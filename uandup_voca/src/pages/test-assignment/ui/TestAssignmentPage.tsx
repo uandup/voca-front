@@ -1,3 +1,5 @@
+import { useNavigate } from "@tanstack/react-router";
+
 type AssignmentStatus = "Active" | "Pending" | "Unassigned";
 
 interface Student {
@@ -61,6 +63,8 @@ const statusDot: Record<AssignmentStatus, string> = {
 };
 
 export function TestAssignmentPage() {
+  const navigate = useNavigate();
+
   return (
     <main className="ml-64 p-10">
       {/* Table Header Controls */}
@@ -181,6 +185,12 @@ export function TestAssignmentPage() {
               <tr
                 key={student.id}
                 className="hover:bg-surface-container-low transition-colors cursor-pointer group"
+                onClick={() =>
+                  navigate({
+                    to: "/test-assignment/$studentId",
+                    params: { studentId: String(student.id) },
+                  })
+                }
               >
                 <td className="py-6 px-8">
                   <input

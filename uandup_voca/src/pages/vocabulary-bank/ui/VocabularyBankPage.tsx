@@ -68,6 +68,60 @@ export function VocabularyBankPage() {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
+            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
+              Level 1
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-extrabold text-[#002D8F]">
+                240
+              </span>
+              <span className="text-xs text-on-surface-variant font-medium">
+                words
+              </span>
+            </div>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
+            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
+              Level 2
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-extrabold text-[#002D8F]">
+                180
+              </span>
+              <span className="text-xs text-on-surface-variant font-medium">
+                words
+              </span>
+            </div>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
+            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
+              Level 3
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-extrabold text-[#002D8F]">
+                312
+              </span>
+              <span className="text-xs text-on-surface-variant font-medium">
+                words
+              </span>
+            </div>
+          </div>
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
+            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
+              Level 4
+            </p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-extrabold text-[#002D8F]">
+                156
+              </span>
+              <span className="text-xs text-on-surface-variant font-medium">
+                words
+              </span>
+            </div>
+          </div>
+        </div>
         {/* Filters & Search */}
         <div className="bg-surface-container-low p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full">

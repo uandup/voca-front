@@ -13,6 +13,7 @@ import { Route as VocabularyBankRouteImport } from './../routes/vocabulary-bank'
 import { Route as TestGradingRouteImport } from './../routes/test-grading'
 import { Route as TestAssignmentRouteImport } from './../routes/test-assignment'
 import { Route as IndexRouteImport } from './../routes/index'
+import { Route as TestAssignmentStudentIdRouteImport } from './../routes/test-assignment_.$studentId'
 
 const VocabularyBankRoute = VocabularyBankRouteImport.update({
   id: '/vocabulary-bank',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestAssignmentStudentIdRoute = TestAssignmentStudentIdRouteImport.update({
+  id: '/test-assignment_/$studentId',
+  path: '/test-assignment/$studentId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/test-assignment': typeof TestAssignmentRoute
   '/test-grading': typeof TestGradingRoute
   '/vocabulary-bank': typeof VocabularyBankRoute
+  '/test-assignment/$studentId': typeof TestAssignmentStudentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/test-assignment': typeof TestAssignmentRoute
   '/test-grading': typeof TestGradingRoute
   '/vocabulary-bank': typeof VocabularyBankRoute
+  '/test-assignment/$studentId': typeof TestAssignmentStudentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,18 +61,30 @@ export interface FileRoutesById {
   '/test-assignment': typeof TestAssignmentRoute
   '/test-grading': typeof TestGradingRoute
   '/vocabulary-bank': typeof VocabularyBankRoute
+  '/test-assignment_/$studentId': typeof TestAssignmentStudentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/test-assignment' | '/test-grading' | '/vocabulary-bank'
+  fullPaths:
+    | '/'
+    | '/test-assignment'
+    | '/test-grading'
+    | '/vocabulary-bank'
+    | '/test-assignment/$studentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/test-assignment' | '/test-grading' | '/vocabulary-bank'
+  to:
+    | '/'
+    | '/test-assignment'
+    | '/test-grading'
+    | '/vocabulary-bank'
+    | '/test-assignment/$studentId'
   id:
     | '__root__'
     | '/'
     | '/test-assignment'
     | '/test-grading'
     | '/vocabulary-bank'
+    | '/test-assignment_/$studentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -72,6 +92,7 @@ export interface RootRouteChildren {
   TestAssignmentRoute: typeof TestAssignmentRoute
   TestGradingRoute: typeof TestGradingRoute
   VocabularyBankRoute: typeof VocabularyBankRoute
+  TestAssignmentStudentIdRoute: typeof TestAssignmentStudentIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -104,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/test-assignment_/$studentId': {
+      id: '/test-assignment_/$studentId'
+      path: '/test-assignment/$studentId'
+      fullPath: '/test-assignment/$studentId'
+      preLoaderRoute: typeof TestAssignmentStudentIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -112,6 +140,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestAssignmentRoute: TestAssignmentRoute,
   TestGradingRoute: TestGradingRoute,
   VocabularyBankRoute: VocabularyBankRoute,
+  TestAssignmentStudentIdRoute: TestAssignmentStudentIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
