@@ -1,9 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
 const navItems = [
-  { icon: "assignment", label: "Test Assignment", to: "/test-assignment" },
-  { icon: "grading", label: "Test Grading", to: "/test-grading" },
-  { icon: "book_2", label: "Vocabulary Bank", to: "/vocabulary-bank" },
+  {
+    icon: "assignment",
+    label: "Test Assignment",
+    to: "/teacher/test-assignment",
+  },
+  { icon: "grading", label: "Test Grading", to: "/teacher/test-grading" },
+  { icon: "book_2", label: "Vocabulary Bank", to: "/teacher/vocabulary-bank" },
 ] as const;
 
 export function SideNavBar() {

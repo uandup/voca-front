@@ -9,25 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './../routes/__root'
-import { Route as VocabularyBankRouteImport } from './../routes/vocabulary-bank'
-import { Route as TestGradingRouteImport } from './../routes/test-grading'
-import { Route as TestAssignmentRouteImport } from './../routes/test-assignment'
+import { Route as TeacherRouteImport } from './../routes/teacher'
+import { Route as StudentRouteImport } from './../routes/student'
 import { Route as IndexRouteImport } from './../routes/index'
-import { Route as TestAssignmentStudentIdRouteImport } from './../routes/test-assignment_.$studentId'
+import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
+import { Route as TeacherTestGradingRouteImport } from './../routes/teacher/test-grading'
+import { Route as TeacherTestAssignmentRouteImport } from './../routes/teacher/test-assignment'
+import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
+import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
 
-const VocabularyBankRoute = VocabularyBankRouteImport.update({
-  id: '/vocabulary-bank',
-  path: '/vocabulary-bank',
+const TeacherRoute = TeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestGradingRoute = TestGradingRouteImport.update({
-  id: '/test-grading',
-  path: '/test-grading',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TestAssignmentRoute = TestAssignmentRouteImport.update({
-  id: '/test-assignment',
-  path: '/test-assignment',
+const StudentRoute = StudentRouteImport.update({
+  id: '/student',
+  path: '/student',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -35,87 +33,117 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestAssignmentStudentIdRoute = TestAssignmentStudentIdRouteImport.update({
-  id: '/test-assignment_/$studentId',
-  path: '/test-assignment/$studentId',
-  getParentRoute: () => rootRouteImport,
+const TeacherVocabularyBankRoute = TeacherVocabularyBankRouteImport.update({
+  id: '/vocabulary-bank',
+  path: '/vocabulary-bank',
+  getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherTestGradingRoute = TeacherTestGradingRouteImport.update({
+  id: '/test-grading',
+  path: '/test-grading',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherTestAssignmentRoute = TeacherTestAssignmentRouteImport.update({
+  id: '/test-assignment',
+  path: '/test-assignment',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const StudentDashboardRoute = StudentDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => StudentRoute,
+} as any)
+const TeacherTestAssignmentStudentIdRoute =
+  TeacherTestAssignmentStudentIdRouteImport.update({
+    id: '/test-assignment_/$studentId',
+    path: '/test-assignment/$studentId',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/test-assignment': typeof TestAssignmentRoute
-  '/test-grading': typeof TestGradingRoute
-  '/vocabulary-bank': typeof VocabularyBankRoute
-  '/test-assignment/$studentId': typeof TestAssignmentStudentIdRoute
+  '/student': typeof StudentRouteWithChildren
+  '/teacher': typeof TeacherRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
+  '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
+  '/teacher/test-grading': typeof TeacherTestGradingRoute
+  '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/test-assignment': typeof TestAssignmentRoute
-  '/test-grading': typeof TestGradingRoute
-  '/vocabulary-bank': typeof VocabularyBankRoute
-  '/test-assignment/$studentId': typeof TestAssignmentStudentIdRoute
+  '/student': typeof StudentRouteWithChildren
+  '/teacher': typeof TeacherRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
+  '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
+  '/teacher/test-grading': typeof TeacherTestGradingRoute
+  '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/test-assignment': typeof TestAssignmentRoute
-  '/test-grading': typeof TestGradingRoute
-  '/vocabulary-bank': typeof VocabularyBankRoute
-  '/test-assignment_/$studentId': typeof TestAssignmentStudentIdRoute
+  '/student': typeof StudentRouteWithChildren
+  '/teacher': typeof TeacherRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
+  '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
+  '/teacher/test-grading': typeof TeacherTestGradingRoute
+  '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/teacher/test-assignment_/$studentId': typeof TeacherTestAssignmentStudentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/test-assignment'
-    | '/test-grading'
-    | '/vocabulary-bank'
-    | '/test-assignment/$studentId'
+    | '/student'
+    | '/teacher'
+    | '/student/dashboard'
+    | '/teacher/test-assignment'
+    | '/teacher/test-grading'
+    | '/teacher/vocabulary-bank'
+    | '/teacher/test-assignment/$studentId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/test-assignment'
-    | '/test-grading'
-    | '/vocabulary-bank'
-    | '/test-assignment/$studentId'
+    | '/student'
+    | '/teacher'
+    | '/student/dashboard'
+    | '/teacher/test-assignment'
+    | '/teacher/test-grading'
+    | '/teacher/vocabulary-bank'
+    | '/teacher/test-assignment/$studentId'
   id:
     | '__root__'
     | '/'
-    | '/test-assignment'
-    | '/test-grading'
-    | '/vocabulary-bank'
-    | '/test-assignment_/$studentId'
+    | '/student'
+    | '/teacher'
+    | '/student/dashboard'
+    | '/teacher/test-assignment'
+    | '/teacher/test-grading'
+    | '/teacher/vocabulary-bank'
+    | '/teacher/test-assignment_/$studentId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  TestAssignmentRoute: typeof TestAssignmentRoute
-  TestGradingRoute: typeof TestGradingRoute
-  VocabularyBankRoute: typeof VocabularyBankRoute
-  TestAssignmentStudentIdRoute: typeof TestAssignmentStudentIdRoute
+  StudentRoute: typeof StudentRouteWithChildren
+  TeacherRoute: typeof TeacherRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vocabulary-bank': {
-      id: '/vocabulary-bank'
-      path: '/vocabulary-bank'
-      fullPath: '/vocabulary-bank'
-      preLoaderRoute: typeof VocabularyBankRouteImport
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test-grading': {
-      id: '/test-grading'
-      path: '/test-grading'
-      fullPath: '/test-grading'
-      preLoaderRoute: typeof TestGradingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/test-assignment': {
-      id: '/test-assignment'
-      path: '/test-assignment'
-      fullPath: '/test-assignment'
-      preLoaderRoute: typeof TestAssignmentRouteImport
+    '/student': {
+      id: '/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof StudentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -125,22 +153,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test-assignment_/$studentId': {
-      id: '/test-assignment_/$studentId'
+    '/teacher/vocabulary-bank': {
+      id: '/teacher/vocabulary-bank'
+      path: '/vocabulary-bank'
+      fullPath: '/teacher/vocabulary-bank'
+      preLoaderRoute: typeof TeacherVocabularyBankRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/test-grading': {
+      id: '/teacher/test-grading'
+      path: '/test-grading'
+      fullPath: '/teacher/test-grading'
+      preLoaderRoute: typeof TeacherTestGradingRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/test-assignment': {
+      id: '/teacher/test-assignment'
+      path: '/test-assignment'
+      fullPath: '/teacher/test-assignment'
+      preLoaderRoute: typeof TeacherTestAssignmentRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/student/dashboard': {
+      id: '/student/dashboard'
+      path: '/dashboard'
+      fullPath: '/student/dashboard'
+      preLoaderRoute: typeof StudentDashboardRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/teacher/test-assignment_/$studentId': {
+      id: '/teacher/test-assignment_/$studentId'
       path: '/test-assignment/$studentId'
-      fullPath: '/test-assignment/$studentId'
-      preLoaderRoute: typeof TestAssignmentStudentIdRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/teacher/test-assignment/$studentId'
+      preLoaderRoute: typeof TeacherTestAssignmentStudentIdRouteImport
+      parentRoute: typeof TeacherRoute
     }
   }
 }
 
+interface StudentRouteChildren {
+  StudentDashboardRoute: typeof StudentDashboardRoute
+}
+
+const StudentRouteChildren: StudentRouteChildren = {
+  StudentDashboardRoute: StudentDashboardRoute,
+}
+
+const StudentRouteWithChildren =
+  StudentRoute._addFileChildren(StudentRouteChildren)
+
+interface TeacherRouteChildren {
+  TeacherTestAssignmentRoute: typeof TeacherTestAssignmentRoute
+  TeacherTestGradingRoute: typeof TeacherTestGradingRoute
+  TeacherVocabularyBankRoute: typeof TeacherVocabularyBankRoute
+  TeacherTestAssignmentStudentIdRoute: typeof TeacherTestAssignmentStudentIdRoute
+}
+
+const TeacherRouteChildren: TeacherRouteChildren = {
+  TeacherTestAssignmentRoute: TeacherTestAssignmentRoute,
+  TeacherTestGradingRoute: TeacherTestGradingRoute,
+  TeacherVocabularyBankRoute: TeacherVocabularyBankRoute,
+  TeacherTestAssignmentStudentIdRoute: TeacherTestAssignmentStudentIdRoute,
+}
+
+const TeacherRouteWithChildren =
+  TeacherRoute._addFileChildren(TeacherRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  TestAssignmentRoute: TestAssignmentRoute,
-  TestGradingRoute: TestGradingRoute,
-  VocabularyBankRoute: VocabularyBankRoute,
-  TestAssignmentStudentIdRoute: TestAssignmentStudentIdRoute,
+  StudentRoute: StudentRouteWithChildren,
+  TeacherRoute: TeacherRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

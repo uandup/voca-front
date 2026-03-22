@@ -187,7 +187,7 @@ export function TestAssignmentPage() {
                 className="hover:bg-surface-container-low transition-colors cursor-pointer group"
                 onClick={() =>
                   navigate({
-                    to: "/test-assignment/$studentId",
+                    to: "/teacher/test-assignment/$studentId",
                     params: { studentId: String(student.id) },
                   })
                 }
