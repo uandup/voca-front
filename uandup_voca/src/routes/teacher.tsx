@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { SideNavBar } from "../shared/ui/SideNavBar";
+import { SideNavBar } from "@/shared/ui/SideNavBar";
 
 export const Route = createFileRoute("/teacher")({
   component: () => (

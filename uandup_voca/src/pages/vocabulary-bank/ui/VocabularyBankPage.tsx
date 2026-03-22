@@ -1,4 +1,4 @@
-import { VocabCard } from "./VocabCard";
+import { VocabCard } from "@/pages/vocabulary-bank/ui/VocabCard";
 
 const mockVocabData = [
   {
