@@ -5,6 +5,64 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Material Design color tokens */
+  --color-surface-tint: #3a57b8;
+  --color-on-secondary-fixed: #0f193c;
+  --color-outline-variant: #c4c5d4;
+  --color-on-primary-fixed-variant: #1d3e9f;
+  --color-on-tertiary-fixed-variant: #81280c;
+  --color-tertiary-fixed-dim: #ffb5a0;
+  --color-surface-container-high: #e8e7f0;
+  --color-surface-container: #eeedf6;
+  --color-error: #ba1a1a;
+  --color-surface-container-highest: #e3e1ea;
+  --color-error-container: #ffdad6;
+  --color-secondary-container: #c9d3ff;
+  --color-on-secondary-container: #505a80;
+  --color-inverse-surface: #2f3037;
+  --color-on-tertiary: #ffffff;
+  --color-surface: #faf8ff;
+  --color-inverse-primary: #b6c4ff;
+  --color-tertiary: #460d00;
+  --color-on-tertiary-container: #f67f5c;
+  --color-on-tertiary-fixed: #3b0900;
+  --color-on-error-container: #93000a;
+  --color-on-error: #ffffff;
+  --color-on-surface-variant: #444652;
+  --color-tertiary-container: #6c1900;
+  --color-surface-container-lowest: #ffffff;
+  --color-background: #faf8ff;
+  --color-inverse-on-surface: #f1f0f9;
+  --color-primary-container: #002d8f;
+  --color-on-secondary: #ffffff;
+  --color-tertiary-fixed: #ffdbd1;
+  --color-on-secondary-fixed-variant: #3b456a;
+  --color-primary: #001b5f;
+  --color-secondary-fixed-dim: #bbc5f1;
+  --color-secondary-fixed: #dce1ff;
+  --color-primary-fixed: #dce1ff;
+  --color-on-surface: #1a1b21;
+  --color-secondary: #535d83;
+  --color-surface-container-low: #f4f2fb;
+  --color-surface-bright: #faf8ff;
+  --color-primary-fixed-dim: #b6c4ff;
+  --color-on-primary: #ffffff;
+  --color-surface-variant: #e3e1ea;
+  --color-on-background: #1a1b21;
+  --color-outline: #747684;
+  --color-on-primary-fixed: #001550;
+  --color-on-primary-container: #809bff;
+  --color-surface-dim: #dad9e2;
+
+  /* Border radius tokens */
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
 }
 
 * {
@@ -14,4 +72,8 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
