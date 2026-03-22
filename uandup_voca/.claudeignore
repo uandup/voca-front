@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+out/
+build/
+dist/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Documentation (if you want to exclude)
+/docs
+
+# Cache files
+.cache/
+.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
