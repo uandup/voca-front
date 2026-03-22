@@ -87,7 +87,6 @@ export function VocabularyBankPage() {
               <option>Level 2 (Intermediate)</option>
               <option>Level 3 (Advanced)</option>
               <option>Level 4 (Academic)</option>
-              <option>Level 5 (Mastery)</option>
             </select>
             <button className="bg-surface-container-highest p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors">
               <span className="material-symbols-outlined">filter_list</span>

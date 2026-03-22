@@ -1,0 +1,632 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Lexicon Scholar - Julianna De-Vries Settings</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f4f2fb",
+              "on-tertiary-fixed": "#3b0900",
+              "surface-container-lowest": "#ffffff",
+              "outline-variant": "#c4c5d4",
+              "tertiary-fixed": "#ffdbd1",
+              "on-tertiary-container": "#f67f5c",
+              "surface-dim": "#dad9e2",
+              "on-secondary-container": "#505a80",
+              background: "#faf8ff",
+              "primary-fixed": "#dce1ff",
+              "surface-container-high": "#e8e7f0",
+              surface: "#faf8ff",
+              "primary-fixed-dim": "#b6c4ff",
+              "on-primary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#b6c4ff",
+              "tertiary-fixed-dim": "#ffb5a0",
+              "secondary-container": "#c9d3ff",
+              "error-container": "#ffdad6",
+              error: "#ba1a1a",
+              "on-secondary-fixed-variant": "#3b456a",
+              "surface-container": "#eeedf6",
+              "on-tertiary-fixed-variant": "#81280c",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#6c1900",
+              tertiary: "#460d00",
+              "on-background": "#1a1b21",
+              "surface-tint": "#3a57b8",
+              "secondary-fixed-dim": "#bbc5f1",
+              secondary: "#535d83",
+              "inverse-surface": "#2f3037",
+              "surface-bright": "#faf8ff",
+              outline: "#747684",
+              "secondary-fixed": "#dce1ff",
+              primary: "#001b5f",
+              "on-secondary-fixed": "#0f193c",
+              "surface-variant": "#e3e1ea",
+              "inverse-on-surface": "#f1f0f9",
+              "primary-container": "#002d8f",
+              "on-primary-fixed-variant": "#1d3e9f",
+              "surface-container-highest": "#e3e1ea",
+              "on-primary-container": "#809bff",
+              "on-error": "#ffffff",
+              "on-surface-variant": "#444652",
+              "on-surface": "#1a1b21",
+              "on-primary-fixed": "#001550",
+              "on-error-container": "#93000a",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-surface font-body selection:bg-primary-fixed"
+  >
+    <!-- SideNavBar -->
+    <aside
+      class="h-screen w-64 fixed left-0 top-0 bg-slate-50 dark:bg-slate-900 flex flex-col py-6 px-4 gap-2 z-50"
+    >
+      <div class="mb-8 px-2">
+        <h1
+          class="font-headline font-bold text-blue-900 dark:text-blue-50 text-xl"
+        >
+          The Curator
+        </h1>
+        <p class="text-xs text-slate-500 font-medium">Academic Portal</p>
+      </div>
+      <nav class="flex flex-col gap-1">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="dashboard"
+            >dashboard</span
+          >
+          <span class="font-medium text-sm">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#002d8f] to-blue-700 text-white rounded-lg shadow-md transition-all duration-300"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="group">group</span>
+          <span class="font-medium text-sm">Student Management</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="menu_book"
+            >menu_book</span
+          >
+          <span class="font-medium text-sm">Vocabulary Management</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="assignment"
+            >assignment</span
+          >
+          <span class="font-medium text-sm">Test Assignment</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="grade">grade</span>
+          <span class="font-medium text-sm">Test Records</span>
+        </a>
+      </nav>
+      <div class="mt-auto flex flex-col gap-1 border-t border-slate-200 pt-4">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="help">help</span>
+          <span class="font-medium text-sm">Help Center</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 rounded-lg"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="logout"
+            >logout</span
+          >
+          <span class="font-medium text-sm">Logout</span>
+        </a>
+      </div>
+    </aside>
+    <main class="ml-64 min-h-screen">
+      <!-- TopAppBar -->
+      <header
+        class="w-full sticky top-0 z-40 bg-white dark:bg-slate-950 flex items-center justify-between px-8 h-16 shadow-[0px_8px_24px_rgba(0,21,80,0.08)]"
+      >
+        <div class="flex items-center gap-4">
+          <a
+            class="text-slate-500 hover:text-primary transition-colors"
+            href="#"
+          >
+            <span class="material-symbols-outlined">arrow_back</span>
+          </a>
+          <h2
+            class="font-headline font-extrabold tracking-tight text-[#002d8f] dark:text-blue-50 text-xl"
+          >
+            Student Profile
+          </h2>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <span
+              class="material-symbols-outlined text-slate-500"
+              data-icon="notifications"
+              >notifications</span
+            >
+            <span
+              class="material-symbols-outlined text-slate-500"
+              data-icon="settings"
+              >settings</span
+            >
+          </div>
+          <div
+            class="h-8 w-8 rounded-full overflow-hidden bg-surface-container"
+          >
+            <img
+              alt="Educator Profile"
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz_PFhZV58Md6LsMB50uCSdR1eG6I2iOyuUU1om1JUpdoQ62vHJPDEGLh_XIz8gifu2XTTcajDmbhlD6KcxioPiijNwkXAu5wsDv_AZ4AtFNjCu-COK64rgDso2bk9X3etLbSrKe2KVYOQRj-ZLJCSW-0HcQ2WoMt5uWCcIZV5PD3RgDInKz8B2kzY9vZdRJtKFnsH1V5cSubvDRA0U-_JeW3gI2rHr_q3B6gE74L4R5INAJGbxXTyWp8c2wXUEeq7JOvolLAq5gUJ"
+            />
+          </div>
+        </div>
+      </header>
+      <div class="max-w-6xl mx-auto py-10 px-8">
+        <!-- Student Profile Header Card -->
+        <section class="mb-8">
+          <div
+            class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-primary/5"
+          >
+            <div class="flex-grow">
+              <div class="flex items-center gap-3 mb-1">
+                <h3 class="font-headline text-3xl font-bold text-[#002d8f]">
+                  Julianna De-Vries
+                </h3>
+                <span
+                  class="bg-secondary-container text-on-secondary-container text-xs font-bold px-3 py-1 rounded-full"
+                  >Grade 11-B</span
+                >
+              </div>
+              <p class="text-on-surface-variant font-medium mb-6">
+                Advanced Vocabulary Track • ID: 29485-JDV
+              </p>
+              <!-- Detailed Progress Breakdown -->
+              <div class="grid grid-cols-4 gap-4">
+                <div
+                  class="bg-surface-container-low px-4 py-4 rounded-lg border border-primary/5"
+                >
+                  <span
+                    class="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5"
+                    >Level 1 Progress</span
+                  >
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-[#002d8f] font-bold text-lg"
+                      >120/1040</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="bg-surface-container-low px-4 py-4 rounded-lg border border-primary/5"
+                >
+                  <span
+                    class="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5"
+                    >Level 2 Progress</span
+                  >
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-[#002d8f] font-bold text-lg"
+                      >150/1040</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="bg-surface-container-low px-4 py-4 rounded-lg border border-primary/5"
+                >
+                  <span
+                    class="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5"
+                    >Level 3 Progress</span
+                  >
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-[#002d8f] font-bold text-lg"
+                      >180/1040</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="bg-surface-container-low px-4 py-4 rounded-lg border border-primary/5"
+                >
+                  <span
+                    class="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5"
+                    >Level 4 Progress</span
+                  >
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-[#002d8f] font-bold text-lg">0/1040</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Simplified Assignment Bar -->
+        <section class="mb-12">
+          <div
+            class="bg-white p-4 rounded-xl shadow-sm flex items-center gap-6 border border-primary/10"
+          >
+            <div class="flex items-center gap-4 flex-grow">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-[#002d8f] whitespace-nowrap"
+                  >Difficulty:</span
+                >
+                <div class="flex bg-surface-container-low p-1 rounded-lg">
+                  <button
+                    class="px-4 py-1.5 text-xs font-bold rounded-md bg-[#002d8f] text-white shadow-sm transition-all"
+                  >
+                    Level 1
+                  </button>
+                  <button
+                    class="px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-[#002d8f] transition-all"
+                  >
+                    Level 2
+                  </button>
+                  <button
+                    class="px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-[#002d8f] transition-all"
+                  >
+                    Level 3
+                  </button>
+                  <button
+                    class="px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-[#002d8f] transition-all"
+                  >
+                    Level 4
+                  </button>
+                </div>
+              </div>
+              <div class="h-8 w-px bg-slate-200"></div>
+              <div class="flex items-center gap-3">
+                <label
+                  class="text-sm font-bold text-[#002d8f] whitespace-nowrap"
+                  for="words_input"
+                  >Quantity:</label
+                >
+                <div class="relative w-32">
+                  <input
+                    class="w-full bg-surface-container-low border-none rounded-lg py-1.5 pl-3 pr-3 text-xs font-bold text-[#002d8f] focus:ring-1 focus:ring-primary/20"
+                    id="words_input"
+                    type="number"
+                    value="25"
+                  />
+                </div>
+              </div>
+            </div>
+            <button
+              class="bg-[#002d8f] hover:bg-primary-container text-white px-8 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2 shadow-md"
+            >
+              <span class="material-symbols-outlined text-lg">send</span>
+              Assign
+            </button>
+          </div>
+        </section>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <!-- Test History Section -->
+          <div class="lg:col-span-12">
+            <!-- Updated Tab Navigation Bar -->
+            <div class="mb-6 flex items-center justify-between">
+              <div class="flex-grow">
+                <div
+                  class="bg-[#f4f2fb] p-1.5 rounded-xl inline-flex items-center gap-1 shadow-inner border border-outline-variant/20"
+                >
+                  <button
+                    class="px-8 py-2.5 bg-white text-[#001b5f] rounded-lg shadow-sm font-bold text-sm transition-all border border-blue-100/50"
+                  >
+                    Word Test
+                  </button>
+                  <button
+                    class="px-8 py-2.5 text-on-surface-variant hover:text-[#001b5f] font-semibold text-sm transition-all"
+                  >
+                    Example Sentence Test
+                  </button>
+                  <button
+                    class="px-8 py-2.5 text-on-surface-variant hover:text-[#001b5f] font-semibold text-sm transition-all"
+                  >
+                    Review Test
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-8 border border-primary/5"
+            >
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr class="bg-surface-container-low">
+                    <th
+                      class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      TEST ID
+                    </th>
+                    <th
+                      class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      DATE
+                    </th>
+                    <th
+                      class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      DIFFICULTY
+                    </th>
+                    <th
+                      class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      SCORE
+                    </th>
+                    <th
+                      class="text-left px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      STATUS
+                    </th>
+                    <th
+                      class="text-right px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant"
+                    >
+                      ACTIONS
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                  <tr class="group hover:bg-surface-bright transition-all">
+                    <td class="px-6 py-5">
+                      <span class="font-headline font-bold text-[#002d8f]"
+                        >#TX-8821</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-sm text-on-surface-variant">
+                      Oct 24, 2023
+                    </td>
+                    <td class="px-6 py-5">
+                      <span class="text-xs font-bold text-[#002d8f]"
+                        >Level 1</span
+                      >
+                    </td>
+                    <td
+                      class="px-6 py-5 font-headline font-bold text-[#002d8f]"
+                    >
+                      98/100
+                    </td>
+                    <td class="px-6 py-5">
+                      <span
+                        class="bg-secondary-container text-on-secondary-container text-[10px] font-extrabold uppercase px-2 py-1 rounded-full"
+                        >Completed</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-right">
+                      <div class="flex items-center justify-end gap-3">
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-[#002d8f] transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >print</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-red-600 transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >delete</span
+                          >
+                        </button>
+                        <button
+                          class="ml-2 bg-[#002d8f]/10 text-[#002d8f] w-20 h-8 rounded-md text-xs font-bold hover:bg-[#002d8f] hover:text-white transition-all flex items-center justify-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-sm"
+                            >edit</span
+                          >
+                          Edit
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="group hover:bg-surface-bright transition-all">
+                    <td class="px-6 py-5">
+                      <span class="font-headline font-bold text-[#002d8f]"
+                        >#TX-8794</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-sm text-on-surface-variant">
+                      Oct 18, 2023
+                    </td>
+                    <td class="px-6 py-5">
+                      <span class="text-xs font-bold text-[#002d8f]"
+                        >Level 1</span
+                      >
+                    </td>
+                    <td
+                      class="px-6 py-5 font-headline font-bold text-[#002d8f]"
+                    >
+                      92/100
+                    </td>
+                    <td class="px-6 py-5">
+                      <span
+                        class="bg-secondary-container text-on-secondary-container text-[10px] font-extrabold uppercase px-2 py-1 rounded-full"
+                        >Completed</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-right">
+                      <div class="flex items-center justify-end gap-3">
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-[#002d8f] transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >print</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-red-600 transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >delete</span
+                          >
+                        </button>
+                        <button
+                          class="ml-2 bg-[#002d8f]/10 text-[#002d8f] w-20 h-8 rounded-md text-xs font-bold hover:bg-[#002d8f] hover:text-white transition-all flex items-center justify-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-sm"
+                            >edit</span
+                          >
+                          Edit
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="group hover:bg-surface-bright transition-all">
+                    <td class="px-6 py-5">
+                      <span class="font-headline font-bold text-[#002d8f]"
+                        >#TX-8710</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-sm text-on-surface-variant">
+                      Oct 12, 2023
+                    </td>
+                    <td class="px-6 py-5">
+                      <span class="text-xs font-bold text-[#002d8f]"
+                        >Level 1</span
+                      >
+                    </td>
+                    <td
+                      class="px-6 py-5 font-headline font-bold text-[#002d8f]"
+                    >
+                      —
+                    </td>
+                    <td class="px-6 py-5">
+                      <span
+                        class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-extrabold uppercase px-2 py-1 rounded-full"
+                        >Pending</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-right">
+                      <div class="flex items-center justify-end gap-3">
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-[#002d8f] transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >print</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-red-600 transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >delete</span
+                          >
+                        </button>
+                        <button
+                          class="ml-2 bg-[#002d8f] text-white w-20 h-8 rounded-md text-xs font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-sm"
+                            >fact_check</span
+                          >
+                          Grade
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="group hover:bg-surface-bright transition-all">
+                    <td class="px-6 py-5">
+                      <span class="font-headline font-bold text-[#002d8f]"
+                        >#TX-8655</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-sm text-on-surface-variant">
+                      Oct 05, 2023
+                    </td>
+                    <td class="px-6 py-5">
+                      <span class="text-xs font-bold text-[#002d8f]"
+                        >Level 1</span
+                      >
+                    </td>
+                    <td
+                      class="px-6 py-5 font-headline font-bold text-[#002d8f]"
+                    >
+                      100/100
+                    </td>
+                    <td class="px-6 py-5">
+                      <span
+                        class="bg-secondary-container text-on-secondary-container text-[10px] font-extrabold uppercase px-2 py-1 rounded-full"
+                        >Completed</span
+                      >
+                    </td>
+                    <td class="px-6 py-5 text-right">
+                      <div class="flex items-center justify-end gap-3">
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-[#002d8f] transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >print</span
+                          >
+                        </button>
+                        <button
+                          class="p-1.5 text-on-surface-variant hover:text-red-600 transition-colors"
+                        >
+                          <span class="material-symbols-outlined text-xl"
+                            >delete</span
+                          >
+                        </button>
+                        <button
+                          class="ml-2 bg-[#002d8f]/10 text-[#002d8f] w-20 h-8 rounded-md text-xs font-bold hover:bg-[#002d8f] hover:text-white transition-all flex items-center justify-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-sm"
+                            >edit</span
+                          >
+                          Edit
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Visual Feedback Bento Box -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Contextual FAB -->
+  </body>
+</html>

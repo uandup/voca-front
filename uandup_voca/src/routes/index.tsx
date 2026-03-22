@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { VocabularyBankPage } from "../pages/vocabulary-bank/ui/VocabularyBankPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: VocabularyBankPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/test-assignment" });
+  },
 });
