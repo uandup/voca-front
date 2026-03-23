@@ -64,7 +64,7 @@ const testHistory: TestHistoryItem[] = [
 
 import { useNavigate } from "@tanstack/react-router";
 
-export function StudentDashboardPage() {
+export function DashboardPage() {
   const navigate = useNavigate();
 
   return (

@@ -52,7 +52,7 @@ const mockWords: VocabWord[] = [
   },
 ];
 
-export function StudentVocabularyPage() {
+export function VocabularyPage() {
   return (
     <main>
       {/* Page Title */}

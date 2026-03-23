@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/student/dashboard/ui)",
+      "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/student/vocabulary/ui)",
+      "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/test-assignment/ui)",
+      "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/test-grading/ui)",
+      "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/vocabulary-bank/ui)"
+    ]
+  }
+}

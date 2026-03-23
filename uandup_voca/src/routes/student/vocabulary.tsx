@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StudentVocabularyPage } from "@/pages/student-vocabulary/ui/StudentVocabularyPage";
+import { VocabularyPage } from "@/pages/student/vocabulary/ui/VocabularyPage";
 
 export const Route = createFileRoute("/student/vocabulary")({
-  component: StudentVocabularyPage,
+  component: VocabularyPage,
 });
