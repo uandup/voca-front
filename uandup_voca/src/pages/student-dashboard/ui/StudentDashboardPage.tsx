@@ -62,7 +62,11 @@ const testHistory: TestHistoryItem[] = [
   },
 ];
 
+import { useNavigate } from "@tanstack/react-router";
+
 export function StudentDashboardPage() {
+  const navigate = useNavigate();
+
   return (
     <main>
       {/* Page Header */}
@@ -81,9 +85,9 @@ export function StudentDashboardPage() {
           <span className="w-2 h-2 bg-primary rounded-full" />
           Current Active Path
         </h2>
-        <a
-          href="#"
-          className="group block relative overflow-hidden bg-surface-container-lowest rounded-xl p-8 shadow-[0px_8px_24px_rgba(0,21,80,0.08)] border-l-4 border-primary transition-all hover:-translate-y-1"
+        <div
+          onClick={() => navigate({ to: "/student/vocabulary" })}
+          className="group block relative overflow-hidden bg-surface-container-lowest rounded-xl p-8 shadow-[0px_8px_24px_rgba(0,21,80,0.08)] border-l-4 border-primary transition-all hover:-translate-y-1 cursor-pointer"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex-1">
@@ -113,7 +117,7 @@ export function StudentDashboardPage() {
               </div>
             </div>
           </div>
-        </a>
+        </div>
       </section>
 
       {/* Previous Test History */}
@@ -128,6 +132,7 @@ export function StudentDashboardPage() {
         {testHistory.map((item) => (
           <div
             key={item.id}
+            onClick={() => navigate({ to: "/student/vocabulary" })}
             className="group flex flex-col md:flex-row items-center justify-between bg-surface-container-low hover:bg-surface-container-lowest p-6 rounded-xl transition-all hover:shadow-md cursor-pointer"
           >
             <div className="flex items-center gap-6 w-full md:w-auto mb-4 md:mb-0">

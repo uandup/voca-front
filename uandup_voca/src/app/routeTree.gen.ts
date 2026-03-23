@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './../routes/index'
 import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
 import { Route as TeacherTestGradingRouteImport } from './../routes/teacher/test-grading'
 import { Route as TeacherTestAssignmentRouteImport } from './../routes/teacher/test-assignment'
+import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
 
@@ -48,6 +49,11 @@ const TeacherTestAssignmentRoute = TeacherTestAssignmentRouteImport.update({
   path: '/test-assignment',
   getParentRoute: () => TeacherRoute,
 } as any)
+const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentDashboardRoute = StudentDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/vocabulary'
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/vocabulary'
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/vocabulary'
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
@@ -174,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherTestAssignmentRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/student/vocabulary': {
+      id: '/student/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/student/vocabulary'
+      preLoaderRoute: typeof StudentVocabularyRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/dashboard': {
       id: '/student/dashboard'
       path: '/dashboard'
@@ -193,10 +212,12 @@ declare module '@tanstack/react-router' {
 
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
+  StudentVocabularyRoute: typeof StudentVocabularyRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
+  StudentVocabularyRoute: StudentVocabularyRoute,
 }
 
 const StudentRouteWithChildren =
