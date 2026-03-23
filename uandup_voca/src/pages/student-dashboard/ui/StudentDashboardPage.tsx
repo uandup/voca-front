@@ -64,7 +64,7 @@ const testHistory: TestHistoryItem[] = [
 
 export function StudentDashboardPage() {
   return (
-    <main className="flex-1 lg:ml-64 p-6 md:p-12 max-w-7xl mx-auto w-full">
+    <main>
       {/* Page Header */}
       <header className="mb-12">
         <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">

@@ -44,24 +44,21 @@ const mockVocabData = [
 
 export function VocabularyBankPage() {
   return (
-    <main className="ml-64 pt-8 px-12 pb-24">
+    <main>
       {/* Header Section */}
       <header className="flex flex-col gap-8 mb-12">
-        <div className="flex justify-between items-end">
+        <div className="flex justify-between items-start">
           <div>
-            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-2">
+            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight ">
               Vocabulary Bank
             </h1>
-            <p className="text-on-surface-variant font-body">
-              Manage and curate lexical sets for advanced academic English.
-            </p>
           </div>
           <div className="flex gap-3">
-            <button className="border-2 border-primary text-primary px-6 py-3 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all">
+            <button className="border-2 border-primary text-primary px-4 py-2 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all">
               <span className="material-symbols-outlined">file_upload</span>
               <span className="font-bold">Excel Upload</span>
             </button>
-            <button className="bg-gradient-to-r from-primary to-primary-container text-white px-6 py-3 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all">
+            <button className="bg-gradient-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all">
               <span className="material-symbols-outlined">add</span>
               <span className="font-bold">Add New Word</span>
             </button>
@@ -154,16 +151,6 @@ export function VocabularyBankPage() {
         {mockVocabData.map((item) => (
           <VocabCard key={item.id} {...item} />
         ))}
-      </div>
-
-      {/* Floating Action Button */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <button className="w-16 h-16 bg-primary shadow-xl rounded-full flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all group">
-          <span className="material-symbols-outlined text-3xl">add</span>
-          <span className="absolute right-full mr-4 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            Add Word
-          </span>
-        </button>
       </div>
     </main>
   );

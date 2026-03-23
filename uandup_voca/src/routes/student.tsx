@@ -5,7 +5,9 @@ export const Route = createFileRoute("/student")({
   component: () => (
     <div className="bg-surface font-body text-on-surface min-h-screen">
       <StudentSideNavBar />
-      <Outlet />
+      <div className="ml-64 p-10">
+        <Outlet />
+      </div>
     </div>
   ),
 });

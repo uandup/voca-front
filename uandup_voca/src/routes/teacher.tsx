@@ -1,11 +1,13 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { SideNavBar } from "@/shared/ui/SideNavBar";
+import { TeacherSideNavBar } from "@/shared/ui/TeacherSideNavBar";
 
 export const Route = createFileRoute("/teacher")({
   component: () => (
     <div className="bg-surface font-body text-on-surface min-h-screen">
-      <SideNavBar />
-      <Outlet />
+      <TeacherSideNavBar />
+      <div className="ml-64 p-10">
+        <Outlet />
+      </div>
     </div>
   ),
 });

@@ -48,8 +48,13 @@ const levelProgress = [
 
 export function TestAssignmentDetailPage() {
   return (
-    <main className="ml-64 min-h-screen">
-      <div className=" py-10 px-8">
+    <main>
+      <div>
+        {/* Page Title */}
+        <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8">
+          Test Assignment
+        </h1>
+
         {/* Student Profile Header Card */}
         <section className="mb-8">
           <div className="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-primary/5">

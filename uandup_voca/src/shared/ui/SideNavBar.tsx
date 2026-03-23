@@ -1,16 +1,16 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
-const navItems = [
-  {
-    icon: "assignment",
-    label: "Test Assignment",
-    to: "/teacher/test-assignment",
-  },
-  { icon: "grading", label: "Test Grading", to: "/teacher/test-grading" },
-  { icon: "book_2", label: "Vocabulary Bank", to: "/teacher/vocabulary-bank" },
-] as const;
+interface NavItem {
+  icon: string;
+  label: string;
+  to: string;
+}
 
-export function SideNavBar() {
+interface SideNavBarProps {
+  navItems: NavItem[];
+}
+
+export function SideNavBar({ navItems }: SideNavBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (

@@ -42,8 +42,13 @@ const tabs = ["Word Test", "Example Sentence Test", "Review Test"];
 
 export function TestGradingPage() {
   return (
-    <main className="ml-64 min-h-screen">
-      <div className="p-8 space-y-10">
+    <main>
+      <div className="space-y-8">
+        {/* Page Title */}
+        <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight">
+          Test Grading
+        </h1>
+
         {/* Stats Header */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {statCards.map((card) => (
