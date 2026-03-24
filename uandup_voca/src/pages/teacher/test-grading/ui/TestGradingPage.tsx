@@ -212,16 +212,6 @@ export function TestGradingPage() {
             </div>
           </div>
         </div>
-
-        {/* FAB */}
-        <div className="fixed bottom-8 right-8 flex flex-col items-end gap-3">
-          <div className="bg-white px-4 py-2 rounded-lg shadow-xl border border-primary/10 text-xs font-bold text-primary animate-bounce">
-            New Test Ready to Print!
-          </div>
-          <button className="bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-3xl">print</span>
-          </button>
-        </div>
       </div>
     </main>
   );

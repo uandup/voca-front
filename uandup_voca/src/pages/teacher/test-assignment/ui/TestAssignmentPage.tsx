@@ -71,7 +71,6 @@ export function TestAssignmentPage() {
       <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8">
         Test Assignment
       </h1>
-
       {/* Table Header Controls */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-6">
@@ -120,7 +119,6 @@ export function TestAssignmentPage() {
           </button>
         </div>
       </div>
-
       {/* Student Table */}
       <div className="bg-surface-container-lowest rounded-2xl shadow-[0px_8px_24px_rgba(0,21,80,0.08)] overflow-hidden">
         {/* Table Header */}
@@ -266,23 +264,6 @@ export function TestAssignmentPage() {
             </span>
           </button>
         </div>
-      </div>
-
-      {/* FAB */}
-      <div className="fixed bottom-8 right-8">
-        <button className="group relative flex items-center gap-2">
-          <span className="bg-primary-container text-white px-4 py-2 rounded-full text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
-            New Assignment
-          </span>
-          <div className="w-14 h-14 bg-primary rounded-full shadow-xl flex items-center justify-center text-white hover:scale-110 transition-transform active:scale-95">
-            <span
-              className="material-symbols-outlined text-3xl"
-              style={{ fontVariationSettings: '"FILL" 1' }}
-            >
-              add
-            </span>
-          </div>
-        </button>
       </div>
     </main>
   );

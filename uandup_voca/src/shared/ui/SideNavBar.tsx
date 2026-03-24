@@ -21,7 +21,7 @@ export function SideNavBar({ navItems }: SideNavBarProps) {
 
       <nav className="flex-1 flex flex-col gap-1">
         {navItems.map((item) => {
-          const isActive = pathname === item.to;
+          const isActive = pathname.includes(item.to);
           return (
             <Link
               key={item.label}
