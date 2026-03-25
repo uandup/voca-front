@@ -1,6 +1,5 @@
 interface VocabCardProps {
   level: number;
-  levelColor: "primary" | "tertiary";
   word: string;
   synonyms: string[];
   partOfSpeech: string;
@@ -9,14 +8,8 @@ interface VocabCardProps {
   example: string;
 }
 
-const levelColorMap = {
-  primary: "bg-primary-container text-on-primary-container",
-  tertiary: "bg-tertiary-container text-on-tertiary-container",
-};
-
 export function VocabCard({
   level,
-  levelColor,
   word,
   synonyms,
   partOfSpeech,
@@ -25,7 +18,7 @@ export function VocabCard({
   example,
 }: VocabCardProps) {
   return (
-    <article className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0px_8px_24px_rgba(0,21,80,0.08)] hover:shadow-[0px_12px_32px_rgba(0,21,80,0.12)] transition-shadow relative group">
+    <article className="bg-surface-container-lowest rounded-xl overflow-hidden border shadow-sm border-outline-variant/60 relative group">
       <div className="absolute top-6 right-6 flex gap-2 z-10">
         <button className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold">
           <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -39,18 +32,34 @@ export function VocabCard({
 
       <div className="p-8">
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Column 1: Identity & Synonyms */}
-          <div className="w-full lg:w-1/3">
-            <div className="flex items-center gap-3 mb-3">
-              <span
-                className={`${levelColorMap[levelColor]} px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest uppercase`}
-              >
-                Level {level}
+          {/* Column 1: Level + Word */}
+          <div className="w-1/4">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
+                LEVEL {level}
               </span>
             </div>
-            <h2 className="font-headline font-extrabold text-4xl text-primary mb-4">
+            <h2 className="font-headline font-bold text-2xl text-primary">
               {word}
             </h2>
+          </div>
+
+          {/* Column 2: Meaning + Synonyms */}
+          <div className="flex-1 space-y-4">
+            <div>
+              <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
+                Meaning
+              </h4>
+              <p className="text-primary font-bold text-lg">
+                <span className="text-on-tertiary-container tracking-wider mr-2">
+                  {partOfSpeech}
+                </span>
+                {koreanMeaning}
+              </p>
+              <p className="text-on-surface-variant leading-relaxed font-body text-sm mt-1">
+                {definition}
+              </p>
+            </div>
             <div>
               <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
                 Synonyms
@@ -59,27 +68,12 @@ export function VocabCard({
                 {synonyms.map((syn) => (
                   <span
                     key={syn}
-                    className="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-xs font-medium "
+                    className="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-xs font-medium"
                   >
                     {syn}
                   </span>
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* Column 2: Meaning */}
-          <div className="flex-1">
-            <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-3">
-              Definition &amp; Part of Speech
-            </h4>
-            <div className="space-y-2">
-              <p className="text-primary font-bold text-lg">
-                {partOfSpeech}. {koreanMeaning}
-              </p>
-              <p className="text-on-surface-variant leading-relaxed font-body">
-                {definition}
-              </p>
             </div>
           </div>
         </div>

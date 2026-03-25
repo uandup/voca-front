@@ -1,10 +1,17 @@
 import { VocabCard } from "@/pages/teacher/vocabulary-bank/ui/VocabCard";
+import { LevelStatCard } from "./LevelStatCard";
+
+const levelStats = [
+  { level: 1, count: 240 },
+  { level: 2, count: 180 },
+  { level: 3, count: 312 },
+  { level: 4, count: 156 },
+];
 
 const mockVocabData = [
   {
     id: 1,
     level: 3,
-    levelColor: "primary" as const,
     word: "Ambiguity",
     synonyms: ["Vagueness", "Obscurity", "Equivocation"],
     partOfSpeech: "N",
@@ -17,7 +24,6 @@ const mockVocabData = [
   {
     id: 2,
     level: 4,
-    levelColor: "tertiary" as const,
     word: "Corroborate",
     synonyms: ["Validate", "Verify", "Authenticate"],
     partOfSpeech: "V",
@@ -30,7 +36,6 @@ const mockVocabData = [
   {
     id: 3,
     level: 2,
-    levelColor: "primary" as const,
     word: "Resilient",
     synonyms: ["Tough", "Strong", "Adaptable"],
     partOfSpeech: "Adj",
@@ -46,7 +51,7 @@ export function VocabularyBankPage() {
   return (
     <main>
       {/* Header Section */}
-      <header className="flex flex-col gap-8 mb-12">
+      <header className="flex flex-col gap-4 mb-4">
         <div className="flex justify-between items-start">
           <div>
             <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight ">
@@ -66,59 +71,15 @@ export function VocabularyBankPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
-            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
-              Level 1
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-[#002D8F]">
-                240
-              </span>
-              <span className="text-xs text-on-surface-variant font-medium">
-                words
-              </span>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
-            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
-              Level 2
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-[#002D8F]">
-                180
-              </span>
-              <span className="text-xs text-on-surface-variant font-medium">
-                words
-              </span>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
-            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
-              Level 3
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-[#002D8F]">
-                312
-              </span>
-              <span className="text-xs text-on-surface-variant font-medium">
-                words
-              </span>
-            </div>
-          </div>
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-5 rounded-xl shadow-sm hover:border-primary/30 transition-colors group">
-            <p className="text-[10px] uppercase tracking-widest text-outline font-bold mb-1">
-              Level 4
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-extrabold text-[#002D8F]">
-                156
-              </span>
-              <span className="text-xs text-on-surface-variant font-medium">
-                words
-              </span>
-            </div>
-          </div>
+          {levelStats.map((stat) => (
+            <LevelStatCard
+              key={stat.level}
+              level={stat.level}
+              count={stat.count}
+            />
+          ))}
         </div>
+
         {/* Filters & Search */}
         <div className="bg-surface-container-low p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full">
@@ -131,7 +92,7 @@ export function VocabularyBankPage() {
               type="text"
             />
           </div>
-          <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex gap-3 w-auto">
             <select className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-[160px]">
               <option>Difficulty: All</option>
               <option>Level 1 (Basic)</option>

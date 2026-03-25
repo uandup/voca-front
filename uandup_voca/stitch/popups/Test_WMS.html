@@ -1,0 +1,266 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vocabulary Assessment | Scholarly Curator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#000000",
+              surface: "#ffffff",
+              outline: "#000000",
+            },
+            fontFamily: {
+              body: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+        .no-print {
+          display: none;
+        }
+        .a4-page {
+          box-shadow: none !important;
+          margin: 0 !important;
+          border: none !important;
+          width: 210mm !important;
+          height: 297mm !important;
+        }
+      }
+      .a4-page {
+        width: 210mm;
+        height: 297mm;
+        padding: 20mm;
+        background: white;
+        position: relative;
+      }
+      .grid-table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .grid-table th,
+      .grid-table td {
+        border: 1.5pt solid black;
+        padding: 8px 12px;
+        text-align: left;
+      }
+      .grid-table th {
+        background-color: #f2f2f2;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-200 font-body text-black flex flex-col items-center py-12 px-4"
+  >
+    <div
+      class="no-print w-full max-w-[210mm] mb-8 flex justify-between items-center bg-white p-4 rounded shadow-sm border border-black/10"
+    >
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-black">description</span>
+        <h1 class="font-bold text-lg uppercase tracking-tight">
+          Assessment Preview
+        </h1>
+      </div>
+      <div class="flex gap-4">
+        <button
+          class="flex items-center gap-2 px-4 py-2 bg-black text-white rounded font-bold text-sm hover:bg-gray-800 transition-colors"
+          onclick="window.print()"
+        >
+          <span class="material-symbols-outlined text-sm">print</span>
+          PRINT A4
+        </button>
+      </div>
+    </div>
+    <main class="a4-page shadow-2xl flex flex-col border border-black/5">
+      <!-- Header Section -->
+      <header class="mb-8">
+        <div class="flex justify-between items-start mb-10">
+          <div>
+            <h2 class="font-extrabold text-3xl uppercase tracking-tighter">
+              Vocabulary Mastery
+            </h2>
+            <p class="font-bold text-sm">
+              Assessment Type: Word + Meaning + Synonym
+            </p>
+          </div>
+          <div class="text-right border-2 border-black p-3 min-w-[120px]">
+            <span class="block text-[10px] font-black uppercase tracking-widest"
+              >Test ID</span
+            >
+            <span class="font-bold">SC-2024-EDU</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-x-12 gap-y-6">
+          <div class="flex items-end gap-2 border-b-2 border-black pb-1">
+            <span class="text-[11px] font-black uppercase mb-1">NAME:</span>
+            <div class="flex-grow h-6"></div>
+          </div>
+          <div class="flex items-end gap-2 border-b-2 border-black pb-1">
+            <span class="text-[11px] font-black uppercase mb-1">DATE:</span>
+            <div class="flex-grow h-6"></div>
+          </div>
+          <div class="flex items-end gap-2 border-b-2 border-black pb-1">
+            <span class="text-[11px] font-black uppercase mb-1">SCORE:</span>
+            <div class="flex-grow h-6"></div>
+          </div>
+          <div class="flex items-end gap-2 border-b-2 border-black pb-1">
+            <span class="text-[11px] font-black uppercase mb-1">EXAMINER:</span>
+            <div class="flex-grow h-6"></div>
+          </div>
+        </div>
+      </header>
+      <!-- Instructions -->
+      <div class="mb-6 p-3 border-2 border-black bg-gray-50">
+        <p class="text-[11px] leading-tight font-medium">
+          <span class="font-black uppercase mr-1">Instructions:</span>
+          Provide the contextual definition and one scholarly synonym for each
+          English word listed. Ensure clarity and academic relevance in your
+          responses.
+        </p>
+      </div>
+      <!-- Main Grid Table -->
+      <section class="flex-grow">
+        <table class="grid-table">
+          <thead>
+            <tr>
+              <th class="w-[40px] text-center">NO</th>
+              <th class="w-[180px]">ENGLISH WORD</th>
+              <th>CONTEXTUAL MEANING</th>
+              <th class="w-[180px]">SCHOLARLY SYNONYM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center font-bold">01</td>
+              <td class="font-black">Meticulous</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">02</td>
+              <td class="font-black">Ambiguous</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">03</td>
+              <td class="font-black">Pragmatic</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">04</td>
+              <td class="font-black">Ephemeral</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">05</td>
+              <td class="font-black">Benevolent</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">06</td>
+              <td class="font-black">Resilient</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">07</td>
+              <td class="font-black">Eloquence</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">08</td>
+              <td class="font-black">Mitigate</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">09</td>
+              <td class="font-black">Tenacious</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">10</td>
+              <td class="font-black">Ineffable</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">11</td>
+              <td class="font-black">Paradigm</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">12</td>
+              <td class="font-black">Sovereign</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">13</td>
+              <td class="font-black">Acquiesce</td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td class="text-center font-bold">14</td>
+              <td class="font-black">Alacrity</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <!-- Footer -->
+      <footer
+        class="mt-8 pt-4 border-t-2 border-black flex justify-between items-center"
+      >
+        <div class="text-[9px] font-black uppercase tracking-widest">
+          Institutional assessment suite • Scholarly Curator
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold">PAGE</span>
+          <span
+            class="border-2 border-black w-7 h-7 flex items-center justify-center font-black text-sm"
+            >1</span
+          >
+          <span class="text-[10px] font-bold uppercase">OF 2</span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

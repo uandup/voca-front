@@ -1,3 +1,5 @@
+import { VocabCard } from "./VocabCard";
+
 interface VocabWord {
   id: number;
   level: number;
@@ -15,17 +17,17 @@ const mockWords: VocabWord[] = [
     level: 3,
     category: "Academic Core",
     word: "Ambiguity",
-    partOfSpeech: "Noun",
+    partOfSpeech: "N",
     koreanMeaning: "모호함, 다의성",
     synonyms: ["vague", "obscurity", "uncertainty"],
-    starred: true,
+    starred: false,
   },
   {
     id: 2,
     level: 4,
     category: "Scholarly Prose",
     word: "Juxtaposition",
-    partOfSpeech: "Noun",
+    partOfSpeech: "N",
     koreanMeaning: "병치, 나란히 놓기",
     synonyms: ["comparison", "proximity", "adjacency"],
     starred: false,
@@ -35,17 +37,17 @@ const mockWords: VocabWord[] = [
     level: 3,
     category: "Literature Analysis",
     word: "Inherent",
-    partOfSpeech: "Adjective",
+    partOfSpeech: "Adj",
     koreanMeaning: "내재하는, 본질적인",
     synonyms: ["intrinsic", "innate", "essential"],
-    starred: true,
+    starred: false,
   },
   {
     id: 4,
     level: 5,
     category: "Advanced Dialectic",
     word: "Pragmatic",
-    partOfSpeech: "Adjective",
+    partOfSpeech: "Adj",
     koreanMeaning: "실용적인, 실제적인",
     synonyms: ["practical", "utilitarian", "sensible"],
     starred: false,
@@ -65,82 +67,15 @@ export function VocabularyPage() {
       {/* Word List */}
       <div className="space-y-6">
         {mockWords.map((word) => (
-          <div
+          <VocabCard
             key={word.id}
-            className="group relative overflow-hidden rounded-xl bg-surface-container-lowest p-8 transition-all hover:-translate-y-0.5 hover:shadow-[0px_8px_24px_rgba(0,21,80,0.08)]"
-          >
-            <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-              <div className="flex-1 space-y-4">
-                {/* Level + Category */}
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-                    LEVEL {word.level}
-                  </span>
-                  <span className="h-px w-12 bg-outline-variant/30" />
-                  <span className="text-on-surface-variant text-sm font-medium italic">
-                    {word.category}
-                  </span>
-                </div>
-
-                {/* Word + POS + Korean */}
-                <div>
-                  <h2 className="font-headline font-extrabold text-3xl text-primary mb-2">
-                    {word.word}
-                  </h2>
-                  <div className="flex items-center gap-4 text-on-surface-variant">
-                    <span className="font-bold text-xs uppercase tracking-tighter text-on-tertiary-container">
-                      {word.partOfSpeech}
-                    </span>
-                    <span className="text-lg font-medium">
-                      {word.koreanMeaning}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Synonyms */}
-                <div className="pt-4 border-t border-outline-variant/10">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mr-2">
-                      Synonyms
-                    </span>
-                    {word.synonyms.map((s) => (
-                      <span
-                        key={s}
-                        className="px-3 py-1.5 bg-surface-container text-on-secondary-container text-xs font-semibold rounded-full"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-4">
-                <button className="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-low text-primary hover:bg-primary hover:text-on-primary transition-all">
-                  <span className="material-symbols-outlined">volume_up</span>
-                </button>
-                <button
-                  className={`w-12 h-12 flex items-center justify-center rounded-full transition-all ${
-                    word.starred
-                      ? "bg-surface-container-low text-on-tertiary-container hover:bg-tertiary-fixed"
-                      : "bg-surface-container-low text-outline-variant hover:text-on-tertiary-container"
-                  }`}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={
-                      word.starred
-                        ? { fontVariationSettings: '"FILL" 1' }
-                        : undefined
-                    }
-                  >
-                    star
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
+            level={word.level}
+            word={word.word}
+            partOfSpeech={word.partOfSpeech}
+            koreanMeaning={word.koreanMeaning}
+            synonyms={word.synonyms}
+            starred={word.starred}
+          />
         ))}
       </div>
 
