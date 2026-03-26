@@ -47,7 +47,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   );
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" && synonymInput.trim()) {
+    if (e.key === "Enter" && !e.nativeEvent.isComposing && synonymInput.trim()) {
       e.preventDefault();
       setSynonyms((prev) => [...prev, synonymInput.trim()]);
       setSynonymInput("");
