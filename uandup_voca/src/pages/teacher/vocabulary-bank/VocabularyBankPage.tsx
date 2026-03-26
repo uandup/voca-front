@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { VocabCard } from "@/pages/teacher/vocabulary-bank/ui/VocabCard";
-import { LevelStatCard } from "./LevelStatCard";
+import { LevelStatCard } from "./ui/LevelStatCard";
+import { VocabModal } from "@/entities/vocab/ui/VocabModal";
 
 const levelStats = [
   { level: 1, count: 240 },
@@ -47,7 +49,9 @@ const mockVocabData = [
   },
 ];
 
-export function VocabularyBankPage() {
+export default function VocabularyBankPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main>
       {/* Header Section */}
@@ -63,7 +67,10 @@ export function VocabularyBankPage() {
               <span className="material-symbols-outlined">file_upload</span>
               <span className="font-bold">Excel Upload</span>
             </button>
-            <button className="bg-gradient-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all">
+            <button
+              className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
+              onClick={() => setIsModalOpen(true)}
+            >
               <span className="material-symbols-outlined">add</span>
               <span className="font-bold">Add New Word</span>
             </button>
@@ -93,7 +100,7 @@ export function VocabularyBankPage() {
             />
           </div>
           <div className="flex gap-3 w-auto">
-            <select className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-[160px]">
+            <select className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-40">
               <option>Difficulty: All</option>
               <option>Level 1 (Basic)</option>
               <option>Level 2 (Intermediate)</option>
@@ -106,6 +113,16 @@ export function VocabularyBankPage() {
           </div>
         </div>
       </header>
+
+      {isModalOpen && (
+        <VocabModal
+          onClose={() => setIsModalOpen(false)}
+          onSave={(data) => {
+            console.log(data);
+            setIsModalOpen(false);
+          }}
+        />
+      )}
 
       {/* Vocabulary List */}
       <div className="flex flex-col gap-8">

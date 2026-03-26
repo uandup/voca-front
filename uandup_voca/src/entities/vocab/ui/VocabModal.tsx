@@ -30,20 +30,20 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
     VocabFormData["partOfSpeech"]
   >(initialData?.partOfSpeech ?? "Noun");
   const [koreanMeaning, setKoreanMeaning] = useState(
-    initialData?.koreanMeaning ?? ""
+    initialData?.koreanMeaning ?? "",
   );
   const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3 | 4>(
-    initialData?.difficultyLevel ?? 1
+    initialData?.difficultyLevel ?? 1,
   );
   const [englishMeaning, setEnglishMeaning] = useState(
-    initialData?.englishMeaning ?? ""
+    initialData?.englishMeaning ?? "",
   );
   const [synonyms, setSynonyms] = useState<string[]>(
-    initialData?.synonyms ?? []
+    initialData?.synonyms ?? [],
   );
   const [synonymInput, setSynonymInput] = useState("");
   const [exampleSentence, setExampleSentence] = useState(
-    initialData?.exampleSentence ?? ""
+    initialData?.exampleSentence ?? "",
   );
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -76,7 +76,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
       onClick={onClose}
     >
       <div
-        className="relative bg-white w-full max-w-[640px] my-auto rounded-[24px] shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col"
+        className="relative bg-white w-full max-w-160 my-auto rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -102,7 +102,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
           {/* Row 1: Word & POS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Word
               </label>
               <input
@@ -114,7 +114,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Part of Speech
               </label>
               <div className="relative">
@@ -123,7 +123,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                   value={partOfSpeech}
                   onChange={(e) =>
                     setPartOfSpeech(
-                      e.target.value as VocabFormData["partOfSpeech"]
+                      e.target.value as VocabFormData["partOfSpeech"],
                     )
                   }
                 >
@@ -141,7 +141,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
           {/* Row 2: Korean Meaning & Difficulty */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Korean Meaning
               </label>
               <input
@@ -153,10 +153,10 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
               </label>
-              <div className="flex p-1 bg-surface-container-low rounded-xl h-[56px] items-center">
+              <div className="flex p-1 bg-surface-container-low rounded-xl h-14 items-center">
                 {([1, 2, 3, 4] as const).map((level) => (
                   <button
                     key={level}
@@ -177,7 +177,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
 
           {/* English Meaning */}
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               English Meaning
             </label>
             <textarea
@@ -191,10 +191,10 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
 
           {/* Synonyms */}
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Synonyms
             </label>
-            <div className="w-full bg-surface-container-low rounded-xl p-3 flex flex-wrap gap-2 items-center min-h-[56px]">
+            <div className="w-full bg-surface-container-low rounded-xl p-3 flex flex-wrap gap-2 items-center min-h-14">
               {synonyms.map((syn, i) => (
                 <div
                   key={i}
@@ -213,7 +213,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 </div>
               ))}
               <input
-                className="bg-transparent border-none focus:ring-0 outline-none p-1 text-[13px] flex-grow min-w-[150px] text-on-surface-variant placeholder:text-on-surface-variant/40"
+                className="bg-transparent border-none focus:ring-0 outline-none p-1 text-[13px] grow min-w-37.5 text-on-surface-variant placeholder:text-on-surface-variant/40"
                 placeholder="Add synonym and press Enter..."
                 type="text"
                 value={synonymInput}
@@ -225,7 +225,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
 
           {/* Example Sentence */}
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-[0.1em] ml-1 block">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Example Sentence
             </label>
             <textarea
