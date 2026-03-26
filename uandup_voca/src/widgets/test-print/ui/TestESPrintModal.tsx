@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { PrintActionBar } from "@/widgets/test-print/ui/PrintActionBar";
 import { PrintSheetHeader } from "@/widgets/test-print/ui/PrintSheetHeader";
 import { printSheet } from "@/widgets/test-print/lib/print";
@@ -30,6 +31,14 @@ const rows = Array.from({ length: TOTAL_ROWS }, (_, i) => ({
 
 export function TestESPrintModal({ onClose, no }: TestESPrintModalProps) {
   const handlePrint = () => printSheet("es-print-sheet");
+  const tbodyRef = useRef<HTMLTableSectionElement>(null);
+  const [rowHeight, setRowHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (tbodyRef.current) {
+      setRowHeight(tbodyRef.current.clientHeight / TOTAL_ROWS);
+    }
+  }, []);
 
   return (
     <div
@@ -77,11 +86,11 @@ export function TestESPrintModal({ onClose, no }: TestESPrintModalProps) {
                 ))}
               </tr>
             </thead>
-            <tbody style={{ height: "100%" }}>
+            <tbody ref={tbodyRef} style={{ height: "100%" }}>
               {rows.map(({ no, sentence }) => {
                 const parts = sentence.split("___");
                 return (
-                  <tr key={no} style={{ height: `${100 / TOTAL_ROWS}%` }}>
+                  <tr key={no} style={{ height: rowHeight ?? `${100 / TOTAL_ROWS}%` }}>
                     <td
                       className="text-center text-sm font-bold"
                       style={{
