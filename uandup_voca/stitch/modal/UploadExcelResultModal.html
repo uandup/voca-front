@@ -1,0 +1,308 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#eeedf6",
+              "secondary-container": "#c9d3ff",
+              "primary-fixed-dim": "#b6c4ff",
+              "on-tertiary-container": "#f67f5c",
+              "surface-container-lowest": "#ffffff",
+              "primary-container": "#002d8f",
+              "on-primary-container": "#809bff",
+              "on-secondary-container": "#505a80",
+              tertiary: "#460d00",
+              "on-surface": "#1a1b21",
+              "surface-container-highest": "#e3e1ea",
+              "surface-variant": "#e3e1ea",
+              background: "#faf8ff",
+              "on-surface-variant": "#444652",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#b6c4ff",
+              "inverse-surface": "#2f3037",
+              "on-error-container": "#93000a",
+              surface: "#faf8ff",
+              "on-secondary-fixed-variant": "#3b456a",
+              "secondary-fixed-dim": "#bbc5f1",
+              secondary: "#535d83",
+              "surface-container-low": "#f4f2fb",
+              "on-error": "#ffffff",
+              "on-secondary": "#ffffff",
+              "primary-fixed": "#dce1ff",
+              "tertiary-fixed": "#ffdbd1",
+              "on-tertiary-fixed": "#3b0900",
+              "on-tertiary-fixed-variant": "#81280c",
+              "on-primary-fixed": "#001550",
+              "surface-dim": "#dad9e2",
+              "surface-container-high": "#e8e7f0",
+              "outline-variant": "#c4c5d4",
+              outline: "#747684",
+              "inverse-on-surface": "#f1f0f9",
+              "on-primary": "#ffffff",
+              primary: "#001b5f",
+              "on-secondary-fixed": "#001550",
+              "surface-bright": "#faf8ff",
+              "secondary-fixed": "#dce1ff",
+              "surface-tint": "#3a57b8",
+              "tertiary-fixed-dim": "#ffb5a0",
+              error: "#ba1a1a",
+              "tertiary-container": "#6c1900",
+              "on-tertiary": "#ffffff",
+              "on-background": "#1a1b21",
+              "on-primary-fixed-variant": "#1d3e9f",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Manrope", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F1F5F9] text-on-surface min-h-screen flex items-center justify-center p-4 sm:p-6"
+  >
+    <!-- Modal Content Only -->
+    <div
+      class="relative bg-white w-full max-w-[720px] rounded-3xl shadow-[0px_32px_64px_-12px_rgba(0,21,80,0.12)] overflow-hidden flex flex-col max-h-[90vh]"
+    >
+      <!-- Header -->
+      <div class="p-8 pb-6 flex justify-between items-start">
+        <div class="flex items-start gap-4">
+          <div class="bg-primary/5 p-3 rounded-2xl">
+            <span class="material-symbols-outlined text-primary text-3xl"
+              >upload_file</span
+            >
+          </div>
+          <div>
+            <h2
+              class="text-2xl font-extrabold text-primary font-headline leading-tight"
+            >
+              Upload Summary
+            </h2>
+            <p class="text-on-surface-variant mt-1 text-sm font-medium">
+              Excel file processing complete. Review the results below.
+            </p>
+          </div>
+        </div>
+        <button
+          class="text-on-surface-variant/40 hover:text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-all"
+        >
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+      </div>
+      <!-- Stats Grid -->
+      <div
+        class="grid grid-cols-3 mx-8 mb-8 border border-surface-container rounded-2xl overflow-hidden divide-x divide-surface-container"
+      >
+        <div class="px-6 py-8 text-center bg-white">
+          <div
+            class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.15em] mb-2 opacity-70"
+          >
+            Attempted
+          </div>
+          <div
+            class="text-4xl font-extrabold text-primary font-headline tracking-tight"
+          >
+            100
+          </div>
+        </div>
+        <div class="px-6 py-8 text-center bg-primary/[0.02]">
+          <div
+            class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.15em] mb-2 opacity-70"
+          >
+            Successful
+          </div>
+          <div
+            class="text-4xl font-extrabold text-primary font-headline tracking-tight"
+          >
+            92
+          </div>
+        </div>
+        <div class="px-6 py-8 text-center bg-error-container/[0.05]">
+          <div
+            class="text-[10px] font-bold text-error uppercase tracking-[0.15em] mb-2"
+          >
+            Failed
+          </div>
+          <div
+            class="text-4xl font-extrabold text-error font-headline tracking-tight"
+          >
+            8
+          </div>
+        </div>
+      </div>
+      <!-- Detailed Log -->
+      <div class="flex-1 overflow-y-auto px-8 pb-8 flex flex-col">
+        <div
+          class="flex items-center justify-between mb-4 sticky top-0 bg-white pt-2 pb-2"
+        >
+          <h3 class="font-bold text-primary text-base">Detailed Error Log</h3>
+          <span
+            class="bg-error text-white px-2.5 py-1 rounded-md text-[9px] font-extrabold uppercase tracking-wider"
+            >Critical Review Required</span
+          >
+        </div>
+        <div class="space-y-3">
+          <!-- Failed Word Cards -->
+          <div
+            class="bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-2xl border border-surface-container flex items-center justify-between transition-colors"
+          >
+            <div>
+              <div
+                class="font-extrabold text-on-surface font-headline text-base"
+              >
+                Ephemeral
+              </div>
+              <div class="text-xs text-on-surface-variant mt-0.5">
+                Duplicate entry detected in
+                <span class="font-bold text-primary">Vocabulary Bank</span>.
+              </div>
+            </div>
+            <span
+              class="material-symbols-outlined text-error text-2xl"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >error</span
+            >
+          </div>
+          <div
+            class="bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-2xl border border-surface-container flex items-center justify-between transition-colors"
+          >
+            <div>
+              <div
+                class="font-extrabold text-on-surface font-headline text-base"
+              >
+                Perspicacious
+              </div>
+              <div class="text-xs text-on-surface-variant mt-0.5">
+                Missing Korean translation in column
+                <span class="font-bold text-primary">'Target_Mean'</span>.
+              </div>
+            </div>
+            <span
+              class="material-symbols-outlined text-error text-2xl"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >error</span
+            >
+          </div>
+          <div
+            class="bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-2xl border border-surface-container flex items-center justify-between transition-colors"
+          >
+            <div>
+              <div
+                class="font-extrabold text-on-surface font-headline text-base"
+              >
+                Magnanimous
+              </div>
+              <div class="text-xs text-on-surface-variant mt-0.5">
+                Invalid character formatting in definition string.
+              </div>
+            </div>
+            <span
+              class="material-symbols-outlined text-error text-2xl"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >error</span
+            >
+          </div>
+          <div
+            class="bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-2xl border border-surface-container flex items-center justify-between transition-colors"
+          >
+            <div>
+              <div
+                class="font-extrabold text-on-surface font-headline text-base"
+              >
+                Reticent
+              </div>
+              <div class="text-xs text-on-surface-variant mt-0.5">
+                Level assignment
+                <span class="font-bold text-primary">'X1'</span> is not a valid
+                CEFRL tag.
+              </div>
+            </div>
+            <span
+              class="material-symbols-outlined text-error text-2xl"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >error</span
+            >
+          </div>
+          <div
+            class="bg-surface-container-low/50 hover:bg-surface-container-low p-4 rounded-2xl border border-surface-container flex items-center justify-between transition-colors"
+          >
+            <div>
+              <div
+                class="font-extrabold text-on-surface font-headline text-base"
+              >
+                Sycophant
+              </div>
+              <div class="text-xs text-on-surface-variant mt-0.5">
+                Phonetic transcription contains unsupported symbols.
+              </div>
+            </div>
+            <span
+              class="material-symbols-outlined text-error text-2xl"
+              style="font-variation-settings: &quot;FILL&quot; 1"
+              >error</span
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div
+        class="px-8 py-6 bg-slate-50/50 border-t border-surface-container flex items-center justify-between gap-4"
+      >
+        <button
+          class="px-5 py-3 rounded-xl text-on-surface-variant font-bold text-sm hover:bg-surface-container-high transition-colors flex items-center gap-2"
+        >
+          <span class="material-symbols-outlined text-lg">download</span>
+          Download Error CSV
+        </button>
+        <button
+          class="px-10 py-3 rounded-xl bg-[#001b5f] hover:bg-[#002d8f] text-white font-bold text-sm shadow-xl shadow-primary/20 transition-all active:scale-[0.98]"
+        >
+          Finish &amp; View Bank
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
