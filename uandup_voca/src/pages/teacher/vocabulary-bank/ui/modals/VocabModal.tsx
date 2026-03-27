@@ -84,14 +84,11 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-10 pt-10 pb-6 flex justify-between items-start">
+        <div className="px-10 pt-8 pb-6 flex justify-between items-start">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
               Add New Word
             </h2>
-            <p className="text-on-surface-variant text-sm mt-1">
-              Expand your curated vocabulary set.
-            </p>
           </div>
           <button
             onClick={onClose}
@@ -102,7 +99,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
         </div>
 
         {/* Body */}
-        <div className="px-10 pb-10 space-y-8">
+        <div className="px-10 pb-10 space-y-4">
           {/* Row 1: Word & POS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -242,7 +239,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-6 pt-4">
+          <div className="flex items-center justify-end gap-6">
             <button
               type="button"
               onClick={onClose}

@@ -3,14 +3,9 @@ import { useRef, useState } from "react";
 interface UploadExcelModalProps {
   onClose: () => void;
   onUpload: (file: File) => void;
-  onDownloadTemplate: () => void;
 }
 
-export function UploadExcelModal({
-  onClose,
-  onUpload,
-  onDownloadTemplate,
-}: UploadExcelModalProps) {
+export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,15 +45,10 @@ export function UploadExcelModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-8 py-6 flex items-center justify-between border-b border-outline-variant/20">
+        <div className="px-10 pt-8 flex items-center justify-between ">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-primary-fixed-dim flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary font-bold">
-                upload_file
-              </span>
-            </div>
-            <h2 className="text-xl font-extrabold text-primary font-headline tracking-tight">
-              Excel Word Upload
+            <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
+              Excel Upload
             </h2>
           </div>
           <button
@@ -70,7 +60,7 @@ export function UploadExcelModal({
         </div>
 
         {/* Body */}
-        <div className="p-8 space-y-8">
+        <div className="px-10 py-6 space-y-8">
           {/* Dropzone */}
           <div
             className={`border-2 border-dashed rounded-2xl p-12 flex flex-col items-center text-center cursor-pointer transition-all ${
@@ -163,14 +153,7 @@ export function UploadExcelModal({
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-6 bg-surface-container-low/50 border-t border-outline-variant/20 flex items-center justify-between">
-          <button
-            onClick={onDownloadTemplate}
-            className="flex items-center gap-2 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4"
-          >
-            <span className="material-symbols-outlined text-lg">download</span>
-            Download Template
-          </button>
+        <div className="px-10 py-6 bg-surface-container-low/50 border-t border-outline-variant/20 flex items-center justify-end">
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}

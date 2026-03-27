@@ -2,6 +2,7 @@ import { useState } from "react";
 import { VocabCard } from "./ui/VocabCard";
 import { LevelStatCard } from "./ui/LevelStatCard";
 import { VocabModal } from "./ui/modals/VocabModal";
+import { UploadExcelModal } from "./ui/modals/UploadExcelModal";
 
 const levelStats = [
   { level: 1, count: 240 },
@@ -51,6 +52,7 @@ const mockVocabData = [
 
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   return (
     <main>
@@ -63,7 +65,10 @@ export default function VocabularyBankPage() {
             </h1>
           </div>
           <div className="flex gap-3">
-            <button className="border-2 border-primary text-primary px-4 py-2 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all">
+            <button
+              className="border-2 border-primary text-primary px-4 py-2 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all"
+              onClick={() => setIsUploadModalOpen(true)}
+            >
               <span className="material-symbols-outlined">file_upload</span>
               <span className="font-bold">Excel Upload</span>
             </button>
@@ -102,10 +107,10 @@ export default function VocabularyBankPage() {
           <div className="flex gap-3 w-auto">
             <select className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-40">
               <option>Difficulty: All</option>
-              <option>Level 1 (Basic)</option>
-              <option>Level 2 (Intermediate)</option>
-              <option>Level 3 (Advanced)</option>
-              <option>Level 4 (Academic)</option>
+              <option>Level 1</option>
+              <option>Level 2</option>
+              <option>Level 3</option>
+              <option>Level 4</option>
             </select>
             <button className="bg-surface-container-highest p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors">
               <span className="material-symbols-outlined">filter_list</span>
@@ -113,6 +118,16 @@ export default function VocabularyBankPage() {
           </div>
         </div>
       </header>
+
+      {isUploadModalOpen && (
+        <UploadExcelModal
+          onClose={() => setIsUploadModalOpen(false)}
+          onUpload={(file) => {
+            console.log(file);
+            setIsUploadModalOpen(false);
+          }}
+        />
+      )}
 
       {isModalOpen && (
         <VocabModal
