@@ -1,38 +1,21 @@
-import { PrintActionBar } from "@/widgets/test-print/ui/PrintActionBar";
-import { PrintSheetHeader } from "@/widgets/test-print/ui/PrintSheetHeader";
-import { printSheet } from "@/widgets/test-print/lib/print";
+import { PrintActionBar } from "@/shared/test-print/ui/PrintActionBar";
+import { PrintSheetHeader } from "@/shared/test-print/ui/PrintSheetHeader";
+import { printSheet } from "@/shared/test-print/lib/print";
+
+export interface WMRow {
+  no: string;
+  word: string;
+}
 
 interface TestWMPrintModalProps {
   onClose: () => void;
   no?: string;
+  rows: WMRow[];
 }
 
-const words = [
-  "Eloquent",
-  "Pragmatic",
-  "Ambiguous",
-  "Resilient",
-  "Meticulous",
-  "Inevitability",
-  "Paradigm",
-  "Vulnerable",
-  "Hypothesis",
-  "Conundrum",
-  "Ephemeral",
-  "Synthesis",
-  "Ubiquitous",
-  "Cognizant",
-  "Benevolent",
-];
-
-const TOTAL_ROWS = 25;
-const rows = Array.from({ length: TOTAL_ROWS }, (_, i) => ({
-  no: String(i + 1).padStart(2, "0"),
-  word: words[i] ?? "",
-}));
-
-export function TestWMPrintModal({ onClose, no }: TestWMPrintModalProps) {
+export function TestWMPrintModal({ onClose, no, rows }: TestWMPrintModalProps) {
   const handlePrint = () => printSheet("wm-print-sheet");
+  const totalRows = rows.length;
 
   return (
     <div
@@ -60,9 +43,9 @@ export function TestWMPrintModal({ onClose, no }: TestWMPrintModalProps) {
             }}
           >
             <colgroup>
-              <col style={{ width: "44px" }} /> {/* No. */}
-              <col style={{ width: "25%" }} /> {/* Word */}
-              <col /> {/* Definition — 나머지 */}
+              <col style={{ width: "44px" }} />
+              <col style={{ width: "25%" }} />
+              <col />
             </colgroup>
             <thead>
               <tr>
@@ -70,10 +53,7 @@ export function TestWMPrintModal({ onClose, no }: TestWMPrintModalProps) {
                   <th
                     key={col}
                     className="text-left text-xs font-extrabold uppercase tracking-[0.05em] bg-[#f2f2f2]"
-                    style={{
-                      border: "1.5pt solid black",
-                      padding: "4px 12px",
-                    }}
+                    style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                   >
                     {col}
                   </th>
@@ -81,25 +61,17 @@ export function TestWMPrintModal({ onClose, no }: TestWMPrintModalProps) {
               </tr>
             </thead>
             <tbody style={{ height: "100%" }}>
-              {rows.map(({ no, word }) => (
-                <tr key={no} style={{ height: `${100 / TOTAL_ROWS}%` }}>
+              {rows.map(({ no: rowNo, word }) => (
+                <tr key={rowNo} style={{ height: `${100 / totalRows}%` }}>
                   <td
                     className="text-center text-sm font-bold"
-                    style={{
-                      border: "1.5pt solid black",
-                      padding: "4px 12px",
-                      width: "4rem",
-                    }}
+                    style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                   >
-                    {no}
+                    {rowNo}
                   </td>
                   <td
                     className="text-xs font-bold uppercase"
-                    style={{
-                      border: "1.5pt solid black",
-                      padding: "4px 12px",
-                      width: "220px",
-                    }}
+                    style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                   >
                     {word}
                   </td>

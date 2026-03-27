@@ -47,7 +47,11 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   );
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" && !e.nativeEvent.isComposing && synonymInput.trim()) {
+    if (
+      e.key === "Enter" &&
+      !e.nativeEvent.isComposing &&
+      synonymInput.trim()
+    ) {
       e.preventDefault();
       setSynonyms((prev) => [...prev, synonymInput.trim()]);
       setSynonymInput("");
@@ -146,7 +150,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               </label>
               <input
                 className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
-                placeholder="뜻을 입력하세요"
+                placeholder="e.g. 일시적인, 덧없는"
                 type="text"
                 value={koreanMeaning}
                 onChange={(e) => setKoreanMeaning(e.target.value)}
@@ -168,7 +172,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                         : "text-on-surface-variant hover:bg-white/40"
                     }`}
                   >
-                    L{level}
+                    {level}
                   </button>
                 ))}
               </div>

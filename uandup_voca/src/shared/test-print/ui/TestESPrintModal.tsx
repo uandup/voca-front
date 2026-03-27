@@ -1,44 +1,30 @@
 import { useEffect, useRef, useState } from "react";
-import { PrintActionBar } from "@/widgets/test-print/ui/PrintActionBar";
-import { PrintSheetHeader } from "@/widgets/test-print/ui/PrintSheetHeader";
-import { printSheet } from "@/widgets/test-print/lib/print";
+import { PrintActionBar } from "@/shared/test-print/ui/PrintActionBar";
+import { PrintSheetHeader } from "@/shared/test-print/ui/PrintSheetHeader";
+import { printSheet } from "@/shared/test-print/lib/print";
+
+export interface ESRow {
+  no: string;
+  sentence: string;
+}
 
 interface TestESPrintModalProps {
   onClose: () => void;
   no?: string;
+  rows: ESRow[];
 }
 
-const sentences = [
-  "The professor provided an ___ explanation of the complex chemical reaction.",
-  "Her research was considered ___ by the academic committee because of its unique approach.",
-  "The artifact remained remarkably ___ despite being buried for over two centuries.",
-  "He was so ___ in his study of ancient linguistics that he forgot to eat dinner.",
-  "The sudden ___ in market prices caused widespread concern among local investors.",
-  "It is ___ that we finish the data collection before the rainy season begins.",
-  "The diplomat's ___ tone helped de-escalate the tension during the negotiation.",
-  "A small ___ in the foundation could compromise the entire structural integrity of the bridge.",
-  "The author's latest novel is a ___ of various genres including mystery and historical fiction.",
-  "After several hours of deliberation, the jury reached a ___ verdict.",
-  "The new software update is designed to ___ the workflow for creative professionals.",
-  "She handled the delicate situation with great ___ and professionalism.",
-];
-
-const TOTAL_ROWS = 15;
-const rows = Array.from({ length: TOTAL_ROWS }, (_, i) => ({
-  no: String(i + 1).padStart(2, "0"),
-  sentence: sentences[i] ?? "",
-}));
-
-export function TestESPrintModal({ onClose, no }: TestESPrintModalProps) {
+export function TestESPrintModal({ onClose, no, rows }: TestESPrintModalProps) {
   const handlePrint = () => printSheet("es-print-sheet");
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const [rowHeight, setRowHeight] = useState<number | null>(null);
+  const totalRows = rows.length;
 
   useEffect(() => {
     if (tbodyRef.current) {
-      setRowHeight(tbodyRef.current.clientHeight / TOTAL_ROWS);
+      setRowHeight(tbodyRef.current.clientHeight / totalRows);
     }
-  }, []);
+  }, [totalRows]);
 
   return (
     <div
@@ -66,8 +52,8 @@ export function TestESPrintModal({ onClose, no }: TestESPrintModalProps) {
             }}
           >
             <colgroup>
-              <col style={{ width: "44px" }} /> {/* No. */}
-              <col /> {/* Example Sentence */}
+              <col style={{ width: "44px" }} />
+              <col />
             </colgroup>
             <thead>
               <tr>
@@ -87,25 +73,19 @@ export function TestESPrintModal({ onClose, no }: TestESPrintModalProps) {
               </tr>
             </thead>
             <tbody ref={tbodyRef} style={{ height: "100%" }}>
-              {rows.map(({ no, sentence }) => {
+              {rows.map(({ no: rowNo, sentence }) => {
                 const parts = sentence.split("___");
                 return (
-                  <tr key={no} style={{ height: rowHeight ?? `${100 / TOTAL_ROWS}%` }}>
+                  <tr key={rowNo} style={{ height: rowHeight ?? `${100 / totalRows}%` }}>
                     <td
                       className="text-center text-sm font-bold"
-                      style={{
-                        border: "1.5pt solid black",
-                        padding: "4px 12px",
-                      }}
+                      style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                     >
-                      {no}
+                      {rowNo}
                     </td>
                     <td
                       className="text-xs"
-                      style={{
-                        border: "1.5pt solid black",
-                        padding: "4px 12px",
-                      }}
+                      style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                     >
                       {parts[0]}
                       {sentence && (

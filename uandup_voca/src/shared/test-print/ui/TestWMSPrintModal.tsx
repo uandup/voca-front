@@ -1,38 +1,21 @@
-import { PrintActionBar } from "@/widgets/test-print/ui/PrintActionBar";
-import { PrintSheetHeader } from "@/widgets/test-print/ui/PrintSheetHeader";
-import { printSheet } from "@/widgets/test-print/lib/print";
+import { PrintActionBar } from "@/shared/test-print/ui/PrintActionBar";
+import { PrintSheetHeader } from "@/shared/test-print/ui/PrintSheetHeader";
+import { printSheet } from "@/shared/test-print/lib/print";
+
+export interface WMSRow {
+  no: string;
+  word: string;
+}
 
 interface TestWMSPrintModalProps {
   onClose: () => void;
   no?: string;
+  rows: WMSRow[];
 }
 
-const words = [
-  "Meticulous",
-  "Ambiguous",
-  "Pragmatic",
-  "Ephemeral",
-  "Benevolent",
-  "Resilient",
-  "Eloquence",
-  "Mitigate",
-  "Tenacious",
-  "Ineffable",
-  "Paradigm",
-  "Sovereign",
-  "Acquiesce",
-  "Alacrity",
-];
-
-const printId = "wms-print-sheet";
-const TOTAL_ROWS = 25;
-const rows = Array.from({ length: TOTAL_ROWS }, (_, i) => ({
-  no: String(i + 1).padStart(2, "0"),
-  word: words[i] ?? "",
-}));
-
-export function TestWMSPrintModal({ onClose, no }: TestWMSPrintModalProps) {
-  const handlePrint = () => printSheet(printId);
+export function TestWMSPrintModal({ onClose, no, rows }: TestWMSPrintModalProps) {
+  const handlePrint = () => printSheet("wms-print-sheet");
+  const totalRows = rows.length;
 
   return (
     <div
@@ -60,10 +43,10 @@ export function TestWMSPrintModal({ onClose, no }: TestWMSPrintModalProps) {
             }}
           >
             <colgroup>
-              <col style={{ width: "44px" }} /> {/* No. */}
-              <col style={{ width: "20%" }} /> {/* Word */}
-              <col /> {/* Meaning — 나머지 절반 */}
-              <col style={{ width: "25%" }} /> {/* Synonym */}
+              <col style={{ width: "44px" }} />
+              <col style={{ width: "20%" }} />
+              <col />
+              <col style={{ width: "25%" }} />
             </colgroup>
             <thead>
               <tr>
@@ -85,13 +68,13 @@ export function TestWMSPrintModal({ onClose, no }: TestWMSPrintModalProps) {
               </tr>
             </thead>
             <tbody style={{ height: "100%" }}>
-              {rows.map(({ no, word }) => (
-                <tr key={no} style={{ height: `${100 / TOTAL_ROWS}%` }}>
+              {rows.map(({ no: rowNo, word }) => (
+                <tr key={rowNo} style={{ height: `${100 / totalRows}%` }}>
                   <td
                     className="text-center text-sm font-bold"
                     style={{ border: "1.5pt solid black", padding: "4px 12px" }}
                   >
-                    {no}
+                    {rowNo}
                   </td>
                   <td
                     className="text-xs font-bold uppercase"

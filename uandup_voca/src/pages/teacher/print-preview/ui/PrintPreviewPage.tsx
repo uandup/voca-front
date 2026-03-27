@@ -1,5 +1,27 @@
 import { useState } from "react";
-import { TestWMPrintModal, TestWMSPrintModal, TestESPrintModal } from "@/widgets/test-print";
+import {
+  TestWMPrintModal,
+  TestWMSPrintModal,
+  TestESPrintModal,
+  type WMRow,
+  type WMSRow,
+  type ESRow,
+} from "@/shared/test-print";
+
+const WM_ROWS: WMRow[] = Array.from({ length: 25 }, (_, i) => ({
+  no: String(i + 1).padStart(2, "0"),
+  word: "",
+}));
+
+const WMS_ROWS: WMSRow[] = Array.from({ length: 25 }, (_, i) => ({
+  no: String(i + 1).padStart(2, "0"),
+  word: "",
+}));
+
+const ES_ROWS: ESRow[] = Array.from({ length: 15 }, (_, i) => ({
+  no: String(i + 1).padStart(2, "0"),
+  sentence: "",
+}));
 
 type ModalType = "WM" | "WMS" | "ES" | null;
 
@@ -67,13 +89,13 @@ export function PrintPreviewPage() {
       </div>
 
       {openModal === "WM" && (
-        <TestWMPrintModal onClose={() => setOpenModal(null)} />
+        <TestWMPrintModal onClose={() => setOpenModal(null)} rows={WM_ROWS} />
       )}
       {openModal === "WMS" && (
-        <TestWMSPrintModal onClose={() => setOpenModal(null)} />
+        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={WMS_ROWS} />
       )}
       {openModal === "ES" && (
-        <TestESPrintModal onClose={() => setOpenModal(null)} />
+        <TestESPrintModal onClose={() => setOpenModal(null)} rows={ES_ROWS} />
       )}
     </main>
   );
