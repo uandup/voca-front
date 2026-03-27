@@ -53,6 +53,13 @@ const mockVocabData = [
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+
+  function handleResetFilters() {
+    setSearchQuery("");
+    setSelectedLevel("");
+  }
 
   return (
     <main>
@@ -102,18 +109,27 @@ export default function VocabularyBankPage() {
               className="w-full bg-surface-container-lowest border-none rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface"
               placeholder="Search by word, meaning, or synonym..."
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex gap-3 w-auto">
-            <select className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-40">
-              <option>Difficulty: All</option>
-              <option>Level 1</option>
-              <option>Level 2</option>
-              <option>Level 3</option>
-              <option>Level 4</option>
+            <select
+              className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-40"
+              value={selectedLevel}
+              onChange={(e) => setSelectedLevel(e.target.value)}
+            >
+              <option value="">Difficulty: All</option>
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
             </select>
-            <button className="bg-surface-container-highest p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors">
-              <span className="material-symbols-outlined">filter_list</span>
+            <button
+              className="bg-surface-container-highest px-4 py-3 rounded-lg text-on-surface-variant font-bold hover:bg-primary/10 hover:text-primary active:scale-95 transition-all"
+              onClick={handleResetFilters}
+            >
+              Init
             </button>
           </div>
         </div>
