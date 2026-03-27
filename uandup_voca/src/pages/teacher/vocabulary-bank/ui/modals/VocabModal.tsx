@@ -1,22 +1,13 @@
 import { useState } from "react";
-
-export interface VocabFormData {
-  word: string;
-  partOfSpeech: "Noun" | "Verb" | "Adjective" | "Adverb" | "Conjunction";
-  koreanMeaning: string;
-  difficultyLevel: 1 | 2 | 3 | 4;
-  englishMeaning: string;
-  synonyms: string[];
-  exampleSentence: string;
-}
+import type { Vocab } from "@/entities/vocab";
 
 interface VocabModalProps {
   onClose: () => void;
-  onSave: (data: VocabFormData) => void;
-  initialData?: Partial<VocabFormData>;
+  onSave: (data: Vocab) => void;
+  initialData?: Partial<Vocab>;
 }
 
-const PARTS_OF_SPEECH: VocabFormData["partOfSpeech"][] = [
+const PARTS_OF_SPEECH: Vocab["partOfSpeech"][] = [
   "Noun",
   "Verb",
   "Adjective",
@@ -27,7 +18,7 @@ const PARTS_OF_SPEECH: VocabFormData["partOfSpeech"][] = [
 export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   const [word, setWord] = useState(initialData?.word ?? "");
   const [partOfSpeech, setPartOfSpeech] = useState<
-    VocabFormData["partOfSpeech"]
+    Vocab["partOfSpeech"]
   >(initialData?.partOfSpeech ?? "Noun");
   const [koreanMeaning, setKoreanMeaning] = useState(
     initialData?.koreanMeaning ?? "",
@@ -87,7 +78,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
         <div className="px-10 pt-8 pb-6 flex justify-between items-start">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
-              Add New Word
+              {initialData ? "Edit Word" : "Add New Word"}
             </h2>
           </div>
           <button
@@ -124,7 +115,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                   value={partOfSpeech}
                   onChange={(e) =>
                     setPartOfSpeech(
-                      e.target.value as VocabFormData["partOfSpeech"],
+                      e.target.value as Vocab["partOfSpeech"],
                     )
                   }
                 >

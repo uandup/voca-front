@@ -3,51 +3,13 @@ import { VocabCard } from "./ui/VocabCard";
 import { LevelStatCard } from "./ui/LevelStatCard";
 import { VocabModal } from "./ui/modals/VocabModal";
 import { UploadExcelModal } from "./ui/modals/UploadExcelModal";
+import { mockVocabData } from "./mock/vocabMockData";
 
 const levelStats = [
   { level: 1, count: 240 },
   { level: 2, count: 180 },
   { level: 3, count: 312 },
   { level: 4, count: 156 },
-];
-
-const mockVocabData = [
-  {
-    id: 1,
-    level: 3,
-    word: "Ambiguity",
-    synonyms: ["Vagueness", "Obscurity", "Equivocation"],
-    partOfSpeech: "N",
-    koreanMeaning: "모호함, 다의성",
-    definition:
-      "The quality of being open to more than one interpretation; inexactness.",
-    example:
-      "The ambiguity of the poem allows multiple readings by different critics.",
-  },
-  {
-    id: 2,
-    level: 4,
-    word: "Corroborate",
-    synonyms: ["Validate", "Verify", "Authenticate"],
-    partOfSpeech: "V",
-    koreanMeaning: "확증하다, 입증하다",
-    definition:
-      "To confirm or give support to (a statement, theory, or finding).",
-    example:
-      "The witness was able to corroborate the suspect's alibi with specific details.",
-  },
-  {
-    id: 3,
-    level: 2,
-    word: "Resilient",
-    synonyms: ["Tough", "Strong", "Adaptable"],
-    partOfSpeech: "Adj",
-    koreanMeaning: "회복력 있는, 탄력 있는",
-    definition:
-      "Able to withstand or recover quickly from difficult conditions.",
-    example:
-      "Despite the heavy rains, the local crops proved remarkably resilient.",
-  },
 ];
 
 export default function VocabularyBankPage() {
@@ -157,8 +119,8 @@ export default function VocabularyBankPage() {
 
       {/* Vocabulary List */}
       <div className="flex flex-col gap-8">
-        {mockVocabData.map((item) => (
-          <VocabCard key={item.id} {...item} />
+        {mockVocabData.map(({ id, ...vocabData }) => (
+          <VocabCard key={id} {...vocabData} />
         ))}
       </div>
     </main>
