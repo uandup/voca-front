@@ -7,7 +7,6 @@ interface DeleteVocabModalProps {
 
 export function DeleteVocabModal({
   word,
-  pronunciation,
   onClose,
   onDelete,
 }: DeleteVocabModalProps) {
@@ -22,15 +21,6 @@ export function DeleteVocabModal({
       >
         {/* Modal Content */}
         <div className="p-8 pb-6 flex flex-col items-center text-center">
-          {/* Warning Icon */}
-          <div className="w-16 h-16 bg-error/10 rounded-2xl flex items-center justify-center mb-6">
-            <span
-              className="material-symbols-outlined text-error text-4xl"
-              style={{ fontVariationSettings: '"FILL" 1' }}
-            >
-              delete_forever
-            </span>
-          </div>
           <h2 className="text-2xl font-extrabold font-headline text-on-surface mb-3 tracking-tight">
             Delete Word?
           </h2>
@@ -51,11 +41,6 @@ export function DeleteVocabModal({
               <span className="font-headline font-bold text-lg text-primary">
                 {word}
               </span>
-              {pronunciation && (
-                <span className="text-xs text-on-surface-variant italic">
-                  {pronunciation}
-                </span>
-              )}
             </div>
           </div>
         </div>

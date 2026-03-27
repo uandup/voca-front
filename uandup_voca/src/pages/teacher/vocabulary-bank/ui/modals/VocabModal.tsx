@@ -17,9 +17,9 @@ const PARTS_OF_SPEECH: Vocab["partOfSpeech"][] = [
 
 export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   const [word, setWord] = useState(initialData?.word ?? "");
-  const [partOfSpeech, setPartOfSpeech] = useState<
-    Vocab["partOfSpeech"]
-  >(initialData?.partOfSpeech ?? "Noun");
+  const [partOfSpeech, setPartOfSpeech] = useState<Vocab["partOfSpeech"]>(
+    initialData?.partOfSpeech ?? "Noun",
+  );
   const [koreanMeaning, setKoreanMeaning] = useState(
     initialData?.koreanMeaning ?? "",
   );
@@ -114,9 +114,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={partOfSpeech}
                   onChange={(e) =>
-                    setPartOfSpeech(
-                      e.target.value as Vocab["partOfSpeech"],
-                    )
+                    setPartOfSpeech(e.target.value as Vocab["partOfSpeech"])
                   }
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
@@ -221,7 +219,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               Example Sentence
             </label>
             <textarea
-              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none italic text-on-surface-variant placeholder:text-on-surface-variant/30"
+              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
               value={exampleSentence}
