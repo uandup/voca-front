@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { VocabCard } from "@/pages/teacher/vocabulary-bank/ui/VocabCard";
+import { VocabCard } from "./ui/VocabCard";
 import { LevelStatCard } from "./ui/LevelStatCard";
-import { VocabModal } from "@/entities/vocab/ui/VocabModal";
+import { VocabModal } from "./ui/modals/VocabModal";
 
 const levelStats = [
   { level: 1, count: 240 },
