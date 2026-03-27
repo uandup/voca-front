@@ -1,30 +1,36 @@
-interface VocabCardProps {
-  level: number;
-  word: string;
-  synonyms: string[];
-  partOfSpeech: string;
-  koreanMeaning: string;
-  definition: string;
-  example: string;
-}
+import { useState } from "react";
+import type { Vocab } from "@/entities/vocab";
+import { VocabModal } from "./modals/VocabModal";
+import { DeleteVocabModal } from "./modals/DeleteVocabModal";
+
+type VocabCardProps = Vocab;
 
 export function VocabCard({
-  level,
   word,
-  synonyms,
   partOfSpeech,
   koreanMeaning,
-  definition,
-  example,
+  difficultyLevel,
+  englishMeaning,
+  synonyms,
+  exampleSentence,
 }: VocabCardProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   return (
     <article className="bg-surface-container-lowest rounded-xl overflow-hidden border shadow-sm border-outline-variant/60 relative group">
       <div className="absolute top-6 right-6 flex gap-2 z-10">
-        <button className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold">
+        <button
+          onClick={() => setIsEditOpen(true)}
+          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
+        >
           <span className="material-symbols-outlined text-[18px]">edit</span>
           Edit
         </button>
-        <button className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold">
+        <button
+          onClick={() => setIsDeleteOpen(true)}
+          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
+        >
           <span className="material-symbols-outlined text-[18px]">delete</span>
           Delete
         </button>
@@ -36,7 +42,7 @@ export function VocabCard({
           <div className="w-1/4">
             <div className="flex items-center gap-3 mb-2">
               <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-                LEVEL {level}
+                LEVEL {difficultyLevel}
               </span>
             </div>
             <h2 className="font-headline font-bold text-2xl text-primary">
@@ -57,7 +63,7 @@ export function VocabCard({
                 {koreanMeaning}
               </p>
               <p className="text-on-surface-variant leading-relaxed font-body text-sm mt-1">
-                {definition}
+                {englishMeaning}
               </p>
             </div>
             <div>
@@ -86,10 +92,40 @@ export function VocabCard({
             Example:
           </span>
           <p className="text-on-surface-variant text-md font-medium leading-relaxed">
-            "{example}"
+            "{exampleSentence}"
           </p>
         </div>
       </div>
+
+      {isEditOpen && (
+        <VocabModal
+          initialData={{
+            word,
+            partOfSpeech,
+            koreanMeaning,
+            difficultyLevel,
+            englishMeaning,
+            synonyms,
+            exampleSentence,
+          }}
+          onClose={() => setIsEditOpen(false)}
+          onSave={(data) => {
+            console.log(data);
+            setIsEditOpen(false);
+          }}
+        />
+      )}
+
+      {isDeleteOpen && (
+        <DeleteVocabModal
+          word={word}
+          onClose={() => setIsDeleteOpen(false)}
+          onDelete={() => {
+            console.log("delete", word);
+            setIsDeleteOpen(false);
+          }}
+        />
+      )}
     </article>
   );
 }
