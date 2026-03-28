@@ -27,7 +27,7 @@ export default function VocabularyBankPage() {
   return (
     <main>
       {/* Header Section */}
-      <header className="flex flex-col gap-4 mb-4">
+      <header className="flex flex-col">
         <div className="flex justify-between items-start">
           <div>
             <PageTitle title="Vocabulary Bank" />
@@ -59,8 +59,10 @@ export default function VocabularyBankPage() {
             />
           ))}
         </div>
+      </header>
 
-        {/* Filters & Search */}
+      {/* Filters & Search */}
+      <section className="my-4">
         <div className="bg-surface-container-low p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
@@ -94,7 +96,7 @@ export default function VocabularyBankPage() {
             </button>
           </div>
         </div>
-      </header>
+      </section>
 
       {isUploadModalOpen && (
         <UploadExcelModal

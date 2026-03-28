@@ -1,4 +1,4 @@
-import { PageTitle } from "@/shared/ui/PageTitle";
+import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
 import { CLASS_DETAIL_MOCK, type StudentRow } from "./mock/classDetailMockData";
 
 function TrendIcon({ trend }: { trend: StudentRow["trend"] }) {
@@ -25,38 +25,24 @@ export default function ClassDetailPage() {
   const data = CLASS_DETAIL_MOCK;
 
   return (
-    <main className="space-y-8">
+    <main>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="flex justify-between">
         <div>
-          <nav className="flex items-center gap-2 text-xs font-medium text-on-surface-variant mb-2">
-            <span>Classes</span>
-            <span className="material-symbols-outlined text-[12px]">
-              chevron_right
-            </span>
-            <span className="text-primary">{data.className}</span>
-          </nav>
-          <PageTitle title={data.className} />
-          <p className="text-on-surface-variant -mt-6">{data.subtitle}</p>
+          <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="">
           <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border border-outline-variant/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium">
             <span className="material-symbols-outlined text-lg">
               person_add
             </span>
             Edit Members
           </button>
-          <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-white bg-linear-to-r from-primary to-primary-container shadow-lg hover:opacity-90 transition-opacity font-medium">
-            <span className="material-symbols-outlined text-lg">
-              file_download
-            </span>
-            Export Report
-          </button>
         </div>
       </div>
 
       {/* Overview Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10">
           <div className="flex items-center justify-between mb-4">
             <span className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/5 text-primary">
@@ -95,11 +81,11 @@ export default function ClassDetailPage() {
       </section>
 
       {/* Student Roster */}
-      <section className="bg-surface-container-lowest rounded-xl shadow-[0px_8px_24px_rgba(0,21,80,0.06)] overflow-hidden border border-outline-variant/10">
+      <section className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-surface-container-low">
+              <tr className="bg-surface-container-highest/30">
                 <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                   Student Name
                 </th>
