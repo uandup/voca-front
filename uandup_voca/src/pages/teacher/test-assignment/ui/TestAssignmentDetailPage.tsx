@@ -1,3 +1,5 @@
+import { PageTitle } from "@/shared/ui/PageTitle";
+
 type TestStatus = "Completed" | "Pending";
 
 interface TestRecord {
@@ -50,10 +52,7 @@ export function TestAssignmentDetailPage() {
   return (
     <main>
       <div>
-        {/* Page Title */}
-        <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8">
-          Test Assignment
-        </h1>
+        <PageTitle title="Test Assignment" />
 
         {/* Student Profile Header Card */}
         <section className="mb-8">

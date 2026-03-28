@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageTitle } from "@/shared/ui/PageTitle";
 import { VocabCard } from "./ui/VocabCard";
 import { LevelStatCard } from "./ui/LevelStatCard";
 import { VocabModal } from "./ui/modals/VocabModal";
@@ -29,9 +30,7 @@ export default function VocabularyBankPage() {
       <header className="flex flex-col gap-4 mb-4">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight pb-4">
-              Vocabulary Bank
-            </h1>
+            <PageTitle title="Vocabulary Bank" />
           </div>
           <div className="flex gap-3">
             <button

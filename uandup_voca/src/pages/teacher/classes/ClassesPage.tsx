@@ -205,6 +205,8 @@ function buildGrid(): GridCell[][] {
   return grid;
 }
 
+import { PageTitle } from "@/shared/ui/PageTitle";
+
 // ─── 컴포넌트 ─────────────────────────────────────────────────────────────
 export default function ClassesPage() {
   const grid = buildGrid();
@@ -219,22 +221,15 @@ export default function ClassesPage() {
   return (
     <main>
       {/* Header */}
-      <section className="flex justify-between items-end mb-10">
-        <div>
-          <span className="text-on-surface-variant font-label text-xs font-bold uppercase tracking-widest">
-            Active Schedule
-          </span>
-          <h1 className="text-4xl font-headline font-extrabold text-primary tracking-tight mt-1">
-            Class Status &amp; Performance
-          </h1>
-        </div>
-        <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2">
+      <div className="flex items-center gap-4">
+        <PageTitle title="Classes" />
+        <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2 -mt-8">
           <span className="material-symbols-outlined text-primary">
             calendar_month
           </span>
           <span className="font-bold text-sm">October 24, 2023</span>
         </div>
-      </section>
+      </div>
 
       {/* Timetable — 단일 CSS grid */}
       <div

@@ -1,3 +1,5 @@
+import { PageTitle } from "@/shared/ui/PageTitle";
+
 type TestStatus = "Completed" | "Pending";
 
 interface TestRecord {
@@ -44,10 +46,7 @@ export function TestGradingPage() {
   return (
     <main>
       <div className="space-y-8">
-        {/* Page Title */}
-        <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight">
-          Test Grading
-        </h1>
+        <PageTitle title="Test Grading" />
 
         {/* Stats Header */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

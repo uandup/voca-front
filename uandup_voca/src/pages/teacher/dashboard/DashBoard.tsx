@@ -1,3 +1,5 @@
+import { PageTitle } from "@/shared/ui/PageTitle";
+
 const actionCards = [
   {
     icon: "person_add",
@@ -67,10 +69,8 @@ export default function DashBoard() {
     <main>
       {/* Welcome Section */}
       <section className="mb-8">
-        <h2 className="font-headline font-extrabold text-3xl text-primary tracking-tight mb-2">
-          Teacher's Dashboard
-        </h2>
-        <p className="text-on-surface-variant font-medium">
+        <PageTitle title="Teacher's Dashboard" />
+        <p className="-mt-4 text-on-surface-variant font-medium">
           Welcome back, Julian. Here is your curation summary for today.
         </p>
       </section>
@@ -80,7 +80,7 @@ export default function DashBoard() {
         {actionCards.map((card) => (
           <button
             key={card.label}
-            className="group flex flex-col items-start p-8 rounded-xl bg-gradient-to-br from-[#001b5f] to-[#002d8f] text-white shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 text-left"
+            className="group flex flex-col items-start p-8 rounded-xl bg-linear-to-br from-primary to-primary-container text-white shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300 text-left"
           >
             <span className="material-symbols-outlined mb-4 p-2 bg-white/10 rounded-lg">
               {card.icon}
