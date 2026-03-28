@@ -29,7 +29,7 @@ export default function VocabularyBankPage() {
       <header className="flex flex-col gap-4 mb-4">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight ">
+            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight pb-4">
               Vocabulary Bank
             </h1>
           </div>
