@@ -1,4 +1,5 @@
 import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
+import { TableContainer } from "@/shared/ui/TableContainer";
 import { CLASS_DETAIL_MOCK, type StudentRow } from "./mock/classDetailMockData";
 
 function TrendIcon({ trend }: { trend: StudentRow["trend"] }) {
@@ -81,7 +82,7 @@ export default function ClassDetailPage() {
       </section>
 
       {/* Student Roster */}
-      <section className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
+      <TableContainer>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -106,7 +107,7 @@ export default function ClassDetailPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-outline-variant/10">
+            <tbody className="divide-y divide-surface-container-low">
               {data.students.map((student) => (
                 <tr
                   key={student.id}
@@ -185,7 +186,7 @@ export default function ClassDetailPage() {
             </button>
           </div>
         </div>
-      </section>
+      </TableContainer>
 
       {/* FAB */}
       <button className="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-60">

@@ -1,4 +1,5 @@
 import { PageTitle } from "@/shared/ui/PageTitle";
+import { TableContainer } from "@/shared/ui/TableContainer";
 
 const actionCards = [
   {
@@ -141,8 +142,7 @@ export default function DashBoard() {
           </button>
         </div>
 
-        <div className="bg-surface-container-low rounded-2xl overflow-hidden p-1">
-          <div className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+        <TableContainer>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-container-highest/30">
@@ -214,8 +214,7 @@ export default function DashBoard() {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+        </TableContainer>
       </section>
     </main>
   );
