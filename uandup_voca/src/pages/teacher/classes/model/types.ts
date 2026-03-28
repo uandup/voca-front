@@ -2,6 +2,7 @@ export interface CellDef {
   label: string;
   style: string;
   colSpan?: number;
+  classId?: number;
 }
 
 export interface TimeSlotDef {
@@ -17,4 +18,5 @@ export interface GridCell {
   rowSpan: number;
   skip: boolean;
   isBreak: boolean;
+  classId?: number;
 }

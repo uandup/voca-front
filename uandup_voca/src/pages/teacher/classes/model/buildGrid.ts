@@ -32,6 +32,7 @@ function expandNormalRow(slot: TimeSlotDef): GridCell[] {
       rowSpan: 1,
       skip: false,
       isBreak: false,
+      classId: cell?.classId,
     });
     // colSpan만큼 뒤따르는 칸은 이미 차지했으므로 skip 처리
     for (let k = 1; k < span; k++) {
