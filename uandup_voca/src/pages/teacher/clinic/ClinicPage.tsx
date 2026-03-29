@@ -8,7 +8,7 @@ import {
   type ClinicStudent,
 } from "./mock/clinicMockData";
 import { StudentDetailModal } from "./ui/modals/StudentDetailModal";
-import { EditMembersModal } from "@/pages/teacher/class-detail/ui/modals/EditMembersModal";
+import { EditMembersModal } from "@/features/roster-manage";
 
 // 월~토 앞 3글자 (일요일 제외)
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;

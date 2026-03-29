@@ -5,7 +5,7 @@ import {
   CURRENT_ROSTER_MOCK,
   GRADE_OPTIONS,
   type MemberStudent,
-} from "../../mock/editMembersMockData";
+} from "../mock/editMembersMockData";
 
 interface EditMembersModalProps {
   onClose: () => void;

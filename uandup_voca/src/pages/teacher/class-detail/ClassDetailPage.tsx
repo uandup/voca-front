@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
 import { TableContainer } from "@/shared/ui/TableContainer";
 import { CLASS_DETAIL_MOCK } from "./mock/classDetailMockData";
-import { EditMembersModal } from "./ui/modals/EditMembersModal";
+import { EditMembersModal } from "@/features/roster-manage";
 import { AssignedLevelBlocks } from "@/entities/vocab";
 
 export default function ClassDetailPage() {
