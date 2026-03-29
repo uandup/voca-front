@@ -54,12 +54,12 @@ export default function ClassDetailPage() {
             <colgroup>
               <col className="w-[10%]" />
               <col className="w-[8%]" />
-              <col className="w-[15%]" />
+              <col className="w-[13%]" />
               <col className="w-[8%]" />
               <col className="w-[8%]" />
               <col className="w-[8%]" />
               <col className="w-[8%]" />
-              <col className="w-[35%]" />
+              <col className="w-[37%]" />
             </colgroup>
             <thead>
               <tr className="bg-surface-container-highest/30">
