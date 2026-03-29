@@ -1,3 +1,5 @@
+import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+
 interface DeleteVocabModalProps {
   word: string;
   pronunciation?: string;
@@ -11,14 +13,8 @@ export function DeleteVocabModal({
   onDelete,
 }: DeleteVocabModalProps) {
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-6"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <ModalBackdrop onClose={onClose} padding="p-6">
+      <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
         {/* Modal Content */}
         <div className="p-8 pb-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-extrabold font-headline text-on-surface mb-3 tracking-tight">
@@ -61,6 +57,6 @@ export function DeleteVocabModal({
           </button>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 }

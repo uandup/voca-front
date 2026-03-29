@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
 import {
   AVAILABLE_STUDENTS_MOCK,
   CURRENT_ROSTER_MOCK,
@@ -40,15 +41,8 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="relative w-full max-w-3xl bg-white rounded-md shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <ModalBackdrop onClose={onClose}>
+      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-8 py-6 border-b border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white sticky top-0">
           <div>
@@ -207,6 +201,6 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 }

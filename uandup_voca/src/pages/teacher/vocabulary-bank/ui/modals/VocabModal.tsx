@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Vocab } from "@/entities/vocab";
+import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
 
 interface VocabModalProps {
   onClose: () => void;
@@ -66,16 +67,10 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="relative bg-white w-full max-w-160 my-auto rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <ModalBackdrop onClose={onClose}>
+      <div className="bg-white w-full max-w-160 rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="px-10 pt-8 pb-6 flex justify-between items-start">
+        <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
               {initialData ? "Edit Word" : "Add New Word"}
@@ -90,7 +85,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
         </div>
 
         {/* Body */}
-        <div className="px-10 pb-10 space-y-4">
+        <div className="px-10 pb-10 space-y-4 overflow-y-auto">
           {/* Row 1: Word & POS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -246,6 +241,6 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 }
