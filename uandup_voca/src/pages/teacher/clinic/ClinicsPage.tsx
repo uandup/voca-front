@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
 import { TableContainer } from "@/shared/ui/TableContainer";
-import { AssignedLevelBlocks } from "@/pages/teacher/class-detail/ui/AssignedLevelBlocks";
+import { AssignedLevelBlocks } from "@/entities/vocab";
 import { CLINIC_MOCK, type ClinicSession } from "./mock/clinicMockData";
 
 // 월~토 앞 3글자 (일요일 제외)
