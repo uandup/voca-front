@@ -2,7 +2,13 @@ import { useState } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
 import { TableContainer } from "@/shared/ui/TableContainer";
 import { AssignedLevelBlocks } from "@/entities/vocab";
-import { CLINIC_MOCK, type ClinicSession } from "./mock/clinicMockData";
+import {
+  CLINIC_MOCK,
+  type ClinicSession,
+  type ClinicStudent,
+} from "./mock/clinicMockData";
+import { StudentDetailModal } from "./ui/modals/StudentDetailModal";
+import { EditMembersModal } from "@/pages/teacher/class-detail/ui/modals/EditMembersModal";
 
 // 월~토 앞 3글자 (일요일 제외)
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
@@ -17,6 +23,10 @@ export default function ClinicsPage() {
   const [selectedSession, setSelectedSession] = useState<ClinicSession>(
     data.sessions[2],
   );
+  const [selectedStudent, setSelectedStudent] = useState<ClinicStudent | null>(
+    null,
+  );
+  const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
 
   function handlePrevDay() {
     const idx = DAYS.indexOf(selectedDay);
@@ -33,7 +43,7 @@ export default function ClinicsPage() {
       {/* Header */}
       <PageTitle title="Clinic" />
 
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-8 items-start">
         {/* 세션 목록 */}
         <div className="col-span-3 space-y-4">
           {/* 요일 네비게이터 */}
@@ -103,7 +113,18 @@ export default function ClinicsPage() {
         </div>
 
         {/* 학생 테이블 */}
-        <div className="col-span-9">
+        <div className="col-span-9 space-y-6">
+          <div className="flex justify-end">
+            <button
+              onClick={() => setIsEditMembersOpen(true)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
+            >
+              <span className="material-symbols-outlined text-lg">
+                person_add
+              </span>
+              Edit Members
+            </button>
+          </div>
           <TableContainer>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse table-fixed">
@@ -126,7 +147,7 @@ export default function ClinicsPage() {
                       Level
                     </th>
                     <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
-                      Cnt
+                      QTY
                     </th>
                     <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Memo
@@ -137,7 +158,8 @@ export default function ClinicsPage() {
                   {selectedSession.students.map((student) => (
                     <tr
                       key={student.id}
-                      className="transition-colors group hover:bg-surface-container-low/30"
+                      onClick={() => setSelectedStudent(student)}
+                      className="transition-colors group hover:bg-surface-container-low/30 cursor-pointer"
                     >
                       <td className="px-6 py-5 border-r border-outline-variant/20">
                         <p className="font-headline font-bold text-sm text-primary">
@@ -168,6 +190,15 @@ export default function ClinicsPage() {
           </TableContainer>
         </div>
       </div>
+      {isEditMembersOpen && (
+        <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />
+      )}
+      {selectedStudent && (
+        <StudentDetailModal
+          student={selectedStudent}
+          onClose={() => setSelectedStudent(null)}
+        />
+      )}
     </main>
   );
 }

@@ -14,7 +14,7 @@ export function ModalBackdrop({
       className={`fixed inset-0 z-50 bg-black/50 flex items-center justify-center ${padding}`}
       onClick={onClose}
     >
-      <div onClick={(e) => e.stopPropagation()}>{children}</div>
+      <div className="contents" onClick={(e) => e.stopPropagation()}>{children}</div>
     </div>
   );
 }
