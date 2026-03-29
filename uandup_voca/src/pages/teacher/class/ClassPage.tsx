@@ -27,12 +27,12 @@ export default function ClassesPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <PageTitle title="Class" />
-        <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2 -mt-8">
+        {/* <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2 -mt-8">
           <span className="material-symbols-outlined text-primary">
             calendar_month
           </span>
           <span className="font-bold text-sm">October 24, 2023</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Timetable — 단일 CSS grid */}

@@ -16,17 +16,10 @@ export interface ClinicSession {
 }
 
 export interface ClinicData {
-  clinicId: string;
-  clinicName: string;
-  subtitle: string;
   sessions: ClinicSession[];
 }
 
 export const CLINIC_MOCK: ClinicData = {
-  clinicId: "intensive-vocab-b4",
-  clinicName: "Intensive Vocab Clinic B-4",
-  subtitle:
-    "Session-based testing and grading management for Teaching Assistants.",
   sessions: [
     {
       id: "s1",

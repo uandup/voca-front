@@ -31,10 +31,7 @@ export default function ClinicsPage() {
   return (
     <main>
       {/* Header */}
-      <PageTitle title={data.clinicName} />
-      <p className="text-on-surface-variant -mt-6 mb-8 text-base font-medium">
-        {data.subtitle}
-      </p>
+      <PageTitle title="Clinic" />
 
       <div className="grid grid-cols-12 gap-8">
         {/* 세션 목록 */}
@@ -70,14 +67,14 @@ export default function ClinicsPage() {
           </div>
 
           {/* 세션 카드 목록 */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {data.sessions.map((session) => {
               const isSelected = session.id === selectedSession.id;
               return (
                 <button
                   key={session.id}
                   onClick={() => setSelectedSession(session)}
-                  className={`w-full text-left p-4 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
+                  className={`w-full text-left p-6 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
                     isSelected
                       ? "bg-primary-fixed border-l-4 border-primary shadow-md rounded-r-xl"
                       : "bg-white border border-outline-variant/30 hover:border-primary/40 shadow-sm"
@@ -111,11 +108,11 @@ export default function ClinicsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse table-fixed">
                 <colgroup>
-                  <col className="w-[18%]" />
-                  <col className="w-[10%]" />
-                  <col className="w-[20%]" />
                   <col className="w-[12%]" />
-                  <col className="w-[40%]" />
+                  <col className="w-[10%]" />
+                  <col className="w-[15%]" />
+                  <col className="w-[6%]" />
+                  <col className="w-[47%]" />
                 </colgroup>
                 <thead>
                   <tr className="bg-surface-container-highest/30">
@@ -129,7 +126,7 @@ export default function ClinicsPage() {
                       Level
                     </th>
                     <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
-                      Count
+                      Cnt
                     </th>
                     <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                       Memo
@@ -152,7 +149,7 @@ export default function ClinicsPage() {
                           {student.grade}
                         </span>
                       </td>
-                      <td className="px-4 py-5 text-center border-r border-outline-variant/20">
+                      <td className="px-6 py-5 text-center border-r border-outline-variant/20">
                         <AssignedLevelBlocks levels={student.assignedLevels} />
                       </td>
                       <td className="px-4 py-5 text-center border-r border-outline-variant/20">
