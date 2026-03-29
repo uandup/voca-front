@@ -91,10 +91,7 @@ export default function ClassDetailPage() {
             </thead>
             <tbody className="divide-y divide-outline-variant/60">
               {data.students.map((student) => (
-                <tr
-                  key={student.id}
-                  className="hover:bg-surface-bright transition-colors group"
-                >
+                <tr key={student.id} className=" transition-colors group">
                   <td className="px-8 py-5 text-center border-r border-outline-variant/20">
                     <p className="font-headline font-bold text-primary group-hover:text-primary-container transition-colors">
                       {student.name}
