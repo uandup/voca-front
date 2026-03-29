@@ -17,7 +17,6 @@ export interface ClassDetailData {
   className: string;
   subtitle: string;
   classAverage: string;
-  averageDelta: string;
   studentCount: number;
   capacity: number;
   students: StudentRow[];
@@ -28,7 +27,6 @@ export const CLASS_DETAIL_MOCK: ClassDetailData = {
   className: "G10 English A",
   subtitle: "Linguistic Rhetoric & Advanced Vocabulary Mastery",
   classAverage: "88.5%",
-  averageDelta: "+2.4% vs last month",
   studentCount: 24,
   capacity: 30,
   students: [

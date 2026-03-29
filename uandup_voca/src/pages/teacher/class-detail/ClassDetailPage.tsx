@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
 import { TableContainer } from "@/shared/ui/TableContainer";
 import { CLASS_DETAIL_MOCK, type StudentRow } from "./mock/classDetailMockData";
+import { EditMembersModal } from "./ui/modals/EditMembersModal";
 
 function TrendIcon({ trend }: { trend: StudentRow["trend"] }) {
   if (trend === "up")
@@ -24,60 +26,43 @@ function TrendIcon({ trend }: { trend: StudentRow["trend"] }) {
 
 export default function ClassDetailPage() {
   const data = CLASS_DETAIL_MOCK;
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
     <main>
       {/* Header */}
-      <div className="flex justify-between">
-        <div>
-          <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
+      <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
+
+      {/* Overview Cards */}
+      <section className="grid grid-cols-3 gap-6 mb-6">
+        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10 flex items-center justify-between">
+          <p className="text-on-surface-variant text-lg font-bold">
+            Class Average
+          </p>
+          <h3 className="text-3xl font-headline font-bold text-primary">
+            {data.classAverage}
+          </h3>
         </div>
-        <div className="">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border border-outline-variant/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium">
+
+        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10 flex items-center justify-between">
+          <p className="text-on-surface-variant text-lg font-bold">
+            Student Count
+          </p>
+          <h3 className="text-3xl font-headline font-bold text-primary">
+            {data.studentCount}
+          </h3>
+        </div>
+
+        <div className="flex items-end justify-end">
+          <button
+            onClick={() => setIsEditModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border border-outline-variant/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
+          >
             <span className="material-symbols-outlined text-lg">
               person_add
             </span>
             Edit Members
           </button>
-        </div>
-      </div>
-
-      {/* Overview Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10">
-          <div className="flex items-center justify-between mb-4">
-            <span className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/5 text-primary">
-              <span className="material-symbols-outlined text-2xl">
-                analytics
-              </span>
-            </span>
-            <span className="text-xs font-bold text-primary px-2 py-1 bg-primary-fixed rounded-full">
-              {data.averageDelta}
-            </span>
-          </div>
-          <p className="text-on-surface-variant text-sm font-medium">
-            Class Average
-          </p>
-          <h3 className="text-3xl font-headline font-bold text-primary mt-1">
-            {data.classAverage}
-          </h3>
-        </div>
-
-        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10">
-          <div className="flex items-center justify-between mb-4">
-            <span className="w-12 h-12 flex items-center justify-center rounded-full bg-secondary-container/20 text-secondary">
-              <span className="material-symbols-outlined text-2xl">group</span>
-            </span>
-            <span className="text-xs font-bold text-on-surface-variant">
-              Capacity: {data.capacity}
-            </span>
-          </div>
-          <p className="text-on-surface-variant text-sm font-medium">
-            Student Count
-          </p>
-          <h3 className="text-3xl font-headline font-bold text-primary mt-1">
-            {data.studentCount}
-          </h3>
         </div>
       </section>
 
@@ -197,6 +182,9 @@ export default function ClassDetailPage() {
           add
         </span>
       </button>
+      {isEditModalOpen && (
+        <EditMembersModal onClose={() => setIsEditModalOpen(false)} />
+      )}
     </main>
   );
 }
