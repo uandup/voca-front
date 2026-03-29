@@ -12,7 +12,7 @@ export default function ClassDetailPage() {
   return (
     <main>
       {/* Header */}
-      <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
+      <BreadcrumbPageTitle parents={["Class"]} title={data.className} />
 
       {/* Overview Cards */}
       <section className="grid grid-cols-3 gap-6 mb-6">
@@ -89,7 +89,7 @@ export default function ClassDetailPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-outline-variant/60">
+            <tbody className="divide-y divide-outline-variant/20">
               {data.students.map((student) => (
                 <tr key={student.id} className=" transition-colors group">
                   <td className="px-8 py-5 text-center border-r border-outline-variant/20">

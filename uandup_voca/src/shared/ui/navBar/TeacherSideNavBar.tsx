@@ -2,7 +2,7 @@ import { SideNavBar } from "./SideNavBar";
 
 const navItems = [
   { icon: "dashboard", label: "Dashboard", to: "/teacher/dashboard" },
-  { icon: "calendar_today", label: "Classes", to: "/teacher/classes" },
+  { icon: "calendar_today", label: "Class", to: "/teacher/class" },
   {
     icon: "assignment",
     label: "Test Assignment",

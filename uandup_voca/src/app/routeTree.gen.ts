@@ -17,12 +17,12 @@ import { Route as TeacherTestGradingRouteImport } from './../routes/teacher/test
 import { Route as TeacherTestAssignmentRouteImport } from './../routes/teacher/test-assignment'
 import { Route as TeacherPrintPreviewRouteImport } from './../routes/teacher/print-preview'
 import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashboard'
-import { Route as TeacherClassesRouteImport } from './../routes/teacher/classes'
+import { Route as TeacherClassRouteImport } from './../routes/teacher/class'
 import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
-import { Route as TeacherClassesIndexRouteImport } from './../routes/teacher/classes/index'
+import { Route as TeacherClassIndexRouteImport } from './../routes/teacher/class/index'
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
-import { Route as TeacherClassesClassIdRouteImport } from './../routes/teacher/classes/$classId'
+import { Route as TeacherClassClassIdRouteImport } from './../routes/teacher/class/$classId'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -64,9 +64,9 @@ const TeacherDashboardRoute = TeacherDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherClassesRoute = TeacherClassesRouteImport.update({
-  id: '/classes',
-  path: '/classes',
+const TeacherClassRoute = TeacherClassRouteImport.update({
+  id: '/class',
+  path: '/class',
   getParentRoute: () => TeacherRoute,
 } as any)
 const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
@@ -79,10 +79,10 @@ const StudentDashboardRoute = StudentDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => StudentRoute,
 } as any)
-const TeacherClassesIndexRoute = TeacherClassesIndexRouteImport.update({
+const TeacherClassIndexRoute = TeacherClassIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => TeacherClassesRoute,
+  getParentRoute: () => TeacherClassRoute,
 } as any)
 const TeacherTestAssignmentStudentIdRoute =
   TeacherTestAssignmentStudentIdRouteImport.update({
@@ -90,10 +90,10 @@ const TeacherTestAssignmentStudentIdRoute =
     path: '/test-assignment/$studentId',
     getParentRoute: () => TeacherRoute,
   } as any)
-const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
+const TeacherClassClassIdRoute = TeacherClassClassIdRouteImport.update({
   id: '/$classId',
   path: '/$classId',
-  getParentRoute: () => TeacherClassesRoute,
+  getParentRoute: () => TeacherClassRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -102,15 +102,15 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
-  '/teacher/classes': typeof TeacherClassesRouteWithChildren
+  '/teacher/class': typeof TeacherClassRouteWithChildren
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/class/$classId': typeof TeacherClassClassIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
-  '/teacher/classes/': typeof TeacherClassesIndexRoute
+  '/teacher/class/': typeof TeacherClassIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -123,9 +123,9 @@ export interface FileRoutesByTo {
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/class/$classId': typeof TeacherClassClassIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
-  '/teacher/classes': typeof TeacherClassesIndexRoute
+  '/teacher/class': typeof TeacherClassIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,15 +134,15 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
-  '/teacher/classes': typeof TeacherClassesRouteWithChildren
+  '/teacher/class': typeof TeacherClassRouteWithChildren
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
   '/teacher/test-assignment': typeof TeacherTestAssignmentRoute
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/class/$classId': typeof TeacherClassClassIdRoute
   '/teacher/test-assignment_/$studentId': typeof TeacherTestAssignmentStudentIdRoute
-  '/teacher/classes/': typeof TeacherClassesIndexRoute
+  '/teacher/class/': typeof TeacherClassIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -152,15 +152,15 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/student/dashboard'
     | '/student/vocabulary'
-    | '/teacher/classes'
+    | '/teacher/class'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
-    | '/teacher/classes/$classId'
+    | '/teacher/class/$classId'
     | '/teacher/test-assignment/$studentId'
-    | '/teacher/classes/'
+    | '/teacher/class/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -173,9 +173,9 @@ export interface FileRouteTypes {
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
-    | '/teacher/classes/$classId'
+    | '/teacher/class/$classId'
     | '/teacher/test-assignment/$studentId'
-    | '/teacher/classes'
+    | '/teacher/class'
   id:
     | '__root__'
     | '/'
@@ -183,15 +183,15 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/student/dashboard'
     | '/student/vocabulary'
-    | '/teacher/classes'
+    | '/teacher/class'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
     | '/teacher/test-assignment'
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
-    | '/teacher/classes/$classId'
+    | '/teacher/class/$classId'
     | '/teacher/test-assignment_/$studentId'
-    | '/teacher/classes/'
+    | '/teacher/class/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -258,11 +258,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherDashboardRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/classes': {
-      id: '/teacher/classes'
-      path: '/classes'
-      fullPath: '/teacher/classes'
-      preLoaderRoute: typeof TeacherClassesRouteImport
+    '/teacher/class': {
+      id: '/teacher/class'
+      path: '/class'
+      fullPath: '/teacher/class'
+      preLoaderRoute: typeof TeacherClassRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/student/vocabulary': {
@@ -279,12 +279,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentDashboardRouteImport
       parentRoute: typeof StudentRoute
     }
-    '/teacher/classes/': {
-      id: '/teacher/classes/'
+    '/teacher/class/': {
+      id: '/teacher/class/'
       path: '/'
-      fullPath: '/teacher/classes/'
-      preLoaderRoute: typeof TeacherClassesIndexRouteImport
-      parentRoute: typeof TeacherClassesRoute
+      fullPath: '/teacher/class/'
+      preLoaderRoute: typeof TeacherClassIndexRouteImport
+      parentRoute: typeof TeacherClassRoute
     }
     '/teacher/test-assignment_/$studentId': {
       id: '/teacher/test-assignment_/$studentId'
@@ -293,12 +293,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherTestAssignmentStudentIdRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/classes/$classId': {
-      id: '/teacher/classes/$classId'
+    '/teacher/class/$classId': {
+      id: '/teacher/class/$classId'
       path: '/$classId'
-      fullPath: '/teacher/classes/$classId'
-      preLoaderRoute: typeof TeacherClassesClassIdRouteImport
-      parentRoute: typeof TeacherClassesRoute
+      fullPath: '/teacher/class/$classId'
+      preLoaderRoute: typeof TeacherClassClassIdRouteImport
+      parentRoute: typeof TeacherClassRoute
     }
   }
 }
@@ -316,22 +316,22 @@ const StudentRouteChildren: StudentRouteChildren = {
 const StudentRouteWithChildren =
   StudentRoute._addFileChildren(StudentRouteChildren)
 
-interface TeacherClassesRouteChildren {
-  TeacherClassesClassIdRoute: typeof TeacherClassesClassIdRoute
-  TeacherClassesIndexRoute: typeof TeacherClassesIndexRoute
+interface TeacherClassRouteChildren {
+  TeacherClassClassIdRoute: typeof TeacherClassClassIdRoute
+  TeacherClassIndexRoute: typeof TeacherClassIndexRoute
 }
 
-const TeacherClassesRouteChildren: TeacherClassesRouteChildren = {
-  TeacherClassesClassIdRoute: TeacherClassesClassIdRoute,
-  TeacherClassesIndexRoute: TeacherClassesIndexRoute,
+const TeacherClassRouteChildren: TeacherClassRouteChildren = {
+  TeacherClassClassIdRoute: TeacherClassClassIdRoute,
+  TeacherClassIndexRoute: TeacherClassIndexRoute,
 }
 
-const TeacherClassesRouteWithChildren = TeacherClassesRoute._addFileChildren(
-  TeacherClassesRouteChildren,
+const TeacherClassRouteWithChildren = TeacherClassRoute._addFileChildren(
+  TeacherClassRouteChildren,
 )
 
 interface TeacherRouteChildren {
-  TeacherClassesRoute: typeof TeacherClassesRouteWithChildren
+  TeacherClassRoute: typeof TeacherClassRouteWithChildren
   TeacherDashboardRoute: typeof TeacherDashboardRoute
   TeacherPrintPreviewRoute: typeof TeacherPrintPreviewRoute
   TeacherTestAssignmentRoute: typeof TeacherTestAssignmentRoute
@@ -341,7 +341,7 @@ interface TeacherRouteChildren {
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
-  TeacherClassesRoute: TeacherClassesRouteWithChildren,
+  TeacherClassRoute: TeacherClassRouteWithChildren,
   TeacherDashboardRoute: TeacherDashboardRoute,
   TeacherPrintPreviewRoute: TeacherPrintPreviewRoute,
   TeacherTestAssignmentRoute: TeacherTestAssignmentRoute,

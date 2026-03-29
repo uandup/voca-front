@@ -26,7 +26,7 @@ export default function ClassesPage() {
     <main>
       {/* Header */}
       <div className="flex items-center gap-4">
-        <PageTitle title="Classes" />
+        <PageTitle title="Class" />
         <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2 -mt-8">
           <span className="material-symbols-outlined text-primary">
             calendar_month
@@ -104,7 +104,7 @@ export default function ClassesPage() {
                           onClick={() =>
                             cell.classId &&
                             navigate({
-                              to: "/teacher/classes/$classId",
+                              to: "/teacher/class/$classId",
                               params: { classId: String(cell.classId) },
                             })
                           }
