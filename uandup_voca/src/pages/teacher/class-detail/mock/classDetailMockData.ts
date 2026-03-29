@@ -1,15 +1,17 @@
+export interface ScoreEntry {
+  correct: number;
+  total: number;
+}
+
 export interface StudentRow {
   id: string;
-  initials: string;
-  avatarColor: string;
   name: string;
-  email: string;
   grade: string;
-  lastTestDate: string;
-  assignedLevel: string;
-  recentScore: string;
+  assignedLevels: (1 | 2 | 3 | 4)[];
+  scores: ScoreEntry[]; // 오름차순 [오래된순 → 최근순], 최대 3개
   accuracy: string;
   trend: "up" | "down" | "flat";
+  memo?: string;
 }
 
 export interface ClassDetailData {
@@ -32,53 +34,51 @@ export const CLASS_DETAIL_MOCK: ClassDetailData = {
   students: [
     {
       id: "1",
-      initials: "EA",
-      avatarColor: "bg-primary-fixed text-on-primary-fixed-variant",
-      name: "Elena Arisawa",
-      email: "elena.a@scholar.edu",
-      grade: "A+",
-      lastTestDate: "Oct 24, 2024",
-      assignedLevel: "Advanced (C1)",
-      recentScore: "38/40",
+      name: "고세규",
+      grade: "10th",
+      assignedLevels: [4],
+      scores: [
+        { correct: 34, total: 40 },
+        { correct: 36, total: 40 },
+        { correct: 38, total: 40 },
+      ],
       accuracy: "95.0%",
       trend: "up",
+      memo: "심화 과정 추천",
     },
     {
       id: "2",
-      initials: "JM",
-      avatarColor: "bg-secondary-fixed text-on-secondary-fixed-variant",
-      name: "Julian Miller",
-      email: "j.miller@scholar.edu",
-      grade: "B+",
-      lastTestDate: "Oct 23, 2024",
-      assignedLevel: "Upper-Int (B2)",
-      recentScore: "32/40",
+      name: "이은수",
+      grade: "11th",
+      assignedLevels: [1, 2, 3, 4],
+      scores: [
+        { correct: 31, total: 40 },
+        { correct: 32, total: 40 },
+      ],
       accuracy: "82.4%",
       trend: "down",
+      memo: "메모의 길이는 어느정도가 될것인가?메모의 길이는 어느정도가 될것인가?메모의 길이는 어느정도가 될것인가?메모의 길이는 어느정도가 될것인가?메모의 길이는 어느정도가 될것인가?",
     },
     {
       id: "3",
-      initials: "SK",
-      avatarColor: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-      name: "Sana Khan",
-      email: "sana.k@scholar.edu",
-      grade: "A",
-      lastTestDate: "Oct 24, 2024",
-      assignedLevel: "Advanced (C1)",
-      recentScore: "36/40",
+      name: "박지현",
+      grade: "10th",
+      assignedLevels: [3, 4],
+      scores: [
+        { correct: 32, total: 40 },
+        { correct: 34, total: 40 },
+        { correct: 36, total: 40 },
+      ],
       accuracy: "91.2%",
       trend: "up",
+      memo: "꾸준한 향상세",
     },
     {
       id: "4",
-      initials: "LB",
-      avatarColor: "bg-primary-fixed text-on-primary-fixed-variant",
-      name: "Liam Bennett",
-      email: "l.bennett@scholar.edu",
-      grade: "B",
-      lastTestDate: "Oct 21, 2024",
-      assignedLevel: "Intermediate (B1)",
-      recentScore: "30/40",
+      name: "김민준",
+      grade: "9th",
+      assignedLevels: [2],
+      scores: [{ correct: 30, total: 40 }],
       accuracy: "76.8%",
       trend: "flat",
     },

@@ -47,7 +47,7 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
         <div className="px-8 py-6 border-b border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white sticky top-0">
           <div>
             <h2 className="text-2xl font-extrabold font-headline tracking-tight text-primary">
-              Class Member Management
+              Member Management
             </h2>
             <p className="text-on-surface-variant text-sm mt-1">
               {roster.length} Students in roster
@@ -88,7 +88,7 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
               </h3>
               {/* 카드 5개 높이 고정 + 내부 스크롤 */}
               <div className="bg-surface-container-low rounded-xs overflow-hidden flex flex-col h-105">
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-outline-variant/40 [&::-webkit-scrollbar-track]:bg-transparent">
                   {roster.map((student) => (
                     <div
                       key={student.id}
@@ -171,7 +171,7 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                   </div>
                 </div>
                 {/* 학생 목록 스크롤 */}
-                <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-3 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-outline-variant/40 [&::-webkit-scrollbar-track]:bg-transparent">
                   {filteredAvailable.map((student) => (
                     <div
                       key={student.id}

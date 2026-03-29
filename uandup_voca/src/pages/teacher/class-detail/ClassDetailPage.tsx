@@ -1,28 +1,9 @@
 import { useState } from "react";
 import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
 import { TableContainer } from "@/shared/ui/TableContainer";
-import { CLASS_DETAIL_MOCK, type StudentRow } from "./mock/classDetailMockData";
+import { CLASS_DETAIL_MOCK } from "./mock/classDetailMockData";
 import { EditMembersModal } from "./ui/modals/EditMembersModal";
-
-function TrendIcon({ trend }: { trend: StudentRow["trend"] }) {
-  if (trend === "up")
-    return (
-      <span className="material-symbols-outlined text-green-600 text-lg">
-        trending_up
-      </span>
-    );
-  if (trend === "down")
-    return (
-      <span className="material-symbols-outlined text-error text-lg">
-        trending_down
-      </span>
-    );
-  return (
-    <span className="material-symbols-outlined text-outline text-lg">
-      trending_flat
-    </span>
-  );
-}
+import { AssignedLevelBlocks } from "./ui/AssignedLevelBlocks";
 
 export default function ClassDetailPage() {
   const data = CLASS_DETAIL_MOCK;
@@ -35,7 +16,7 @@ export default function ClassDetailPage() {
 
       {/* Overview Cards */}
       <section className="grid grid-cols-3 gap-6 mb-6">
-        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10 flex items-center justify-between">
+        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border/10 flex items-center justify-between">
           <p className="text-on-surface-variant text-lg font-bold">
             Class Average
           </p>
@@ -44,7 +25,7 @@ export default function ClassDetailPage() {
           </h3>
         </div>
 
-        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border border-outline-variant/10 flex items-center justify-between">
+        <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border/10 flex items-center justify-between">
           <p className="text-on-surface-variant text-lg font-bold">
             Student Count
           </p>
@@ -56,7 +37,7 @@ export default function ClassDetailPage() {
         <div className="flex items-end justify-end">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border border-outline-variant/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
           >
             <span className="material-symbols-outlined text-lg">
               person_add
@@ -69,119 +50,104 @@ export default function ClassDetailPage() {
       {/* Student Roster */}
       <TableContainer>
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse table-fixed">
+            <colgroup>
+              <col className="w-[10%]" />
+              <col className="w-[8%]" />
+              <col className="w-[15%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[35%]" />
+            </colgroup>
             <thead>
               <tr className="bg-surface-container-highest/30">
-                <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Student Name
+                <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                  Name
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center">
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
                   Grade
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Last Test Date
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
                   Assigned Level
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center">
-                  Recent Score
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                  Prev 2
                 </th>
-                <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">
-                  Overall Accuracy
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                  Prev
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                  Latest
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                  ACR
+                </th>
+                <th className="px-8 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Memo
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-surface-container-low">
+            <tbody className="divide-y divide-outline-variant/60">
               {data.students.map((student) => (
                 <tr
                   key={student.id}
                   className="hover:bg-surface-bright transition-colors group"
                 >
-                  <td className="px-8 py-5">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center font-headline font-bold text-sm ${student.avatarColor}`}
-                      >
-                        {student.initials}
-                      </div>
-                      <div>
-                        <p className="font-headline font-bold text-primary group-hover:text-primary-container transition-colors">
-                          {student.name}
-                        </p>
-                        <p className="text-xs text-on-surface-variant">
-                          {student.email}
-                        </p>
-                      </div>
-                    </div>
+                  <td className="px-8 py-5 text-center border-r border-outline-variant/20">
+                    <p className="font-headline font-bold text-primary group-hover:text-primary-container transition-colors">
+                      {student.name}
+                    </p>
                   </td>
-                  <td className="px-6 py-5 text-center">
+                  <td className="px-6 py-5 text-center border-r border-outline-variant/20">
                     <span className="px-3 py-1 bg-surface-container-highest text-primary font-bold text-sm rounded-full">
                       {student.grade}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-sm text-on-surface-variant">
-                    {student.lastTestDate}
+                  <td className="px-6 py-5 text-center border-r border-outline-variant/20">
+                    <AssignedLevelBlocks levels={student.assignedLevels} />
                   </td>
-                  <td className="px-6 py-5">
-                    <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-full">
-                      {student.assignedLevel}
+                  {[
+                    student.scores[student.scores.length - 3],
+                    student.scores[student.scores.length - 2],
+                    student.scores[student.scores.length - 1],
+                  ].map((score, i) => (
+                    <td
+                      key={i}
+                      className="px-6 py-5 text-center border-r border-outline-variant/20"
+                    >
+                      {score ? (
+                        <div className="flex flex-col items-center gap-0.5">
+                          <span className="font-headline font-semibold text-sm text-on-surface-variant">
+                            {score.correct}/{score.total}
+                          </span>
+                          <span className="text-[12px] text-on-surface-variant/80">
+                            {Math.round((score.correct / score.total) * 100)}%
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-on-surface-variant/30 text-sm">
+                          -
+                        </span>
+                      )}
+                    </td>
+                  ))}
+                  <td className="px-6 py-5 text-center border-r border-outline-variant/20">
+                    <span className="font-headline font-bold text-primary">
+                      {student.accuracy}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-center">
-                    <span className="font-headline font-semibold text-primary">
-                      {student.recentScore}
-                    </span>
-                  </td>
-                  <td className="px-8 py-5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <span className="font-headline font-bold text-primary">
-                        {student.accuracy}
-                      </span>
-                      <TrendIcon trend={student.trend} />
-                    </div>
+                  <td className="px-8 py-5 text-sm text-on-surface-variant">
+                    {student.memo ?? "-"}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        {/* Pagination */}
-        <div className="px-8 py-5 bg-surface-container-low flex justify-between items-center text-sm text-on-surface-variant">
-          <p>
-            Showing {data.studentCount} students in Class {data.className}
-          </p>
-          <div className="flex gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 hover:bg-white transition-colors">
-              <span className="material-symbols-outlined text-lg">
-                chevron_left
-              </span>
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white font-bold">
-              1
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 hover:bg-white transition-colors">
-              2
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 hover:bg-white transition-colors">
-              <span className="material-symbols-outlined text-lg">
-                chevron_right
-              </span>
-            </button>
-          </div>
-        </div>
       </TableContainer>
 
-      {/* FAB */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-60">
-        <span
-          className="material-symbols-outlined text-2xl"
-          style={{ fontVariationSettings: '"FILL" 1' }}
-        >
-          add
-        </span>
-      </button>
       {isEditModalOpen && (
         <EditMembersModal onClose={() => setIsEditModalOpen(false)} />
       )}
