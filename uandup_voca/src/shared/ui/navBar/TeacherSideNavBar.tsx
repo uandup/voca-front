@@ -10,7 +10,7 @@ const navItems = [
   //   to: "/teacher/test-assignment",
   // },
   // { icon: "grading", label: "Test Grading", to: "/teacher/test-grading" },
-  { icon: "clinical_notes", label: "Clinic", to: "/teacher/clinic" },
+  { icon: "clinical_notes", label: "Clinics", to: "/teacher/clinics" },
   { icon: "book_2", label: "Vocabulary Bank", to: "/teacher/vocabulary-bank" },
   // { icon: "print", label: "Print Preview", to: "/teacher/print-preview" },
 ] as const;

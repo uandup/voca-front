@@ -41,7 +41,7 @@ export default function ClinicsPage() {
   return (
     <main>
       {/* Header */}
-      <PageTitle title="Clinic" />
+      <PageTitle title="Clinics" />
 
       <div className="grid grid-cols-12 gap-8 items-start">
         {/* 세션 목록 */}

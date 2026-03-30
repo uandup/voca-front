@@ -18,7 +18,7 @@ import { Route as TeacherTestAssignmentRouteImport } from './../routes/teacher/t
 import { Route as TeacherStudentManageRouteImport } from './../routes/teacher/student-manage'
 import { Route as TeacherPrintPreviewRouteImport } from './../routes/teacher/print-preview'
 import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashboard'
-import { Route as TeacherClinicRouteImport } from './../routes/teacher/clinic'
+import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherClassesRouteImport } from './../routes/teacher/classes'
 import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
@@ -71,9 +71,9 @@ const TeacherDashboardRoute = TeacherDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherClinicRoute = TeacherClinicRouteImport.update({
-  id: '/clinic',
-  path: '/clinic',
+const TeacherClinicsRoute = TeacherClinicsRouteImport.update({
+  id: '/clinics',
+  path: '/clinics',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherClassesRoute = TeacherClassesRouteImport.update({
@@ -115,7 +115,7 @@ export interface FileRoutesByFullPath {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
-  '/teacher/clinic': typeof TeacherClinicRoute
+  '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
   '/teacher/student-manage': typeof TeacherStudentManageRoute
@@ -132,7 +132,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
-  '/teacher/clinic': typeof TeacherClinicRoute
+  '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
   '/teacher/student-manage': typeof TeacherStudentManageRoute
@@ -151,7 +151,7 @@ export interface FileRoutesById {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
-  '/teacher/clinic': typeof TeacherClinicRoute
+  '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
   '/teacher/student-manage': typeof TeacherStudentManageRoute
@@ -171,7 +171,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/vocabulary'
     | '/teacher/classes'
-    | '/teacher/clinic'
+    | '/teacher/clinics'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
     | '/teacher/student-manage'
@@ -188,7 +188,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/student/dashboard'
     | '/student/vocabulary'
-    | '/teacher/clinic'
+    | '/teacher/clinics'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
     | '/teacher/student-manage'
@@ -206,7 +206,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/vocabulary'
     | '/teacher/classes'
-    | '/teacher/clinic'
+    | '/teacher/clinics'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
     | '/teacher/student-manage'
@@ -289,11 +289,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherDashboardRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/clinic': {
-      id: '/teacher/clinic'
-      path: '/clinic'
-      fullPath: '/teacher/clinic'
-      preLoaderRoute: typeof TeacherClinicRouteImport
+    '/teacher/clinics': {
+      id: '/teacher/clinics'
+      path: '/clinics'
+      fullPath: '/teacher/clinics'
+      preLoaderRoute: typeof TeacherClinicsRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/classes': {
@@ -370,7 +370,7 @@ const TeacherClassesRouteWithChildren = TeacherClassesRoute._addFileChildren(
 
 interface TeacherRouteChildren {
   TeacherClassesRoute: typeof TeacherClassesRouteWithChildren
-  TeacherClinicRoute: typeof TeacherClinicRoute
+  TeacherClinicsRoute: typeof TeacherClinicsRoute
   TeacherDashboardRoute: typeof TeacherDashboardRoute
   TeacherPrintPreviewRoute: typeof TeacherPrintPreviewRoute
   TeacherStudentManageRoute: typeof TeacherStudentManageRoute
@@ -382,7 +382,7 @@ interface TeacherRouteChildren {
 
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherClassesRoute: TeacherClassesRouteWithChildren,
-  TeacherClinicRoute: TeacherClinicRoute,
+  TeacherClinicsRoute: TeacherClinicsRoute,
   TeacherDashboardRoute: TeacherDashboardRoute,
   TeacherPrintPreviewRoute: TeacherPrintPreviewRoute,
   TeacherStudentManageRoute: TeacherStudentManageRoute,
