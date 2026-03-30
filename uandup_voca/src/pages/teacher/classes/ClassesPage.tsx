@@ -4,7 +4,6 @@ import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from "./mock/timetableMockData";
 import { buildGrid } from "./model/buildGrid";
 import { cellCardStyles } from "./ui/timetableStyles";
 
-
 export default function ClassesPage() {
   const navigate = useNavigate();
   const grid = buildGrid(TIME_SLOTS_DEF);
@@ -18,7 +17,7 @@ export default function ClassesPage() {
     <main>
       {/* Header */}
       <div className="flex items-center gap-4">
-        <PageTitle title="Class" />
+        <PageTitle title="Classes" />
         {/* <div className="bg-surface-container-low px-4 py-2 rounded-xl flex items-center gap-2 -mt-8">
           <span className="material-symbols-outlined text-primary">
             calendar_month
@@ -96,7 +95,7 @@ export default function ClassesPage() {
                           onClick={() =>
                             cell.classId &&
                             navigate({
-                              to: "/teacher/class/$classId",
+                              to: "/teacher/classes/$classId",
                               params: { classId: String(cell.classId) },
                             })
                           }

@@ -12,7 +12,7 @@ export default function ClassDetailPage() {
   return (
     <main>
       {/* Header */}
-      <BreadcrumbPageTitle parents={["Class"]} title={data.className} />
+      <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
 
       {/* Overview Cards */}
       <section className="grid grid-cols-3 gap-6 mb-6">
