@@ -241,7 +241,7 @@ export function StudentDetailModal({
                     <tr className="bg-surface-container-low">
                       {[
                         "TEST ID",
-                        "DATE",
+                        "ASSIGNED",
                         "TYPE",
                         "LEVEL",
                         "SCORE",

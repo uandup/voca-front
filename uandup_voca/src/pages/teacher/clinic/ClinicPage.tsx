@@ -114,7 +114,7 @@ export default function ClinicsPage() {
 
         {/* 학생 테이블 */}
         <div className="col-span-9 space-y-6">
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <button
               onClick={() => setIsEditMembersOpen(true)}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"

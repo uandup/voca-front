@@ -26,26 +26,26 @@ export const TIME_SLOTS_DEF: TimeSlotDef[] = [
       null,
     ],
   },
-  { time: "12~1", isBreak: true },
+  { time: "12~13", isBreak: true },
   {
-    time: "1~2",
+    time: "13~14",
     cols: [{ label: "SAT", style: "class-sat", colSpan: 6, classId: 4 }],
   },
   {
-    time: "2~3",
+    time: "14~15",
     cols: [{ label: "SAT", style: "class-sat", colSpan: 6, classId: 4 }],
   },
   {
-    time: "3~4",
+    time: "15~16",
     cols: [{ label: "SAT", style: "class-sat", colSpan: 6, classId: 4 }],
   },
   {
-    time: "4~5",
+    time: "16~17",
     cols: [{ label: "SAT", style: "class-sat", colSpan: 6, classId: 4 }],
   },
-  { time: "5~6", isBreak: true },
+  { time: "17~18", isBreak: true },
   {
-    time: "6~7",
+    time: "18~19",
     cols: [
       { label: "G6 Literature", style: "class-lit", classId: 5 },
       { label: "G7 Literature", style: "class-lit", classId: 6 },
@@ -56,15 +56,15 @@ export const TIME_SLOTS_DEF: TimeSlotDef[] = [
     ],
   },
   {
-    time: "7~8",
+    time: "19~20",
     cols: [null, null, null, null, null, null],
   },
   {
-    time: "8~9",
+    time: "20~21",
     cols: [{ label: "SAT Q&A", style: "class-qa", colSpan: 6, classId: 10 }],
   },
   {
-    time: "9~10",
+    time: "21~22",
     cols: [null, null, null, null, null, null],
   },
 ];

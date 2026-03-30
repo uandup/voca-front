@@ -4,14 +4,6 @@ import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from "./mock/timetableMockData";
 import { buildGrid } from "./model/buildGrid";
 import { cellCardStyles } from "./ui/timetableStyles";
 
-// "10~11" 형식의 시간 슬롯이 현재 시각을 포함하는지 확인
-function isCurrentSlot(time: string): boolean {
-  const hour = new Date().getHours();
-  const [startStr, endStr] = time.split("~");
-  const start = parseInt(startStr);
-  const end = parseInt(endStr) === 0 ? 24 : parseInt(endStr); // "9~10"에서 end가 0이면 자정(24)으로 처리
-  return hour >= start && hour < end;
-}
 
 export default function ClassesPage() {
   const navigate = useNavigate();
@@ -100,7 +92,7 @@ export default function ClassesPage() {
                     >
                       {cell.label && (
                         <div
-                          className={`h-full rounded-xl p-3 flex items-center justify-center transition-colors cursor-pointer ${v.card} ${isCurrentSlot(slot.time) ? "ring-2 ring-primary" : ""}`}
+                          className={`h-full rounded-xl p-3 flex items-center justify-center transition-colors cursor-pointer ${v.card}`}
                           onClick={() =>
                             cell.classId &&
                             navigate({
