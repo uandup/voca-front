@@ -6,6 +6,8 @@ import {
   STUDENT_MANAGE_MOCK,
   type ManagedStudent,
 } from "./mock/studentManageMockData";
+import { EditStudentModal } from "./ui/modals/EditStudentModal";
+import { DeleteConfirmModal } from "./ui/modals/DeleteConfirmModal";
 
 type SortKey = keyof Pick<
   ManagedStudent,
@@ -45,8 +47,20 @@ export default function StudentManagePage() {
   const [gradeFilter, setGradeFilter] = useState("");
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [students, setStudents] =
+    useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
+  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(null);
+  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(null);
 
-  const grades = [...new Set(STUDENT_MANAGE_MOCK.map((s) => s.grade))].sort();
+  const grades = [...new Set(students.map((s) => s.grade))].sort();
+
+  function handleSave(updated: ManagedStudent) {
+    setStudents((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+  }
+
+  function handleDelete(id: number) {
+    setStudents((prev) => prev.filter((s) => s.id !== id));
+  }
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
@@ -62,7 +76,7 @@ export default function StudentManagePage() {
     }
   }
 
-  const filtered = STUDENT_MANAGE_MOCK.filter((s) => {
+  const filtered = students.filter((s) => {
     const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
     return matchesSearch && matchesGrade;
@@ -76,7 +90,7 @@ export default function StudentManagePage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 mb-6">
-        <div className="relative flex-1 min-w-[280px]">
+        <div className="relative flex-1 min-w-70">
           <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
             search
           </span>
@@ -208,13 +222,19 @@ export default function StudentManagePage() {
                   {/* Actions */}
                   <td className="px-4 py-4 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="bg-primary/10 text-primary px-3 py-1 rounded-md text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1">
+                      <button
+                        onClick={() => setEditingStudent(student)}
+                        className="bg-primary/10 text-primary px-3 py-1 rounded-md text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
+                      >
                         <span className="material-symbols-outlined text-sm">
                           edit
                         </span>
                         Edit
                       </button>
-                      <button className="p-1.5 text-on-surface-variant hover:text-error transition-colors">
+                      <button
+                        onClick={() => setDeletingStudent(student)}
+                        className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
+                      >
                         <span className="material-symbols-outlined text-xl">
                           delete
                         </span>
@@ -227,6 +247,22 @@ export default function StudentManagePage() {
           </table>
         </div>
       </TableContainer>
+
+      {editingStudent && (
+        <EditStudentModal
+          student={editingStudent}
+          onClose={() => setEditingStudent(null)}
+          onSave={handleSave}
+        />
+      )}
+
+      {deletingStudent && (
+        <DeleteConfirmModal
+          student={deletingStudent}
+          onClose={() => setDeletingStudent(null)}
+          onConfirm={handleDelete}
+        />
+      )}
     </main>
   );
 }
