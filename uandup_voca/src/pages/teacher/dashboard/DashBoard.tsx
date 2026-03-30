@@ -1,4 +1,5 @@
 import { PageTitle } from "@/shared/ui/PageTitle";
+// import { MiniTimetable } from "./ui/MiniTimetable";
 
 const alertCards = [
   {
@@ -110,6 +111,16 @@ export default function DashBoard() {
           </div>
         ))}
       </section>
+
+      {/* Mini Timetable */}
+      {/* <section className="mt-8">
+        <h2 className="text-sm font-black uppercase tracking-widest text-on-surface-variant mb-3">
+          Today's Schedule
+        </h2>
+        <div className="max-w-2xl">
+          <MiniTimetable />
+        </div>
+      </section> */}
     </main>
   );
 }
