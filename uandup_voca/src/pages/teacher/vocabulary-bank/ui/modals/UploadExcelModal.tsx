@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
 
 interface UploadExcelModalProps {
   onClose: () => void;
@@ -36,14 +37,8 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-2xl bg-white rounded-2xl shadow-[0px_32px_64px_-12px_rgba(0,0,0,0.14)] overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <ModalBackdrop onClose={onClose}>
+      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-[0px_32px_64px_-12px_rgba(0,0,0,0.14)] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-10 pt-8 flex items-center justify-between ">
           <div className="flex items-center gap-4">
@@ -171,6 +166,6 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
           </div>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 }

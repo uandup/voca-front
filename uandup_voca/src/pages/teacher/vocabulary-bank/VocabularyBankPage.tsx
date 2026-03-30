@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageTitle } from "@/shared/ui/PageTitle";
 import { VocabCard } from "./ui/VocabCard";
 import { LevelStatCard } from "./ui/LevelStatCard";
 import { VocabModal } from "./ui/modals/VocabModal";
@@ -26,12 +27,10 @@ export default function VocabularyBankPage() {
   return (
     <main>
       {/* Header Section */}
-      <header className="flex flex-col gap-4 mb-4">
+      <header className="flex flex-col">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight ">
-              Vocabulary Bank
-            </h1>
+            <PageTitle title="Vocabulary Bank" />
           </div>
           <div className="flex gap-3">
             <button
@@ -60,8 +59,10 @@ export default function VocabularyBankPage() {
             />
           ))}
         </div>
+      </header>
 
-        {/* Filters & Search */}
+      {/* Filters & Search */}
+      <section className="my-4">
         <div className="bg-surface-container-low p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">
@@ -95,7 +96,7 @@ export default function VocabularyBankPage() {
             </button>
           </div>
         </div>
-      </header>
+      </section>
 
       {isUploadModalOpen && (
         <UploadExcelModal

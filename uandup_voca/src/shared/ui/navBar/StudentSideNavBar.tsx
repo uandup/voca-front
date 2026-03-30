@@ -1,4 +1,4 @@
-import { SideNavBar } from "@/shared/ui/SideNavBar";
+import { SideNavBar } from "./SideNavBar";
 
 const navItems = [
   { icon: "assignment", label: "Dashboard", to: "/student/dashboard" },

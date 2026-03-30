@@ -1,29 +1,31 @@
 import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import type { ManagedStudent } from "../../mock/studentManageMockData";
 
-interface DeleteVocabModalProps {
-  word: string;
-  pronunciation?: string;
+interface DeleteConfirmModalProps {
+  student: ManagedStudent;
   onClose: () => void;
-  onDelete: () => void;
+  onConfirm: (id: number) => void;
 }
 
-export function DeleteVocabModal({
-  word,
+export function DeleteConfirmModal({
+  student,
   onClose,
-  onDelete,
-}: DeleteVocabModalProps) {
+  onConfirm,
+}: DeleteConfirmModalProps) {
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
         {/* Modal Content */}
         <div className="p-8 pb-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-extrabold font-headline text-on-surface mb-3 tracking-tight">
-            Delete Word?
+            Delete Student?
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed text-sm">
             This action will permanently remove{" "}
-            <span className="font-bold text-on-surface">"{word}"</span> from
-            your curriculum. This cannot be undone.
+            <span className="font-bold text-on-surface">
+              "{student.nameKo}"
+            </span>{" "}
+            from the roster. This cannot be undone.
           </p>
         </div>
 
@@ -35,7 +37,10 @@ export function DeleteVocabModal({
             </p>
             <div className="flex items-center gap-2">
               <span className="font-headline font-bold text-lg text-primary">
-                {word}
+                {student.nameKo}
+              </span>
+              <span className="text-sm text-on-surface-variant">
+                {student.name}
               </span>
             </div>
           </div>
@@ -44,10 +49,13 @@ export function DeleteVocabModal({
         {/* Action Buttons */}
         <div className="px-8 pb-8 flex flex-col gap-3">
           <button
-            onClick={onDelete}
+            onClick={() => {
+              onConfirm(student.id);
+              onClose();
+            }}
             className="w-full bg-error text-white px-6 py-4 rounded-2xl font-bold shadow-lg active:scale-[0.98] transition-all text-base font-headline"
           >
-            Delete Word
+            Delete Student
           </button>
           <button
             onClick={onClose}

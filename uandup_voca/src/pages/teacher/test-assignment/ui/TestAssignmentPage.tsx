@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { PageTitle } from "@/shared/ui/PageTitle";
 
 type AssignmentStatus = "Active" | "Pending" | "Unassigned";
 
@@ -67,10 +68,7 @@ export function TestAssignmentPage() {
 
   return (
     <main>
-      {/* Page Title */}
-      <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8">
-        Test Assignment
-      </h1>
+      <PageTitle title="Test Assignment" />
       {/* Table Header Controls */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-6">

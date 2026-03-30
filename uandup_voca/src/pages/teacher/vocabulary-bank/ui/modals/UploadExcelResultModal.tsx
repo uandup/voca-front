@@ -17,6 +17,8 @@ interface UploadExcelResultModalProps {
   onDownloadErrors: () => void;
 }
 
+import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+
 export function UploadExcelResultModal({
   result,
   onClose,
@@ -24,14 +26,8 @@ export function UploadExcelResultModal({
   onDownloadErrors,
 }: UploadExcelResultModalProps) {
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div
-        className="relative bg-white w-full max-w-[720px] rounded-3xl shadow-[0px_32px_64px_-12px_rgba(0,21,80,0.12)] overflow-hidden flex flex-col max-h-[90vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <ModalBackdrop onClose={onClose}>
+      <div className="bg-white w-full max-w-180 rounded-3xl shadow-[0px_32px_64px_-12px_rgba(0,21,80,0.12)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-8 pb-6 flex justify-between items-start">
           <div className="flex items-start gap-4">
@@ -139,6 +135,6 @@ export function UploadExcelResultModal({
           </button>
         </div>
       </div>
-    </div>
+    </ModalBackdrop>
   );
 }
