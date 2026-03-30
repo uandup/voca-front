@@ -107,6 +107,10 @@ export function StudentDetailModal({
     (t) => t.scheduledFor === selectedTab,
   );
 
+  const alreadyAssigned = mockAssignedTests.some(
+    (t) => t.scheduledFor === "today" && t.status === "Pending",
+  );
+
   function toggleLevel(level: number) {
     setSelectedLevels((prev) =>
       prev.includes(level)
@@ -193,13 +197,28 @@ export function StudentDetailModal({
                   </label>
                   <input
                     id="modal_words_input"
-                    className="w-32 bg-surface-container-low border-none rounded-lg py-1.5 pl-3 pr-3 text-xs font-bold text-primary-container focus:ring-1 focus:ring-primary/20"
+                    className="w-32 bg-surface-container-low border-none rounded-lg py-1.5 pl-3 pr-3 text-xs font-bold text-primary-container focus:ring-1 focus:ring-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
                     type="number"
                     defaultValue={25}
+                    disabled={alreadyAssigned}
                   />
                 </div>
+                {alreadyAssigned && (
+                  <div className="flex gap-4">
+                    <div className="h-8 w-px bg-slate-200" />
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
+                      <span className="material-symbols-outlined text-base">
+                        check_circle
+                      </span>
+                      Already Assigned
+                    </div>
+                  </div>
+                )}
               </div>
-              <button className="bg-primary-container hover:opacity-90 text-white px-8 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2 shadow-md">
+              <button
+                disabled={alreadyAssigned}
+                className="bg-primary-container hover:opacity-90 text-white px-8 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2 shadow-md disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:opacity-40"
+              >
                 <span className="material-symbols-outlined text-lg">send</span>
                 Assign
               </button>

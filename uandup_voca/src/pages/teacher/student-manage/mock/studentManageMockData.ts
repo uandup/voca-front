@@ -3,6 +3,7 @@ export interface ManagedStudent {
   name: string;
   nameKo: string;
   grade: number;
+  joinedAt: string; // "YY.MM.DD"
   classes: string[];
   clinics: string[];
   testCount: number;
@@ -19,6 +20,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Kim Minsu",
     nameKo: "김민수",
     grade: 11,
+    joinedAt: "24.03.04",
     classes: ["G10 English", "PreSAT Reading"],
     clinics: ["MON 13~15", "THU 15~17"],
     testCount: 24,
@@ -26,13 +28,14 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     accuracy: "87%",
     assignedLevels: [3, 4],
     assignedWordCount: 30,
-    memo: "단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중.",
+    memo: "단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중. 줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.",
   },
   {
     id: 2,
     name: "Lee Younghee",
     nameKo: "이영희",
     grade: 9,
+    joinedAt: "24.05.11",
     classes: ["SAT"],
     clinics: ["TUE 13~15"],
     testCount: 18,
@@ -47,6 +50,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Park Jimin",
     nameKo: "박지민",
     grade: 12,
+    joinedAt: "23.09.01",
     classes: ["G10 English"],
     clinics: ["MON 13~15", "WED 18~20"],
     testCount: 31,
@@ -61,6 +65,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Choi Suyeon",
     nameKo: "최수연",
     grade: 10,
+    joinedAt: "24.01.15",
     classes: ["G9 English", "Essay"],
     clinics: ["FRI 13~15"],
     testCount: 12,
@@ -75,6 +80,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Jung Dohyun",
     nameKo: "정도현",
     grade: 11,
+    joinedAt: "23.03.20",
     classes: ["SAT", "SL English"],
     clinics: ["TUE 13~15", "SAT 10~12"],
     testCount: 42,
@@ -88,6 +94,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Kang Jisu",
     nameKo: "강지수",
     grade: 10,
+    joinedAt: "25.02.28",
     classes: ["G9 English"],
     clinics: [],
     testCount: 8,
@@ -102,6 +109,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     name: "Yoon Jaehyuk",
     nameKo: "윤재혁",
     grade: 12,
+    joinedAt: "23.11.07",
     classes: ["PreSAT Reading", "SAT"],
     clinics: ["MON 13~15"],
     testCount: 27,

@@ -11,12 +11,13 @@ import { DeleteConfirmModal } from "./ui/modals/DeleteConfirmModal";
 
 type SortKey = keyof Pick<
   ManagedStudent,
-  "name" | "grade" | "testCount" | "accuracy" | "assignedWordCount"
+  "name" | "grade" | "joinedAt" | "testCount" | "accuracy" | "assignedWordCount"
 >;
 type SortDir = "asc" | "desc";
 
 const COLUMNS: { label: string; key?: SortKey; className?: string }[] = [
   { label: "Name", key: "name" },
+  { label: "Joined", key: "joinedAt", className: "text-center" },
   { label: "Grade", key: "grade", className: "text-center" },
   { label: "Tests", key: "testCount", className: "text-center" },
   { label: "ACR", key: "accuracy", className: "text-center" },
@@ -45,12 +46,17 @@ function sortStudents(
 export default function StudentManagePage() {
   const [search, setSearch] = useState("");
   const [gradeFilter, setGradeFilter] = useState("");
+  const [levelFilter, setLevelFilter] = useState<number | "">("");
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
   const [students, setStudents] =
     useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
-  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(null);
-  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(null);
+  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(
+    null,
+  );
+  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(
+    null,
+  );
 
   const grades = [...new Set(students.map((s) => s.grade))].sort();
 
@@ -77,9 +83,10 @@ export default function StudentManagePage() {
   }
 
   const filtered = students.filter((s) => {
-    const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.nameKo.includes(search);
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
-    return matchesSearch && matchesGrade;
+    const matchesLevel = levelFilter !== "" ? s.assignedLevels.includes(levelFilter as 1 | 2 | 3 | 4) : true;
+    return matchesSearch && matchesGrade && matchesLevel;
   });
 
   const sorted = sortKey ? sortStudents(filtered, sortKey, sortDir) : filtered;
@@ -114,11 +121,24 @@ export default function StudentManagePage() {
             </option>
           ))}
         </select>
+        <select
+          className="bg-background border border-outline-variant/30 rounded-lg py-2 pl-3 pr-10 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer"
+          value={levelFilter}
+          onChange={(e) => setLevelFilter(e.target.value === "" ? "" : Number(e.target.value))}
+        >
+          <option value="">Level: All</option>
+          {([1, 2, 3, 4] as const).map((l) => (
+            <option key={l} value={l}>
+              Level {l}
+            </option>
+          ))}
+        </select>
         <button
           className="px-4 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant text-sm font-bold hover:bg-surface-container-low transition-colors"
           onClick={() => {
             setSearch("");
             setGradeFilter("");
+            setLevelFilter("");
           }}
         >
           Reset
@@ -129,13 +149,14 @@ export default function StudentManagePage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <colgroup>
-              <col className="w-[13%]" />
+              <col className="w-[12%]" />
+              <col className="w-[9%]" />
+              <col className="w-[8%]" />
               <col className="w-[8%]" />
               <col className="w-[7%]" />
+              <col className="w-[12%]" />
               <col className="w-[7%]" />
-              <col className="w-[13%]" />
-              <col className="w-[7%]" />
-              <col className="w-[33%]" />
+              <col className="w-[25%]" />
               <col className="w-[12%]" />
             </colgroup>
             <thead>
@@ -144,7 +165,7 @@ export default function StudentManagePage() {
                   <th
                     key={col.label}
                     onClick={col.key ? () => handleSort(col.key!) : undefined}
-                    className={`px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < 7 ? "border-r border-outline-variant/20" : ""} ${col.key ? "cursor-pointer select-none hover:text-primary transition-colors" : ""} ${col.className ?? ""}`}
+                    className={`px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < 8 ? "border-r border-outline-variant/20" : ""} ${col.key ? "cursor-pointer select-none hover:text-primary transition-colors" : ""} ${col.className ?? ""}`}
                   >
                     <span className="inline-flex items-center gap-1">
                       {col.label}
@@ -178,6 +199,13 @@ export default function StudentManagePage() {
                     </p>
                     <p className="text-xs text-on-surface-variant mt-0.5">
                       {student.name}
+                    </p>
+                  </td>
+
+                  {/* Joined */}
+                  <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                    <p className="text-xs text-on-surface-variant font-medium">
+                      {student.joinedAt}
                     </p>
                   </td>
 
