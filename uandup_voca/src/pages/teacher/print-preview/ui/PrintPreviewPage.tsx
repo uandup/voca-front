@@ -1,37 +1,19 @@
 import { useState } from "react";
 import {
-  TestWMPrintModal,
   TestWMSPrintModal,
   TestESPrintModal,
-  type WMRow,
-  type WMSRow,
   type ESRow,
 } from "@/shared/test-print";
-
-const WM_ROWS: WMRow[] = Array.from({ length: 25 }, (_, i) => ({
-  no: String(i + 1).padStart(2, "0"),
-  word: "",
-}));
-
-const WMS_ROWS: WMSRow[] = Array.from({ length: 25 }, (_, i) => ({
-  no: String(i + 1).padStart(2, "0"),
-  word: "",
-}));
+import { mockVocabList, mockESRows } from "@/shared/test-print/lib/mockData";
 
 const ES_ROWS: ESRow[] = Array.from({ length: 15 }, (_, i) => ({
   no: String(i + 1).padStart(2, "0"),
   sentence: "",
 }));
 
-type ModalType = "WM" | "WMS" | "ES" | null;
+type ModalType = "WMS" | "ES" | "TEST_WMS" | "TEST_ES" | null;
 
 const previews = [
-  {
-    type: "WM" as const,
-    title: "Word + Meaning",
-    description: "단어와 뜻을 작성하는 시험지",
-    icon: "article",
-  },
   {
     type: "WMS" as const,
     title: "Word + Meaning + Synonym",
@@ -59,6 +41,28 @@ export function PrintPreviewPage() {
           시험지 양식을 미리보기위한 임시 페이지입니다.
         </p>
       </header>
+
+      <section className="mb-10">
+        <h2 className="font-headline font-bold text-lg text-primary mb-4">
+          Print Test (목데이터)
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setOpenModal("TEST_WMS")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/80 transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">description</span>
+            단어 시험 WMS (50개)
+          </button>
+          <button
+            onClick={() => setOpenModal("TEST_ES")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/80 transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">edit_note</span>
+            예문 시험 (30개)
+          </button>
+        </div>
+      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {previews.map((item) => (
@@ -88,14 +92,17 @@ export function PrintPreviewPage() {
         ))}
       </div>
 
-      {openModal === "WM" && (
-        <TestWMPrintModal onClose={() => setOpenModal(null)} rows={WM_ROWS} />
-      )}
       {openModal === "WMS" && (
-        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={WMS_ROWS} />
+        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
       )}
       {openModal === "ES" && (
         <TestESPrintModal onClose={() => setOpenModal(null)} rows={ES_ROWS} />
+      )}
+      {openModal === "TEST_WMS" && (
+        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
+      )}
+      {openModal === "TEST_ES" && (
+        <TestESPrintModal onClose={() => setOpenModal(null)} rows={mockESRows} />
       )}
     </main>
   );

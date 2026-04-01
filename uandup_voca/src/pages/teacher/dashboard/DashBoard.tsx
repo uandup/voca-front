@@ -1,20 +1,8 @@
+import { useState } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
-// import { MiniTimetable } from "./ui/MiniTimetable";
+import { PendingApprovalsModal } from "./ui/modals/PendingApprovalsModal";
+import { UnassignedStudentsModal } from "./ui/modals/UnassignedStudentsModal";
 
-const alertCards = [
-  {
-    icon: "person_add",
-    label: "Pending Approvals",
-    value: 4,
-    badge: "4 waiting",
-  },
-  {
-    icon: "assignment_ind",
-    label: "Unassigned Students",
-    value: 3,
-    badge: "3 students",
-  },
-];
 
 const shortcutCards = [
   {
@@ -32,6 +20,9 @@ const shortcutCards = [
 ];
 
 export default function DashBoard() {
+  const [isPendingOpen, setIsPendingOpen] = useState(false);
+  const [isUnassignedOpen, setIsUnassignedOpen] = useState(false);
+
   return (
     <main>
       <section className="mb-10">
@@ -42,26 +33,35 @@ export default function DashBoard() {
       </section>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Alert Cards */}
-        {alertCards.map((card) => (
-          <button
-            key={card.label}
-            className="group flex flex-col items-start p-7 rounded-2xl text-left bg-gradient-to-br from-primary to-primary-container border-transparent shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
-          >
-            <span className="material-symbols-outlined mb-5 p-2 rounded-xl text-xl bg-white/15 text-white">
-              {card.icon}
-            </span>
-            <span className="text-3xl font-headline font-black mb-1 text-white">
-              {card.value}
-            </span>
-            <span className="text-sm font-bold mb-4 text-white/80">
-              {card.label}
-            </span>
-            <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 text-white transition-colors group-hover:bg-white group-hover:text-primary">
-              {card.badge}
-            </span>
-          </button>
-        ))}
+        {/* Pending Approvals */}
+        <button
+          onClick={() => setIsPendingOpen(true)}
+          className="group flex flex-col items-start p-7 rounded-2xl text-left bg-linear-to-br from-primary to-primary-container border-transparent shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
+        >
+          <span className="material-symbols-outlined mb-5 p-2 rounded-xl text-xl bg-white/15 text-white">
+            person_add
+          </span>
+          <span className="text-3xl font-headline font-black mb-1 text-white">4</span>
+          <span className="text-sm font-bold mb-4 text-white/80">Pending Approvals</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 text-white transition-colors group-hover:bg-white group-hover:text-primary">
+            4 waiting
+          </span>
+        </button>
+
+        {/* Unassigned Students */}
+        <button
+          onClick={() => setIsUnassignedOpen(true)}
+          className="group flex flex-col items-start p-7 rounded-2xl text-left bg-linear-to-br from-primary to-primary-container border-transparent shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
+        >
+          <span className="material-symbols-outlined mb-5 p-2 rounded-xl text-xl bg-white/15 text-white">
+            assignment_ind
+          </span>
+          <span className="text-3xl font-headline font-black mb-1 text-white">3</span>
+          <span className="text-sm font-bold mb-4 text-white/80">Unassigned Students</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 text-white transition-colors group-hover:bg-white group-hover:text-primary">
+            3 students
+          </span>
+        </button>
 
         {/* Shortcut Cards */}
         {shortcutCards.map((card) => (
@@ -111,6 +111,13 @@ export default function DashBoard() {
           </div>
         ))}
       </section>
+
+      {isPendingOpen && (
+        <PendingApprovalsModal onClose={() => setIsPendingOpen(false)} />
+      )}
+      {isUnassignedOpen && (
+        <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />
+      )}
 
       {/* Mini Timetable */}
       {/* <section className="mt-8">
