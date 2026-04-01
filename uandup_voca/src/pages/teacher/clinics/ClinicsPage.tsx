@@ -7,7 +7,7 @@ import {
   type ClinicSession,
   type ClinicStudent,
 } from "./mock/clinicMockData";
-import { StudentDetailModal } from "./ui/modals/StudentDetailModal";
+import { StudentDetailModal } from "./ui/StudentDetailModal";
 import { EditMembersModal } from "@/features/roster-manage";
 
 // 월~토 앞 3글자 (일요일 제외)
