@@ -81,9 +81,9 @@ export function PendingApprovalsModal({ onClose }: PendingApprovalsModalProps) {
                 <div>
                   <p className="font-headline font-bold text-sm text-on-surface">
                     {student.nameKo}
-                  </p>
-                  <p className="text-xs text-on-surface-variant mt-0.5">
-                    {student.name} · G{student.grade}
+                    <span className="text-xs font-medium text-on-surface-variant ml-1.5">
+                      ( {student.name} · G{student.grade} )
+                    </span>
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

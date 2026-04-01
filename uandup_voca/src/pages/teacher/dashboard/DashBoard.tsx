@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
 import { PendingApprovalsModal } from "./ui/modals/PendingApprovalsModal";
+import { UnassignedStudentsModal } from "./ui/modals/UnassignedStudentsModal";
 
 
 const shortcutCards = [
@@ -20,6 +21,7 @@ const shortcutCards = [
 
 export default function DashBoard() {
   const [isPendingOpen, setIsPendingOpen] = useState(false);
+  const [isUnassignedOpen, setIsUnassignedOpen] = useState(false);
 
   return (
     <main>
@@ -48,6 +50,7 @@ export default function DashBoard() {
 
         {/* Unassigned Students */}
         <button
+          onClick={() => setIsUnassignedOpen(true)}
           className="group flex flex-col items-start p-7 rounded-2xl text-left bg-linear-to-br from-primary to-primary-container border-transparent shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
         >
           <span className="material-symbols-outlined mb-5 p-2 rounded-xl text-xl bg-white/15 text-white">
@@ -111,6 +114,9 @@ export default function DashBoard() {
 
       {isPendingOpen && (
         <PendingApprovalsModal onClose={() => setIsPendingOpen(false)} />
+      )}
+      {isUnassignedOpen && (
+        <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />
       )}
 
       {/* Mini Timetable */}
