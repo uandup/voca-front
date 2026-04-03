@@ -15,7 +15,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 export function LevelProgress() {
   return (
     <section className="mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="grid grid-cols-5 gap-8">
         {levels.map((level) => {
           const pct = mockProgress[level];
           const offset = CIRCUMFERENCE * (1 - pct / 100);

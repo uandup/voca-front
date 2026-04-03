@@ -4,7 +4,7 @@ interface PageTitleProps {
 
 export function PageTitle({ title }: PageTitleProps) {
   return (
-    <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8">
+    <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight">
       {title}
     </h1>
   );
