@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './../routes/__root'
 import { Route as TeacherRouteImport } from './../routes/teacher'
 import { Route as StudentRouteImport } from './../routes/student'
+import { Route as LoginRouteImport } from './../routes/login'
 import { Route as IndexRouteImport } from './../routes/index'
 import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
 import { Route as TeacherTestGradingRouteImport } from './../routes/teacher/test-grading'
@@ -21,6 +22,7 @@ import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashbo
 import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherClassesRouteImport } from './../routes/teacher/classes'
 import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
+import { Route as StudentTestListRouteImport } from './../routes/student/test-list'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as TeacherClassesIndexRouteImport } from './../routes/teacher/classes/index'
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
@@ -34,6 +36,11 @@ const TeacherRoute = TeacherRouteImport.update({
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -86,6 +93,11 @@ const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
   path: '/vocabulary',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentTestListRoute = StudentTestListRouteImport.update({
+  id: '/test-list',
+  path: '/test-list',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentDashboardRoute = StudentDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -110,9 +122,11 @@ const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
   '/teacher/clinics': typeof TeacherClinicsRoute
@@ -128,9 +142,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
@@ -146,9 +162,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
+  '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
   '/teacher/clinics': typeof TeacherClinicsRoute
@@ -166,9 +184,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/test-list'
     | '/student/vocabulary'
     | '/teacher/classes'
     | '/teacher/clinics'
@@ -184,9 +204,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/test-list'
     | '/student/vocabulary'
     | '/teacher/clinics'
     | '/teacher/dashboard'
@@ -201,9 +223,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/login'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
+    | '/student/test-list'
     | '/student/vocabulary'
     | '/teacher/classes'
     | '/teacher/clinics'
@@ -220,6 +244,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
 }
@@ -238,6 +263,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -310,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentVocabularyRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/test-list': {
+      id: '/student/test-list'
+      path: '/test-list'
+      fullPath: '/student/test-list'
+      preLoaderRoute: typeof StudentTestListRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/dashboard': {
       id: '/student/dashboard'
       path: '/dashboard'
@@ -343,11 +382,13 @@ declare module '@tanstack/react-router' {
 
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
+  StudentTestListRoute: typeof StudentTestListRoute
   StudentVocabularyRoute: typeof StudentVocabularyRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
+  StudentTestListRoute: StudentTestListRoute,
   StudentVocabularyRoute: StudentVocabularyRoute,
 }
 
@@ -397,6 +438,7 @@ const TeacherRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
 }

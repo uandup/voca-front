@@ -64,7 +64,7 @@ const testHistory: TestHistoryItem[] = [
 
 import { useNavigate } from "@tanstack/react-router";
 
-export function DashboardPage() {
+export function TestListPage() {
   const navigate = useNavigate();
 
   return (
@@ -75,7 +75,8 @@ export function DashboardPage() {
           Assignments
         </h1>
         <p className="text-on-surface-variant font-medium">
-          Manage your active curriculum and review your academic performance history.
+          Manage your active curriculum and review your academic performance
+          history.
         </p>
       </header>
 
@@ -96,7 +97,9 @@ export function DashboardPage() {
                   Active Assignment
                 </span>
                 <span className="text-on-surface-variant text-sm flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">calendar_today</span>
+                  <span className="material-symbols-outlined text-sm">
+                    calendar_today
+                  </span>
                   Assigned on Oct 24
                 </span>
               </div>
@@ -104,16 +107,21 @@ export function DashboardPage() {
                 Level 3 - Academic Core
               </h3>
               <p className="text-on-surface-variant text-lg font-medium max-w-2xl">
-                Master 40 essential vocabulary words focused on higher education and research discourse.
+                Master 40 essential vocabulary words focused on higher education
+                and research discourse.
               </p>
             </div>
             <div className="flex items-center gap-8 md:border-l border-outline-variant/30 md:pl-8">
               <div className="text-center">
                 <p className="text-3xl font-black text-primary">40</p>
-                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Words</p>
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase">
+                  Words
+                </p>
               </div>
               <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-3xl">play_arrow</span>
+                <span className="material-symbols-outlined text-3xl">
+                  play_arrow
+                </span>
               </div>
             </div>
           </div>
@@ -125,7 +133,7 @@ export function DashboardPage() {
         <h2 className="text-2xl font-bold text-primary whitespace-nowrap">
           Previous Test History
         </h2>
-        <div className="h-[1px] w-full bg-outline-variant/30" />
+        <div className="h-px w-full bg-outline-variant/30" />
       </div>
 
       <div className="space-y-4">
@@ -136,7 +144,9 @@ export function DashboardPage() {
             className="group flex flex-col md:flex-row items-center justify-between bg-surface-container-low hover:bg-surface-container-lowest p-6 rounded-xl transition-all hover:shadow-md cursor-pointer"
           >
             <div className="flex items-center gap-6 w-full md:w-auto mb-4 md:mb-0">
-              <div className={`w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center ${item.iconColor}`}>
+              <div
+                className={`w-12 h-12 rounded-lg ${item.iconBg} flex items-center justify-center ${item.iconColor}`}
+              >
                 <span className="material-symbols-outlined">{item.icon}</span>
               </div>
               <div>
@@ -158,8 +168,12 @@ export function DashboardPage() {
                   Accuracy
                 </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-black text-primary">{item.correct}</span>
-                  <span className="text-sm font-medium text-on-surface-variant">/ {item.total}</span>
+                  <span className="text-2xl font-black text-primary">
+                    {item.correct}
+                  </span>
+                  <span className="text-sm font-medium text-on-surface-variant">
+                    / {item.total}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-4">
