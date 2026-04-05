@@ -25,12 +25,17 @@ export function StatCards() {
           <span className="text-4xl font-black text-primary font-headline">
             80
           </span>
-          <span
-            className="-mr-3 material-symbols-outlined text-primary"
-            style={{ fontSize: "40px" }}
-          >
-            chevron_right
-          </span>
+          <div className="flex items-center -mr-3">
+            <span className="text-lg font-bold text-primary/60">
+              View words
+            </span>
+            <span
+              className="material-symbols-outlined text-primary"
+              style={{ fontSize: "40px" }}
+            >
+              chevron_right
+            </span>
+          </div>
         </div>
       </div>
 
@@ -48,12 +53,17 @@ export function StatCards() {
           <span className="text-4xl font-black text-green-600 font-headline">
             200
           </span>
-          <span
-            className="-mr-3 material-symbols-outlined text-green-600"
-            style={{ fontSize: "40px" }}
-          >
-            chevron_right
-          </span>
+          <div className="flex items-center -mr-3">
+            <span className="text-lg font-bold text-green-600/60">
+              View words
+            </span>
+            <span
+              className="material-symbols-outlined text-green-600"
+              style={{ fontSize: "40px" }}
+            >
+              chevron_right
+            </span>
+          </div>
         </div>
       </div>
     </div>
