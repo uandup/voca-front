@@ -3,6 +3,7 @@ import { PageTitle } from "@/shared/ui/PageTitle";
 import { WeeklyScoreChart } from "./ui/WeeklyScoreChart";
 import { StatCards } from "./ui/StatCards";
 import { LevelProgress } from "./ui/LevelProgress";
+import { WordsLearnedCard } from "./ui/WordsLearnedCard";
 import { TodoList } from "./ui/TodoList";
 
 export default function DashboardPage() {
@@ -27,7 +28,7 @@ export default function DashboardPage() {
   return (
     <main className="relative">
       {/* Title row with todo toggle */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between">
         <PageTitle title="Welcome back, LES" />
 
         {/* Todo Button */}
@@ -51,7 +52,12 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <LevelProgress />
+      <div className="flex gap-4 items-stretch mb-8">
+        <div className="flex-1">
+          <LevelProgress />
+        </div>
+        <WordsLearnedCard />
+      </div>
       <div className="grid grid-cols-12 gap-8 items-stretch">
         <WeeklyScoreChart />
         <StatCards />
