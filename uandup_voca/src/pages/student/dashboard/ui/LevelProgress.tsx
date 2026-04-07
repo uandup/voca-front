@@ -1,13 +1,11 @@
 const TOTAL_LEVELS = 10;
 const currentLevel = 4;
 const currentLevelProgress = 60; // % of current level
-const wordsLearned = 240;
-const totalWords = 400;
 
 const testConfig = {
   type: "Word to meaning (Korean)",
   synonyms: true,
-  wordsPerTest: 40,
+  wordsPerTest: 100,
 };
 
 const RADIUS = 54;
@@ -54,16 +52,13 @@ export function LevelProgress() {
               </span>
             </div>
           </div>
-          {/* <p className="text-xs text-on-surface-variant">
-            {wordsLearned} / {totalWords} words
-          </p> */}
         </div>
 
         {/* Divider */}
         <div className="w-px self-stretch bg-outline-variant/20" />
 
         {/* Right */}
-        <div className="flex-1 flex flex-col justify-around">
+        <div className="flex-1 flex flex-col gap-4 justify-around">
           {/* Test config chips */}
           <div>
             <p className="text-[12px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">
@@ -120,7 +115,7 @@ export function LevelProgress() {
                     key={level}
                     className="flex-1 flex flex-col items-center gap-1"
                   >
-                    <div className="relative h-6 w-full rounded-sm overflow-hidden bg-surface-container-highest">
+                    <div className="relative h-8 w-full rounded-sm overflow-hidden bg-surface-container-highest">
                       {isCompleted && (
                         <div className="absolute inset-0 bg-primary rounded-sm" />
                       )}
