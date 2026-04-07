@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
-import { WeeklyScoreChart } from "./ui/WeeklyScoreChart";
+import { ScoreTrendChart } from "./ui/ScoreTrendChart";
 import { StatCards } from "./ui/StatCards";
 import { LevelProgress } from "./ui/LevelProgress";
 import { WordsLearnedCard } from "./ui/WordsLearnedCard";
@@ -59,7 +59,7 @@ export default function DashboardPage() {
         <WordsLearnedCard />
       </div>
       <div className="grid grid-cols-12 gap-8 items-stretch">
-        <WeeklyScoreChart />
+        <ScoreTrendChart />
         <StatCards />
       </div>
 
