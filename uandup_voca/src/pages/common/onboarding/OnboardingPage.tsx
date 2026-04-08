@@ -23,7 +23,7 @@ export default function OnboardingPage() {
   const isValid = () => {
     if (userType === "학생") return !!(studentNameKo && studentNameEn && studentGrade);
     if (userType === "학부모") return !!(parentPhone && childName && childGrade);
-    if (userType === "선생님") return !!(teacherName && teacherNameEn);
+    if (userType === "선생님") return !!teacherName;
     return false;
   };
 

@@ -25,7 +25,7 @@ export function TeacherForm({ name, nameEn, onChangeName, onChangeNameEn }: Prop
 
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-on-surface">
-          영어 이름 <span className="text-error">*</span>
+          영어 이름
         </label>
         <input
           type="text"
