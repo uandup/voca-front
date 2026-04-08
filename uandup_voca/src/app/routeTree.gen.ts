@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './../routes/__root'
 import { Route as TeacherRouteImport } from './../routes/teacher'
 import { Route as StudentRouteImport } from './../routes/student'
+import { Route as PendingRouteImport } from './../routes/pending'
 import { Route as OnboardingRouteImport } from './../routes/onboarding'
 import { Route as LoginRouteImport } from './../routes/login'
 import { Route as IndexRouteImport } from './../routes/index'
@@ -37,6 +38,11 @@ const TeacherRoute = TeacherRouteImport.update({
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
   path: '/student',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PendingRoute = PendingRouteImport.update({
+  id: '/pending',
+  path: '/pending',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/student/dashboard': typeof StudentDashboardRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
+    | '/pending'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
@@ -216,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
+    | '/pending'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
+    | '/pending'
     | '/student'
     | '/teacher'
     | '/student/dashboard'
@@ -258,6 +270,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  PendingRoute: typeof PendingRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
 }
@@ -276,6 +289,13 @@ declare module '@tanstack/react-router' {
       path: '/student'
       fullPath: '/student'
       preLoaderRoute: typeof StudentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pending': {
+      id: '/pending'
+      path: '/pending'
+      fullPath: '/pending'
+      preLoaderRoute: typeof PendingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -460,6 +480,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  PendingRoute: PendingRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
 }
