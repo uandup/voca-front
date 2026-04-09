@@ -9,21 +9,32 @@ type UserType = "학생" | "학부모" | "선생님";
 export default function OnboardingPage() {
   const [userType, setUserType] = useState<UserType>("학생");
 
-  const [studentNameKo, setStudentNameKo] = useState("");
-  const [studentNameEn, setStudentNameEn] = useState("");
+  const [studentLastKo, setStudentLastKo] = useState("");
+  const [studentFirstKo, setStudentFirstKo] = useState("");
+  const [studentLastEn, setStudentLastEn] = useState("");
+  const [studentFirstEn, setStudentFirstEn] = useState("");
   const [studentGrade, setStudentGrade] = useState("");
 
+  const [parentLastKo, setParentLastKo] = useState("");
+  const [parentFirstKo, setParentFirstKo] = useState("");
   const [parentPhone, setParentPhone] = useState("");
-  const [childName, setChildName] = useState("");
+  const [parentPhoneConsent, setParentPhoneConsent] = useState(false);
+  const [childLastKo, setChildLastKo] = useState("");
+  const [childFirstKo, setChildFirstKo] = useState("");
   const [childGrade, setChildGrade] = useState("");
 
-  const [teacherName, setTeacherName] = useState("");
-  const [teacherNameEn, setTeacherNameEn] = useState("");
+  const [teacherLastKo, setTeacherLastKo] = useState("");
+  const [teacherFirstKo, setTeacherFirstKo] = useState("");
+  const [teacherLastEn, setTeacherLastEn] = useState("");
+  const [teacherFirstEn, setTeacherFirstEn] = useState("");
 
   const isValid = () => {
-    if (userType === "학생") return !!(studentNameKo && studentNameEn && studentGrade);
-    if (userType === "학부모") return !!(parentPhone && childName && childGrade);
-    if (userType === "선생님") return !!teacherName;
+    if (userType === "학생")
+      return !!(studentLastKo && studentFirstKo && studentLastEn && studentFirstEn && studentGrade);
+    if (userType === "학부모")
+      return !!(parentLastKo && parentFirstKo && parentPhone && parentPhoneConsent && childLastKo && childFirstKo && childGrade);
+    if (userType === "선생님")
+      return !!(teacherLastKo && teacherFirstKo);
     return false;
   };
 
@@ -75,32 +86,48 @@ export default function OnboardingPage() {
 
           {userType === "학생" && (
             <StudentForm
-              nameKo={studentNameKo}
-              nameEn={studentNameEn}
+              nameLastKo={studentLastKo}
+              nameFirstKo={studentFirstKo}
+              nameLastEn={studentLastEn}
+              nameFirstEn={studentFirstEn}
               grade={studentGrade}
-              onChangeNameKo={setStudentNameKo}
-              onChangeNameEn={setStudentNameEn}
+              onChangeNameLastKo={setStudentLastKo}
+              onChangeNameFirstKo={setStudentFirstKo}
+              onChangeNameLastEn={setStudentLastEn}
+              onChangeNameFirstEn={setStudentFirstEn}
               onChangeGrade={setStudentGrade}
             />
           )}
 
           {userType === "학부모" && (
             <ParentForm
+              nameLastKo={parentLastKo}
+              nameFirstKo={parentFirstKo}
               phone={parentPhone}
-              childName={childName}
+              phoneConsent={parentPhoneConsent}
+              childLastKo={childLastKo}
+              childFirstKo={childFirstKo}
               childGrade={childGrade}
+              onChangeNameLastKo={setParentLastKo}
+              onChangeNameFirstKo={setParentFirstKo}
               onChangePhone={setParentPhone}
-              onChangeChildName={setChildName}
+              onChangePhoneConsent={setParentPhoneConsent}
+              onChangeChildLastKo={setChildLastKo}
+              onChangeChildFirstKo={setChildFirstKo}
               onChangeChildGrade={setChildGrade}
             />
           )}
 
           {userType === "선생님" && (
             <TeacherForm
-              name={teacherName}
-              nameEn={teacherNameEn}
-              onChangeName={setTeacherName}
-              onChangeNameEn={setTeacherNameEn}
+              nameLastKo={teacherLastKo}
+              nameFirstKo={teacherFirstKo}
+              nameLastEn={teacherLastEn}
+              nameFirstEn={teacherFirstEn}
+              onChangeNameLastKo={setTeacherLastKo}
+              onChangeNameFirstKo={setTeacherFirstKo}
+              onChangeNameLastEn={setTeacherLastEn}
+              onChangeNameFirstEn={setTeacherFirstEn}
             />
           )}
 
