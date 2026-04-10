@@ -256,7 +256,7 @@ export function EditStudentModal({
                   <span className="material-symbols-outlined text-sm">
                     {showParentList ? "chevron_right" : "chevron_left"}
                   </span>
-                  학부모 선택
+                  Select Parent
                 </button>
               </div>
 
@@ -276,7 +276,7 @@ export function EditStudentModal({
                   </button>
                 </div>
               ) : (
-                <p className="text-xs text-on-surface-variant/60 px-1">선택된 학부모 없음</p>
+                <p className="text-xs text-on-surface-variant/60 px-1">No parent selected</p>
               )}
             </div>
           </div>

@@ -21,10 +21,10 @@ export function ParentListPanel({
       {/* 헤더 */}
       <div className="px-5 py-4 border-b border-outline-variant/30 shrink-0">
         <h3 className="text-sm font-extrabold font-headline text-primary">
-          학부모 목록
+          Parent List
         </h3>
         <p className="text-xs text-on-surface-variant mt-0.5">
-          선택하면 적용됩니다
+          Select to apply
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export function ParentListPanel({
         <div className="relative">
           <input
             className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-1.5 pl-2 pr-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-            placeholder="이름 또는 연락처"
+            placeholder="Name or phone number"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             autoFocus
@@ -45,7 +45,7 @@ export function ParentListPanel({
       <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20">
         {filtered.length === 0 && (
           <li className="px-5 py-6 text-xs text-on-surface-variant text-center">
-            검색 결과 없음
+            No results found
           </li>
         )}
         {filtered.map((parent) => {
