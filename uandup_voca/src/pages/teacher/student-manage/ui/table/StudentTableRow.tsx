@@ -93,7 +93,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
           </p>
           <button
             onClick={() => actions.onMemo(student)}
-            className="shrink-0 p-1 text-on-surface-variant hover:text-primary transition-colors"
+            className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
             title="메모 보기"
           >
             <span className="material-symbols-outlined text-base">

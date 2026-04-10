@@ -49,11 +49,19 @@ export function StudentDetailModal({
         <div className="px-8 py-4 shadow-sm border-b border-outline-variant/30 flex justify-between items-center shrink-0 bg-surface">
           <div className="flex items-center gap-3">
             <h2 className="font-headline text-2xl font-bold text-primary">
-              {student.name}
+              {student.nameLastKo}{student.nameFirstKo}
             </h2>
+            <span className="text-sm text-on-surface-variant font-medium">
+              {student.nameFirstEn} {student.nameLastEn}
+            </span>
             <span className="bg-secondary-container text-on-secondary-container text-xs font-bold px-3 py-1 rounded-full">
               {student.grade}
             </span>
+            {student.memos.length > 0 && (
+              <span className="material-symbols-outlined text-on-surface-variant text-base">
+                sticky_note_2
+              </span>
+            )}
           </div>
           <button
             onClick={onClose}
