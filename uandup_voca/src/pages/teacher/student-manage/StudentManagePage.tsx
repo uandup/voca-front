@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { PageTitle } from "@/shared/ui/PageTitle";
 import {
   STUDENT_MANAGE_MOCK,
@@ -14,17 +14,20 @@ export default function StudentManagePage() {
   const [gradeFilter, setGradeFilter] = useState("");
   const [levelFilter, setLevelFilter] = useState<number | "">("");
   const [classFilter, setClassFilter] = useState("");
-  const [students, setStudents] = useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
-  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(null);
-  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(null);
+  const [students, setStudents] =
+    useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
+  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(
+    null,
+  );
+  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(
+    null,
+  );
   const [memoStudent, setMemoStudent] = useState<ManagedStudent | null>(null);
 
-  // Set Grade
-  const [showSetGrade, setShowSetGrade] = useState(false);
-  const [pendingGrade, setPendingGrade] = useState<number | "">("");
-  const setGradeRef = useRef<HTMLDivElement>(null);
 
-  const grades = [...new Set(students.map((s) => s.grade))].sort((a, b) => a - b);
+  const grades = [...new Set(students.map((s) => s.grade))].sort(
+    (a, b) => a - b,
+  );
   const allClasses = [...new Set(students.flatMap((s) => s.classes))].sort();
 
   function handleSave(updated: ManagedStudent) {
@@ -35,19 +38,16 @@ export default function StudentManagePage() {
     setStudents((prev) => prev.filter((s) => s.id !== id));
   }
 
-  function handleSetGradeConfirm() {
-    if (pendingGrade === "") return;
-    setStudents((prev) => prev.map((s) => ({ ...s, grade: pendingGrade as number })));
-    setShowSetGrade(false);
-    setPendingGrade("");
-  }
 
   const filtered = students.filter((s) => {
     const matchesSearch =
-      `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()) ||
+      `${s.nameFirstEn} ${s.nameLastEn}`
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
       `${s.nameLastKo}${s.nameFirstKo}`.includes(search);
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
-    const matchesLevel = levelFilter !== "" ? s.assignedLevel === levelFilter : true;
+    const matchesLevel =
+      levelFilter !== "" ? s.assignedLevel === levelFilter : true;
     const matchesClass = classFilter ? s.classes.includes(classFilter) : true;
     return matchesSearch && matchesGrade && matchesLevel && matchesClass;
   });
@@ -61,6 +61,7 @@ export default function StudentManagePage() {
   return (
     <main>
       <PageTitle title="Student Management" />
+
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 mb-6">
@@ -86,7 +87,9 @@ export default function StudentManagePage() {
         >
           <option value="">Grade: All</option>
           {grades.map((g) => (
-            <option key={g} value={g}>G{g}</option>
+            <option key={g} value={g}>
+              G{g}
+            </option>
           ))}
         </select>
 
@@ -100,7 +103,9 @@ export default function StudentManagePage() {
         >
           <option value="">Level: All</option>
           {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
-            <option key={l} value={l}>Level {l}</option>
+            <option key={l} value={l}>
+              Level {l}
+            </option>
           ))}
         </select>
 
@@ -112,7 +117,9 @@ export default function StudentManagePage() {
         >
           <option value="">Class: All</option>
           {allClasses.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
         </select>
 
@@ -128,51 +135,6 @@ export default function StudentManagePage() {
         >
           Reset
         </button>
-
-        {/* Set Grade */}
-        <div className="relative ml-auto" ref={setGradeRef}>
-          <button
-            className="px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors flex items-center gap-1"
-            onClick={() => {
-              setShowSetGrade((v) => !v);
-              setPendingGrade("");
-            }}
-          >
-            <span className="material-symbols-outlined text-base">swap_vert</span>
-            Set Grade
-          </button>
-          {showSetGrade && (
-            <div className="absolute right-0 top-full mt-2 bg-white border border-outline-variant/20 rounded-xl shadow-lg p-4 flex flex-col gap-3 z-10 min-w-48">
-              <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">
-                전체 학생 학년 변경
-              </p>
-              <div className="relative">
-                <select
-                  className="w-full border border-outline-variant/30 rounded-lg px-3 py-2 text-sm appearance-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  value={pendingGrade}
-                  onChange={(e) =>
-                    setPendingGrade(e.target.value === "" ? "" : Number(e.target.value))
-                  }
-                >
-                  <option value="">학년 선택</option>
-                  {[4, 5, 6, 7, 8, 9, 10, 11, 12].map((g) => (
-                    <option key={g} value={g}>G{g}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-base">
-                  expand_more
-                </span>
-              </div>
-              <button
-                disabled={pendingGrade === ""}
-                onClick={handleSetGradeConfirm}
-                className="w-full py-2 rounded-lg bg-primary text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
-              >
-                적용
-              </button>
-            </div>
-          )}
-        </div>
       </div>
 
       <StudentTable students={filtered} actions={rowActions} />

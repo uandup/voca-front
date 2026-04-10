@@ -67,13 +67,11 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       </td>
 
       {/* Recent Score */}
-      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+      <td className="px-4 py-4 text-center font-headline font-bold text-primary text-sm border-r border-outline-variant/20">
         {student.recentScore ? (
-          <span className="font-headline font-bold text-sm text-primary">
+          <span className=" ">
             {student.recentScore.score}
-            <span className="text-on-surface-variant font-normal text-xs">
-              /{student.recentScore.total}
-            </span>
+            <span className="">/{student.recentScore.total}</span>
           </span>
         ) : (
           <span className="text-on-surface-variant text-sm">—</span>

@@ -39,9 +39,9 @@ export interface RecentScore {
 export interface ManagedStudent {
   id: number;
   nameFirstEn: string; // 이름 (예: Minsu)
-  nameLastEn: string;  // 성 (예: Kim)
+  nameLastEn: string; // 성 (예: Kim)
   nameFirstKo: string; // 이름 (예: 민수)
-  nameLastKo: string;  // 성 (예: 김)
+  nameLastKo: string; // 성 (예: 김)
   grade: number;
   classes: string[];
   clinics: string[];
@@ -73,12 +73,36 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     testConfig: { type: "W→EN", includeSynonyms: true },
     recentScore: { score: 87, total: 100, date: "2026.04.01" },
     memos: [
-      { id: 1, date: "2026.03.01", content: "단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중." },
-      { id: 2, date: "2026.04.01", content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트." },
-      { id: 3, date: "2026.04.02", content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트." },
-      { id: 4, date: "2026.04.03", content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트." },
-      { id: 5, date: "2026.04.04", content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트." },
-      { id: 6, date: "2026.04.05", content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트." },
+      {
+        id: 1,
+        date: "2026.03.01",
+        content: "단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중.",
+      },
+      {
+        id: 2,
+        date: "2026.04.01",
+        content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.",
+      },
+      {
+        id: 3,
+        date: "2026.04.02",
+        content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.",
+      },
+      {
+        id: 4,
+        date: "2026.04.03",
+        content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.",
+      },
+      {
+        id: 5,
+        date: "2026.04.04",
+        content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.",
+      },
+      {
+        id: 6,
+        date: "2026.04.05",
+        content: "줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트..가나다라마바.",
+      },
     ],
     parentName: "김철수",
     parentPhone: "010-1234-5678",
@@ -99,7 +123,11 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     testConfig: { type: "W→KR", includeSynonyms: false },
     recentScore: { score: 92, total: 100, date: "2026.04.02" },
     memos: [
-      { id: 1, date: "2026.03.15", content: "재시험 예정. 혼동 어휘 정리가 필요함." },
+      {
+        id: 1,
+        date: "2026.03.15",
+        content: "재시험 예정. 혼동 어휘 정리가 필요함.",
+      },
     ],
     parentName: "이상훈",
     parentPhone: "010-2345-6789",
@@ -120,7 +148,11 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     testConfig: { type: "M→W", includeSynonyms: true },
     recentScore: { score: 78, total: 100, date: "2026.03.28" },
     memos: [
-      { id: 1, date: "2026.02.20", content: "꾸준한 성적 향상 보임. 집중력이 좋음." },
+      {
+        id: 1,
+        date: "2026.02.20",
+        content: "꾸준한 성적 향상 보임. 집중력이 좋음.",
+      },
     ],
   },
   {
@@ -139,7 +171,11 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     testConfig: { type: "W→KR", includeSynonyms: true },
     recentScore: { score: 95, total: 100, date: "2026.04.03" },
     memos: [
-      { id: 1, date: "2026.03.10", content: "학습 진도 빠름. 다음 단계 교재 준비 권장." },
+      {
+        id: 1,
+        date: "2026.03.10",
+        content: "학습 진도 빠름. 다음 단계 교재 준비 권장.",
+      },
     ],
     parentName: "최영진",
     parentPhone: "010-3456-7890",
