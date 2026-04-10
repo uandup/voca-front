@@ -1,7 +1,5 @@
-import type {
-  TestConfig,
-  MemoItem,
-} from '@/pages/teacher/student-manage/mock/studentManageMockData';
+import type { TestConfig } from '@/entities/test';
+import type { MemoItem } from '@/entities/student';
 
 export interface ClinicStudent {
   id: string;

@@ -1,6 +1,6 @@
 import { AssignedLevelBlocks } from '@/entities/vocab';
 import type { ManagedStudent } from '../../mock/studentManageMockData';
-import { TestConfigBadges } from './cells/TestConfigBadges';
+import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {
   onEdit: (student: ManagedStudent) => void;

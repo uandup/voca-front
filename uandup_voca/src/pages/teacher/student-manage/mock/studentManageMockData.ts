@@ -1,4 +1,7 @@
-export type TestType = 'W→EN' | 'W→KR' | 'M→W';
+import type { TestConfig } from '@/entities/test';
+import type { MemoItem } from '@/entities/student';
+export type { TestType, TestConfig } from '@/entities/test';
+export type { MemoItem } from '@/entities/student';
 
 export interface ParentInfo {
   id: number;
@@ -18,17 +21,6 @@ export const PARENT_MOCK: ParentInfo[] = [
   { id: 9, name: '이은수', phone: '010-1234-1234' },
   { id: 10, name: '고세규', phone: '010-1234-1234' },
 ];
-
-export interface TestConfig {
-  type: TestType;
-  includeSynonyms: boolean;
-}
-
-export interface MemoItem {
-  id: number;
-  date: string; // "YYYY.MM.DD"
-  content: string;
-}
 
 export interface RecentScore {
   score: number;

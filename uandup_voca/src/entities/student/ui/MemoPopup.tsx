@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { MemoItem } from '@/entities/student';
+import type { MemoItem } from '../types/memo';
 
 interface MemoPopupProps {
   studentName: string;

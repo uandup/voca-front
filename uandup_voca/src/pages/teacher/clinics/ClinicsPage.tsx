@@ -5,9 +5,8 @@ import { AssignedLevelBlocks } from '@/entities/vocab';
 import { CLINIC_MOCK, type ClinicStudent } from './mock/clinicMockData';
 import { StudentDetailModal } from './ui/StudentDetailModal';
 import { EditMembersModal } from '@/features/roster-manage';
-import { TestConfigBadges } from '@/pages/teacher/student-manage/ui/table/cells/TestConfigBadges';
-import { MemoPopup } from '@/pages/teacher/student-manage/ui/modals/MemoPopup';
-import type { MemoItem } from '@/pages/teacher/student-manage/mock/studentManageMockData';
+import { TestConfigBadges } from '@/entities/test';
+import { MemoPopup, type MemoItem } from '@/entities/student';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 type Day = (typeof DAYS)[number];

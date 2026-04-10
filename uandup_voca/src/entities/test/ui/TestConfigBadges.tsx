@@ -1,4 +1,4 @@
-import type { TestConfig, TestType } from '../../../mock/studentManageMockData';
+import type { TestConfig, TestType } from '../types/testConfig';
 
 const TYPE_STYLES: Record<TestType, string> = {
   'W→EN': 'bg-blue-100 text-blue-700',
