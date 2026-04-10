@@ -13,6 +13,21 @@ type Day = (typeof DAYS)[number];
 
 const todayDay = DAYS[Math.max(0, new Date().getDay() - 1)];
 
+type TimeGroup = 'morning' | 'afternoon' | 'evening';
+
+const TIME_GROUPS: { key: TimeGroup; label: string; range: string }[] = [
+  { key: 'morning', label: 'Morning', range: '09 – 12' },
+  { key: 'afternoon', label: 'Afternoon', range: '13 – 17' },
+  { key: 'evening', label: 'Evening', range: '18 – 23' },
+];
+
+function getTimeGroup(timeSlot: string): TimeGroup {
+  const startHour = parseInt(timeSlot.split(':')[0], 10);
+  if (startHour < 12) return 'morning';
+  if (startHour < 17) return 'afternoon';
+  return 'evening';
+}
+
 export default function ClinicsPage() {
   const [sessions, setSessions] = useState(CLINIC_MOCK.sessions);
   const [selectedDay, setSelectedDay] = useState<Day>(todayDay);
@@ -20,6 +35,15 @@ export default function ClinicsPage() {
   const [selectedStudent, setSelectedStudent] = useState<ClinicStudent | null>(null);
   const [memoStudent, setMemoStudent] = useState<ClinicStudent | null>(null);
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Record<TimeGroup, boolean>>({
+    morning: true,
+    afternoon: true,
+    evening: true,
+  });
+
+  function toggleGroup(group: TimeGroup) {
+    setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+  }
 
   const selectedSession = sessions.find((s) => s.id === selectedSessionId) ?? sessions[0];
 
@@ -78,29 +102,61 @@ export default function ClinicsPage() {
 
           {/* 세션 카드 목록 */}
           <div className="space-y-2">
-            {sessions.map((session) => {
-              const isSelected = session.id === selectedSessionId;
+            {TIME_GROUPS.map((group) => {
+              const groupSessions = sessions.filter((s) => getTimeGroup(s.timeSlot) === group.key);
+              if (groupSessions.length === 0) return null;
+              const isOpen = expandedGroups[group.key];
               return (
-                <button
-                  key={session.id}
-                  onClick={() => setSelectedSessionId(session.id)}
-                  className={`w-full text-left px-5 py-3.5 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-primary-fixed border-l-4 border-primary shadow-md rounded-r-xl'
-                      : 'bg-white border border-outline-variant/30 hover:border-primary/40 shadow-sm'
-                  }`}
+                <div
+                  key={group.key}
+                  className="rounded-xl border border-outline-variant/30 overflow-hidden shadow-sm"
                 >
-                  <span
-                    className={`text-sm font-bold transition-colors ${isSelected ? 'text-primary' : 'text-on-surface/80'}`}
+                  <button
+                    onClick={() => toggleGroup(group.key)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer"
                   >
-                    {session.timeSlot}
-                  </span>
-                  <span
-                    className={`text-xs font-black px-2 py-1 rounded ${isSelected ? 'text-primary bg-white/50' : 'text-on-surface-variant bg-surface-container-highest'}`}
-                  >
-                    {session.enrolled}
-                  </span>
-                </button>
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs font-black uppercase tracking-widest text-on-surface">
+                        {group.label}
+                      </span>
+                      <span className="text-xs font-normal text-on-surface-variant/60">
+                        {group.range}
+                      </span>
+                    </span>
+                    <span className="material-symbols-outlined text-base text-on-surface-variant">
+                      {isOpen ? 'expand_less' : 'expand_more'}
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div className="bg-white">
+                      {groupSessions.map((session) => {
+                        const isSelected = session.id === selectedSessionId;
+                        return (
+                          <button
+                            key={session.id}
+                            onClick={() => setSelectedSessionId(session.id)}
+                            className={`w-full text-left px-4 py-3 flex justify-between items-center transition-all cursor-pointer border-l-4 ${
+                              isSelected
+                                ? 'bg-primary-fixed border-primary'
+                                : 'border-transparent hover:bg-surface-container-low/50'
+                            }`}
+                          >
+                            <span
+                              className={`text-sm font-bold transition-colors ${isSelected ? 'text-primary' : 'text-on-surface/80'}`}
+                            >
+                              {session.timeSlot}
+                            </span>
+                            <span
+                              className={`text-xs font-black px-2 py-1 rounded ${isSelected ? 'text-primary bg-white/50' : 'text-on-surface-variant bg-surface-container-highest'}`}
+                            >
+                              {session.enrolled}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
