@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Vocab } from "@/entities/vocab";
+
 import { VocabModal } from "./modals/VocabModal";
 import { DeleteVocabModal } from "./modals/DeleteVocabModal";
 

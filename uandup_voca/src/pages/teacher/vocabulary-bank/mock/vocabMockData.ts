@@ -6,7 +6,7 @@ export const mockVocabData: (Vocab & { id: number })[] = [
     difficultyLevel: 3,
     word: "Ambiguity",
     synonyms: ["Vagueness", "Obscurity", "Equivocation"],
-    partOfSpeech: "Noun",
+    partOfSpeech: "N",
     koreanMeaning: "모호함, 다의성",
     englishMeaning:
       "The quality of being open to more than one interpretation; inexactness.",
@@ -18,7 +18,7 @@ export const mockVocabData: (Vocab & { id: number })[] = [
     difficultyLevel: 4,
     word: "Corroborate",
     synonyms: ["Validate", "Verify", "Authenticate"],
-    partOfSpeech: "Verb",
+    partOfSpeech: "V",
     koreanMeaning: "확증하다, 입증하다",
     englishMeaning:
       "To confirm or give support to (a statement, theory, or finding).",
@@ -30,7 +30,7 @@ export const mockVocabData: (Vocab & { id: number })[] = [
     difficultyLevel: 2,
     word: "Resilient",
     synonyms: ["Tough", "Strong", "Adaptable"],
-    partOfSpeech: "Adjective",
+    partOfSpeech: "Adj",
     koreanMeaning: "회복력 있는, 탄력 있는",
     englishMeaning:
       "Able to withstand or recover quickly from difficult conditions.",

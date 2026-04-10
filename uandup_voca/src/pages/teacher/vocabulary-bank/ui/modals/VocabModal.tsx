@@ -9,22 +9,22 @@ interface VocabModalProps {
 }
 
 const PARTS_OF_SPEECH: Vocab["partOfSpeech"][] = [
-  "Noun",
-  "Verb",
-  "Adjective",
-  "Adverb",
-  "Conjunction",
+  "N",
+  "V",
+  "Adj",
+  "Adv",
+  "Conj",
 ];
 
 export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   const [word, setWord] = useState(initialData?.word ?? "");
   const [partOfSpeech, setPartOfSpeech] = useState<Vocab["partOfSpeech"]>(
-    initialData?.partOfSpeech ?? "Noun",
+    initialData?.partOfSpeech ?? "N",
   );
   const [koreanMeaning, setKoreanMeaning] = useState(
     initialData?.koreanMeaning ?? "",
   );
-  const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3 | 4>(
+  const [difficultyLevel, setDifficultyLevel] = useState<Vocab["difficultyLevel"]>(
     initialData?.difficultyLevel ?? 1,
   );
   const [englishMeaning, setEnglishMeaning] = useState(
@@ -141,21 +141,21 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
               </label>
-              <div className="flex p-1 bg-surface-container-low rounded-xl h-14 items-center">
-                {([1, 2, 3, 4] as const).map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    onClick={() => setDifficultyLevel(level)}
-                    className={`flex-1 h-full text-xs font-bold rounded-lg transition-colors ${
-                      difficultyLevel === level
-                        ? "bg-white shadow-sm text-primary"
-                        : "text-on-surface-variant hover:bg-white/40"
-                    }`}
-                  >
-                    {level}
-                  </button>
-                ))}
+              <div className="relative">
+                <select
+                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
+                  value={difficultyLevel}
+                  onChange={(e) =>
+                    setDifficultyLevel(Number(e.target.value) as Vocab["difficultyLevel"])
+                  }
+                >
+                  {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
+                    <option key={l} value={l}>Level {l}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+                  expand_more
+                </span>
               </div>
             </div>
           </div>
