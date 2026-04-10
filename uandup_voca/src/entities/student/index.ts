@@ -1,2 +1,2 @@
-export { EditStudentModal } from "./ui/EditStudentModal";
-export type { StudentFormData } from "./ui/EditStudentModal";
+export { EditStudentModal } from './ui/EditStudentModal';
+export type { StudentFormData } from './ui/EditStudentModal';

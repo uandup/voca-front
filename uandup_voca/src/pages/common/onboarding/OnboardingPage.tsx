@@ -1,40 +1,47 @@
-import { useState } from "react";
-import { StudentForm } from "./ui/StudentForm";
-import { ParentForm } from "./ui/ParentForm";
-import { TeacherForm } from "./ui/TeacherForm";
-import { selectClass, selectStyle } from "./ui/formStyles";
+import { useState } from 'react';
+import { StudentForm } from './ui/StudentForm';
+import { ParentForm } from './ui/ParentForm';
+import { TeacherForm } from './ui/TeacherForm';
+import { selectClass, selectStyle } from './ui/formStyles';
 
-type UserType = "학생" | "학부모" | "선생님";
+type UserType = '학생' | '학부모' | '선생님';
 
 export default function OnboardingPage() {
-  const [userType, setUserType] = useState<UserType>("학생");
+  const [userType, setUserType] = useState<UserType>('학생');
 
-  const [studentLastKo, setStudentLastKo] = useState("");
-  const [studentFirstKo, setStudentFirstKo] = useState("");
-  const [studentLastEn, setStudentLastEn] = useState("");
-  const [studentFirstEn, setStudentFirstEn] = useState("");
-  const [studentGrade, setStudentGrade] = useState("");
+  const [studentLastKo, setStudentLastKo] = useState('');
+  const [studentFirstKo, setStudentFirstKo] = useState('');
+  const [studentLastEn, setStudentLastEn] = useState('');
+  const [studentFirstEn, setStudentFirstEn] = useState('');
+  const [studentGrade, setStudentGrade] = useState('');
 
-  const [parentLastKo, setParentLastKo] = useState("");
-  const [parentFirstKo, setParentFirstKo] = useState("");
-  const [parentPhone, setParentPhone] = useState("");
+  const [parentLastKo, setParentLastKo] = useState('');
+  const [parentFirstKo, setParentFirstKo] = useState('');
+  const [parentPhone, setParentPhone] = useState('');
   const [parentPhoneConsent, setParentPhoneConsent] = useState(false);
-  const [childLastKo, setChildLastKo] = useState("");
-  const [childFirstKo, setChildFirstKo] = useState("");
-  const [childGrade, setChildGrade] = useState("");
+  const [childLastKo, setChildLastKo] = useState('');
+  const [childFirstKo, setChildFirstKo] = useState('');
+  const [childGrade, setChildGrade] = useState('');
 
-  const [teacherLastKo, setTeacherLastKo] = useState("");
-  const [teacherFirstKo, setTeacherFirstKo] = useState("");
-  const [teacherLastEn, setTeacherLastEn] = useState("");
-  const [teacherFirstEn, setTeacherFirstEn] = useState("");
+  const [teacherLastKo, setTeacherLastKo] = useState('');
+  const [teacherFirstKo, setTeacherFirstKo] = useState('');
+  const [teacherLastEn, setTeacherLastEn] = useState('');
+  const [teacherFirstEn, setTeacherFirstEn] = useState('');
 
   const isValid = () => {
-    if (userType === "학생")
+    if (userType === '학생')
       return !!(studentLastKo && studentFirstKo && studentLastEn && studentFirstEn && studentGrade);
-    if (userType === "학부모")
-      return !!(parentLastKo && parentFirstKo && parentPhone && parentPhoneConsent && childLastKo && childFirstKo && childGrade);
-    if (userType === "선생님")
-      return !!(teacherLastKo && teacherFirstKo);
+    if (userType === '학부모')
+      return !!(
+        parentLastKo &&
+        parentFirstKo &&
+        parentPhone &&
+        parentPhoneConsent &&
+        childLastKo &&
+        childFirstKo &&
+        childGrade
+      );
+    if (userType === '선생님') return !!(teacherLastKo && teacherFirstKo);
     return false;
   };
 
@@ -49,11 +56,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-md px-5">
         {/* 로고 */}
         <div className="flex items-center justify-center">
-          <img
-            src="/logo.png"
-            alt="유앤UP국제학원"
-            className="h-24 w-auto object-contain"
-          />
+          <img src="/logo.png" alt="유앤UP국제학원" className="h-24 w-auto object-contain" />
         </div>
 
         {/* 타이틀 */}
@@ -72,10 +75,7 @@ export default function OnboardingPage() {
             <select
               value={userType}
               onChange={(e) => setUserType(e.target.value as UserType)}
-              className={selectClass.replace(
-                "border-outline-variant",
-                "border-primary",
-              )}
+              className={selectClass.replace('border-outline-variant', 'border-primary')}
               style={selectStyle}
             >
               <option value="학생">학생</option>
@@ -84,7 +84,7 @@ export default function OnboardingPage() {
             </select>
           </div>
 
-          {userType === "학생" && (
+          {userType === '학생' && (
             <StudentForm
               nameLastKo={studentLastKo}
               nameFirstKo={studentFirstKo}
@@ -99,7 +99,7 @@ export default function OnboardingPage() {
             />
           )}
 
-          {userType === "학부모" && (
+          {userType === '학부모' && (
             <ParentForm
               nameLastKo={parentLastKo}
               nameFirstKo={parentFirstKo}
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
             />
           )}
 
-          {userType === "선생님" && (
+          {userType === '선생님' && (
             <TeacherForm
               nameLastKo={teacherLastKo}
               nameFirstKo={teacherFirstKo}
@@ -143,8 +143,8 @@ export default function OnboardingPage() {
         {/* 알림 */}
         <div className="mt-5 px-4 py-3.5 rounded-xl bg-[#fffde7] border border-[#f9e87f]">
           <p className="text-sm text-[#7a6c00]">
-            <span className="font-bold">알림:</span> 정보 입력 후 관리자 승인을
-            기다려주세요. 승인 완료 시 서비스를 이용할 수 있습니다.
+            <span className="font-bold">알림:</span> 정보 입력 후 관리자 승인을 기다려주세요. 승인
+            완료 시 서비스를 이용할 수 있습니다.
           </p>
         </div>
       </div>

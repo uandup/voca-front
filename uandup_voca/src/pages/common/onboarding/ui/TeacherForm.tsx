@@ -1,4 +1,4 @@
-import { inputClass } from "./formStyles";
+import { inputClass } from './formStyles';
 
 interface Props {
   nameLastKo: string;
@@ -49,9 +49,7 @@ export function TeacherForm({
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            Last Name
-          </label>
+          <label className="text-sm font-medium text-on-surface">Last Name</label>
           <input
             type="text"
             placeholder="예) Kim"
@@ -61,9 +59,7 @@ export function TeacherForm({
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            First Name
-          </label>
+          <label className="text-sm font-medium text-on-surface">First Name</label>
           <input
             type="text"
             placeholder="예) Minsu"

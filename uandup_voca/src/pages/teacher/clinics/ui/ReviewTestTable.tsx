@@ -1,5 +1,5 @@
-import { TableContainer } from "@/shared/ui/TableContainer";
-import { AssignedLevelBlocks } from "@/entities/vocab";
+import { TableContainer } from '@/shared/ui/TableContainer';
+import { AssignedLevelBlocks } from '@/entities/vocab';
 
 export interface ReviewScore {
   value: string;
@@ -13,7 +13,7 @@ export interface ReviewTest {
   scores: [ReviewScore?, ReviewScore?, ReviewScore?, ReviewScore?];
 }
 
-function nextGradeIndex(scores: ReviewTest["scores"]): number | null {
+function nextGradeIndex(scores: ReviewTest['scores']): number | null {
   const idx = scores.findIndex((s) => s === undefined);
   return idx === -1 ? null : idx;
 }
@@ -125,7 +125,7 @@ export function ReviewTestTable({
                                   <button className="flex items-center text-on-surface-variant hover:text-primary-container transition-colors">
                                     <span
                                       className="material-symbols-outlined leading-none"
-                                      style={{ fontSize: "18px" }}
+                                      style={{ fontSize: '18px' }}
                                     >
                                       edit
                                     </span>
@@ -143,9 +143,7 @@ export function ReviewTestTable({
                                 Grade
                               </button>
                             ) : (
-                              <span className="text-on-surface-variant/30 text-sm">
-                                —
-                              </span>
+                              <span className="text-on-surface-variant/30 text-sm">—</span>
                             )}
                           </td>
                         );
@@ -153,9 +151,7 @@ export function ReviewTestTable({
                       <td className="px-4 py-5 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button className="p-1.5 text-on-surface-variant hover:text-primary-container transition-colors">
-                            <span className="material-symbols-outlined text-xl">
-                              print
-                            </span>
+                            <span className="material-symbols-outlined text-xl">print</span>
                           </button>
                         </div>
                       </td>

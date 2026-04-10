@@ -1,4 +1,4 @@
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
 interface DeleteVocabModalProps {
   word: string;
@@ -7,11 +7,7 @@ interface DeleteVocabModalProps {
   onDelete: () => void;
 }
 
-export function DeleteVocabModal({
-  word,
-  onClose,
-  onDelete,
-}: DeleteVocabModalProps) {
+export function DeleteVocabModal({ word, onClose, onDelete }: DeleteVocabModalProps) {
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
@@ -21,9 +17,9 @@ export function DeleteVocabModal({
             Delete Word?
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed text-sm">
-            This action will permanently remove{" "}
-            <span className="font-bold text-on-surface">"{word}"</span> from
-            your curriculum. This cannot be undone.
+            This action will permanently remove{' '}
+            <span className="font-bold text-on-surface">"{word}"</span> from your curriculum. This
+            cannot be undone.
           </p>
         </div>
 
@@ -34,9 +30,7 @@ export function DeleteVocabModal({
               Confirming Deletion for:
             </p>
             <div className="flex items-center gap-2">
-              <span className="font-headline font-bold text-lg text-primary">
-                {word}
-              </span>
+              <span className="font-headline font-bold text-lg text-primary">{word}</span>
             </div>
           </div>
         </div>

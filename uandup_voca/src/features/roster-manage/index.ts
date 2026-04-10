@@ -1,1 +1,1 @@
-export { EditMembersModal } from "./ui/EditMembersModal";
+export { EditMembersModal } from './ui/EditMembersModal';

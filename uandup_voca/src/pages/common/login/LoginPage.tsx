@@ -8,11 +8,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-5">
         {/* 로고 */}
         <div className="flex items-center justify-center mb-10">
-          <img
-            src="/logo.png"
-            alt="유앤UP국제학원"
-            className="h-24 w-auto object-contain"
-          />
+          <img src="/logo.png" alt="유앤UP국제학원" className="h-24 w-auto object-contain" />
         </div>
 
         {/* 구글 로그인 */}

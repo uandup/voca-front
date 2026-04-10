@@ -1,12 +1,8 @@
-import { useState } from "react";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
-import type {
-  ManagedStudent,
-  TestType,
-  ParentInfo,
-} from "../../mock/studentManageMockData";
-import { PARENT_MOCK } from "../../mock/studentManageMockData";
-import { ParentListPanel } from "./ParentListPanel";
+import { useState } from 'react';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import type { ManagedStudent, TestType, ParentInfo } from '../../mock/studentManageMockData';
+import { PARENT_MOCK } from '../../mock/studentManageMockData';
+import { ParentListPanel } from './ParentListPanel';
 
 interface EditStudentModalProps {
   student: ManagedStudent;
@@ -14,21 +10,17 @@ interface EditStudentModalProps {
   onSave: (updated: ManagedStudent) => void;
 }
 
-const TEST_TYPES: TestType[] = ["W→EN", "W→KR", "M→W"];
+const TEST_TYPES: TestType[] = ['W→EN', 'W→KR', 'M→W'];
 
 const TEST_TYPE_LABELS: Record<TestType, string> = {
-  "W→EN": "Word to English meaning (W→EN)",
-  "W→KR": "Word to Korean meaning (W→KR)",
-  "M→W":  "Meaning to word (M→W)",
+  'W→EN': 'Word to English meaning (W→EN)',
+  'W→KR': 'Word to Korean meaning (W→KR)',
+  'M→W': 'Meaning to word (M→W)',
 };
 
 const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
-export function EditStudentModal({
-  student,
-  onClose,
-  onSave,
-}: EditStudentModalProps) {
+export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
   const [nameFirstKo, setNameFirstKo] = useState(student.nameFirstKo);
   const [nameLastKo, setNameLastKo] = useState(student.nameLastKo);
   const [nameFirstEn, setNameFirstEn] = useState(student.nameFirstEn);
@@ -36,17 +28,11 @@ export function EditStudentModal({
   const [grade, setGrade] = useState(student.grade);
   const [level, setLevel] = useState(student.assignedLevel);
   const [wordCount, setWordCount] = useState(String(student.assignedWordCount));
-  const [testQuestionCount, setTestQuestionCount] = useState(
-    String(student.testQuestionCount),
-  );
+  const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
   const [testType, setTestType] = useState<TestType>(student.testConfig.type);
-  const [includeSynonyms, setIncludeSynonyms] = useState(
-    student.testConfig.includeSynonyms,
-  );
+  const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
   const [selectedParent, setSelectedParent] = useState<ParentInfo | null>(
-    student.parentName
-      ? (PARENT_MOCK.find((p) => p.name === student.parentName) ?? null)
-      : null,
+    student.parentName ? (PARENT_MOCK.find((p) => p.name === student.parentName) ?? null) : null,
   );
   const [showParentList, setShowParentList] = useState(false);
 
@@ -146,7 +132,9 @@ export function EditStudentModal({
                     onChange={(e) => setGrade(Number(e.target.value))}
                   >
                     {[12, 11, 10, 9, 8, 7, 6, 5, 4].map((g) => (
-                      <option key={g} value={g}>G{g}</option>
+                      <option key={g} value={g}>
+                        G{g}
+                      </option>
                     ))}
                   </select>
                   <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
@@ -165,7 +153,9 @@ export function EditStudentModal({
                     onChange={(e) => setLevel(Number(e.target.value))}
                   >
                     {ALL_LEVELS.map((l) => (
-                      <option key={l} value={l}>Level {l}</option>
+                      <option key={l} value={l}>
+                        Level {l}
+                      </option>
                     ))}
                   </select>
                   <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
@@ -186,7 +176,7 @@ export function EditStudentModal({
                   inputMode="numeric"
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   value={wordCount}
-                  onChange={(e) => setWordCount(e.target.value.replace(/\D/g, ""))}
+                  onChange={(e) => setWordCount(e.target.value.replace(/\D/g, ''))}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -198,7 +188,7 @@ export function EditStudentModal({
                   inputMode="numeric"
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   value={testQuestionCount}
-                  onChange={(e) => setTestQuestionCount(e.target.value.replace(/\D/g, ""))}
+                  onChange={(e) => setTestQuestionCount(e.target.value.replace(/\D/g, ''))}
                 />
               </div>
             </div>
@@ -216,7 +206,9 @@ export function EditStudentModal({
                     onChange={(e) => setTestType(e.target.value as TestType)}
                   >
                     {TEST_TYPES.map((t) => (
-                      <option key={t} value={t}>{TEST_TYPE_LABELS[t]}</option>
+                      <option key={t} value={t}>
+                        {TEST_TYPE_LABELS[t]}
+                      </option>
                     ))}
                   </select>
                   <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
@@ -228,8 +220,8 @@ export function EditStudentModal({
                   onClick={() => setIncludeSynonyms((v) => !v)}
                   className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
                     includeSynonyms
-                      ? "bg-primary text-white border-primary"
-                      : "bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50"
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
                   }`}
                 >
                   +Syn
@@ -249,12 +241,12 @@ export function EditStudentModal({
                   onClick={() => setShowParentList((v) => !v)}
                   className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold border transition-all ${
                     showParentList
-                      ? "bg-primary/10 text-primary border-primary/30"
-                      : "text-on-surface-variant border-outline-variant/30 hover:border-primary/30 hover:text-primary"
+                      ? 'bg-primary/10 text-primary border-primary/30'
+                      : 'text-on-surface-variant border-outline-variant/30 hover:border-primary/30 hover:text-primary'
                   }`}
                 >
                   <span className="material-symbols-outlined text-sm">
-                    {showParentList ? "chevron_right" : "chevron_left"}
+                    {showParentList ? 'chevron_right' : 'chevron_left'}
                   </span>
                   Select Parent
                 </button>

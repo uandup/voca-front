@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { PrintActionBar } from "@/shared/test-print/ui/PrintActionBar";
-import { PrintSheetHeader } from "@/shared/test-print/ui/PrintSheetHeader";
-import { printAllSheets } from "@/shared/test-print/lib/print";
+import { useState } from 'react';
+import { PrintActionBar } from '@/shared/test-print/ui/PrintActionBar';
+import { PrintSheetHeader } from '@/shared/test-print/ui/PrintSheetHeader';
+import { printAllSheets } from '@/shared/test-print/lib/print';
 
 export interface ESRow {
   no: string;
@@ -33,33 +33,37 @@ function ESSheet({
       id={id}
       className="bg-white border border-black shadow-2xl flex flex-col"
       style={{
-        width: "210mm",
-        height: "297mm",
-        padding: "10mm 20mm",
-        ...(hidden ? { position: "absolute", left: "-9999px", top: 0, visibility: "hidden" } : {}),
+        width: '210mm',
+        height: '297mm',
+        padding: '10mm 20mm',
+        ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
       <PrintSheetHeader no={no} />
-      <section style={{ overflow: "hidden" }}>
+      <section style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
           style={{
-            borderCollapse: "collapse",
+            borderCollapse: 'collapse',
             height: `${pageRows.length * ROW_HEIGHT_MM}mm`,
-            tableLayout: "fixed",
+            tableLayout: 'fixed',
           }}
         >
           <colgroup>
-            <col style={{ width: "44px" }} />
+            <col style={{ width: '44px' }} />
             <col />
           </colgroup>
           <thead>
             <tr>
-              {["No", "Example Sentence"].map((col, i) => (
+              {['No', 'Example Sentence'].map((col, i) => (
                 <th
                   key={col}
                   className="text-left text-xs font-extrabold uppercase tracking-[0.05em] bg-[#f2f2f2]"
-                  style={{ border: "1.5pt solid black", padding: "4px 12px", textAlign: i === 0 ? "center" : "left" }}
+                  style={{
+                    border: '1.5pt solid black',
+                    padding: '4px 12px',
+                    textAlign: i === 0 ? 'center' : 'left',
+                  }}
                 >
                   {col}
                 </th>
@@ -68,22 +72,28 @@ function ESSheet({
           </thead>
           <tbody>
             {pageRows.map(({ no: rowNo, sentence }) => {
-              const parts = sentence.split("___");
+              const parts = sentence.split('___');
               return (
                 <tr key={rowNo} style={{ height: `${ROW_HEIGHT_MM}mm` }}>
-                  <td className="text-center text-sm font-bold" style={{ border: "1.5pt solid black", padding: "4px 12px" }}>
+                  <td
+                    className="text-center text-sm font-bold"
+                    style={{ border: '1.5pt solid black', padding: '4px 12px' }}
+                  >
                     {rowNo}
                   </td>
-                  <td className="text-xs" style={{ border: "1.5pt solid black", padding: "4px 12px" }}>
+                  <td
+                    className="text-xs"
+                    style={{ border: '1.5pt solid black', padding: '4px 12px' }}
+                  >
                     {parts[0]}
                     {sentence && (
                       <span
                         style={{
-                          display: "inline-block",
-                          minWidth: "100px",
-                          borderBottom: "1px solid black",
-                          margin: "0 2px",
-                          verticalAlign: "baseline",
+                          display: 'inline-block',
+                          minWidth: '100px',
+                          borderBottom: '1px solid black',
+                          margin: '0 2px',
+                          verticalAlign: 'baseline',
                         }}
                       />
                     )}
@@ -131,7 +141,7 @@ export function TestESPrintModal({ onClose, no, rows }: TestESPrintModalProps) {
       {allPageIds
         .filter((_, i) => i + 1 !== page)
         .map((id) => {
-          const p = parseInt(id.split("-").pop()!);
+          const p = parseInt(id.split('-').pop()!);
           return (
             <ESSheet
               key={id}

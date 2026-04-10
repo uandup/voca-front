@@ -1,31 +1,22 @@
-import { useState } from "react";
-import type { ParentInfo } from "../../mock/studentManageMockData";
-import { PARENT_MOCK } from "../../mock/studentManageMockData";
+import { useState } from 'react';
+import type { ParentInfo } from '../../mock/studentManageMockData';
+import { PARENT_MOCK } from '../../mock/studentManageMockData';
 
 interface ParentListPanelProps {
   selectedId: number | null;
   onSelect: (parent: ParentInfo) => void;
 }
 
-export function ParentListPanel({
-  selectedId,
-  onSelect,
-}: ParentListPanelProps) {
-  const [search, setSearch] = useState("");
-  const filtered = PARENT_MOCK.filter(
-    (p) => p.name.includes(search) || p.phone.includes(search),
-  );
+export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) {
+  const [search, setSearch] = useState('');
+  const filtered = PARENT_MOCK.filter((p) => p.name.includes(search) || p.phone.includes(search));
 
   return (
     <div className="absolute left-full top-0 ml-3 w-64 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full">
       {/* 헤더 */}
       <div className="px-5 py-4 border-b border-outline-variant/30 shrink-0">
-        <h3 className="text-sm font-extrabold font-headline text-primary">
-          Parent List
-        </h3>
-        <p className="text-xs text-on-surface-variant mt-0.5">
-          Select to apply
-        </p>
+        <h3 className="text-sm font-extrabold font-headline text-primary">Parent List</h3>
+        <p className="text-xs text-on-surface-variant mt-0.5">Select to apply</p>
       </div>
 
       {/* 검색바 */}
@@ -56,24 +47,16 @@ export function ParentListPanel({
                 type="button"
                 onClick={() => onSelect(parent)}
                 className={`w-full text-left px-5 py-3.5 transition-colors ${
-                  isSelected
-                    ? "bg-primary/10"
-                    : "hover:bg-surface-container-low"
+                  isSelected ? 'bg-primary/10' : 'hover:bg-surface-container-low'
                 }`}
               >
                 <p
-                  className={`text-sm font-bold flex items-center gap-1 ${isSelected ? "text-primary" : "text-on-surface"}`}
+                  className={`text-sm font-bold flex items-center gap-1 ${isSelected ? 'text-primary' : 'text-on-surface'}`}
                 >
                   {parent.name}
-                  {isSelected && (
-                    <span className="material-symbols-outlined text-sm">
-                      check
-                    </span>
-                  )}
+                  {isSelected && <span className="material-symbols-outlined text-sm">check</span>}
                 </p>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  {parent.phone}
-                </p>
+                <p className="text-xs text-on-surface-variant mt-0.5">{parent.phone}</p>
               </button>
             </li>
           );

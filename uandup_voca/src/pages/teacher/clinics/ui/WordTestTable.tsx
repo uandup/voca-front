@@ -1,8 +1,8 @@
-import { TableContainer } from "@/shared/ui/TableContainer";
-import { AssignedLevelBlocks } from "@/entities/vocab";
+import { TableContainer } from '@/shared/ui/TableContainer';
+import { AssignedLevelBlocks } from '@/entities/vocab';
 
-type TestType = "Word" | "Sentence" | "Review";
-type TestStatus = "Pending" | "Graded";
+type TestType = 'Word' | 'Sentence' | 'Review';
+type TestStatus = 'Pending' | 'Graded';
 
 export interface WordTest {
   id: string;
@@ -15,9 +15,9 @@ export interface WordTest {
 }
 
 const TEST_TYPE_STYLES: Record<TestType, string> = {
-  Word: "bg-primary/10 text-primary",
-  Sentence: "bg-secondary-container text-on-secondary-container",
-  Review: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+  Word: 'bg-primary/10 text-primary',
+  Sentence: 'bg-secondary-container text-on-secondary-container',
+  Review: 'bg-tertiary-fixed text-on-tertiary-fixed-variant',
 };
 
 export function WordTestTable({ tests }: { tests: WordTest[] }) {
@@ -37,18 +37,10 @@ export function WordTestTable({ tests }: { tests: WordTest[] }) {
           </colgroup>
           <thead>
             <tr className="bg-surface-container-low">
-              {[
-                "TEST ID",
-                "ASSIGNED",
-                "TYPE",
-                "LEVEL",
-                "SCORE",
-                "STATUS",
-                "ACTIONS",
-              ].map((col) => (
+              {['TEST ID', 'ASSIGNED', 'TYPE', 'LEVEL', 'SCORE', 'STATUS', 'ACTIONS'].map((col) => (
                 <th
                   key={col}
-                  className={`px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant ${col === "ACTIONS" ? "text-right" : "text-left"}`}
+                  className={`px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant ${col === 'ACTIONS' ? 'text-right' : 'text-left'}`}
                 >
                   {col}
                 </th>
@@ -84,9 +76,7 @@ export function WordTestTable({ tests }: { tests: WordTest[] }) {
                         {test.id}
                       </span>
                     </td>
-                    <td className="px-6 py-5 text-sm text-on-surface-variant">
-                      {test.assignedAt}
-                    </td>
+                    <td className="px-6 py-5 text-sm text-on-surface-variant">{test.assignedAt}</td>
                     <td className="px-6 py-5">
                       <span
                         className={`text-[10px] font-extrabold uppercase px-2 py-1 rounded-full ${TEST_TYPE_STYLES[test.type]}`}
@@ -98,10 +88,10 @@ export function WordTestTable({ tests }: { tests: WordTest[] }) {
                       <AssignedLevelBlocks levels={test.levels} />
                     </td>
                     <td className="px-6 py-5 font-headline font-bold text-primary-container">
-                      {test.score ?? "—"}
+                      {test.score ?? '—'}
                     </td>
                     <td className="px-6 py-5">
-                      {test.status === "Graded" ? (
+                      {test.status === 'Graded' ? (
                         <span className="bg-secondary-container text-on-secondary-container text-[10px] font-extrabold uppercase px-2 py-1 rounded-full">
                           Graded
                         </span>
@@ -114,22 +104,16 @@ export function WordTestTable({ tests }: { tests: WordTest[] }) {
                     <td className="px-6 py-5 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button className="p-1.5 text-on-surface-variant hover:text-primary-container transition-colors">
-                          <span className="material-symbols-outlined text-xl">
-                            print
-                          </span>
+                          <span className="material-symbols-outlined text-xl">print</span>
                         </button>
-                        {test.status === "Graded" ? (
+                        {test.status === 'Graded' ? (
                           <button className="ml-2 bg-primary-container/10 text-primary-container w-20 h-8 rounded-md text-xs font-bold hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-sm">
-                              edit
-                            </span>
+                            <span className="material-symbols-outlined text-sm">edit</span>
                             Edit
                           </button>
                         ) : (
                           <button className="ml-2 bg-primary-container text-white w-20 h-8 rounded-md text-xs font-bold hover:opacity-90 transition-all flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-sm">
-                              fact_check
-                            </span>
+                            <span className="material-symbols-outlined text-sm">fact_check</span>
                             Grade
                           </button>
                         )}

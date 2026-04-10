@@ -1,18 +1,15 @@
-import { useState } from "react";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import { TableContainer } from "@/shared/ui/TableContainer";
-import { AssignedLevelBlocks } from "@/entities/vocab";
-import {
-  CLINIC_MOCK,
-  type ClinicStudent,
-} from "./mock/clinicMockData";
-import { StudentDetailModal } from "./ui/StudentDetailModal";
-import { EditMembersModal } from "@/features/roster-manage";
-import { TestConfigBadges } from "@/pages/teacher/student-manage/ui/table/cells/TestConfigBadges";
-import { MemoPopup } from "@/pages/teacher/student-manage/ui/modals/MemoPopup";
-import type { MemoItem } from "@/pages/teacher/student-manage/mock/studentManageMockData";
+import { useState } from 'react';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { TableContainer } from '@/shared/ui/TableContainer';
+import { AssignedLevelBlocks } from '@/entities/vocab';
+import { CLINIC_MOCK, type ClinicStudent } from './mock/clinicMockData';
+import { StudentDetailModal } from './ui/StudentDetailModal';
+import { EditMembersModal } from '@/features/roster-manage';
+import { TestConfigBadges } from '@/pages/teacher/student-manage/ui/table/cells/TestConfigBadges';
+import { MemoPopup } from '@/pages/teacher/student-manage/ui/modals/MemoPopup';
+import type { MemoItem } from '@/pages/teacher/student-manage/mock/studentManageMockData';
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 type Day = (typeof DAYS)[number];
 
 const todayDay = DAYS[Math.max(0, new Date().getDay() - 1)];
@@ -41,14 +38,10 @@ export default function ClinicsPage() {
     setSessions((prev) =>
       prev.map((session) => ({
         ...session,
-        students: session.students.map((s) =>
-          s.id === studentId ? { ...s, memos: newMemos } : s,
-        ),
+        students: session.students.map((s) => (s.id === studentId ? { ...s, memos: newMemos } : s)),
       })),
     );
-    setMemoStudent((prev) =>
-      prev?.id === studentId ? { ...prev, memos: newMemos } : prev,
-    );
+    setMemoStudent((prev) => (prev?.id === studentId ? { ...prev, memos: newMemos } : prev));
   }
 
   return (
@@ -94,14 +87,18 @@ export default function ClinicsPage() {
                   onClick={() => setSelectedSessionId(session.id)}
                   className={`w-full text-left px-5 py-3.5 rounded-xl flex justify-between items-center transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-primary-fixed border-l-4 border-primary shadow-md rounded-r-xl"
-                      : "bg-white border border-outline-variant/30 hover:border-primary/40 shadow-sm"
+                      ? 'bg-primary-fixed border-l-4 border-primary shadow-md rounded-r-xl'
+                      : 'bg-white border border-outline-variant/30 hover:border-primary/40 shadow-sm'
                   }`}
                 >
-                  <span className={`text-sm font-bold transition-colors ${isSelected ? "text-primary" : "text-on-surface/80"}`}>
+                  <span
+                    className={`text-sm font-bold transition-colors ${isSelected ? 'text-primary' : 'text-on-surface/80'}`}
+                  >
                     {session.timeSlot}
                   </span>
-                  <span className={`text-xs font-black px-2 py-1 rounded ${isSelected ? "text-primary bg-white/50" : "text-on-surface-variant bg-surface-container-highest"}`}>
+                  <span
+                    className={`text-xs font-black px-2 py-1 rounded ${isSelected ? 'text-primary bg-white/50' : 'text-on-surface-variant bg-surface-container-highest'}`}
+                  >
                     {session.enrolled}
                   </span>
                 </button>
@@ -135,13 +132,27 @@ export default function ClinicsPage() {
                 </colgroup>
                 <thead>
                   <tr className="bg-surface-container-highest/30">
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-r border-outline-variant/20">Name</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">Grade</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">Level</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">QTY</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">Test</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">Config</th>
-                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Memo</th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-r border-outline-variant/20">
+                      Name
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                      Grade
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                      Level
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                      QTY
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                      Test
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-center border-r border-outline-variant/20">
+                      Config
+                    </th>
+                    <th className="px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                      Memo
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/20">
@@ -157,7 +168,8 @@ export default function ClinicsPage() {
                       >
                         <td className="px-4 py-4 border-r border-outline-variant/20">
                           <p className="font-headline font-bold text-sm text-primary">
-                            {student.nameLastKo}{student.nameFirstKo}
+                            {student.nameLastKo}
+                            {student.nameFirstKo}
                           </p>
                           <p className="text-xs text-on-surface-variant mt-0.5">
                             {student.nameFirstEn} {student.nameLastEn}
@@ -191,7 +203,7 @@ export default function ClinicsPage() {
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-1.5">
                             <p className="text-xs text-on-surface-variant truncate flex-1">
-                              {latestMemo ? latestMemo.content : "—"}
+                              {latestMemo ? latestMemo.content : '—'}
                             </p>
                             <button
                               type="button"
@@ -201,7 +213,9 @@ export default function ClinicsPage() {
                               }}
                               className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
                             >
-                              <span className="material-symbols-outlined text-base">sticky_note_2</span>
+                              <span className="material-symbols-outlined text-base">
+                                sticky_note_2
+                              </span>
                             </button>
                           </div>
                         </td>
@@ -215,14 +229,9 @@ export default function ClinicsPage() {
         </div>
       </div>
 
-      {isEditMembersOpen && (
-        <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />
-      )}
+      {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
       {selectedStudent && (
-        <StudentDetailModal
-          student={selectedStudent}
-          onClose={() => setSelectedStudent(null)}
-        />
+        <StudentDetailModal student={selectedStudent} onClose={() => setSelectedStudent(null)} />
       )}
       {memoStudent && (
         <MemoPopup

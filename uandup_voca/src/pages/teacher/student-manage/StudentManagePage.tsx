@@ -1,33 +1,22 @@
-import { useState } from "react";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import {
-  STUDENT_MANAGE_MOCK,
-  type ManagedStudent,
-} from "./mock/studentManageMockData";
-import { EditStudentModal } from "./ui/modals/EditStudentModal";
-import { DeleteConfirmModal } from "./ui/modals/DeleteConfirmModal";
-import { MemoPopup } from "./ui/modals/MemoPopup";
-import { StudentTable } from "./ui/table/StudentTable";
+import { useState } from 'react';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { STUDENT_MANAGE_MOCK, type ManagedStudent } from './mock/studentManageMockData';
+import { EditStudentModal } from './ui/modals/EditStudentModal';
+import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
+import { MemoPopup } from './ui/modals/MemoPopup';
+import { StudentTable } from './ui/table/StudentTable';
 
 export default function StudentManagePage() {
-  const [search, setSearch] = useState("");
-  const [gradeFilter, setGradeFilter] = useState("");
-  const [levelFilter, setLevelFilter] = useState<number | "">("");
-  const [classFilter, setClassFilter] = useState("");
-  const [students, setStudents] =
-    useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
-  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(
-    null,
-  );
-  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(
-    null,
-  );
+  const [search, setSearch] = useState('');
+  const [gradeFilter, setGradeFilter] = useState('');
+  const [levelFilter, setLevelFilter] = useState<number | ''>('');
+  const [classFilter, setClassFilter] = useState('');
+  const [students, setStudents] = useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
+  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(null);
+  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(null);
   const [memoStudent, setMemoStudent] = useState<ManagedStudent | null>(null);
 
-
-  const grades = [...new Set(students.map((s) => s.grade))].sort(
-    (a, b) => a - b,
-  );
+  const grades = [...new Set(students.map((s) => s.grade))].sort((a, b) => a - b);
   const allClasses = [...new Set(students.flatMap((s) => s.classes))].sort();
 
   function handleSave(updated: ManagedStudent) {
@@ -38,16 +27,12 @@ export default function StudentManagePage() {
     setStudents((prev) => prev.filter((s) => s.id !== id));
   }
 
-
   const filtered = students.filter((s) => {
     const matchesSearch =
-      `${s.nameFirstEn} ${s.nameLastEn}`
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
+      `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()) ||
       `${s.nameLastKo}${s.nameFirstKo}`.includes(search);
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
-    const matchesLevel =
-      levelFilter !== "" ? s.assignedLevel === levelFilter : true;
+    const matchesLevel = levelFilter !== '' ? s.assignedLevel === levelFilter : true;
     const matchesClass = classFilter ? s.classes.includes(classFilter) : true;
     return matchesSearch && matchesGrade && matchesLevel && matchesClass;
   });
@@ -61,7 +46,6 @@ export default function StudentManagePage() {
   return (
     <main>
       <PageTitle title="Student Management" />
-
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 mb-6">
@@ -97,9 +81,7 @@ export default function StudentManagePage() {
         <select
           className="bg-background border border-outline-variant/30 rounded-lg py-2 pl-3 pr-8 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer"
           value={levelFilter}
-          onChange={(e) =>
-            setLevelFilter(e.target.value === "" ? "" : Number(e.target.value))
-          }
+          onChange={(e) => setLevelFilter(e.target.value === '' ? '' : Number(e.target.value))}
         >
           <option value="">Level: All</option>
           {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
@@ -127,10 +109,10 @@ export default function StudentManagePage() {
         <button
           className="px-4 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant text-sm font-bold hover:bg-surface-container-low transition-colors"
           onClick={() => {
-            setSearch("");
-            setGradeFilter("");
-            setLevelFilter("");
-            setClassFilter("");
+            setSearch('');
+            setGradeFilter('');
+            setLevelFilter('');
+            setClassFilter('');
           }}
         >
           Reset
@@ -162,13 +144,9 @@ export default function StudentManagePage() {
           onClose={() => setMemoStudent(null)}
           onChange={(newMemos) => {
             setStudents((prev) =>
-              prev.map((s) =>
-                s.id === memoStudent.id ? { ...s, memos: newMemos } : s,
-              ),
+              prev.map((s) => (s.id === memoStudent.id ? { ...s, memos: newMemos } : s)),
             );
-            setMemoStudent((prev) =>
-              prev ? { ...prev, memos: newMemos } : null,
-            );
+            setMemoStudent((prev) => (prev ? { ...prev, memos: newMemos } : null));
           }}
         />
       )}

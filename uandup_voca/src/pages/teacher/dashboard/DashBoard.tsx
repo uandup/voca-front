@@ -1,21 +1,20 @@
-import { useState } from "react";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import { PendingApprovalsModal } from "./ui/modals/PendingApprovalsModal";
-import { UnassignedStudentsModal } from "./ui/modals/UnassignedStudentsModal";
-
+import { useState } from 'react';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { PendingApprovalsModal } from './ui/modals/PendingApprovalsModal';
+import { UnassignedStudentsModal } from './ui/modals/UnassignedStudentsModal';
 
 const shortcutCards = [
   {
-    icon: "school",
-    current: { label: "SAT", sub: "13:00 - 17:00" },
-    next: { label: "G10 English", sub: "18:00 - 19:00" },
-    title: "Class",
+    icon: 'school',
+    current: { label: 'SAT', sub: '13:00 - 17:00' },
+    next: { label: 'G10 English', sub: '18:00 - 19:00' },
+    title: 'Class',
   },
   {
-    icon: "groups",
-    current: { label: "15:00 - 17:00", sub: "4 / 6 enrolled" },
-    next: { label: "18:00 - 20:00", sub: "3 / 6 enrolled" },
-    title: "Clinic",
+    icon: 'groups',
+    current: { label: '15:00 - 17:00', sub: '4 / 6 enrolled' },
+    next: { label: '18:00 - 20:00', sub: '3 / 6 enrolled' },
+    title: 'Clinic',
   },
 ];
 
@@ -82,8 +81,8 @@ export default function DashBoard() {
             {/* Current / Next */}
             <div className="flex divide-x divide-outline-variant/20 border-t border-outline-variant/20 flex-1">
               {[
-                { slot: "Current", data: card.current },
-                { slot: "Next", data: card.next },
+                { slot: 'Current', data: card.current },
+                { slot: 'Next', data: card.next },
               ].map(({ slot, data }) => (
                 <button
                   key={slot}
@@ -96,9 +95,7 @@ export default function DashBoard() {
                     <p className="text-base font-headline font-black text-primary leading-tight">
                       {data.label}
                     </p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">
-                      {data.sub}
-                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">{data.sub}</p>
                   </div>
                   <div className="flex justify-end mt-3">
                     <span className="material-symbols-outlined text-sm text-on-surface-variant/30 group-hover/slot:text-primary group-hover/slot:translate-x-0.5 transition-all duration-200">
@@ -112,12 +109,8 @@ export default function DashBoard() {
         ))}
       </section>
 
-      {isPendingOpen && (
-        <PendingApprovalsModal onClose={() => setIsPendingOpen(false)} />
-      )}
-      {isUnassignedOpen && (
-        <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />
-      )}
+      {isPendingOpen && <PendingApprovalsModal onClose={() => setIsPendingOpen(false)} />}
+      {isUnassignedOpen && <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />}
 
       {/* Mini Timetable */}
       {/* <section className="mt-8">

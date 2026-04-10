@@ -1,44 +1,33 @@
-import { useState } from "react";
-import { TableContainer } from "@/shared/ui/TableContainer";
-import type { ManagedStudent } from "../../mock/studentManageMockData";
-import { StudentTableRow, type RowActions } from "./StudentTableRow";
+import { useState } from 'react';
+import { TableContainer } from '@/shared/ui/TableContainer';
+import type { ManagedStudent } from '../../mock/studentManageMockData';
+import { StudentTableRow, type RowActions } from './StudentTableRow';
 
 type SortKey = keyof Pick<
   ManagedStudent,
-  | "nameLastKo"
-  | "grade"
-  | "assignedLevel"
-  | "assignedWordCount"
-  | "testQuestionCount"
-  | "accuracy"
+  'nameLastKo' | 'grade' | 'assignedLevel' | 'assignedWordCount' | 'testQuestionCount' | 'accuracy'
 >;
-type SortDir = "asc" | "desc";
+type SortDir = 'asc' | 'desc';
 
 const COLUMNS: { label: string; key?: SortKey; className?: string }[] = [
-  { label: "Name", key: "nameLastKo" },
-  { label: "Grade", key: "grade", className: "text-center" },
-  { label: "Level", key: "assignedLevel", className: "text-center" },
-  { label: "QTY", key: "assignedWordCount", className: "text-center" },
-  { label: "TEST", key: "testQuestionCount", className: "text-center" },
-  { label: "Config", className: "text-center" },
-  { label: "Recent", className: "text-center" },
-  { label: "ACR", key: "accuracy", className: "text-center" },
-  { label: "Memo" },
-  { label: "Actions", className: "text-right" },
+  { label: 'Name', key: 'nameLastKo' },
+  { label: 'Grade', key: 'grade', className: 'text-center' },
+  { label: 'Level', key: 'assignedLevel', className: 'text-center' },
+  { label: 'QTY', key: 'assignedWordCount', className: 'text-center' },
+  { label: 'TEST', key: 'testQuestionCount', className: 'text-center' },
+  { label: 'Config', className: 'text-center' },
+  { label: 'Recent', className: 'text-center' },
+  { label: 'ACR', key: 'accuracy', className: 'text-center' },
+  { label: 'Memo' },
+  { label: 'Actions', className: 'text-right' },
 ];
 
-function sortStudents(
-  data: ManagedStudent[],
-  key: SortKey,
-  dir: SortDir,
-): ManagedStudent[] {
+function sortStudents(data: ManagedStudent[], key: SortKey, dir: SortDir): ManagedStudent[] {
   return [...data].sort((a, b) => {
-    const av =
-      key === "accuracy" ? parseFloat(a[key]) : (a[key] as number | string);
-    const bv =
-      key === "accuracy" ? parseFloat(b[key]) : (b[key] as number | string);
-    if (av < bv) return dir === "asc" ? -1 : 1;
-    if (av > bv) return dir === "asc" ? 1 : -1;
+    const av = key === 'accuracy' ? parseFloat(a[key]) : (a[key] as number | string);
+    const bv = key === 'accuracy' ? parseFloat(b[key]) : (b[key] as number | string);
+    if (av < bv) return dir === 'asc' ? -1 : 1;
+    if (av > bv) return dir === 'asc' ? 1 : -1;
     return 0;
   });
 }
@@ -50,19 +39,19 @@ interface StudentTableProps {
 
 export function StudentTable({ students, actions }: StudentTableProps) {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
-      if (sortDir === "asc") {
-        setSortDir("desc");
+      if (sortDir === 'asc') {
+        setSortDir('desc');
       } else {
         setSortKey(null);
-        setSortDir("asc");
+        setSortDir('asc');
       }
     } else {
       setSortKey(key);
-      setSortDir("asc");
+      setSortDir('asc');
     }
   }
 
@@ -90,20 +79,20 @@ export function StudentTable({ students, actions }: StudentTableProps) {
                 <th
                   key={col.label}
                   onClick={col.key ? () => handleSort(col.key!) : undefined}
-                  className={`px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < COLUMNS.length - 1 ? "border-r border-outline-variant/20" : ""} ${col.key ? "cursor-pointer select-none hover:text-primary transition-colors" : ""} ${col.className ?? ""}`}
+                  className={`px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < COLUMNS.length - 1 ? 'border-r border-outline-variant/20' : ''} ${col.key ? 'cursor-pointer select-none hover:text-primary transition-colors' : ''} ${col.className ?? ''}`}
                 >
                   <span className="inline-flex items-center gap-1">
                     {col.label}
                     {col.key && (
                       <span
                         className="material-symbols-outlined leading-none"
-                        style={{ fontSize: "14px" }}
+                        style={{ fontSize: '14px' }}
                       >
                         {sortKey === col.key
-                          ? sortDir === "asc"
-                            ? "arrow_upward"
-                            : "arrow_downward"
-                          : "unfold_more"}
+                          ? sortDir === 'asc'
+                            ? 'arrow_upward'
+                            : 'arrow_downward'
+                          : 'unfold_more'}
                       </span>
                     )}
                   </span>
@@ -113,11 +102,7 @@ export function StudentTable({ students, actions }: StudentTableProps) {
           </thead>
           <tbody className="divide-y divide-outline-variant/20">
             {sorted.map((student) => (
-              <StudentTableRow
-                key={student.id}
-                student={student}
-                actions={actions}
-              />
+              <StudentTableRow key={student.id} student={student} actions={actions} />
             ))}
           </tbody>
         </table>

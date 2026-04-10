@@ -4,11 +4,7 @@ export default function PendingPage() {
       <div className="w-full max-w-md px-5 text-center">
         {/* 로고 */}
         <div className="flex items-center justify-center mb-4">
-          <img
-            src="/logo.png"
-            alt="유앤UP국제학원"
-            className="h-24 w-auto object-contain"
-          />
+          <img src="/logo.png" alt="유앤UP국제학원" className="h-24 w-auto object-contain" />
         </div>
 
         {/* 아이콘 */}

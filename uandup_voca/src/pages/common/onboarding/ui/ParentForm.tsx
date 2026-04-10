@@ -1,4 +1,4 @@
-import { GRADES, inputClass, selectClass, selectStyle } from "./formStyles";
+import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
 
 interface Props {
   nameLastKo: string;
@@ -83,7 +83,7 @@ export function ParentForm({
             className="mt-0.5 w-4 h-4 accent-primary shrink-0"
           />
           <span className="text-xs text-on-surface-variant leading-relaxed">
-            연락처 수집 및 이용에 동의합니다.{" "}
+            연락처 수집 및 이용에 동의합니다.{' '}
             <span className="text-on-surface-variant/60">
               (수집된 연락처는 학원 서비스 안내 및 학생 관리 목적으로만 사용됩니다.)
             </span>

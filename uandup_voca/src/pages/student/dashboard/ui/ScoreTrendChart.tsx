@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 
 interface ExamResult {
   label: string;
@@ -12,53 +12,53 @@ interface DataPoint {
 }
 
 const wordResults: ExamResult[] = [
-  { label: "02.03", value: 80, pass: true },
-  { label: "02.10", value: 85, pass: true },
-  { label: "02.17", value: 55, pass: false },
-  { label: "02.17", value: 82, pass: true }, // 재시험 합격
-  { label: "02.24", value: 90, pass: true },
-  { label: "03.03", value: 88, pass: true },
-  { label: "03.10", value: 93, pass: true },
-  { label: "03.17", value: 100, pass: true },
-  { label: "03.24", value: 95, pass: true },
+  { label: '02.03', value: 80, pass: true },
+  { label: '02.10', value: 85, pass: true },
+  { label: '02.17', value: 55, pass: false },
+  { label: '02.17', value: 82, pass: true }, // 재시험 합격
+  { label: '02.24', value: 90, pass: true },
+  { label: '03.03', value: 88, pass: true },
+  { label: '03.10', value: 93, pass: true },
+  { label: '03.17', value: 100, pass: true },
+  { label: '03.24', value: 95, pass: true },
 ];
 
 const sentenceResults: ExamResult[] = [
-  { label: "02.03", value: 74, pass: true },
-  { label: "02.10", value: 58, pass: false },
-  { label: "02.10", value: 80, pass: true }, // 재시험 합격
-  { label: "02.24", value: 86, pass: true },
-  { label: "03.03", value: 82, pass: true },
-  { label: "03.17", value: 100, pass: true },
-  { label: "03.24", value: 91, pass: true },
+  { label: '02.03', value: 74, pass: true },
+  { label: '02.10', value: 58, pass: false },
+  { label: '02.10', value: 80, pass: true }, // 재시험 합격
+  { label: '02.24', value: 86, pass: true },
+  { label: '03.03', value: 82, pass: true },
+  { label: '03.17', value: 100, pass: true },
+  { label: '03.24', value: 91, pass: true },
 ];
 
 const reviewResults: DataPoint[] = [
-  { label: "01.06", value: 68 },
-  { label: "01.13", value: 72 },
-  { label: "01.20", value: 70 },
-  { label: "01.27", value: 75 },
-  { label: "02.03", value: 72 },
-  { label: "02.10", value: 78 },
-  { label: "02.17", value: 82 },
-  { label: "02.24", value: 84 },
-  { label: "03.03", value: 80 },
-  { label: "03.10", value: 87 },
-  { label: "03.17", value: 95 },
-  { label: "03.24", value: 89 },
-  { label: "03.31", value: 96 },
+  { label: '01.06', value: 68 },
+  { label: '01.13', value: 72 },
+  { label: '01.20', value: 70 },
+  { label: '01.27', value: 75 },
+  { label: '02.03', value: 72 },
+  { label: '02.10', value: 78 },
+  { label: '02.17', value: 82 },
+  { label: '02.24', value: 84 },
+  { label: '03.03', value: 80 },
+  { label: '03.10', value: 87 },
+  { label: '03.17', value: 95 },
+  { label: '03.24', value: 89 },
+  { label: '03.31', value: 96 },
 ];
 
 const monthlyWords: DataPoint[] = [
-  { label: "25.10", value: 120 },
-  { label: "25.11", value: 180 },
-  { label: "25.12", value: 150 },
-  { label: "26.01", value: 200 },
-  { label: "26.02", value: 150 },
-  { label: "26.03", value: 150 },
+  { label: '25.10', value: 120 },
+  { label: '25.11', value: 180 },
+  { label: '25.12', value: 150 },
+  { label: '26.01', value: 200 },
+  { label: '26.02', value: 150 },
+  { label: '26.03', value: 150 },
 ];
 
-type TabType = "word" | "sentence" | "review" | "monthly";
+type TabType = 'word' | 'sentence' | 'review' | 'monthly';
 
 interface TabConfig {
   data: DataPoint[] | ExamResult[];
@@ -100,19 +100,19 @@ const tabConfigs: Record<TabType, TabConfig> = {
 };
 
 const tabs: { key: TabType; label: string }[] = [
-  { key: "word", label: "Word" },
-  { key: "sentence", label: "Sentence" },
-  { key: "review", label: "Review" },
-  { key: "monthly", label: "Learned Words" },
+  { key: 'word', label: 'Word' },
+  { key: 'sentence', label: 'Sentence' },
+  { key: 'review', label: 'Review' },
+  { key: 'monthly', label: 'Learned Words' },
 ];
 
 const MARGIN = { top: 24, right: 24, bottom: 32, left: 20 };
 const Y_AXIS_WIDTH = 40;
 const POINT_GAP = 60;
-const PRIMARY = "var(--color-primary)";
-const FAIL_COLOR = "#ef4444";
-const AXIS_COLOR = "var(--color-on-surface-variant)";
-const GRID_COLOR = "rgba(0,0,0,0.06)";
+const PRIMARY = 'var(--color-primary)';
+const FAIL_COLOR = '#ef4444';
+const AXIS_COLOR = 'var(--color-on-surface-variant)';
+const GRID_COLOR = 'rgba(0,0,0,0.06)';
 
 function YAxis({
   height,
@@ -166,17 +166,12 @@ function ChartBody({
     : data.map((d) => d.label);
   const xCount = uniqueLabels.length;
 
-  const innerW = Math.max(
-    containerWidth - MARGIN.left - MARGIN.right,
-    (xCount - 1) * POINT_GAP,
-  );
+  const innerW = Math.max(containerWidth - MARGIN.left - MARGIN.right, (xCount - 1) * POINT_GAP);
   const width = innerW + MARGIN.left + MARGIN.right;
 
   function getX(label: string): number {
     const idx = uniqueLabels.indexOf(label);
-    return (
-      MARGIN.left + (xCount === 1 ? innerW / 2 : (idx / (xCount - 1)) * innerW)
-    );
+    return MARGIN.left + (xCount === 1 ? innerW / 2 : (idx / (xCount - 1)) * innerW);
   }
 
   function getY(v: number): number {
@@ -320,7 +315,7 @@ function ChartBody({
 }
 
 export function ScoreTrendChart() {
-  const [activeTab, setActiveTab] = useState<TabType>("word");
+  const [activeTab, setActiveTab] = useState<TabType>('word');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -359,8 +354,8 @@ export function ScoreTrendChart() {
               className={`px-3 py-1 rounded-md text-xs font-bold transition-all
                 ${
                   activeTab === tab.key
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-on-surface-variant hover:text-on-surface"
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
                 }`}
             >
               {tab.label}

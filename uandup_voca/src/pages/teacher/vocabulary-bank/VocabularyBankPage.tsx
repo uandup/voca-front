@@ -1,31 +1,28 @@
-import { useState } from "react";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import { VocabCard } from "./ui/VocabCard";
-import { VocabModal } from "./ui/modals/VocabModal";
-import { UploadExcelModal } from "./ui/modals/UploadExcelModal";
-import { mockVocabData } from "./mock/vocabMockData";
+import { useState } from 'react';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { VocabCard } from './ui/VocabCard';
+import { VocabModal } from './ui/modals/VocabModal';
+import { UploadExcelModal } from './ui/modals/UploadExcelModal';
+import { mockVocabData } from './mock/vocabMockData';
 
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLevel, setSelectedLevel] = useState('');
 
   function handleResetFilters() {
-    setSearchQuery("");
-    setSelectedLevel("");
+    setSearchQuery('');
+    setSelectedLevel('');
   }
 
   const filtered = mockVocabData.filter((v) => {
     const matchesSearch =
-      searchQuery === "" ||
+      searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
       v.koreanMeaning.includes(searchQuery) ||
-      v.synonyms.some((s) =>
-        s.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-    const matchesLevel =
-      selectedLevel === "" || v.difficultyLevel === Number(selectedLevel);
+      v.synonyms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesLevel = selectedLevel === '' || v.difficultyLevel === Number(selectedLevel);
     return matchesSearch && matchesLevel;
   });
 
@@ -112,9 +109,9 @@ export default function VocabularyBankPage() {
 
       {/* Result count */}
       <p className="text-4xl font-bold text-primary my-6 ml-2">
-        {filtered.length}{" "}
+        {filtered.length}{' '}
         <span className="text-2xl font-bold text-primary/80">
-          {filtered.length === 1 ? "word" : "words"} found
+          {filtered.length === 1 ? 'word' : 'words'} found
         </span>
       </p>
 

@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from '@tanstack/react-router';
 
 interface NavItem {
   icon: string;
@@ -28,8 +28,8 @@ export function SideNavBar({ navItems }: SideNavBarProps) {
               to={item.to}
               className={
                 isActive
-                  ? "flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-bold shadow-sm rounded-lg transition-transform duration-200"
-                  : "flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200/50 rounded-lg transition-transform duration-200"
+                  ? 'flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-bold shadow-sm rounded-lg transition-transform duration-200'
+                  : 'flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200/50 rounded-lg transition-transform duration-200'
               }
             >
               <span className="material-symbols-outlined">{item.icon}</span>

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
-import type { MemoItem } from "../../mock/studentManageMockData";
+import { useState } from 'react';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import type { MemoItem } from '../../mock/studentManageMockData';
 
 interface MemoPopupProps {
   studentName: string;
@@ -11,19 +11,14 @@ interface MemoPopupProps {
 
 function todayString(): string {
   const d = new Date();
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export function MemoPopup({
-  studentName,
-  memos,
-  onClose,
-  onChange,
-}: MemoPopupProps) {
+export function MemoPopup({ studentName, memos, onClose, onChange }: MemoPopupProps) {
   const [newDate, setNewDate] = useState(todayString());
-  const [newContent, setNewContent] = useState("");
+  const [newContent, setNewContent] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editContent, setEditContent] = useState("");
+  const [editContent, setEditContent] = useState('');
 
   const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date));
 
@@ -35,7 +30,7 @@ export function MemoPopup({
       content: newContent.trim(),
     };
     onChange([...memos, item]);
-    setNewContent("");
+    setNewContent('');
     setNewDate(todayString());
   }
 
@@ -46,11 +41,7 @@ export function MemoPopup({
 
   function handleEditSave(id: number) {
     if (!editContent.trim()) return;
-    onChange(
-      memos.map((m) =>
-        m.id === id ? { ...m, content: editContent.trim() } : m,
-      ),
-    );
+    onChange(memos.map((m) => (m.id === id ? { ...m, content: editContent.trim() } : m)));
     setEditingId(null);
   }
 
@@ -68,9 +59,7 @@ export function MemoPopup({
             <h2 className="text-xl font-extrabold font-headline tracking-tight text-primary">
               Memos
             </h2>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              {studentName}
-            </p>
+            <p className="text-xs text-on-surface-variant mt-0.5">{studentName}</p>
           </div>
           <button
             onClick={onClose}
@@ -83,9 +72,7 @@ export function MemoPopup({
         {/* Memo list */}
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-3">
           {sorted.length === 0 && (
-            <p className="text-sm text-on-surface-variant text-center py-8">
-              메모가 없습니다.
-            </p>
+            <p className="text-sm text-on-surface-variant text-center py-8">메모가 없습니다.</p>
           )}
           {sorted.map((memo) => (
             <div
@@ -93,9 +80,7 @@ export function MemoPopup({
               className="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-4 flex flex-col gap-2"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-bold text-on-surface-variant">
-                  {memo.date}
-                </span>
+                <span className="text-xs font-bold text-on-surface-variant">{memo.date}</span>
                 <div className="flex items-center gap-1">
                   {editingId === memo.id ? (
                     <>
@@ -118,17 +103,13 @@ export function MemoPopup({
                         onClick={() => startEdit(memo)}
                         className="p-1 text-on-surface-variant hover:text-primary transition-colors"
                       >
-                        <span className="material-symbols-outlined text-base">
-                          edit
-                        </span>
+                        <span className="material-symbols-outlined text-base">edit</span>
                       </button>
                       <button
                         onClick={() => handleDelete(memo.id)}
                         className="p-1 text-on-surface-variant hover:text-error transition-colors"
                       >
-                        <span className="material-symbols-outlined text-base">
-                          delete
-                        </span>
+                        <span className="material-symbols-outlined text-base">delete</span>
                       </button>
                     </>
                   )}
@@ -143,9 +124,7 @@ export function MemoPopup({
                   autoFocus
                 />
               ) : (
-                <p className="text-sm text-on-surface whitespace-pre-wrap">
-                  {memo.content}
-                </p>
+                <p className="text-sm text-on-surface whitespace-pre-wrap">{memo.content}</p>
               )}
             </div>
           ))}
@@ -173,7 +152,7 @@ export function MemoPopup({
               onChange={(e) => setNewContent(e.target.value)}
               placeholder="메모 내용을 입력하세요..."
               onKeyDown={(e) => {
-                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleAdd();
+                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleAdd();
               }}
             />
             <button

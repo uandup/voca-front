@@ -25,9 +25,7 @@ export function VocabCard({
               LEVEL {level}
             </span>
           </div>
-          <h2 className="font-headline font-bold text-2xl text-primary">
-            {word}
-          </h2>
+          <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>
         </div>
 
         {/* Column 2: Meaning + Synonyms */}
@@ -37,9 +35,7 @@ export function VocabCard({
               Meaning
             </h4>
             <p className="text-primary font-bold text-lg">
-              <span className="text-on-tertiary-container tracking-wider mr-2">
-                {partOfSpeech}
-              </span>
+              <span className="text-on-tertiary-container tracking-wider mr-2">{partOfSpeech}</span>
               {koreanMeaning}
             </p>
           </div>
@@ -65,15 +61,13 @@ export function VocabCard({
           <button
             className={`w-12 h-12 flex items-center justify-center rounded-full transition-all ${
               starred
-                ? "bg-surface-container-low text-on-tertiary-container hover:bg-tertiary-fixed"
-                : "bg-surface-container-low text-outline-variant hover:text-on-tertiary-container"
+                ? 'bg-surface-container-low text-on-tertiary-container hover:bg-tertiary-fixed'
+                : 'bg-surface-container-low text-outline-variant hover:text-on-tertiary-container'
             }`}
           >
             <span
               className="material-symbols-outlined"
-              style={
-                starred ? { fontVariationSettings: '"FILL" 1' } : undefined
-              }
+              style={starred ? { fontVariationSettings: '"FILL" 1' } : undefined}
             >
               star
             </span>

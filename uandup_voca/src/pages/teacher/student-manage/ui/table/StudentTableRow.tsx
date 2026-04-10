@@ -1,6 +1,6 @@
-import { AssignedLevelBlocks } from "@/entities/vocab";
-import type { ManagedStudent } from "../../mock/studentManageMockData";
-import { TestConfigBadges } from "./cells/TestConfigBadges";
+import { AssignedLevelBlocks } from '@/entities/vocab';
+import type { ManagedStudent } from '../../mock/studentManageMockData';
+import { TestConfigBadges } from './cells/TestConfigBadges';
 
 export interface RowActions {
   onEdit: (student: ManagedStudent) => void;
@@ -14,9 +14,7 @@ interface StudentTableRowProps {
 }
 
 export function StudentTableRow({ student, actions }: StudentTableRowProps) {
-  const latestMemo = [...student.memos].sort((a, b) =>
-    b.date.localeCompare(a.date),
-  )[0];
+  const latestMemo = [...student.memos].sort((a, b) => b.date.localeCompare(a.date))[0];
 
   return (
     <tr className="hover:bg-surface-container-low/30 transition-colors group">
@@ -80,25 +78,21 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
 
       {/* ACR */}
       <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-        <span className="font-headline font-bold text-sm text-primary">
-          {student.accuracy}
-        </span>
+        <span className="font-headline font-bold text-sm text-primary">{student.accuracy}</span>
       </td>
 
       {/* Memo */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <div className="flex items-center gap-1.5">
           <p className="text-xs text-on-surface-variant truncate flex-1">
-            {latestMemo ? latestMemo.content : "—"}
+            {latestMemo ? latestMemo.content : '—'}
           </p>
           <button
             onClick={() => actions.onMemo(student)}
             className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
             title="메모 보기"
           >
-            <span className="material-symbols-outlined text-base">
-              sticky_note_2
-            </span>
+            <span className="material-symbols-outlined text-base">sticky_note_2</span>
           </button>
         </div>
       </td>

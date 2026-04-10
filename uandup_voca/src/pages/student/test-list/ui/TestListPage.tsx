@@ -14,55 +14,55 @@ interface TestHistoryItem {
 const testHistory: TestHistoryItem[] = [
   {
     id: 1,
-    type: "Word Test",
+    type: 'Word Test',
     level: 2,
-    date: "Oct 18, 2023",
+    date: 'Oct 18, 2023',
     correct: 38,
     total: 40,
     accuracy: 95,
-    iconBg: "bg-secondary-container",
-    iconColor: "text-on-secondary-container",
-    icon: "quiz",
+    iconBg: 'bg-secondary-container',
+    iconColor: 'text-on-secondary-container',
+    icon: 'quiz',
   },
   {
     id: 2,
-    type: "Review Test",
+    type: 'Review Test',
     level: 2,
-    date: "Oct 12, 2023",
+    date: 'Oct 12, 2023',
     correct: 40,
     total: 40,
     accuracy: 100,
-    iconBg: "bg-tertiary-fixed",
-    iconColor: "text-on-tertiary-fixed-variant",
-    icon: "history_edu",
+    iconBg: 'bg-tertiary-fixed',
+    iconColor: 'text-on-tertiary-fixed-variant',
+    icon: 'history_edu',
   },
   {
     id: 3,
-    type: "Word Test",
+    type: 'Word Test',
     level: 2,
-    date: "Oct 05, 2023",
+    date: 'Oct 05, 2023',
     correct: 34,
     total: 40,
     accuracy: 85,
-    iconBg: "bg-primary-container/10",
-    iconColor: "text-primary",
-    icon: "quiz",
+    iconBg: 'bg-primary-container/10',
+    iconColor: 'text-primary',
+    icon: 'quiz',
   },
   {
     id: 4,
-    type: "Word Test",
+    type: 'Word Test',
     level: 1,
-    date: "Sep 28, 2023",
+    date: 'Sep 28, 2023',
     correct: 39,
     total: 40,
     accuracy: 98,
-    iconBg: "bg-secondary-container",
-    iconColor: "text-on-secondary-container",
-    icon: "quiz",
+    iconBg: 'bg-secondary-container',
+    iconColor: 'text-on-secondary-container',
+    icon: 'quiz',
   },
 ];
 
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from '@tanstack/react-router';
 
 export function TestListPage() {
   const navigate = useNavigate();
@@ -71,12 +71,9 @@ export function TestListPage() {
     <main>
       {/* Page Header */}
       <header className="mb-12">
-        <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">
-          Assignments
-        </h1>
+        <h1 className="text-4xl font-extrabold text-primary tracking-tight mb-2">Assignments</h1>
         <p className="text-on-surface-variant font-medium">
-          Manage your active curriculum and review your academic performance
-          history.
+          Manage your active curriculum and review your academic performance history.
         </p>
       </header>
 
@@ -87,7 +84,7 @@ export function TestListPage() {
           Current Active Path
         </h2>
         <div
-          onClick={() => navigate({ to: "/student/vocabulary" })}
+          onClick={() => navigate({ to: '/student/vocabulary' })}
           className="group block relative overflow-hidden bg-surface-container-lowest rounded-xl p-8 shadow-[0px_8px_24px_rgba(0,21,80,0.08)] border-l-4 border-primary transition-all hover:-translate-y-1 cursor-pointer"
         >
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -97,9 +94,7 @@ export function TestListPage() {
                   Active Assignment
                 </span>
                 <span className="text-on-surface-variant text-sm flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">
-                    calendar_today
-                  </span>
+                  <span className="material-symbols-outlined text-sm">calendar_today</span>
                   Assigned on Oct 24
                 </span>
               </div>
@@ -107,21 +102,17 @@ export function TestListPage() {
                 Level 3 - Academic Core
               </h3>
               <p className="text-on-surface-variant text-lg font-medium max-w-2xl">
-                Master 40 essential vocabulary words focused on higher education
-                and research discourse.
+                Master 40 essential vocabulary words focused on higher education and research
+                discourse.
               </p>
             </div>
             <div className="flex items-center gap-8 md:border-l border-outline-variant/30 md:pl-8">
               <div className="text-center">
                 <p className="text-3xl font-black text-primary">40</p>
-                <p className="text-[10px] font-bold text-on-surface-variant uppercase">
-                  Words
-                </p>
+                <p className="text-[10px] font-bold text-on-surface-variant uppercase">Words</p>
               </div>
               <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-3xl">
-                  play_arrow
-                </span>
+                <span className="material-symbols-outlined text-3xl">play_arrow</span>
               </div>
             </div>
           </div>
@@ -130,9 +121,7 @@ export function TestListPage() {
 
       {/* Previous Test History */}
       <div className="flex items-center gap-4 mb-10">
-        <h2 className="text-2xl font-bold text-primary whitespace-nowrap">
-          Previous Test History
-        </h2>
+        <h2 className="text-2xl font-bold text-primary whitespace-nowrap">Previous Test History</h2>
         <div className="h-px w-full bg-outline-variant/30" />
       </div>
 
@@ -140,7 +129,7 @@ export function TestListPage() {
         {testHistory.map((item) => (
           <div
             key={item.id}
-            onClick={() => navigate({ to: "/student/vocabulary" })}
+            onClick={() => navigate({ to: '/student/vocabulary' })}
             className="group flex flex-col md:flex-row items-center justify-between bg-surface-container-low hover:bg-surface-container-lowest p-6 rounded-xl transition-all hover:shadow-md cursor-pointer"
           >
             <div className="flex items-center gap-6 w-full md:w-auto mb-4 md:mb-0">
@@ -168,9 +157,7 @@ export function TestListPage() {
                   Accuracy
                 </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-black text-primary">
-                    {item.correct}
-                  </span>
+                  <span className="text-2xl font-black text-primary">{item.correct}</span>
                   <span className="text-sm font-medium text-on-surface-variant">
                     / {item.total}
                   </span>

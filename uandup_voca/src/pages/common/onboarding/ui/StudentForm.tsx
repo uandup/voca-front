@@ -1,4 +1,4 @@
-import { GRADES, inputClass, selectClass, selectStyle } from "./formStyles";
+import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
 
 interface Props {
   nameLastKo: string;
@@ -88,9 +88,13 @@ export function StudentForm({
           className={selectClass}
           style={selectStyle}
         >
-          <option value="" disabled>학년을 선택해주세요</option>
+          <option value="" disabled>
+            학년을 선택해주세요
+          </option>
           {GRADES.map((g) => (
-            <option key={g} value={g}>{g}</option>
+            <option key={g} value={g}>
+              {g}
+            </option>
           ))}
         </select>
       </div>

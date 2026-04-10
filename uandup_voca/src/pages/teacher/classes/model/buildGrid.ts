@@ -1,13 +1,13 @@
-import type { GridCell, TimeSlotDef } from "./types";
-import { NUM_COLS } from "../mock/timetableMockData";
+import type { GridCell, TimeSlotDef } from './types';
+import { NUM_COLS } from '../mock/timetableMockData';
 
 /** break row(점심·저녁 휴식)를 NUM_COLS 개의 빈 GridCell 배열로 변환한다 */
 function expandBreakRow(): GridCell[] {
   return Array(NUM_COLS)
     .fill(null)
     .map(() => ({
-      label: "",
-      style: "empty",
+      label: '',
+      style: 'empty',
       colSpan: 1,
       rowSpan: 1,
       skip: false,
@@ -26,8 +26,8 @@ function expandNormalRow(slot: TimeSlotDef): GridCell[] {
   for (const cell of slot.cols ?? []) {
     const span = cell?.colSpan ?? 1;
     expanded.push({
-      label: cell?.label ?? "",
-      style: cell?.style ?? "empty",
+      label: cell?.label ?? '',
+      style: cell?.style ?? 'empty',
       colSpan: span,
       rowSpan: 1,
       skip: false,
@@ -37,8 +37,8 @@ function expandNormalRow(slot: TimeSlotDef): GridCell[] {
     // colSpan만큼 뒤따르는 칸은 이미 차지했으므로 skip 처리
     for (let k = 1; k < span; k++) {
       expanded.push({
-        label: "",
-        style: "empty",
+        label: '',
+        style: 'empty',
         colSpan: 1,
         rowSpan: 1,
         skip: true,
@@ -50,8 +50,8 @@ function expandNormalRow(slot: TimeSlotDef): GridCell[] {
   // 열 수가 NUM_COLS에 미치지 못하면 빈 셀로 채운다
   while (expanded.length < NUM_COLS) {
     expanded.push({
-      label: "",
-      style: "empty",
+      label: '',
+      style: 'empty',
       colSpan: 1,
       rowSpan: 1,
       skip: false,
@@ -101,9 +101,7 @@ function mergeConsecutiveRows(grid: GridCell[][]): void {
  * 2. 연속된 동일 수업을 rowSpan으로 병합한다 (mergeConsecutiveRows)
  */
 export function buildGrid(slots: TimeSlotDef[]): GridCell[][] {
-  const grid = slots.map((slot) =>
-    slot.isBreak ? expandBreakRow() : expandNormalRow(slot)
-  );
+  const grid = slots.map((slot) => (slot.isBreak ? expandBreakRow() : expandNormalRow(slot)));
 
   mergeConsecutiveRows(grid);
 

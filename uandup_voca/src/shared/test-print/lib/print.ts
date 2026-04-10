@@ -1,4 +1,4 @@
-function buildPrintHtml(sheetHtml: string, title = "VOCAB TEST"): string {
+function buildPrintHtml(sheetHtml: string, title = 'VOCAB TEST'): string {
   return `<!DOCTYPE html>
 <html>
   <head>
@@ -35,9 +35,9 @@ function buildPrintHtml(sheetHtml: string, title = "VOCAB TEST"): string {
 }
 
 function triggerPrint(html: string): void {
-  const iframe = document.createElement("iframe");
+  const iframe = document.createElement('iframe');
   iframe.style.cssText =
-    "position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;";
+    'position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;';
   iframe.srcdoc = html;
   document.body.appendChild(iframe);
 
@@ -61,7 +61,7 @@ export function printAllSheets(sheetIds: string[], title?: string): void {
     .map((id) => document.getElementById(id)?.innerHTML)
     .filter(Boolean)
     .map((html) => `<div class="print-page">${html}</div>`)
-    .join("");
+    .join('');
 
   if (!pagesHtml) return;
   triggerPrint(buildPrintHtml(pagesHtml, title));

@@ -19,7 +19,7 @@ interface PrintActionBarProps {
 export function PrintActionBar({
   onClose,
   onPrint,
-  title = "Document Preview",
+  title = 'Document Preview',
   page,
   totalPages,
   onPrev,
@@ -30,7 +30,10 @@ export function PrintActionBar({
   const hasPagination = totalPages !== undefined && totalPages > 1;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-10 flex justify-between items-center px-8 py-4 bg-white border-b border-black/10" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed top-0 left-0 right-0 z-10 flex justify-between items-center px-8 py-4 bg-white border-b border-black/10"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="flex items-center gap-3">
         <button
           onClick={onClose}
@@ -43,7 +46,9 @@ export function PrintActionBar({
 
       {columns && columns.length > 0 && (
         <div className="flex items-center gap-1 px-4 py-2 bg-black/5 rounded-lg">
-          <span className="text-xs font-bold text-black/40 uppercase tracking-widest mr-2">표시</span>
+          <span className="text-xs font-bold text-black/40 uppercase tracking-widest mr-2">
+            표시
+          </span>
           {columns.map((col) => (
             <label
               key={col.key}

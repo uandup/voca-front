@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import { useState } from 'react';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import {
   AVAILABLE_STUDENTS_MOCK,
   CURRENT_ROSTER_MOCK,
   GRADE_OPTIONS,
   type MemberStudent,
-} from "../mock/editMembersMockData";
+} from '../mock/editMembersMockData';
 
 interface EditMembersModalProps {
   onClose: () => void;
@@ -13,11 +13,9 @@ interface EditMembersModalProps {
 
 export function EditMembersModal({ onClose }: EditMembersModalProps) {
   const [roster, setRoster] = useState<MemberStudent[]>(CURRENT_ROSTER_MOCK);
-  const [available, setAvailable] = useState<MemberStudent[]>(
-    AVAILABLE_STUDENTS_MOCK,
-  );
-  const [search, setSearch] = useState("");
-  const [gradeFilter, setGradeFilter] = useState("");
+  const [available, setAvailable] = useState<MemberStudent[]>(AVAILABLE_STUDENTS_MOCK);
+  const [search, setSearch] = useState('');
+  const [gradeFilter, setGradeFilter] = useState('');
 
   function removeFromRoster(student: MemberStudent) {
     setRoster((prev) => prev.filter((s) => s.id !== student.id));
@@ -30,8 +28,8 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
   }
 
   function handleResetFilters() {
-    setSearch("");
-    setGradeFilter("");
+    setSearch('');
+    setGradeFilter('');
   }
 
   const filteredAvailable = available.filter((s) => {
@@ -98,17 +96,13 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                         <p className="font-bold text-on-surface text-sm font-headline">
                           {student.name}
                         </p>
-                        <p className="text-xs text-on-surface-variant">
-                          Grade: {student.grade}
-                        </p>
+                        <p className="text-xs text-on-surface-variant">Grade: {student.grade}</p>
                       </div>
                       <button
                         onClick={() => removeFromRoster(student)}
                         className="w-8 h-8 flex items-center border border-gray-200 justify-center rounded-lg bg-error-container/20 text-error hover:bg-error hover:text-white transition-colors"
                       >
-                        <span className="material-symbols-outlined text-lg">
-                          remove
-                        </span>
+                        <span className="material-symbols-outlined text-lg">remove</span>
                       </button>
                     </div>
                   ))}
@@ -118,16 +112,12 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
 
             {/* Center: swap icon */}
             <div className="flex items-center justify-center h-105 ">
-              <span className="material-symbols-outlined text-3xl text-primary/70">
-                sync_alt
-              </span>
+              <span className="material-symbols-outlined text-3xl text-primary/70">sync_alt</span>
             </div>
 
             {/* Right: Available Students */}
             <div className="flex flex-col gap-4">
-              <h3 className="font-headline font-bold text-lg">
-                Available Students
-              </h3>
+              <h3 className="font-headline font-bold text-lg">Available Students</h3>
               {/* 카드 5개 높이 고정 + 검색 sticky + 내부 스크롤 */}
               <div className="bg-surface-container-low rounded-xs overflow-hidden flex flex-col h-105">
                 {/* 검색/필터 — 고정 */}
@@ -181,17 +171,13 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                         <p className="font-bold text-on-surface text-sm font-headline">
                           {student.name}
                         </p>
-                        <p className="text-xs text-on-surface-variant">
-                          Grade: {student.grade}
-                        </p>
+                        <p className="text-xs text-on-surface-variant">Grade: {student.grade}</p>
                       </div>
                       <button
                         onClick={() => addToRoster(student)}
                         className="w-8 h-8 flex items-center border border-gray-200 justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors"
                       >
-                        <span className="material-symbols-outlined text-lg">
-                          add
-                        </span>
+                        <span className="material-symbols-outlined text-lg">add</span>
                       </button>
                     </div>
                   ))}

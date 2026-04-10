@@ -1,36 +1,30 @@
-import { useState } from "react";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
-import { WordTestTable } from "./WordTestTable";
-import { ReviewTestTable } from "./ReviewTestTable";
-import {
-  mockWordTests,
-  mockReviewTests,
-} from "../mock/studentTestMockData";
-import type { ClinicStudent } from "../mock/clinicMockData";
+import { useState } from 'react';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { WordTestTable } from './WordTestTable';
+import { ReviewTestTable } from './ReviewTestTable';
+import { mockWordTests, mockReviewTests } from '../mock/studentTestMockData';
+import type { ClinicStudent } from '../mock/clinicMockData';
 
 interface StudentDetailModalProps {
   student: ClinicStudent;
   onClose: () => void;
 }
 
-type TestTab = "word" | "review";
+type TestTab = 'word' | 'review';
 
 const levelProgress = [
-  { label: "Level 1 Progress", value: "120/1040" },
-  { label: "Level 2 Progress", value: "150/1040" },
-  { label: "Level 3 Progress", value: "180/1040" },
-  { label: "Level 4 Progress", value: "0/1040" },
+  { label: 'Level 1 Progress', value: '120/1040' },
+  { label: 'Level 2 Progress', value: '150/1040' },
+  { label: 'Level 3 Progress', value: '180/1040' },
+  { label: 'Level 4 Progress', value: '0/1040' },
 ];
 
-export function StudentDetailModal({
-  student,
-  onClose,
-}: StudentDetailModalProps) {
+export function StudentDetailModal({ student, onClose }: StudentDetailModalProps) {
   const [selectedLevels, setSelectedLevels] = useState<number[]>([1]);
-  const [selectedTab, setSelectedTab] = useState<TestTab>("word");
+  const [selectedTab, setSelectedTab] = useState<TestTab>('word');
   const [pendingOnly, setPendingOnly] = useState(false);
 
-  const alreadyAssigned = mockWordTests.some((t) => t.status === "Pending");
+  const alreadyAssigned = mockWordTests.some((t) => t.status === 'Pending');
 
   function toggleLevel(level: number) {
     setSelectedLevels((prev) =>
@@ -49,7 +43,8 @@ export function StudentDetailModal({
         <div className="px-8 py-4 shadow-sm border-b border-outline-variant/30 flex justify-between items-center shrink-0 bg-surface">
           <div className="flex items-center gap-3">
             <h2 className="font-headline text-2xl font-bold text-primary">
-              {student.nameLastKo}{student.nameFirstKo}
+              {student.nameLastKo}
+              {student.nameFirstKo}
             </h2>
             <span className="text-sm text-on-surface-variant font-medium">
               {student.nameFirstEn} {student.nameLastEn}
@@ -84,9 +79,7 @@ export function StudentDetailModal({
                   <span className="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5">
                     {item.label}
                   </span>
-                  <span className="text-primary-container font-bold text-lg">
-                    {item.value}
-                  </span>
+                  <span className="text-primary-container font-bold text-lg">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -107,8 +100,8 @@ export function StudentDetailModal({
                         onClick={() => toggleLevel(lvl)}
                         className={
                           selectedLevels.includes(lvl)
-                            ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary-container text-white shadow-sm transition-all"
-                            : "px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary-container transition-all"
+                            ? 'px-4 py-1.5 text-xs font-bold rounded-md bg-primary-container text-white shadow-sm transition-all'
+                            : 'px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary-container transition-all'
                         }
                       >
                         Level {lvl}
@@ -136,9 +129,7 @@ export function StudentDetailModal({
                   <div className="flex gap-4">
                     <div className="h-8 w-px bg-slate-200" />
                     <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600">
-                      <span className="material-symbols-outlined text-base">
-                        check_circle
-                      </span>
+                      <span className="material-symbols-outlined text-base">check_circle</span>
                       Already Assigned
                     </div>
                   </div>
@@ -159,21 +150,21 @@ export function StudentDetailModal({
             {/* 탭 + 필터 */}
             <div className="flex items-center gap-3 mb-3">
               <div className="flex gap-1 bg-surface-container-low p-1 rounded-xl w-fit">
-                {(["word", "review"] as TestTab[]).map((tab) => (
+                {(['word', 'review'] as TestTab[]).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setSelectedTab(tab)}
                     className={`px-5 py-2 rounded-lg text-xs font-bold transition-all ${
                       selectedTab === tab
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-on-surface-variant hover:text-primary"
+                        ? 'bg-white text-primary shadow-sm'
+                        : 'text-on-surface-variant hover:text-primary'
                     }`}
                   >
-                    {tab === "word" ? "Word" : "Review"}
+                    {tab === 'word' ? 'Word' : 'Review'}
                   </button>
                 ))}
               </div>
-              {selectedTab === "review" && (
+              {selectedTab === 'review' && (
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -181,14 +172,12 @@ export function StudentDetailModal({
                     onChange={(e) => setPendingOnly(e.target.checked)}
                     className="w-4 h-4 accent-primary-container cursor-pointer"
                   />
-                  <span className="text-xs font-bold text-on-surface-variant">
-                    Pending only
-                  </span>
+                  <span className="text-xs font-bold text-on-surface-variant">Pending only</span>
                 </label>
               )}
             </div>
-            {selectedTab === "word" && <WordTestTable tests={mockWordTests} />}
-            {selectedTab === "review" && (
+            {selectedTab === 'word' && <WordTestTable tests={mockWordTests} />}
+            {selectedTab === 'review' && (
               <ReviewTestTable tests={mockReviewTests} showPendingOnly={pendingOnly} />
             )}
           </div>
