@@ -28,6 +28,7 @@ import { Route as StudentTestListRouteImport } from './../routes/student/test-li
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as TeacherClassesIndexRouteImport } from './../routes/teacher/classes/index'
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
+import { Route as TeacherClinicsStudentIdRouteImport } from './../routes/teacher/clinics_.$studentId'
 import { Route as TeacherClassesClassIdRouteImport } from './../routes/teacher/classes/$classId'
 
 const TeacherRoute = TeacherRouteImport.update({
@@ -126,6 +127,11 @@ const TeacherTestAssignmentStudentIdRoute =
     path: '/test-assignment/$studentId',
     getParentRoute: () => TeacherRoute,
   } as any)
+const TeacherClinicsStudentIdRoute = TeacherClinicsStudentIdRouteImport.update({
+  id: '/clinics_/$studentId',
+  path: '/clinics/$studentId',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
   id: '/$classId',
   path: '/$classId',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/clinics/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
 }
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/clinics/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes': typeof TeacherClassesIndexRoute
 }
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/teacher/test-grading': typeof TeacherTestGradingRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
+  '/teacher/clinics_/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment_/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
 }
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
     | '/teacher/classes/$classId'
+    | '/teacher/clinics/$studentId'
     | '/teacher/test-assignment/$studentId'
     | '/teacher/classes/'
   fileRoutesByTo: FileRoutesByTo
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
     | '/teacher/classes/$classId'
+    | '/teacher/clinics/$studentId'
     | '/teacher/test-assignment/$studentId'
     | '/teacher/classes'
   id:
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/teacher/test-grading'
     | '/teacher/vocabulary-bank'
     | '/teacher/classes/$classId'
+    | '/teacher/clinics_/$studentId'
     | '/teacher/test-assignment_/$studentId'
     | '/teacher/classes/'
   fileRoutesById: FileRoutesById
@@ -410,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherTestAssignmentStudentIdRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/clinics_/$studentId': {
+      id: '/teacher/clinics_/$studentId'
+      path: '/clinics/$studentId'
+      fullPath: '/teacher/clinics/$studentId'
+      preLoaderRoute: typeof TeacherClinicsStudentIdRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/classes/$classId': {
       id: '/teacher/classes/$classId'
       path: '/$classId'
@@ -458,6 +477,7 @@ interface TeacherRouteChildren {
   TeacherTestAssignmentRoute: typeof TeacherTestAssignmentRoute
   TeacherTestGradingRoute: typeof TeacherTestGradingRoute
   TeacherVocabularyBankRoute: typeof TeacherVocabularyBankRoute
+  TeacherClinicsStudentIdRoute: typeof TeacherClinicsStudentIdRoute
   TeacherTestAssignmentStudentIdRoute: typeof TeacherTestAssignmentStudentIdRoute
 }
 
@@ -470,6 +490,7 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherTestAssignmentRoute: TeacherTestAssignmentRoute,
   TeacherTestGradingRoute: TeacherTestGradingRoute,
   TeacherVocabularyBankRoute: TeacherVocabularyBankRoute,
+  TeacherClinicsStudentIdRoute: TeacherClinicsStudentIdRoute,
   TeacherTestAssignmentStudentIdRoute: TeacherTestAssignmentStudentIdRoute,
 }
 

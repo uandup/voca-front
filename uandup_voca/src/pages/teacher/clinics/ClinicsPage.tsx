@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { AssignedLevelBlocks } from '@/entities/vocab';
 import { CLINIC_MOCK, type ClinicStudent } from './mock/clinicMockData';
-import { StudentDetailModal } from './ui/StudentDetailModal';
 import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
 import { MemoPopup, type MemoItem } from '@/entities/student';
@@ -32,8 +32,8 @@ export default function ClinicsPage() {
   const [sessions, setSessions] = useState(CLINIC_MOCK.sessions);
   const [selectedDay, setSelectedDay] = useState<Day>(todayDay);
   const [selectedSessionId, setSelectedSessionId] = useState<string>(CLINIC_MOCK.sessions[0].id);
-  const [selectedStudent, setSelectedStudent] = useState<ClinicStudent | null>(null);
   const [memoStudent, setMemoStudent] = useState<ClinicStudent | null>(null);
+  const navigate = useNavigate();
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<TimeGroup, boolean>>({
     morning: true,
@@ -218,7 +218,12 @@ export default function ClinicsPage() {
                     return (
                       <tr
                         key={student.id}
-                        onClick={() => setSelectedStudent(student)}
+                        onClick={() =>
+                          navigate({
+                            to: '/teacher/clinics/$studentId',
+                            params: { studentId: student.id },
+                          })
+                        }
                         className="transition-colors group hover:bg-surface-container-low/30 cursor-pointer"
                       >
                         <td className="px-4 py-4 border-r border-outline-variant/20">
@@ -285,9 +290,6 @@ export default function ClinicsPage() {
       </div>
 
       {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
-      {selectedStudent && (
-        <StudentDetailModal student={selectedStudent} onClose={() => setSelectedStudent(null)} />
-      )}
       {memoStudent && (
         <MemoPopup
           studentName={`${memoStudent.nameLastKo}${memoStudent.nameFirstKo}`}
