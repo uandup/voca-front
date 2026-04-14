@@ -13,6 +13,7 @@ const navItems = [
   { icon: 'clinical_notes', label: 'Clinics', to: '/teacher/clinics' },
   { icon: 'book_2', label: 'Vocabulary Bank', to: '/teacher/vocabulary-bank' },
   { icon: 'print', label: 'Print Preview', to: '/teacher/print-preview' },
+  { icon: 'admin_panel_settings', label: 'Admin', to: '/teacher/admin' },
 ] as const;
 
 export function TeacherSideNavBar() {

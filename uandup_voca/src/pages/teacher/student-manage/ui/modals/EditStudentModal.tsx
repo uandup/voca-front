@@ -3,6 +3,8 @@ import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import type { ManagedStudent, TestType, ParentInfo } from '../../mock/studentManageMockData';
 import { PARENT_MOCK } from '../../mock/studentManageMockData';
 import { ParentListPanel } from './ParentListPanel';
+import { ClassListPanel } from './ClassListPanel';
+import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
   student: ManagedStudent;
@@ -35,6 +37,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
     student.parentName ? (PARENT_MOCK.find((p) => p.name === student.parentName) ?? null) : null,
   );
   const [showParentList, setShowParentList] = useState(false);
+  const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
+  const [showClassList, setShowClassList] = useState(false);
 
   function handleSave() {
     onSave({
@@ -50,6 +54,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
       testConfig: { type: testType, includeSynonyms },
       parentName: selectedParent?.name,
       parentPhone: selectedParent?.phone,
+      classes: selectedClasses,
     });
     onClose();
   }
@@ -229,6 +234,43 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               </div>
             </div>
 
+            {/* 반 정보 */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-3">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Class Info
+                </label>
+                <div className="flex-1 h-px bg-outline-variant/20" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowClassList((v) => !v);
+                    setShowParentList(false);
+                  }}
+                  className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold border transition-all ${
+                    showClassList
+                      ? 'bg-primary/10 text-primary border-primary/30'
+                      : 'text-on-surface-variant border-outline-variant/30 hover:border-primary/30 hover:text-primary'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {showClassList ? 'chevron_right' : 'chevron_left'}
+                  </span>
+                  Select Class
+                </button>
+              </div>
+
+              {/* 선택된 반 표시 */}
+              {selectedClasses.length > 0 ? (
+                <ClassChips
+                  classes={selectedClasses}
+                  onRemove={(c) => setSelectedClasses((prev) => prev.filter((x) => x !== c))}
+                />
+              ) : (
+                <p className="text-xs text-on-surface-variant/60 px-1">No class selected</p>
+              )}
+            </div>
+
             {/* 학부모 정보 */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
@@ -238,7 +280,10 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="flex-1 h-px bg-outline-variant/20" />
                 <button
                   type="button"
-                  onClick={() => setShowParentList((v) => !v)}
+                  onClick={() => {
+                    setShowParentList((v) => !v);
+                    setShowClassList(false);
+                  }}
                   className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold border transition-all ${
                     showParentList
                       ? 'bg-primary/10 text-primary border-primary/30'
@@ -289,6 +334,11 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
             </button>
           </div>
         </div>
+
+        {/* 반 리스트 패널 */}
+        {showClassList && (
+          <ClassListPanel selectedClasses={selectedClasses} onChange={setSelectedClasses} />
+        )}
 
         {/* 학부모 리스트 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {showParentList && (

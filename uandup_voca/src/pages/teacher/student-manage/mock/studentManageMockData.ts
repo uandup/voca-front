@@ -9,6 +9,20 @@ export interface ParentInfo {
   phone: string;
 }
 
+export interface ClassInfo {
+  id: number;
+  name: string;
+}
+
+export const CLASS_MOCK: ClassInfo[] = [
+  { id: 1, name: 'G10 English' },
+  { id: 2, name: 'G9 English' },
+  { id: 3, name: 'SAT' },
+  { id: 4, name: 'PreSAT Reading' },
+  { id: 5, name: 'Essay' },
+  { id: 6, name: 'SL English' },
+];
+
 export const PARENT_MOCK: ParentInfo[] = [
   { id: 1, name: '김철수', phone: '010-1234-5678' },
   { id: 2, name: '이상훈', phone: '010-2345-6789' },
