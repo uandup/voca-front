@@ -1,7 +1,7 @@
 import { SideNavBar } from './SideNavBar';
 
 const navItems = [
-  { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },
+  // { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },
   { icon: 'people', label: 'Students', to: '/teacher/student-manage' },
   // { icon: 'calendar_today', label: 'Classes', to: '/teacher/classes' },
   // {
