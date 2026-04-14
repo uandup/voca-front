@@ -23,6 +23,7 @@ import { Route as TeacherPrintPreviewRouteImport } from './../routes/teacher/pri
 import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashboard'
 import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherClassesRouteImport } from './../routes/teacher/classes'
+import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
 import { Route as StudentTestListRouteImport } from './../routes/student/test-list'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
@@ -101,6 +102,11 @@ const TeacherClassesRoute = TeacherClassesRouteImport.update({
   path: '/classes',
   getParentRoute: () => TeacherRoute,
 } as any)
+const TeacherAdminRoute = TeacherAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => TeacherRoute,
+} as any)
 const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
   id: '/vocabulary',
   path: '/vocabulary',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
+  '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
   '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
+  '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/print-preview': typeof TeacherPrintPreviewRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/test-list': typeof StudentTestListRoute
   '/student/vocabulary': typeof StudentVocabularyRoute
+  '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
   '/teacher/clinics': typeof TeacherClinicsRoute
   '/teacher/dashboard': typeof TeacherDashboardRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/test-list'
     | '/student/vocabulary'
+    | '/teacher/admin'
     | '/teacher/classes'
     | '/teacher/clinics'
     | '/teacher/dashboard'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/test-list'
     | '/student/vocabulary'
+    | '/teacher/admin'
     | '/teacher/clinics'
     | '/teacher/dashboard'
     | '/teacher/print-preview'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/test-list'
     | '/student/vocabulary'
+    | '/teacher/admin'
     | '/teacher/classes'
     | '/teacher/clinics'
     | '/teacher/dashboard'
@@ -387,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherClassesRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/admin': {
+      id: '/teacher/admin'
+      path: '/admin'
+      fullPath: '/teacher/admin'
+      preLoaderRoute: typeof TeacherAdminRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/student/vocabulary': {
       id: '/student/vocabulary'
       path: '/vocabulary'
@@ -469,6 +488,7 @@ const TeacherClassesRouteWithChildren = TeacherClassesRoute._addFileChildren(
 )
 
 interface TeacherRouteChildren {
+  TeacherAdminRoute: typeof TeacherAdminRoute
   TeacherClassesRoute: typeof TeacherClassesRouteWithChildren
   TeacherClinicsRoute: typeof TeacherClinicsRoute
   TeacherDashboardRoute: typeof TeacherDashboardRoute
@@ -482,6 +502,7 @@ interface TeacherRouteChildren {
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
+  TeacherAdminRoute: TeacherAdminRoute,
   TeacherClassesRoute: TeacherClassesRouteWithChildren,
   TeacherClinicsRoute: TeacherClinicsRoute,
   TeacherDashboardRoute: TeacherDashboardRoute,
