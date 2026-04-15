@@ -23,6 +23,7 @@ export function WordTestTab() {
   const [testType, setTestType] = useState('Meaning to Word');
   const [meaningSub, setMeaningSub] = useState<MeaningSubType>('en');
   const [includeSynonyms, setIncludeSynonyms] = useState(true);
+  const [isConfigEditing, setIsConfigEditing] = useState(false);
 
   return (
     <div className="grid grid-cols-12 gap-8">
@@ -139,29 +140,13 @@ export function WordTestTab() {
               Test Configuration
             </p>
             <button
-              onClick={() => {
-                setTestQty(30);
-                setTestType('Meaning to Word');
-                setMeaningSub('en');
-                setIncludeSynonyms(true);
-              }}
-              className="text-[10px] font-bold text-primary hover:underline"
+              onClick={() => setIsConfigEditing((v) => !v)}
+              className="px-3 py-1 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
             >
-              Reset to Default
+              {isConfigEditing ? 'Apply' : 'Edit'}
             </button>
           </div>
           <div className="space-y-6 flex-1">
-            <div>
-              <label className="text-[11px] font-semibold text-on-surface-variant mb-1.5 block">
-                Quantity
-              </label>
-              <input
-                type="number"
-                value={testQty}
-                onChange={(e) => setTestQty(Number(e.target.value))}
-                className="w-full text-sm border border-slate-200 bg-slate-50/50 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
             <div>
               <label className="text-[11px] font-semibold text-on-surface-variant mb-1.5 block">
                 Test Type
@@ -169,7 +154,8 @@ export function WordTestTab() {
               <select
                 value={testType}
                 onChange={(e) => setTestType(e.target.value)}
-                className="w-full text-sm border border-slate-200 bg-slate-50/50 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                disabled={!isConfigEditing}
+                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed"
               >
                 <option>Word to Korean</option>
                 <option>Word to English</option>
@@ -184,35 +170,76 @@ export function WordTestTab() {
                       { value: 'enKo', label: 'En/Ko to Word' },
                     ] as { value: MeaningSubType; label: string }[]
                   ).map((opt) => (
-                    <label key={opt.value} className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="meaning_sub"
-                        checked={meaningSub === opt.value}
-                        onChange={() => setMeaningSub(opt.value)}
-                        className="w-3.5 h-3.5 accent-primary"
-                      />
-                      <span className="text-xs text-on-surface font-medium">{opt.label}</span>
-                    </label>
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => isConfigEditing && setMeaningSub(opt.value)}
+                      className={`flex items-center gap-3 w-full ${isConfigEditing ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                    >
+                      {/* 커스텀 라디오 */}
+                      <span
+                        className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                          meaningSub === opt.value
+                            ? isConfigEditing
+                              ? 'border-primary'
+                              : 'border-slate-400'
+                            : 'border-slate-200'
+                        }`}
+                      >
+                        {meaningSub === opt.value && (
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${isConfigEditing ? 'bg-primary' : 'bg-slate-400'}`}
+                          />
+                        )}
+                      </span>
+                      <span
+                        className={`text-xs font-medium transition-colors ${
+                          meaningSub === opt.value
+                            ? isConfigEditing
+                              ? 'text-on-surface'
+                              : 'text-slate-500'
+                            : 'text-slate-300'
+                        }`}
+                      >
+                        {opt.label}
+                      </span>
+                    </button>
                   ))}
                 </div>
               )}
             </div>
-            <div className="flex items-center justify-between py-2 border-t border-slate-50">
-              <span className="text-xs font-medium text-on-surface">Include Synonyms</span>
-              <label className="relative inline-flex items-center cursor-pointer">
+            <div>
+              <label className="text-[11px] font-semibold text-on-surface-variant mb-1.5 block">
+                Quantity
+              </label>
+              <input
+                type="number"
+                value={testQty}
+                onChange={(e) => setTestQty(Number(e.target.value))}
+                disabled={!isConfigEditing}
+                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-slate-100 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed"
+              />
+            </div>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-xs font-semibold text-on-surface-variant">
+                Include Synonyms
+              </span>
+              <label
+                className={`relative inline-flex items-center ${isConfigEditing ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+              >
                 <input
                   type="checkbox"
                   checked={includeSynonyms}
                   onChange={(e) => setIncludeSynonyms(e.target.checked)}
+                  disabled={!isConfigEditing}
                   className="sr-only peer"
                 />
-                <div className="w-8 h-4 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
+                <div className="w-8 h-5 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
               </label>
             </div>
           </div>
-          <div className="pt-6 border-t border-slate-50">
-            <p className="text-[10px] text-on-surface-variant font-medium text-center">
+          <div className="pt-4 border-t border-gray-200">
+            <p className="text-xs text-on-surface-variant/80 font-medium text-center">
               Settings will apply to the next generated test.
             </p>
           </div>
