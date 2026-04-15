@@ -47,12 +47,15 @@ export function QuickAssignmentCard({
 
       {/* 배정된 상태 오버레이 */}
       {isAssigned ? (
-        <div className="flex-1 flex flex-col items-center justify-center gap-2 bg-slate-50 border border-slate-200 rounded-xl py-6">
-          {/* <p className="material-symbols-outlined text-success text-3xl">check_circle</p> */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-1 bg-slate-50 border border-slate-200 rounded-xl py-6">
           <p className="text-md font-bold text-on-surface-variant">Already assigned</p>
           <p className="text-sm text-on-surface-variant/60 font-medium">
             Level {targetLevel} · {qty} words
           </p>
+          <button className="mt-2 flex items-center gap-1 text-xs font-bold text-primary/70 hover:text-primary cursor-pointer">
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
+            View assigned words
+          </button>
         </div>
       ) : (
         <>
