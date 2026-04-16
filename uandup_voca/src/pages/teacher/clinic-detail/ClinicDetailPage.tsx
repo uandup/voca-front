@@ -7,6 +7,8 @@ import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import { WordTestTab } from './ui/WordTestTab';
+import { LevelTestTab } from './ui/LevelTestTab';
+import { WrongWordBankTab } from './ui/WrongWordBankTab';
 
 type MainTab = 'wordTest' | 'wrongWordBank' | 'levelTest';
 type DifficultyLevel = Vocab['difficultyLevel'];
@@ -89,17 +91,9 @@ export function ClinicDetailPage() {
 
         {mainTab === 'wordTest' && <WordTestTab />}
 
-        {mainTab === 'wrongWordBank' && (
-          <div className="bg-white border border-outline/20 rounded-2xl p-12 flex items-center justify-center">
-            <p className="text-on-surface-variant text-sm font-medium">Wrong Word Bank — 준비 중</p>
-          </div>
-        )}
+        {mainTab === 'wrongWordBank' && <WrongWordBankTab />}
 
-        {mainTab === 'levelTest' && (
-          <div className="bg-white border border-outline/20 rounded-2xl p-12 flex items-center justify-center">
-            <p className="text-on-surface-variant text-sm font-medium">Level Test — 준비 중</p>
-          </div>
-        )}
+        {mainTab === 'levelTest' && <LevelTestTab />}
       </div>
 
       {isMemoOpen && (

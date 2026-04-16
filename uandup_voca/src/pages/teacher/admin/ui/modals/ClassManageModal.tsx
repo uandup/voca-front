@@ -79,7 +79,7 @@ export function ClassManageModal({ onClose }: Props) {
         {/* 목록 */}
         <ul
           className="overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin]"
-          style={{ height: '320px' }}
+          style={{ height: '400px' }}
         >
           {classes.length === 0 && (
             <li className="flex items-center justify-center h-full text-sm text-on-surface-variant">

@@ -239,7 +239,7 @@ export function WordTestTab() {
             </div>
           </div>
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-xs text-on-surface-variant/80 font-medium text-center">
+            <p className="text-xs text-error/80 font-medium text-center">
               Settings will apply to the next generated test.
             </p>
           </div>
