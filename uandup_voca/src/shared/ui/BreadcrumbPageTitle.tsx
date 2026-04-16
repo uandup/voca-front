@@ -5,7 +5,7 @@ interface BreadcrumbPageTitleProps {
 
 export function BreadcrumbPageTitle({ parents, title }: BreadcrumbPageTitleProps) {
   return (
-    <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-8 flex items-center gap-2">
+    <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight mb-6 flex items-center gap-2">
       {parents.map((parent) => (
         <span key={parent.label} className="flex gap-2">
           {parent.onClick ? (
@@ -15,7 +15,7 @@ export function BreadcrumbPageTitle({ parents, title }: BreadcrumbPageTitleProps
           ) : (
             <span>{parent.label}</span>
           )}
-          <span className="material-symbols-outlined" style={{ fontSize: '44px' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '40px' }}>
             chevron_right
           </span>
         </span>
