@@ -73,3 +73,7 @@ npm run preview   # 프로덕션 빌드 미리보기
 
 - `Vocab` (`src/entities/vocab/types/vocab.ts`) — word, partOfSpeech, koreanMeaning, difficultyLevel(1–4), englishMeaning, synonyms, exampleSentence
 - 사용자 역할: `학생` | `학부모` | `선생님` | `관리자`
+
+### 반드시 지켜야 할 점
+
+작성하는 코드에는 명확한 근거와 이유가 있어야 하며, 항상 코드 품질을 높이는 방향으로 작업을 해야합니다.
