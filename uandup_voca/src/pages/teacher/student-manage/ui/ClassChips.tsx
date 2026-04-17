@@ -49,7 +49,9 @@ export function ClassChips({ classes, onRemove }: ClassChipsProps) {
             className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
           >
             {c}
-            <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>close</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>
+              close
+            </span>
           </span>
         ))}
       </div>

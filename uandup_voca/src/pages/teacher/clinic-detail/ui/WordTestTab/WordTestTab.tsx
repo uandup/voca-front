@@ -1,33 +1,107 @@
-import { useState } from 'react';
-import WordTestWorkflow from './WordTestWorkflow';
-import TestConfiguration, { type MeaningSubType } from './TestConfiguration';
+import CycleRow, { type CycleRowData } from './CycleRow';
+
+const MOCK_CYCLES: CycleRowData[] = [
+  {
+    title: 'Cycle #48-97',
+    badge: 'High Priority',
+    scheduledDate: '23.10.23',
+    steps: [
+      {
+        key: 'word',
+        label: 'Word',
+        status: 'pending',
+        subLabel: 'Pending',
+      },
+      {
+        key: 'example',
+        label: 'Sentence',
+        status: 'active',
+        date: '23.10.24',
+        totalScore: '30',
+        testType: 'Meaning to Word',
+      },
+      {
+        key: 'review1',
+        label: 'Review 1',
+        status: 'passed',
+        date: '23.10.23',
+        scores: ['98'],
+        totalScore: '100',
+        testType: 'Meaning to Word',
+      },
+      {
+        key: 'review2',
+        label: 'Review 2',
+        status: 'fail',
+        date: '23.10.24',
+        scores: ['62'],
+        totalScore: '100',
+        testType: 'Meaning to Word',
+      },
+      {
+        key: 'review3',
+        label: 'Review 3',
+        status: 'passed',
+        date: '23.10.25',
+        scores: ['55', '75', '88'],
+        totalScore: '100',
+        testType: 'Meaning to Word',
+      },
+    ],
+  },
+  {
+    title: 'Cycle #01-47',
+    badge: 'Standard',
+    scheduledDate: '23.10.24',
+    steps: [
+      {
+        key: 'word',
+        label: 'Word Test',
+        status: 'fail',
+        date: '23.10.24',
+        scores: ['62'],
+        totalScore: '100',
+        isPassed: false,
+        testType: 'Meaning to Word',
+      },
+      {
+        key: 'example',
+        label: 'Example Test',
+        status: 'locked',
+        testType: 'Meaning to Word',
+        subLabel: 'Locked',
+      },
+      {
+        key: 'review1',
+        label: 'Review 1',
+        status: 'locked',
+        testType: 'Meaning to Word',
+        subLabel: 'Locked',
+      },
+      {
+        key: 'review2',
+        label: 'Review 2',
+        status: 'locked',
+        testType: 'Meaning to Word',
+        subLabel: 'Locked',
+      },
+      {
+        key: 'review3',
+        label: 'Review 3',
+        status: 'locked',
+        testType: 'Meaning to Word',
+        subLabel: 'Locked',
+      },
+    ],
+  },
+];
 
 export default function WordTestTab() {
-  const [testQty, setTestQty] = useState(30);
-  const [testType, setTestType] = useState('Meaning to Word');
-  const [meaningSub, setMeaningSub] = useState<MeaningSubType>('en');
-  const [includeSynonyms, setIncludeSynonyms] = useState(true);
-  const [isConfigEditing, setIsConfigEditing] = useState(false);
-
   return (
-    <div className="grid grid-cols-13 gap-6">
-      <div className="col-span-10">
-        <WordTestWorkflow />
-      </div>
-      <div className="col-span-3">
-        <TestConfiguration
-          testQty={testQty}
-          testType={testType}
-          meaningSub={meaningSub}
-          includeSynonyms={includeSynonyms}
-          isEditing={isConfigEditing}
-          onTestQtyChange={setTestQty}
-          onTestTypeChange={setTestType}
-          onMeaningSubChange={setMeaningSub}
-          onIncludeSynonymsChange={setIncludeSynonyms}
-          onEditingToggle={() => setIsConfigEditing((v) => !v)}
-        />
-      </div>
+    <div className="flex flex-col gap-4">
+      {MOCK_CYCLES.map((cycle) => (
+        <CycleRow key={cycle.title} {...cycle} />
+      ))}
     </div>
   );
 }

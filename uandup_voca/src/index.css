@@ -57,6 +57,10 @@
   --color-on-primary-fixed: #001550;
   --color-on-primary-container: #809bff;
   --color-surface-dim: #dad9e2;
+  --color-success: #1a6c3a;
+  --color-on-success: #ffffff;
+  --color-success-container: #b7f1cb;
+  --color-on-success-container: #00522a;
 
   /* Border radius tokens */
   --radius-DEFAULT: 0.125rem;

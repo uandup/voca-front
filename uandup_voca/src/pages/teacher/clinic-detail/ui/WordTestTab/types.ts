@@ -1,13 +1,17 @@
-export type StepStatus = 'done' | 'fail' | 'active' | 'locked';
+export type StepStatus = 'passed' | 'fail' | 'active' | 'pending' | 'locked';
+
+export type TestType = 'Meaning to Word' | 'Word to Meaning';
 
 export interface TestStep {
   key: string;
   label: string;
   status: StepStatus;
   date?: string;
-  score?: string;
+  scores?: string[];
+  totalScore?: string;
+  failState?: 'fail' | 'awaiting';
   isPassed?: boolean;
-  testType?: string; // e.g. "Word to Korean"
-  subLabel?: string; // e.g. "Pending", "Unlocks in 4h"
+  testType?: TestType;
+  subLabel?: string;
   scheduledDate?: string;
 }
