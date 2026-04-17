@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { NumberInput } from '@/shared/ui/NumberInput';
 import type { ManagedStudent, TestType, ParentInfo } from '../../mock/studentManageMockData';
 import { PARENT_MOCK } from '../../mock/studentManageMockData';
 import { ParentListPanel } from './ParentListPanel';
@@ -176,24 +177,22 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                   Assigned QTY
                 </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                <NumberInput
                   value={wordCount}
-                  onChange={(e) => setWordCount(e.target.value.replace(/\D/g, ''))}
+                  onChange={setWordCount}
+                  min={1}
+                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                   Test QTY
                 </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                <NumberInput
                   value={testQuestionCount}
-                  onChange={(e) => setTestQuestionCount(e.target.value.replace(/\D/g, ''))}
+                  onChange={setTestQuestionCount}
+                  min={1}
+                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
             </div>
