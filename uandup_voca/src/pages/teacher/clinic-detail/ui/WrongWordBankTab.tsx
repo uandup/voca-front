@@ -12,9 +12,9 @@ interface WrongWordTestRecord {
 }
 
 const MOCK_TEST_HISTORY: WrongWordTestRecord[] = [
-  { date: '26.04.25', quantity: 30, score: null, status: 'pending' },
-  { date: '26.04.28', quantity: 30, score: 12, status: 'fail' },
-  { date: '26.05.01', quantity: 30, score: 28, status: 'completed' },
+  { date: '2026.04.25', quantity: 30, score: null, status: 'pending' },
+  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
+  { date: '2026.05.01', quantity: 30, score: 28, status: 'completed' },
 ];
 
 const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
