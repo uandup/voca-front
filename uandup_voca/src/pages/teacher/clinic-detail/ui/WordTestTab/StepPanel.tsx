@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { TestStep, TestType } from './types';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { WordTestModal, SentenceModal } from '@/entities/test';
+import { mockVocabList, mockESRows } from '@/entities/test/lib/mockData';
 
 interface StepPanelProps {
   step: TestStep;
@@ -33,6 +35,7 @@ export default function StepPanel({ step }: StepPanelProps) {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
 
   return (
     <>
@@ -42,6 +45,19 @@ export default function StepPanel({ step }: StepPanelProps) {
           description="The test has been successfully created."
           onClose={() => setShowSuccessModal(false)}
         />
+      )}
+
+      {showPrintModal && step.key === 'sentence' ? (
+        <SentenceModal onClose={() => setShowPrintModal(false)} rows={mockESRows} />
+      ) : (
+        showPrintModal && (
+          <WordTestModal
+            onClose={() => setShowPrintModal(false)}
+            rows={mockVocabList}
+            testType={config.testType}
+            includeSynonyms={config.includeSynonyms}
+          />
+        )
       )}
 
       <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -56,9 +72,13 @@ export default function StepPanel({ step }: StepPanelProps) {
         {phase === 'pending' && (
           <PendingPanel isEditing={isEditing} onGenerate={() => setShowSuccessModal(true)} />
         )}
-        {phase === 'created' && <CreatedPanel step={step} />}
-        {phase === 'fail' && <FailPanel step={step} />}
-        {phase === 'passed' && <PassedPanel step={step} />}
+        {phase === 'created' && (
+          <CreatedPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />
+        )}
+        {phase === 'fail' && <FailPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />}
+        {phase === 'passed' && (
+          <PassedPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />
+        )}
       </div>
     </>
   );
@@ -179,7 +199,7 @@ function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerat
   );
 }
 
-function CreatedPanel({ step }: { step: TestStep }) {
+function CreatedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
@@ -206,12 +226,18 @@ function CreatedPanel({ step }: { step: TestStep }) {
           <button className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20">
             Start Test
           </button>
-          <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center gap-1.5">
+          <button
+            onClick={onOpenPrint}
+            className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center gap-1.5"
+          >
             Preview
           </button>
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <button className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors">
+          <button
+            onClick={onOpenPrint}
+            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+          >
             Grade Test
           </button>
           <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors">
@@ -223,7 +249,7 @@ function CreatedPanel({ step }: { step: TestStep }) {
   );
 }
 
-function FailPanel({ step }: { step: TestStep }) {
+function FailPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
   const [failState, setFailState] = useState<'fail' | 'awaiting'>(step.failState ?? 'fail');
   const scores = step.scores ?? [];
 
@@ -290,12 +316,18 @@ function FailPanel({ step }: { step: TestStep }) {
         >
           {failState === 'awaiting' ? 'Awaiting Grading' : 'Retake Test'}
         </button>
-        <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors">
+        <button
+          onClick={onOpenPrint}
+          className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
+        >
           View Results
         </button>
         {failState === 'awaiting' && (
           <div className="ml-auto">
-            <button className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors">
+            <button
+              onClick={onOpenPrint}
+              className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+            >
               Grade
             </button>
           </div>
@@ -305,7 +337,7 @@ function FailPanel({ step }: { step: TestStep }) {
   );
 }
 
-function PassedPanel({ step }: { step: TestStep }) {
+function PassedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
   const scores = step.scores ?? [];
 
   return (
@@ -340,7 +372,10 @@ function PassedPanel({ step }: { step: TestStep }) {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors">
+        <button
+          onClick={onOpenPrint}
+          className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
+        >
           View Results
         </button>
       </div>

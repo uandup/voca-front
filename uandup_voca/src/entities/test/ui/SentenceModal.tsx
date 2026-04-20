@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { PrintActionBar } from '@/shared/test-print/ui/PrintActionBar';
-import { PrintSheetHeader } from '@/shared/test-print/ui/PrintSheetHeader';
-import { printAllSheets } from '@/shared/test-print/lib/print';
+import { PrintActionBar } from './print/PrintActionBar';
+import { PrintSheetHeader } from './print/PrintSheetHeader';
+import { printAllSheets } from '../lib/print';
 
 export interface ESRow {
   no: string;
@@ -10,22 +10,19 @@ export interface ESRow {
 
 const PAGE_SIZE = 20;
 const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
-const ANSWER_COL_WIDTH = '100px';
+const ANSWER_COL_WIDTH = '110px';
 
 interface TestESPrintModalProps {
   onClose: () => void;
-  no?: string;
   rows: ESRow[];
 }
 
-function ESSheet({
+function SentenceSheet({
   id,
-  no,
   pageRows,
   hidden,
 }: {
   id: string;
-  no?: string;
   pageRows: ESRow[];
   hidden?: boolean;
 }) {
@@ -40,7 +37,7 @@ function ESSheet({
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
-      <PrintSheetHeader no={no} />
+      <PrintSheetHeader />
       <section style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -112,7 +109,7 @@ function ESSheet({
   );
 }
 
-export function TestESPrintModal({ onClose, no, rows }: TestESPrintModalProps) {
+export function SentenceModal({ onClose, rows }: TestESPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
 
@@ -134,9 +131,8 @@ export function TestESPrintModal({ onClose, no, rows }: TestESPrintModalProps) {
       />
 
       <div className="mt-20" onClick={(e) => e.stopPropagation()}>
-        <ESSheet
+        <SentenceSheet
           id={`es-print-sheet-${page}`}
-          no={no}
           pageRows={rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}
         />
       </div>
@@ -146,10 +142,9 @@ export function TestESPrintModal({ onClose, no, rows }: TestESPrintModalProps) {
         .map((id) => {
           const p = parseInt(id.split('-').pop()!);
           return (
-            <ESSheet
+            <SentenceSheet
               key={id}
               id={id}
-              no={no}
               pageRows={rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE)}
               hidden
             />

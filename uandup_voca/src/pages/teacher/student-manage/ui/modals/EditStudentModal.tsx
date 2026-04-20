@@ -13,12 +13,11 @@ interface EditStudentModalProps {
   onSave: (updated: ManagedStudent) => void;
 }
 
-const TEST_TYPES: TestType[] = ['W→EN', 'W→KR', 'M→W'];
+const TEST_TYPES: TestType[] = ['Meaning to Word', 'Word to Meaning'];
 
 const TEST_TYPE_LABELS: Record<TestType, string> = {
-  'W→EN': 'Word to English meaning (W→EN)',
-  'W→KR': 'Word to Korean meaning (W→KR)',
-  'M→W': 'Meaning to word (M→W)',
+  'Meaning to Word': 'Meaning to Word',
+  'Word to Meaning': 'Word to Meaning',
 };
 
 const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;

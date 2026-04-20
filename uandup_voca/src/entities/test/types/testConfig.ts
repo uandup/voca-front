@@ -1,4 +1,4 @@
-export type TestType = 'W→EN' | 'W→KR' | 'M→W';
+export type TestType = 'Meaning to Word' | 'Word to Meaning';
 
 export interface TestConfig {
   type: TestType;

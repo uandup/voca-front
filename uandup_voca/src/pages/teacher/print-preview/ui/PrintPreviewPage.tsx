@@ -1,6 +1,11 @@
 import { useState } from 'react';
-import { TestWMSPrintModal, TestESPrintModal, type ESRow } from '@/shared/test-print';
-import { mockVocabList, mockESRows } from '@/shared/test-print/lib/mockData';
+import {
+  WordTestModal,
+  SentenceModal,
+  type ESRow,
+  mockVocabList,
+  mockESRows,
+} from '@/entities/test';
 
 const ES_ROWS: ESRow[] = Array.from({ length: 15 }, (_, i) => ({
   no: String(i + 1).padStart(2, '0'),
@@ -81,14 +86,14 @@ export function PrintPreviewPage() {
       </div>
 
       {openModal === 'WMS' && (
-        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
+        <WordTestModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
       )}
-      {openModal === 'ES' && <TestESPrintModal onClose={() => setOpenModal(null)} rows={ES_ROWS} />}
+      {openModal === 'ES' && <SentenceModal onClose={() => setOpenModal(null)} rows={ES_ROWS} />}
       {openModal === 'TEST_WMS' && (
-        <TestWMSPrintModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
+        <WordTestModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
       )}
       {openModal === 'TEST_ES' && (
-        <TestESPrintModal onClose={() => setOpenModal(null)} rows={mockESRows} />
+        <SentenceModal onClose={() => setOpenModal(null)} rows={mockESRows} />
       )}
     </main>
   );

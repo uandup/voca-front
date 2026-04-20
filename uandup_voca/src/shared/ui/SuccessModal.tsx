@@ -11,7 +11,7 @@ export function SuccessModal({ message, description, onClose }: SuccessModalProp
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4 min-w-[280px]"
+        className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4 min-w-70"
         onClick={(e) => e.stopPropagation()}
       >
         <span className="material-symbols-outlined text-primary" style={{ fontSize: '48px' }}>

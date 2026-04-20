@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { PrintActionBar, type ColumnToggle } from '@/shared/test-print/ui/PrintActionBar';
-import { PrintSheetHeader } from '@/shared/test-print/ui/PrintSheetHeader';
-import { printAllSheets } from '@/shared/test-print/lib/print';
-import type { VocabItem } from '@/shared/test-print/lib/mockData';
+import { PrintActionBar } from './print/PrintActionBar';
+import { PrintSheetHeader } from './print/PrintSheetHeader';
+import { printAllSheets } from '../lib/print';
+import type { VocabItem } from '../lib/mockData';
+import type { TestType } from '../types/testConfig';
 
 const PAGE_SIZE = 20;
 // A4(297mm) - 상하패딩(20mm) - PrintSheetHeader(25mm) - thead(7mm) = 245mm
@@ -10,8 +11,9 @@ const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 
 interface TestWMSPrintModalProps {
   onClose: () => void;
-  no?: string;
   rows: VocabItem[];
+  testType?: TestType;
+  includeSynonyms?: boolean;
 }
 
 function MeaningCell({
@@ -40,9 +42,8 @@ function MeaningCell({
   );
 }
 
-function WMSSheet({
+function WordSheet({
   id,
-  no,
   pageRows,
   page,
   showWord,
@@ -52,7 +53,6 @@ function WMSSheet({
   hidden,
 }: {
   id: string;
-  no?: string;
   pageRows: VocabItem[];
   page: number;
   showWord: boolean;
@@ -79,7 +79,7 @@ function WMSSheet({
           : {}),
       }}
     >
-      <PrintSheetHeader no={no} />
+      <PrintSheetHeader />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -165,31 +165,30 @@ function WMSSheet({
   );
 }
 
-export function TestWMSPrintModal({ onClose, no, rows }: TestWMSPrintModalProps) {
+export function WordTestModal({
+  onClose,
+  rows,
+  testType = 'Meaning to Word',
+  includeSynonyms = false,
+}: TestWMSPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
-  const [columns, setColumns] = useState<ColumnToggle[]>([
-    { key: 'word', label: 'Word', visible: true },
-    { key: 'kor', label: 'Korean Meaning', visible: false },
-    { key: 'eng', label: 'English Meaning', visible: false },
-    { key: 'synonym', label: 'Synonym 컬럼', visible: true },
-  ]);
 
-  const isVisible = (key: string) => columns.find((c) => c.key === key)?.visible ?? false;
-  const handleColumnToggle = (key: string) =>
-    setColumns((prev) => prev.map((c) => (c.key === key ? { ...c, visible: !c.visible } : c)));
+  const showWord = testType === 'Word to Meaning';
+  const showKor = testType === 'Meaning to Word';
+  const showEng = testType === 'Meaning to Word';
+  const showSynonym = includeSynonyms;
 
   const allPageIds = Array.from({ length: totalPages }, (_, i) => `wms-print-sheet-${i + 1}`);
   const handlePrint = () => printAllSheets(allPageIds);
 
   const sheetProps = (p: number) => ({
-    no,
     pageRows: rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE),
     page: p,
-    showWord: isVisible('word'),
-    showKor: isVisible('kor'),
-    showEng: isVisible('eng'),
-    showSynonym: isVisible('synonym'),
+    showWord,
+    showKor,
+    showEng,
+    showSynonym,
   });
 
   return (
@@ -204,19 +203,17 @@ export function TestWMSPrintModal({ onClose, no, rows }: TestWMSPrintModalProps)
         totalPages={totalPages}
         onPrev={() => setPage((p) => Math.max(1, p - 1))}
         onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
-        columns={columns}
-        onColumnToggle={handleColumnToggle}
       />
 
       <div className="mt-20" onClick={(e) => e.stopPropagation()}>
-        <WMSSheet id={`wms-print-sheet-${page}`} {...sheetProps(page)} />
+        <WordSheet id={`wms-print-sheet-${page}`} {...sheetProps(page)} />
       </div>
 
       {allPageIds
         .filter((_, i) => i + 1 !== page)
         .map((id) => {
           const p = parseInt(id.split('-').pop()!);
-          return <WMSSheet key={id} id={id} {...sheetProps(p)} hidden />;
+          return <WordSheet key={id} id={id} {...sheetProps(p)} hidden />;
         })}
     </div>
   );

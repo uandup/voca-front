@@ -76,7 +76,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 7,
     assignedWordCount: 50,
     testQuestionCount: 30,
-    testConfig: { type: 'W→EN', includeSynonyms: true },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: true },
     recentScore: { score: 87, total: 100, date: '2026.04.01' },
     memos: [
       {
@@ -126,7 +126,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 3,
     assignedWordCount: 50,
     testQuestionCount: 30,
-    testConfig: { type: 'W→KR', includeSynonyms: false },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: false },
     recentScore: { score: 92, total: 100, date: '2026.04.02' },
     memos: [
       {
@@ -151,7 +151,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 5,
     assignedWordCount: 40,
     testQuestionCount: 10,
-    testConfig: { type: 'M→W', includeSynonyms: true },
+    testConfig: { type: 'Meaning to Word', includeSynonyms: true },
     recentScore: { score: 78, total: 100, date: '2026.03.28' },
     memos: [
       {
@@ -174,7 +174,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 4,
     assignedWordCount: 80,
     testQuestionCount: 50,
-    testConfig: { type: 'W→KR', includeSynonyms: true },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: true },
     recentScore: { score: 95, total: 100, date: '2026.04.03' },
     memos: [
       {
@@ -199,7 +199,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 8,
     assignedWordCount: 30,
     testQuestionCount: 10,
-    testConfig: { type: 'W→EN', includeSynonyms: true },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: true },
     recentScore: { score: 83, total: 100, date: '2026.04.05' },
     memos: [],
   },
@@ -216,7 +216,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 2,
     assignedWordCount: 25,
     testQuestionCount: 10,
-    testConfig: { type: 'W→KR', includeSynonyms: false },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: false },
     recentScore: { score: 71, total: 100, date: '2026.03.25' },
     memos: [{ id: 1, date: '2026.03.20', content: '기초 어휘 보완 중.' }],
   },
@@ -233,7 +233,7 @@ export const STUDENT_MANAGE_MOCK: ManagedStudent[] = [
     assignedLevel: 7,
     assignedWordCount: 50,
     testQuestionCount: 30,
-    testConfig: { type: 'W→EN', includeSynonyms: true },
+    testConfig: { type: 'Word to Meaning', includeSynonyms: true },
     recentScore: { score: 89, total: 100, date: '2026.04.04' },
     memos: [{ id: 1, date: '2026.03.05', content: '심화 과정 진행 중.' }],
     parentName: '윤성호',

@@ -1,4 +1,4 @@
-import type { ESRow } from '@/shared/test-print/ui/TestESPrintModal';
+import type { ESRow } from '../ui/SentenceModal';
 
 // ────────────────────────────────────────────────
 // 서버 응답 타입
@@ -22,8 +22,9 @@ export const mockVocabList: VocabItem[] = [
   },
   {
     word: 'abolish',
-    korMeaning: '폐지하다',
-    engMeaning: 'to formally put an end to',
+    korMeaning: '주점, 막대, 법원, 막다, 금하다',
+    engMeaning:
+      'a long piece of material or place serving drinks / to block someone from entering or doing something',
     synonym: 'eliminate',
   },
   {

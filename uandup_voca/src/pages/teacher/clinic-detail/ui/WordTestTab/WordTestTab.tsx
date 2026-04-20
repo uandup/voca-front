@@ -9,11 +9,13 @@ const MOCK_CYCLES: CycleRowData[] = [
       {
         key: 'word',
         label: 'Word',
-        status: 'pending',
-        subLabel: 'Pending',
+        status: 'active',
+        date: '23.10.24',
+        totalScore: '30',
+        testType: 'Meaning to Word',
       },
       {
-        key: 'example',
+        key: 'sentence',
         label: 'Sentence',
         status: 'active',
         date: '23.10.24',
@@ -65,8 +67,8 @@ const MOCK_CYCLES: CycleRowData[] = [
         testType: 'Meaning to Word',
       },
       {
-        key: 'example',
-        label: 'Example Test',
+        key: 'sentence',
+        label: 'Sentence',
         status: 'locked',
         testType: 'Meaning to Word',
         subLabel: 'Locked',
