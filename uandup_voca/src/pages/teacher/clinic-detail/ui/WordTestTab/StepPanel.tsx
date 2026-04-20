@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { TestStep, TestType } from './types';
+import { SuccessModal } from '@/shared/ui/SuccessModal';
 
 interface StepPanelProps {
   step: TestStep;
@@ -31,22 +32,35 @@ export default function StepPanel({ step }: StepPanelProps) {
     includeSynonyms: true,
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   return (
-    <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
-      <TestConfigSection
-        config={config}
-        isEditing={isEditing}
-        showEditButton={phase === 'pending'}
-        onToggleEdit={() => setIsEditing((v) => !v)}
-        onChange={(patch) => setConfig((prev) => ({ ...prev, ...patch }))}
-      />
+    <>
+      {showSuccessModal && (
+        <SuccessModal
+          message="Test Generated!"
+          description="The test has been successfully created."
+          onClose={() => setShowSuccessModal(false)}
+        />
+      )}
 
-      {phase === 'pending' && <PendingPanel isEditing={isEditing} />}
-      {phase === 'created' && <CreatedPanel step={step} />}
-      {phase === 'fail' && <FailPanel step={step} />}
-      {phase === 'passed' && <PassedPanel step={step} />}
-    </div>
+      <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
+        <TestConfigSection
+          config={config}
+          isEditing={isEditing}
+          showEditButton={phase === 'pending'}
+          onToggleEdit={() => setIsEditing((v) => !v)}
+          onChange={(patch) => setConfig((prev) => ({ ...prev, ...patch }))}
+        />
+
+        {phase === 'pending' && (
+          <PendingPanel isEditing={isEditing} onGenerate={() => setShowSuccessModal(true)} />
+        )}
+        {phase === 'created' && <CreatedPanel step={step} />}
+        {phase === 'fail' && <FailPanel step={step} />}
+        {phase === 'passed' && <PassedPanel step={step} />}
+      </div>
+    </>
   );
 }
 
@@ -148,11 +162,12 @@ function TestConfigSection({
 
 // ── Phase panels ───────────────────────────────────────────────────────────
 
-function PendingPanel({ isEditing }: { isEditing: boolean }) {
+function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerate: () => void }) {
   return (
     <div className="flex items-center gap-3">
       <button
         disabled={isEditing}
+        onClick={onGenerate}
         className="px-5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Generate Test
