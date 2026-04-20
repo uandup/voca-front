@@ -5,7 +5,7 @@ function buildPrintHtml(sheetHtml: string, title = 'VOCAB TEST'): string {
     <title>${title}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      @page { size: A4; margin: 10mm 20mm; }
+      @page { size: A4; margin: 10mm 10mm; }
       body { margin: 0; padding: 0; background: white; }
       main, [id$="-print-sheet"] {
         width: 100% !important;

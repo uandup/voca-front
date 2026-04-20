@@ -10,6 +10,7 @@ export interface ESRow {
 
 const PAGE_SIZE = 20;
 const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
+const ANSWER_COL_WIDTH = '100px';
 
 interface TestESPrintModalProps {
   onClose: () => void;
@@ -35,7 +36,7 @@ function ESSheet({
       style={{
         width: '210mm',
         height: '297mm',
-        padding: '10mm 20mm',
+        padding: '10mm 10mm',
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
@@ -52,17 +53,18 @@ function ESSheet({
           <colgroup>
             <col style={{ width: '44px' }} />
             <col />
+            <col style={{ width: ANSWER_COL_WIDTH }} />
           </colgroup>
           <thead>
             <tr>
-              {['No', 'Example Sentence'].map((col, i) => (
+              {['No', 'Example Sentence', 'Answer'].map((col, i) => (
                 <th
                   key={col}
                   className="text-left text-xs font-extrabold uppercase tracking-[0.05em] bg-[#f2f2f2]"
                   style={{
                     border: '1.5pt solid black',
                     padding: '4px 12px',
-                    textAlign: i === 0 ? 'center' : 'left',
+                    textAlign: i === 1 ? 'left' : 'center',
                   }}
                 >
                   {col}
@@ -99,6 +101,7 @@ function ESSheet({
                     )}
                     {parts[1]}
                   </td>
+                  <td style={{ border: '1.5pt solid black', padding: '4px 12px' }} />
                 </tr>
               );
             })}

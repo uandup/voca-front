@@ -68,7 +68,7 @@ function WMSSheet({
       style={{
         width: '210mm',
         height: '297mm',
-        padding: '10mm 20mm',
+        padding: '10mm 10mm',
         ...(hidden
           ? {
               position: 'absolute',
