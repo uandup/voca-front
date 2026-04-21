@@ -121,7 +121,8 @@ export default function StepPanel({ step }: StepPanelProps) {
           <CreatedPanel
             step={step}
             onOpenPrint={() => setShowPrintModal(true)}
-            onOpenGrading={() => setShowGradingModal(true)}
+            onGradeOnline={() => console.warn('Online grading')}
+            onGradeOffline={() => setShowGradingModal(true)}
           />
         )}
         {phase === 'fail' && (
@@ -257,11 +258,13 @@ function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerat
 function CreatedPanel({
   step,
   onOpenPrint,
-  onOpenGrading,
+  onGradeOnline,
+  onGradeOffline,
 }: {
   step: TestStep;
   onOpenPrint: () => void;
-  onOpenGrading: () => void;
+  onGradeOnline: () => void;
+  onGradeOffline: () => void;
 }) {
   return (
     <>
@@ -295,13 +298,26 @@ function CreatedPanel({
           >
             Preview
           </button>
+          <button
+            onClick={onOpenPrint}
+            className="p-2 rounded-xl border border-outline/30 text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center"
+            title="Print"
+          >
+            <span className="material-symbols-outlined leading-none" style={{ fontSize: '18px' }}>print</span>
+          </button>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={onOpenGrading}
+            onClick={onGradeOnline}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
-            Grade Test
+            Grade Online
+          </button>
+          <button
+            onClick={onGradeOffline}
+            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+          >
+            Grade Offline
           </button>
           <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors">
             Cancel Test
