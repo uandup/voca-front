@@ -8,7 +8,7 @@ import {
   WordResultModal,
   SentenceGradingModal,
   SentenceResultModal,
-} from '@/features/test-offline';
+} from '@/widgets/test-offline';
 import { mockVocabList, mockESRows } from '@/entities/test/lib/mockData';
 
 interface StepPanelProps {

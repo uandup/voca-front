@@ -1,4 +1,4 @@
-import type { ESRow } from '@/features/test-offline';
+import type { ESRow } from '@/widgets/test-offline';
 
 // ────────────────────────────────────────────────
 // 서버 응답 타입

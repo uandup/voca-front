@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { WordTestModal, SentenceModal, type ESRow } from '@/features/test-offline';
+import { WordTestModal, SentenceModal, type ESRow } from '@/widgets/test-offline';
 import { mockVocabList, mockESRows } from '@/entities/test';
 
 const ES_ROWS: ESRow[] = Array.from({ length: 15 }, (_, i) => ({
   no: String(i + 1).padStart(2, '0'),
   sentence: '',
+  answer: '',
 }));
 
 type ModalType = 'WMS' | 'ES' | 'TEST_WMS' | 'TEST_ES' | null;
