@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { PrintActionBar } from './print/PrintActionBar';
-import { PrintSheetHeader } from './print/PrintSheetHeader';
+import { PrintActionBar } from './PrintActionBar';
+import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
 
 export interface ESRow {
   no: string;
   sentence: string;
+  answer: string;
 }
 
 const PAGE_SIZE = 20;

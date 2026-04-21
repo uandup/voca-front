@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import type { TestStep, TestType } from './types';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
-import { WordTestModal, SentenceModal } from '@/entities/test';
+import {
+  WordTestModal,
+  SentenceModal,
+  WordGradingModal,
+  WordResultModal,
+  SentenceGradingModal,
+  SentenceResultModal,
+} from '@/features/test-offline';
 import { mockVocabList, mockESRows } from '@/entities/test/lib/mockData';
 
 interface StepPanelProps {
@@ -36,6 +43,8 @@ export default function StepPanel({ step }: StepPanelProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [showGradingModal, setShowGradingModal] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
 
   return (
     <>
@@ -60,6 +69,42 @@ export default function StepPanel({ step }: StepPanelProps) {
         )
       )}
 
+      {showGradingModal && step.key === 'sentence' ? (
+        <SentenceGradingModal
+          onClose={() => setShowGradingModal(false)}
+          onGrade={() => console.warn('Grade submitted')}
+          rows={mockESRows}
+        />
+      ) : (
+        showGradingModal && (
+          <WordGradingModal
+            onClose={() => setShowGradingModal(false)}
+            onGrade={() => console.warn('Grade submitted')}
+            rows={mockVocabList}
+            testType={config.testType}
+            includeSynonyms={config.includeSynonyms}
+          />
+        )
+      )}
+
+      {showResultModal && step.key === 'sentence' ? (
+        <SentenceResultModal
+          onClose={() => setShowResultModal(false)}
+          rows={mockESRows}
+          wrongIndices={[1, 4, 7]}
+        />
+      ) : (
+        showResultModal && (
+          <WordResultModal
+            onClose={() => setShowResultModal(false)}
+            rows={mockVocabList}
+            testType={config.testType}
+            includeSynonyms={config.includeSynonyms}
+            wrongIndices={[1, 4, 7]}
+          />
+        )
+      )}
+
       <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
         <TestConfigSection
           config={config}
@@ -73,11 +118,21 @@ export default function StepPanel({ step }: StepPanelProps) {
           <PendingPanel isEditing={isEditing} onGenerate={() => setShowSuccessModal(true)} />
         )}
         {phase === 'created' && (
-          <CreatedPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />
+          <CreatedPanel
+            step={step}
+            onOpenPrint={() => setShowPrintModal(true)}
+            onOpenGrading={() => setShowGradingModal(true)}
+          />
         )}
-        {phase === 'fail' && <FailPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />}
+        {phase === 'fail' && (
+          <FailPanel
+            step={step}
+            onOpenGrading={() => setShowGradingModal(true)}
+            onOpenResult={() => setShowResultModal(true)}
+          />
+        )}
         {phase === 'passed' && (
-          <PassedPanel step={step} onOpenPrint={() => setShowPrintModal(true)} />
+          <PassedPanel step={step} onOpenResult={() => setShowResultModal(true)} />
         )}
       </div>
     </>
@@ -199,7 +254,15 @@ function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerat
   );
 }
 
-function CreatedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
+function CreatedPanel({
+  step,
+  onOpenPrint,
+  onOpenGrading,
+}: {
+  step: TestStep;
+  onOpenPrint: () => void;
+  onOpenGrading: () => void;
+}) {
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
@@ -235,7 +298,7 @@ function CreatedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () =
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={onOpenPrint}
+            onClick={onOpenGrading}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
             Grade Test
@@ -249,7 +312,15 @@ function CreatedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () =
   );
 }
 
-function FailPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
+function FailPanel({
+  step,
+  onOpenGrading,
+  onOpenResult,
+}: {
+  step: TestStep;
+  onOpenGrading: () => void;
+  onOpenResult: () => void;
+}) {
   const [failState, setFailState] = useState<'fail' | 'awaiting'>(step.failState ?? 'fail');
   const scores = step.scores ?? [];
 
@@ -317,7 +388,7 @@ function FailPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => v
           {failState === 'awaiting' ? 'Awaiting Grading' : 'Retake Test'}
         </button>
         <button
-          onClick={onOpenPrint}
+          onClick={onOpenResult}
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
         >
           View Results
@@ -325,7 +396,7 @@ function FailPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => v
         {failState === 'awaiting' && (
           <div className="ml-auto">
             <button
-              onClick={onOpenPrint}
+              onClick={onOpenGrading}
               className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
             >
               Grade
@@ -337,7 +408,7 @@ function FailPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => v
   );
 }
 
-function PassedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () => void }) {
+function PassedPanel({ step, onOpenResult }: { step: TestStep; onOpenResult: () => void }) {
   const scores = step.scores ?? [];
 
   return (
@@ -373,7 +444,7 @@ function PassedPanel({ step, onOpenPrint }: { step: TestStep; onOpenPrint: () =>
 
       <div className="flex items-center gap-2">
         <button
-          onClick={onOpenPrint}
+          onClick={onOpenResult}
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
         >
           View Results

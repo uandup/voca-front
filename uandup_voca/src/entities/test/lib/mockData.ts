@@ -1,4 +1,4 @@
-import type { ESRow } from '../ui/SentenceModal';
+import type { ESRow } from '@/features/test-offline';
 
 // ────────────────────────────────────────────────
 // 서버 응답 타입
@@ -326,97 +326,123 @@ export const mockESRows: ESRow[] = [
     no: '1',
     sentence:
       'The event was a grand ___ that attracted many people because it was exciting, colorful, and impressive to watch.',
+    answer: 'spectacle',
   },
   {
     no: '2',
     sentence: 'The government plans to ___ the outdated law next year.',
+    answer: 'abolish',
   },
   {
     no: '3',
     sentence: 'The forest is ___ with wildlife during the spring season.',
+    answer: 'teeming',
   },
+  { no: '4', sentence: "Exercise can ___ the body's metabolism significantly.", answer: 'boost' },
+  { no: '5', sentence: 'The report must be ___ in order to be accepted.', answer: 'accurate' },
   {
-    no: '4',
-    sentence: "Exercise can ___ the body's metabolism significantly.",
+    no: '6',
+    sentence: 'He failed to ___ his mistake in front of the class.',
+    answer: 'acknowledge',
   },
-  { no: '5', sentence: 'The report must be ___ in order to be accepted.' },
-  { no: '6', sentence: 'He failed to ___ his mistake in front of the class.' },
-  { no: '7', sentence: 'She worked hard to ___ new skills for the job.' },
+  { no: '7', sentence: 'She worked hard to ___ new skills for the job.', answer: 'acquire' },
   {
     no: '8',
     sentence: 'You need to ___ your schedule to fit the new requirements.',
+    answer: 'adjust',
   },
   {
     no: '9',
     sentence: 'The resources provided were barely ___ for the project.',
+    answer: 'adequate',
   },
   {
     no: '10',
     sentence: 'He became a strong ___ for environmental protection.',
+    answer: 'advocate',
   },
   {
     no: '11',
     sentence: 'The manager decided to ___ extra funds to the research team.',
+    answer: 'allocate',
   },
-  { no: '12', sentence: 'They had to ___ the plan due to unexpected changes.' },
+  { no: '12', sentence: 'They had to ___ the plan due to unexpected changes.', answer: 'alter' },
   {
     no: '13',
     sentence: 'The instructions were ___ and caused a lot of confusion.',
+    answer: 'ambiguous',
   },
   {
     no: '14',
     sentence: 'The new speaker system will ___ the sound throughout the hall.',
+    answer: 'amplify',
   },
   {
     no: '15',
     sentence: 'Scientists ___ data to find patterns in climate change.',
+    answer: 'analyze',
   },
-  { no: '16', sentence: 'We should ___ potential problems before they occur.' },
-  { no: '17', sentence: 'It was ___ that she was upset by the news.' },
-  { no: '18', sentence: 'I really ___ your help during the difficult time.' },
-  { no: '19', sentence: 'We need a new ___ to solve this complex issue.' },
+  {
+    no: '16',
+    sentence: 'We should ___ potential problems before they occur.',
+    answer: 'anticipate',
+  },
+  { no: '17', sentence: 'It was ___ that she was upset by the news.', answer: 'apparent' },
+  { no: '18', sentence: 'I really ___ your help during the difficult time.', answer: 'appreciate' },
+  { no: '19', sentence: 'We need a new ___ to solve this complex issue.', answer: 'approach' },
   {
     no: '20',
     sentence: 'It is not ___ to wear casual clothes to a formal event.',
+    answer: 'appropriate',
   },
   {
     no: '21',
     sentence: 'The temperature was ___ 30 degrees Celsius that afternoon.',
+    answer: 'approximately',
   },
   {
     no: '22',
     sentence: 'The decision seemed completely ___ and unfair to the staff.',
+    answer: 'arbitrary',
   },
   {
     no: '23',
     sentence: 'She ___ her right to remain silent during questioning.',
+    answer: 'asserted',
   },
   {
     no: '24',
     sentence: "The teacher will ___ each student's progress at the end of term.",
+    answer: 'assess',
   },
   {
     no: '25',
     sentence: 'Never ___ that everyone agrees with your point of view.',
+    answer: 'assume',
   },
   {
     no: '26',
     sentence: 'He worked tirelessly to ___ his dream of becoming a doctor.',
+    answer: 'achieve',
   },
   {
     no: '27',
     sentence: 'She ___ her success to years of hard work and dedication.',
+    answer: 'attributed',
   },
   {
     no: '28',
     sentence: 'Regular exercise provides a great ___ to your overall health.',
+    answer: 'benefit',
   },
   {
     no: '29',
     sentence: 'The new model is ___ of processing data twice as fast.',
+    answer: 'capable',
   },
   {
     no: '30',
     sentence: 'The noise from the construction finally ___ late at night.',
+    answer: 'ceased',
   },
 ];

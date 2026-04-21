@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { PrintActionBar } from './print/PrintActionBar';
-import { PrintSheetHeader } from './print/PrintSheetHeader';
+import { useRef, useState } from 'react';
+import { PrintActionBar } from './PrintActionBar';
+import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-import type { VocabItem } from '../lib/mockData';
-import type { TestType } from '../types/testConfig';
+import type { VocabItem } from '@/entities/test';
+import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
 // A4(297mm) - 상하패딩(20mm) - PrintSheetHeader(25mm) - thead(7mm) = 245mm
@@ -173,6 +173,7 @@ export function WordTestModal({
 }: TestWMSPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const showWord = testType === 'Word to Meaning';
   const showKor = testType === 'Meaning to Word';
@@ -193,6 +194,7 @@ export function WordTestModal({
 
   return (
     <div
+      ref={scrollRef}
       className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center overflow-y-auto py-10 px-4"
       onClick={onClose}
     >
@@ -201,8 +203,14 @@ export function WordTestModal({
         onPrint={handlePrint}
         page={page}
         totalPages={totalPages}
-        onPrev={() => setPage((p) => Math.max(1, p - 1))}
-        onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
+        onPrev={() => {
+          setPage((p) => Math.max(1, p - 1));
+          scrollRef.current?.scrollTo({ top: 0 });
+        }}
+        onNext={() => {
+          setPage((p) => Math.min(totalPages, p + 1));
+          scrollRef.current?.scrollTo({ top: 0 });
+        }}
       />
 
       <div className="mt-20" onClick={(e) => e.stopPropagation()}>
