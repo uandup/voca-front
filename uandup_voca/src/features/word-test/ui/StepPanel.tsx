@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from './types';
+import type { TestStep, TestType } from '../types';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import {
   WordTestModal,
@@ -29,8 +29,6 @@ function inferPhase(step: TestStep): PanelPhase {
   if (step.status === 'active') return 'created';
   return 'pending';
 }
-
-// ── Main ───────────────────────────────────────────────────────────────────
 
 export default function StepPanel({ step }: StepPanelProps) {
   const phase = inferPhase(step);
