@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { NumberInput } from '@/shared/ui/NumberInput';
 
 type TestStatus = 'pending' | 'completed' | 'fail';
 
@@ -21,7 +19,6 @@ const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
 
 export function WrongWordBankPage() {
   const totalCount = 124;
-  const [qty, setQty] = useState('10');
 
   return (
     <div className="space-y-4">
@@ -30,35 +27,16 @@ export function WrongWordBankPage() {
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
           <div>
             <h3 className="text-xl font-headline font-bold text-primary">My Error Word Bank</h3>
-            <div className="flex items-center gap-2 mt-0.5">
-              <p className="text-xs text-on-surface-variant">
-                {totalCount} words you have answered incorrectly across all tests
-              </p>
-              <button className="flex items-center gap-0.5 text-xs font-bold text-primary hover:underline">
-                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-                  open_in_new
-                </span>
-                View Word List
-              </button>
-            </div>
+            <p className="text-xs text-on-surface-variant mt-0.5">
+              {totalCount} words you have answered incorrectly across all tests
+            </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-outline/30 rounded-xl overflow-hidden">
-              <span className="px-3 py-4 text-xs font-bold text-on-surface-variant bg-surface-container-highest/40 border-r border-outline/20 whitespace-nowrap">
-                QTY
-              </span>
-              <NumberInput
-                value={qty}
-                onChange={setQty}
-                min={1}
-                max={totalCount}
-                className="w-16 px-3 py-3 border text-sm font-bold text-on-surface text-center border-none rounded-none"
-              />
-            </div>
-            <button className="flex items-center gap-2 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10">
-              Generate Test
-            </button>
-          </div>
+          <button className="flex items-center gap-1.5 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10">
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+              open_in_new
+            </span>
+            View Word List
+          </button>
         </div>
       </div>
 

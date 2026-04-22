@@ -96,24 +96,6 @@ export default function VocabListPage() {
           />
         ))}
       </div>
-
-      {/* Pagination Footer */}
-      {/* <div className="flex items-center justify-between py-12 text-on-surface-variant text-sm border-t border-outline-variant/20 mt-12">
-        <p>Total Words: 142</p>
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 hover:text-primary transition-colors">
-            <span className="material-symbols-outlined text-lg">chevron_left</span>
-            Previous
-          </button>
-          <span className="px-3 py-1 bg-surface-container-high rounded text-primary font-bold">
-            1
-          </span>
-          <button className="flex items-center gap-2 hover:text-primary transition-colors">
-            Next
-            <span className="material-symbols-outlined text-lg">chevron_right</span>
-          </button>
-        </div>
-      </div> */}
     </main>
   );
 }
