@@ -1,4 +1,27 @@
-export type TestType = 'word-to-meaning' | 'meaning-to-word';
+export type VocabTestType = 'word-to-meaning' | 'meaning-to-word';
+export type TestType = VocabTestType | 'sentence';
+
+export interface TestSentenceItem {
+  id: number;
+  sentence: string; // ___ 위치에 빈칸
+}
+
+export const MOCK_SENTENCE_ITEMS: TestSentenceItem[] = [
+  {
+    id: 1,
+    sentence:
+      'The thief tried to ___ when the police arrived, hoping to escape with the stolen money before anyone could stop him.',
+  },
+  { id: 2, sentence: 'She was ___ about the outcome, refusing to commit to either side.' },
+  { id: 3, sentence: 'His ___ remarks at the meeting made everyone uncomfortable.' },
+  { id: 4, sentence: 'The forest had a ___ beauty that left visitors in silence.' },
+  { id: 5, sentence: 'Despite his wealth, he lived a ___ life, avoiding unnecessary expenses.' },
+  { id: 6, sentence: 'The politician gave a ___ speech, using few words to great effect.' },
+  { id: 7, sentence: 'Her ___ nature made it hard for others to keep up with her decisions.' },
+  { id: 8, sentence: "The company's ___ practices were eventually exposed by journalists." },
+  { id: 9, sentence: 'He remained ___ even when everyone around him was panicking.' },
+  { id: 10, sentence: 'The new policy was seen as ___ to the interests of small businesses.' },
+];
 
 export interface TestVocabItem {
   id: number;
