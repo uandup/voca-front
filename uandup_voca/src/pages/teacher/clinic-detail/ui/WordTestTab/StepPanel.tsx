@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from '../types';
+import type { TestStep, TestType } from './types';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import {
   WordTestModal,
@@ -301,7 +301,9 @@ function CreatedPanel({
             className="p-2 rounded-xl border border-outline/30 text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center"
             title="Print"
           >
-            <span className="material-symbols-outlined leading-none" style={{ fontSize: '18px' }}>print</span>
+            <span className="material-symbols-outlined leading-none" style={{ fontSize: '18px' }}>
+              print
+            </span>
           </button>
         </div>
         <div className="ml-auto flex items-center gap-2">

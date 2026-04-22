@@ -1,4 +1,4 @@
-import type { TestStep } from '../types';
+import type { TestStep } from './types';
 
 interface StepCardProps {
   step: TestStep;

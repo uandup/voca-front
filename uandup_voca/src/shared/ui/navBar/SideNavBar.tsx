@@ -40,13 +40,13 @@ export function SideNavBar({ navItems }: SideNavBarProps) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-slate-200">
-        <a
+        {/* <a
           href="#"
           className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-200/50 rounded-lg text-sm"
         >
           <span className="material-symbols-outlined">help</span>
           <span>Help Center</span>
-        </a>
+        </a> */}
         <a
           href="#"
           className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-200/50 rounded-lg text-sm"

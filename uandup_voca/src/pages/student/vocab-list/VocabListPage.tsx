@@ -1,4 +1,12 @@
-import { VocabCard } from './VocabCard';
+import { useRouter, useParams } from '@tanstack/react-router';
+import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { VocabCard } from './ui/VocabCard';
+
+const CYCLE_META: Record<string, { level: number; wordCount: number }> = {
+  '1': { level: 7, wordCount: 50 },
+  '2': { level: 3, wordCount: 47 },
+  '3': { level: 5, wordCount: 30 },
+};
 
 interface VocabWord {
   id: number;
@@ -7,6 +15,7 @@ interface VocabWord {
   word: string;
   partOfSpeech: string;
   koreanMeaning: string;
+  englishMeaning: string;
   synonyms: string[];
   starred: boolean;
 }
@@ -19,6 +28,7 @@ const mockWords: VocabWord[] = [
     word: 'Ambiguity',
     partOfSpeech: 'N',
     koreanMeaning: '모호함, 다의성',
+    englishMeaning: 'The quality of being open to more than one interpretation; inexactness.',
     synonyms: ['vague', 'obscurity', 'uncertainty'],
     starred: false,
   },
@@ -29,6 +39,8 @@ const mockWords: VocabWord[] = [
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     koreanMeaning: '병치, 나란히 놓기',
+    englishMeaning:
+      'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
     starred: false,
   },
@@ -39,6 +51,7 @@ const mockWords: VocabWord[] = [
     word: 'Inherent',
     partOfSpeech: 'Adj',
     koreanMeaning: '내재하는, 본질적인',
+    englishMeaning: 'Existing as a natural or permanent quality of something.',
     synonyms: ['intrinsic', 'innate', 'essential'],
     starred: false,
   },
@@ -49,23 +62,27 @@ const mockWords: VocabWord[] = [
     word: 'Pragmatic',
     partOfSpeech: 'Adj',
     koreanMeaning: '실용적인, 실제적인',
+    englishMeaning:
+      'Dealing with things sensibly and realistically based on practical considerations.',
     synonyms: ['practical', 'utilitarian', 'sensible'],
     starred: false,
   },
 ];
 
-export function VocabularyPage() {
+export default function VocabListPage() {
+  const router = useRouter();
+  const { id } = useParams({ from: '/student/word-test/$id/vocabulary' });
+  const meta = CYCLE_META[id];
+
   return (
     <main>
-      {/* Page Title */}
-      <div className="flex flex-col gap-2 mb-12">
-        <h1 className="font-headline font-extrabold text-4xl text-primary tracking-tight">
-          Vocabulary
-        </h1>
-      </div>
+      <BreadcrumbPageTitle
+        parents={[{ label: 'Word Test', onClick: () => router.history.back() }]}
+        title={meta ? `Level ${meta.level} · Words ${meta.wordCount}` : 'Vocabulary'}
+      />
 
       {/* Word List */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {mockWords.map((word) => (
           <VocabCard
             key={word.id}
@@ -73,6 +90,7 @@ export function VocabularyPage() {
             word={word.word}
             partOfSpeech={word.partOfSpeech}
             koreanMeaning={word.koreanMeaning}
+            englishMeaning={word.englishMeaning}
             synonyms={word.synonyms}
             starred={word.starred}
           />
@@ -80,7 +98,7 @@ export function VocabularyPage() {
       </div>
 
       {/* Pagination Footer */}
-      <div className="flex items-center justify-between py-12 text-on-surface-variant text-sm border-t border-outline-variant/20 mt-12">
+      {/* <div className="flex items-center justify-between py-12 text-on-surface-variant text-sm border-t border-outline-variant/20 mt-12">
         <p>Total Words: 142</p>
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-2 hover:text-primary transition-colors">
@@ -95,7 +113,7 @@ export function VocabularyPage() {
             <span className="material-symbols-outlined text-lg">chevron_right</span>
           </button>
         </div>
-      </div>
+      </div> */}
     </main>
   );
 }

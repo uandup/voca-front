@@ -1,4 +1,4 @@
-import CycleRow, { type CycleRowData } from '@/features/word-test/ui/CycleRow';
+import CycleRow, { type CycleRowData } from './CycleRow';
 
 const MOCK_CYCLES: CycleRowData[] = [
   {

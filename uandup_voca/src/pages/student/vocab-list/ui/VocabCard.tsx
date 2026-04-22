@@ -3,6 +3,7 @@ interface VocabularyCardProps {
   word: string;
   partOfSpeech: string;
   koreanMeaning: string;
+  englishMeaning: string;
   synonyms: string[];
   starred: boolean;
 }
@@ -12,11 +13,12 @@ export function VocabCard({
   word,
   partOfSpeech,
   koreanMeaning,
+  englishMeaning,
   synonyms,
   starred,
 }: VocabularyCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-xl bg-surface-container-lowest pt-6 px-6 pb-8 border shadow-sm border-outline-variant/60 ">
+    <div className="group relative overflow-hidden rounded-xl bg-surface-container-lowest py-5 px-6 border shadow-sm border-outline-variant/60 ">
       <div className="flex flex-col md:flex-row items-start justify-between gap-6">
         {/* Column 1: Level + Word */}
         <div className="w-full md:w-1/3 space-y-2">
@@ -29,7 +31,7 @@ export function VocabCard({
         </div>
 
         {/* Column 2: Meaning + Synonyms */}
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-3">
           <div>
             <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-1">
               Meaning
@@ -38,6 +40,7 @@ export function VocabCard({
               <span className="text-on-tertiary-container tracking-wider mr-2">{partOfSpeech}</span>
               {koreanMeaning}
             </p>
+            <p className="text-sm text-on-surface-variant mt-1">{englishMeaning}</p>
           </div>
           <div>
             <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
@@ -57,7 +60,7 @@ export function VocabCard({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <button
             className={`w-12 h-12 flex items-center justify-center rounded-full transition-all ${
               starred
@@ -72,7 +75,7 @@ export function VocabCard({
               star
             </span>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

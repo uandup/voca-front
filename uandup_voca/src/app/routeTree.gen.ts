@@ -25,8 +25,7 @@ import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherClassesRouteImport } from './../routes/teacher/classes'
 import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWrongWordBankRouteImport } from './../routes/student/wrong-word-bank'
-import { Route as StudentWordTestRouteImport } from './../routes/student/word-test'
-import { Route as StudentVocabularyRouteImport } from './../routes/student/vocabulary'
+import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
 import { Route as StudentTestListRouteImport } from './../routes/student/test-list'
 import { Route as StudentLevelTestRouteImport } from './../routes/student/level-test'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
@@ -34,6 +33,7 @@ import { Route as TeacherClassesIndexRouteImport } from './../routes/teacher/cla
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
 import { Route as TeacherClinicsStudentIdRouteImport } from './../routes/teacher/clinics_.$studentId'
 import { Route as TeacherClassesClassIdRouteImport } from './../routes/teacher/classes/$classId'
+import { Route as StudentWordTestIdVocabularyRouteImport } from './../routes/student/word-test/$id/vocabulary'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -116,13 +116,8 @@ const StudentWrongWordBankRoute = StudentWrongWordBankRouteImport.update({
   getParentRoute: () => StudentRoute,
 } as any)
 const StudentWordTestRoute = StudentWordTestRouteImport.update({
-  id: '/word-test',
+  id: '/word-test_',
   path: '/word-test',
-  getParentRoute: () => StudentRoute,
-} as any)
-const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
-  id: '/vocabulary',
-  path: '/vocabulary',
   getParentRoute: () => StudentRoute,
 } as any)
 const StudentTestListRoute = StudentTestListRouteImport.update({
@@ -161,6 +156,12 @@ const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
   path: '/$classId',
   getParentRoute: () => TeacherClassesRoute,
 } as any)
+const StudentWordTestIdVocabularyRoute =
+  StudentWordTestIdVocabularyRouteImport.update({
+    id: '/word-test/$id/vocabulary',
+    path: '/word-test/$id/vocabulary',
+    getParentRoute: () => StudentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -172,7 +173,6 @@ export interface FileRoutesByFullPath {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/test-list': typeof StudentTestListRoute
-  '/student/vocabulary': typeof StudentVocabularyRoute
   '/student/word-test': typeof StudentWordTestRoute
   '/student/wrong-word-bank': typeof StudentWrongWordBankRoute
   '/teacher/admin': typeof TeacherAdminRoute
@@ -188,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/teacher/clinics/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
+  '/student/word-test/$id/vocabulary': typeof StudentWordTestIdVocabularyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -199,7 +200,6 @@ export interface FileRoutesByTo {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/test-list': typeof StudentTestListRoute
-  '/student/vocabulary': typeof StudentVocabularyRoute
   '/student/word-test': typeof StudentWordTestRoute
   '/student/wrong-word-bank': typeof StudentWrongWordBankRoute
   '/teacher/admin': typeof TeacherAdminRoute
@@ -214,6 +214,7 @@ export interface FileRoutesByTo {
   '/teacher/clinics/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes': typeof TeacherClassesIndexRoute
+  '/student/word-test/$id/vocabulary': typeof StudentWordTestIdVocabularyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -226,8 +227,7 @@ export interface FileRoutesById {
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/test-list': typeof StudentTestListRoute
-  '/student/vocabulary': typeof StudentVocabularyRoute
-  '/student/word-test': typeof StudentWordTestRoute
+  '/student/word-test_': typeof StudentWordTestRoute
   '/student/wrong-word-bank': typeof StudentWrongWordBankRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/classes': typeof TeacherClassesRouteWithChildren
@@ -242,6 +242,7 @@ export interface FileRoutesById {
   '/teacher/clinics_/$studentId': typeof TeacherClinicsStudentIdRoute
   '/teacher/test-assignment_/$studentId': typeof TeacherTestAssignmentStudentIdRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
+  '/student/word-test/$id/vocabulary': typeof StudentWordTestIdVocabularyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -255,7 +256,6 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/test-list'
-    | '/student/vocabulary'
     | '/student/word-test'
     | '/student/wrong-word-bank'
     | '/teacher/admin'
@@ -271,6 +271,7 @@ export interface FileRouteTypes {
     | '/teacher/clinics/$studentId'
     | '/teacher/test-assignment/$studentId'
     | '/teacher/classes/'
+    | '/student/word-test/$id/vocabulary'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -282,7 +283,6 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/test-list'
-    | '/student/vocabulary'
     | '/student/word-test'
     | '/student/wrong-word-bank'
     | '/teacher/admin'
@@ -297,6 +297,7 @@ export interface FileRouteTypes {
     | '/teacher/clinics/$studentId'
     | '/teacher/test-assignment/$studentId'
     | '/teacher/classes'
+    | '/student/word-test/$id/vocabulary'
   id:
     | '__root__'
     | '/'
@@ -308,8 +309,7 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/test-list'
-    | '/student/vocabulary'
-    | '/student/word-test'
+    | '/student/word-test_'
     | '/student/wrong-word-bank'
     | '/teacher/admin'
     | '/teacher/classes'
@@ -324,6 +324,7 @@ export interface FileRouteTypes {
     | '/teacher/clinics_/$studentId'
     | '/teacher/test-assignment_/$studentId'
     | '/teacher/classes/'
+    | '/student/word-test/$id/vocabulary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -449,18 +450,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentWrongWordBankRouteImport
       parentRoute: typeof StudentRoute
     }
-    '/student/word-test': {
-      id: '/student/word-test'
+    '/student/word-test_': {
+      id: '/student/word-test_'
       path: '/word-test'
       fullPath: '/student/word-test'
       preLoaderRoute: typeof StudentWordTestRouteImport
-      parentRoute: typeof StudentRoute
-    }
-    '/student/vocabulary': {
-      id: '/student/vocabulary'
-      path: '/vocabulary'
-      fullPath: '/student/vocabulary'
-      preLoaderRoute: typeof StudentVocabularyRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/test-list': {
@@ -512,6 +506,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherClassesClassIdRouteImport
       parentRoute: typeof TeacherClassesRoute
     }
+    '/student/word-test/$id/vocabulary': {
+      id: '/student/word-test/$id/vocabulary'
+      path: '/word-test/$id/vocabulary'
+      fullPath: '/student/word-test/$id/vocabulary'
+      preLoaderRoute: typeof StudentWordTestIdVocabularyRouteImport
+      parentRoute: typeof StudentRoute
+    }
   }
 }
 
@@ -519,18 +520,18 @@ interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
   StudentLevelTestRoute: typeof StudentLevelTestRoute
   StudentTestListRoute: typeof StudentTestListRoute
-  StudentVocabularyRoute: typeof StudentVocabularyRoute
   StudentWordTestRoute: typeof StudentWordTestRoute
   StudentWrongWordBankRoute: typeof StudentWrongWordBankRoute
+  StudentWordTestIdVocabularyRoute: typeof StudentWordTestIdVocabularyRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
   StudentLevelTestRoute: StudentLevelTestRoute,
   StudentTestListRoute: StudentTestListRoute,
-  StudentVocabularyRoute: StudentVocabularyRoute,
   StudentWordTestRoute: StudentWordTestRoute,
   StudentWrongWordBankRoute: StudentWrongWordBankRoute,
+  StudentWordTestIdVocabularyRoute: StudentWordTestIdVocabularyRoute,
 }
 
 const StudentRouteWithChildren =
