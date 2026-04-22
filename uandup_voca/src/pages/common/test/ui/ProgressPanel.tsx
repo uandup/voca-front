@@ -1,20 +1,21 @@
-import { MOCK_VOCAB_ITEMS, ITEMS_PER_PAGE } from '../mock/testMockData';
+import { ITEMS_PER_PAGE } from '../mock/testMockData';
 
 interface ProgressPanelProps {
+  questionIds: number[];
   completedCount: number;
   remainingCount: number;
-  totalItems: number;
   completedIds: Set<number>;
   onQuestionClick: (page: number) => void;
 }
 
 export function ProgressPanel({
+  questionIds,
   completedCount,
   remainingCount,
-  totalItems,
   completedIds,
   onQuestionClick,
 }: ProgressPanelProps) {
+  const totalItems = questionIds.length;
   return (
     <aside className="absolute left-[calc(50%+500px)] top-6 w-56">
       <div className="bg-white border border-outline-variant/30 rounded-2xl p-4 flex flex-col gap-4 sticky top-18.25">
@@ -28,19 +29,19 @@ export function ProgressPanel({
         </div>
 
         <div className="grid grid-cols-5 gap-1.5">
-          {MOCK_VOCAB_ITEMS.map((item) => {
-            const completed = completedIds.has(item.id);
+          {questionIds.map((id) => {
+            const completed = completedIds.has(id);
             return (
               <button
-                key={item.id}
-                onClick={() => onQuestionClick(Math.ceil(item.id / ITEMS_PER_PAGE))}
+                key={id}
+                onClick={() => onQuestionClick(Math.ceil(id / ITEMS_PER_PAGE))}
                 className={`w-full aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-colors ${
                   completed
                     ? 'bg-primary text-white'
                     : 'bg-surface-container-low border border-outline-variant/30 text-on-surface-variant hover:border-primary/40'
                 }`}
               >
-                {item.id}
+                {id}
               </button>
             );
           })}

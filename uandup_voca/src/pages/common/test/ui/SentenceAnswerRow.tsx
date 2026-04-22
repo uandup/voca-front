@@ -33,7 +33,7 @@ function renderSentence(sentence: string, inputValue: string, props: SentenceAns
           }
         }}
         placeholder="  "
-        className="inline-block w-36 border-b-2 border-outline-variant/60 bg-transparent text-[13px] text-primary font-semibold text-center placeholder:text-transparent focus:outline-none focus:border-primary transition-colors mx-1"
+        className="inline-block w-40 border-b-2 border-outline-variant/60 bg-transparent text-[13px] text-primary font-semibold text-center placeholder:text-transparent focus:outline-none focus:border-primary transition-colors mx-1"
       />
       {parts[1]}
     </span>

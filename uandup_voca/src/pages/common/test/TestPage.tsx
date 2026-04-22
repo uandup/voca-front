@@ -104,9 +104,9 @@ export default function TestPage() {
         </div>
 
         <ProgressPanel
+          questionIds={sourceItems.map((item) => item.id)}
           completedCount={completedCount}
           remainingCount={remainingCount}
-          totalItems={totalItems}
           completedIds={completedIds}
           onQuestionClick={setCurrentPage}
         />

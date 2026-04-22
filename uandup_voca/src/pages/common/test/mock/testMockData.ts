@@ -51,9 +51,10 @@ export const MOCK_VOCAB_ITEMS: TestVocabItem[] = [
   { id: 2, word: 'Ephemeral', korMeaning: '수명이 짧은', engMeaning: 'lasting for a short time' },
   {
     id: 3,
-    word: 'Sycophant',
-    korMeaning: '아첨꾼',
-    engMeaning: 'a person who flatters to gain favor',
+    word: 'persuade',
+    korMeaning: '설득하다, 납득시키다',
+    engMeaning:
+      'to cause someone to agree or do something through reasoning or encouragement. to cause someone to agree or do something through reasoning or encouragement.',
   },
   {
     id: 4,

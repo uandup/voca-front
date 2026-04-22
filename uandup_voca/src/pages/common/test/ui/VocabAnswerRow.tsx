@@ -103,7 +103,7 @@ export function VocabAnswerRow({
       ) : (
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-on-surface leading-tight">{korMeaning}</p>
-          <p className="text-[11px] text-on-surface-variant/70 leading-tight truncate">
+          <p className="text-[11px] text-on-surface-variant/70 leading-tight line-clamp-2">
             {engMeaning}
           </p>
         </div>
