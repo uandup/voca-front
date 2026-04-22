@@ -15,7 +15,7 @@ export function VocabCard({
   koreanMeaning,
   englishMeaning,
   synonyms,
-  starred,
+  // starred,
 }: VocabularyCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-xl bg-surface-container-lowest py-5 px-6 border shadow-sm border-outline-variant/60 ">

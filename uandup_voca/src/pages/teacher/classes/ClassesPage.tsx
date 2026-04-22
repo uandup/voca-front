@@ -1,11 +1,9 @@
-import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from './mock/timetableMockData';
 import { buildGrid } from './model/buildGrid';
 import { cellCardStyles } from './ui/timetableStyles';
 
 export default function ClassesPage() {
-  const navigate = useNavigate();
   const grid = buildGrid(TIME_SLOTS_DEF);
   const numRows = TIME_SLOTS_DEF.length;
 
@@ -90,13 +88,6 @@ export default function ClassesPage() {
                       {cell.label && (
                         <div
                           className={`h-full rounded-xl p-3 flex items-center justify-center transition-colors cursor-pointer ${v.card}`}
-                          onClick={() =>
-                            cell.classId &&
-                            navigate({
-                              to: '/teacher/classes/$classId',
-                              params: { classId: String(cell.classId) },
-                            })
-                          }
                         >
                           <span className={v.text}>{cell.label}</span>
                         </div>
