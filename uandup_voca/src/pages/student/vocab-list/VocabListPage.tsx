@@ -1,6 +1,7 @@
 import { useRouter, useParams } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
-import { VocabCard } from './ui/VocabCard';
+import { VocabCard } from '@/entities/vocab';
+import { StarButton } from './ui/StarButton';
 
 const CYCLE_META: Record<string, { level: number; wordCount: number }> = {
   '1': { level: 7, wordCount: 50 },
@@ -92,7 +93,7 @@ export default function VocabListPage() {
             koreanMeaning={word.koreanMeaning}
             englishMeaning={word.englishMeaning}
             synonyms={word.synonyms}
-            starred={word.starred}
+            extraInfo={<StarButton wordId={word.id} starred={word.starred} />}
           />
         ))}
       </div>
