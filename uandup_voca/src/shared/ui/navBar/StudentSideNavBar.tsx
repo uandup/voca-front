@@ -3,7 +3,12 @@ import { SideNavBar } from './SideNavBar';
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', to: '/student/dashboard' },
   { icon: 'book_2', label: 'Word Tests', to: '/student/word-test' },
-  { icon: 'error', label: 'Wrong Word Bank', to: '/student/wrong-word-bank' },
+  {
+    icon: 'error',
+    label: 'Wrong Word Bank',
+    to: '/student/wrong-word-bank',
+    activePrefixes: ['/student/wrong-word-list'],
+  },
   { icon: 'school', label: 'Level Tests', to: '/student/level-test' },
 ] as const;
 

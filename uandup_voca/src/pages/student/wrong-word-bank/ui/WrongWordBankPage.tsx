@@ -1,3 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
+import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
 
 type TestStatus = 'pending' | 'completed' | 'fail';
@@ -19,19 +21,24 @@ const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
 
 export function WrongWordBankPage() {
   const totalCount = 124;
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
-      {/* My Error Word Bank Card */}
+      <PageTitle title="Wrong Word Bank" />
+      {/* My Wrong Word Bank Card */}
       <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
-          <div>
-            <h3 className="text-xl font-headline font-bold text-primary">My Error Word Bank</h3>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              {totalCount} words you have answered incorrectly across all tests
-            </p>
+          <div className="flex items-baseline gap-3">
+            <span className="text-4xl font-headline font-extrabold text-primary">{totalCount}</span>
+            <span className="text-lg text-on-surface-variant/80">
+              words you have answered incorrectly across all tests
+            </span>
           </div>
-          <button className="flex items-center gap-1.5 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10">
+          <button
+            onClick={() => navigate({ to: '/student/wrong-word-list' })}
+            className="flex items-center gap-1.5 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10"
+          >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
               open_in_new
             </span>
@@ -104,9 +111,6 @@ export function WrongWordBankPage() {
                     <div className="flex items-center gap-2 justify-end">
                       {row.status === 'pending' ? (
                         <>
-                          <button className="px-4 py-1.5 border border-outline-variant/30 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 hover:text-primary transition-colors">
-                            Preview
-                          </button>
                           <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
                             Start Test
                           </button>
