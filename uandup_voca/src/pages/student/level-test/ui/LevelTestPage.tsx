@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import type { Vocab } from '@/entities/vocab/types/vocab';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { NumberInput } from '@/shared/ui/NumberInput';
 import { AssignedLevelBlocks } from '@/entities/vocab/ui/AssignedLevelBlocks';
+import { PageTitle } from '@/shared/ui/PageTitle';
 
 type DifficultyLevel = Vocab['difficultyLevel'];
 type TestStatus = 'pending' | 'completed' | 'fail';
@@ -23,57 +23,52 @@ const MOCK_HISTORY: LevelTestRecord[] = [
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
 
+const ASSIGNED_WORD_COUNT = 100; // TODO: API 연동
+const ASSIGNED_LEVEL = 4; // TODO: API 연동
+
 export function LevelTestPage() {
-  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(4);
-  const [qty, setQty] = useState('100');
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
-      {/* Generator Card */}
+      <PageTitle title="Level Test" />
+      {/* Assigned Words Card */}
       <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
-        <div className="px-8 py-6 flex items-end gap-6">
-          <div>
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3">
-              Select Target Level
-            </p>
-            <div className="flex gap-3">
-              {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as DifficultyLevel[]).map((lv) => (
-                <button
-                  key={lv}
-                  onClick={() => setSelectedLevel(lv)}
-                  className={`w-12 h-12 rounded-xl text-sm font-bold border-2 transition-all ${
-                    selectedLevel === lv
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-slate-200 bg-white text-on-surface-variant hover:border-primary/40'
-                  }`}
-                >
-                  {lv}
-                </button>
-              ))}
+        <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
+          {ASSIGNED_WORD_COUNT > 0 ? (
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl font-headline font-extrabold text-primary">
+                Level {ASSIGNED_LEVEL}
+              </span>
+              <span className="text-on-surface-variant/30 text-4xl font-light">·</span>
+              <span className="text-4xl font-headline font-extrabold text-primary">
+                {ASSIGNED_WORD_COUNT}
+              </span>
+              <span className="text-sm text-on-surface-variant/80">
+                words have been assigned for your level test
+              </span>
             </div>
-          </div>
-
-          <div className="self-stretch w-px bg-slate-200" />
-
-          <div>
-            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3">
-              Quantity
-            </p>
-            <div className="flex items-center border border-outline/30 rounded-xl overflow-hidden">
-              <NumberInput
-                value={qty}
-                onChange={setQty}
-                min={1}
-                className="w-20 px-3 py-3 text-sm font-bold text-on-surface text-center border-none rounded-none"
-              />
+          ) : (
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl font-headline font-extrabold text-on-surface-variant/30">
+                0
+              </span>
+              <span className="text-sm text-on-surface-variant/80">
+                No words have been assigned yet
+              </span>
             </div>
-          </div>
-
-          <div className="self-stretch w-px bg-slate-200" />
-
-          <button className="flex items-center gap-2 bg-primary hover:opacity-90 transition-opacity text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/10 whitespace-nowrap">
-            Generate Level Test
-          </button>
+          )}
+          {ASSIGNED_WORD_COUNT > 0 && (
+            <button
+              onClick={() => navigate({ to: '/student/level-word-list' })}
+              className="flex items-center gap-1.5 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                open_in_new
+              </span>
+              View Word List
+            </button>
+          )}
         </div>
       </div>
 
@@ -145,9 +140,6 @@ export function LevelTestPage() {
                     <div className="flex items-center gap-2 justify-end">
                       {row.status === 'pending' ? (
                         <>
-                          <button className="px-4 py-1.5 border border-outline-variant/30 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 hover:text-primary transition-colors">
-                            Preview
-                          </button>
                           <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
                             Start Test
                           </button>

@@ -31,7 +31,7 @@ export function WrongWordBankPage() {
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
           <div className="flex items-baseline gap-3">
             <span className="text-4xl font-headline font-extrabold text-primary">{totalCount}</span>
-            <span className="text-lg text-on-surface-variant/80">
+            <span className="text-md text-on-surface-variant/80">
               words you have answered incorrectly across all tests
             </span>
           </div>
