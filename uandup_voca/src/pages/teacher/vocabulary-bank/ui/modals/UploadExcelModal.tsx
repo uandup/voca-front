@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import { useRef, useState } from 'react';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
 interface UploadExcelModalProps {
   onClose: () => void;
@@ -60,8 +60,8 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
           <div
             className={`border-2 border-dashed rounded-2xl p-12 flex flex-col items-center text-center cursor-pointer transition-all ${
               isDragOver
-                ? "border-primary/60 bg-surface-container-low"
-                : "border-outline-variant/40 bg-surface-container-low/30 hover:border-primary/40 hover:bg-surface-container-low/60"
+                ? 'border-primary/60 bg-surface-container-low'
+                : 'border-outline-variant/40 bg-surface-container-low/30 hover:border-primary/40 hover:bg-surface-container-low/60'
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -89,9 +89,7 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
                   <h3 className="text-lg font-headline font-bold text-on-surface">
                     {selectedFile.name}
                   </h3>
-                  <p className="text-on-surface-variant text-sm">
-                    Click to change file
-                  </p>
+                  <p className="text-on-surface-variant text-sm">Click to change file</p>
                 </>
               ) : (
                 <>
@@ -125,12 +123,10 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
               </span>
             </div>
             <div className="space-y-3">
-              <p className="text-sm font-bold text-primary">
-                Instructions for Formatting:
-              </p>
+              <p className="text-sm font-bold text-primary">Instructions for Formatting:</p>
               <ul className="text-sm text-on-surface-variant space-y-2 leading-relaxed list-disc ml-4">
                 <li>
-                  Ensure your file includes columns for:{" "}
+                  Ensure your file includes columns for:{' '}
                   <span className="font-bold text-primary">
                     Word, Definition, Phonetic Symbol, Example Sentence
                   </span>
@@ -138,9 +134,8 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
                 </li>
                 <li>Avoid using special characters in the column headers.</li>
                 <li>
-                  The system supports a maximum of{" "}
-                  <span className="font-bold text-primary">500 entries</span>{" "}
-                  per upload session.
+                  The system supports a maximum of{' '}
+                  <span className="font-bold text-primary">500 entries</span> per upload session.
                 </li>
               </ul>
             </div>

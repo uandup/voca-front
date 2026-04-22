@@ -1,0 +1,483 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Scholarly Curator | Clinic Workspace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              surface: '#ffffff',
+              background: '#fafbfc',
+              primary: '#001b5f',
+              'primary-light': '#002d8f',
+              'on-surface': '#1a1b21',
+              'on-surface-variant': '#64748b',
+              outline: '#e2e8f0',
+              success: '#10b981',
+              error: '#ef4444',
+            },
+            borderRadius: {
+              DEFAULT: '0.5rem',
+              lg: '0.75rem',
+              xl: '1rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Manrope', 'sans-serif'],
+              body: ['Inter', 'sans-serif'],
+              label: ['Inter', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      .font-manrope {
+        font-family: 'Manrope', sans-serif;
+      }
+      .primary-gradient {
+        background: #001b5f;
+        transition: background 0.2s ease;
+      }
+      .primary-gradient:hover {
+        background: #002d8f;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen bg-background text-on-surface">
+    <!-- SideNavBar -->
+    <aside
+      class="h-screen w-64 fixed left-0 top-0 bg-white flex flex-col p-6 border-r border-outline z-40"
+    >
+      <div class="mb-10 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1"
+            >school</span
+          >
+        </div>
+        <div>
+          <h1 class="font-manrope font-extrabold text-primary tracking-tight leading-none text-lg">
+            Lexicon Scholar
+          </h1>
+          <p class="text-[10px] text-on-surface-variant uppercase tracking-widest mt-1 font-bold">
+            Workspace
+          </p>
+        </div>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a
+          class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">group</span>
+          <span class="text-sm font-medium">Student Roster</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-3 py-2 bg-slate-50 text-primary rounded-lg font-bold"
+          href="#"
+        >
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1"
+            >clinical_notes</span
+          >
+          <span class="text-sm">Clinic Workspace</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">quiz</span>
+          <span class="text-sm font-medium">Test Generator</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">menu_book</span>
+          <span class="text-sm font-medium">Curriculum</span>
+        </a>
+      </nav>
+      <div class="mt-auto pt-6 border-t border-outline space-y-1">
+        <a
+          class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">settings</span>
+          <span class="text-sm font-medium">Settings</span>
+        </a>
+        <a
+          class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-primary transition-colors"
+          href="#"
+        >
+          <span class="material-symbols-outlined">logout</span>
+          <span class="text-sm font-medium">Log Out</span>
+        </a>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 flex-1 min-h-screen">
+      <!-- Header -->
+      <header
+        class="h-16 bg-white border-b border-outline px-8 flex items-center justify-between sticky top-0 z-30"
+      >
+        <div class="flex items-center gap-2">
+          <span class="text-on-surface-variant text-sm font-medium">Clinic</span>
+          <span class="material-symbols-outlined text-sm text-slate-300">chevron_right</span>
+          <span class="text-primary font-bold text-sm">김민수 (Kim Min-su)</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <p class="text-xs font-bold text-primary">Prof. Henderson</p>
+            </div>
+            <img
+              alt="Profile"
+              class="w-8 h-8 rounded-full border border-outline"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-mY9_SA0lQjBdV2zcvQuVu-DGicAZSk9vvpHlZ1zyz4qAz4d8swKXhHoT7oztKjsvtmx64R_pjRaHvHyb4xcbpmqQSE7DHqw8arD4l7JRObMJsielj92aHAEqZVG-EbtGOkrw9rwQUcjk-XvnxHF3IGaJwfaH25DyB0emlmLI0ko1QEGIFI9uWpieaGd44Ov8CzK1EPvQVZhm8G3L4emkt1oZWijBjR6P87plQWgM0J4A-FDE-vKWemrhYosPCMiLDsML25F3asWy"
+            />
+          </div>
+        </div>
+      </header>
+      <div class="p-8 max-w-7xl mx-auto space-y-8">
+        <!-- Top Section: Student Info & New Assignment (from SCREEN_139) -->
+        <div class="grid grid-cols-12 gap-8 items-stretch">
+          <div class="col-span-8 bg-white border border-outline rounded-2xl p-8 flex flex-col">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="flex items-baseline gap-2">
+                  <h2 class="text-5xl font-manrope font-extrabold text-primary tracking-tight">
+                    김민수
+                  </h2>
+                  <span class="text-xl text-on-surface-variant font-semibold tracking-tight"
+                    >(Kim Min-su)</span
+                  >
+                </div>
+                <div class="mt-4">
+                  <span
+                    class="px-4 py-1.5 bg-primary/5 text-primary text-xs font-bold rounded-full border border-primary/10"
+                    >Grade 11</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Memo Section -->
+            <div class="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-xl flex-1">
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider"
+                  >Teacher's Note</span
+                >
+                <span class="text-[10px] font-medium text-on-surface-variant/70">Oct 23, 2023</span>
+              </div>
+              <p class="text-sm text-on-surface-variant leading-relaxed font-medium">
+                Struggling with abstract scientific terminology. Focus on Latin roots. Prefers
+                meaning-to-word exercises.
+              </p>
+            </div>
+          </div>
+          <!-- New Assignment Section -->
+          <div class="col-span-4 bg-white border border-outline rounded-2xl p-8 flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+              <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                New Assignment
+              </p>
+              <button class="text-[10px] font-bold text-primary hover:underline">
+                Reset to Default
+              </button>
+            </div>
+            <div class="space-y-5 flex-1 flex flex-col justify-center">
+              <div>
+                <label class="text-[11px] font-semibold text-on-surface-variant mb-1.5 block"
+                  >Target Level</label
+                >
+                <select
+                  class="w-full text-sm border-outline bg-slate-50/50 rounded-lg focus:ring-primary/20 border-slate-200"
+                >
+                  <option>Level 4 - Academic Proficiency</option>
+                  <option>Level 3 - Advanced</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-on-surface-variant mb-1.5 block"
+                  >Quantity</label
+                >
+                <input
+                  class="w-full text-sm border-outline bg-slate-50/50 rounded-lg focus:ring-primary/20 border-slate-200"
+                  type="number"
+                  value="50"
+                />
+              </div>
+              <button
+                class="w-full bg-primary text-white py-3 rounded-xl text-xs font-bold hover:bg-primary-light transition-colors shadow-lg shadow-primary/10 mt-2"
+              >
+                Assign New Words
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom Section: Tab System (from SCREEN_207/216) -->
+        <div class="space-y-6">
+          <!-- Navigation Tabs -->
+          <div class="flex items-center justify-between border-b border-outline pb-px">
+            <div class="flex gap-8">
+              <button class="pb-4 text-sm font-bold text-primary relative">
+                Word Test
+                <div class="absolute bottom-0 left-0 w-full h-0.5 bg-primary"></div>
+              </button>
+              <button
+                class="pb-4 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
+              >
+                Wrong Word Bank
+              </button>
+              <button
+                class="pb-4 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
+              >
+                Level Test
+              </button>
+            </div>
+          </div>
+          <!-- Tab Content: Word Test (Default Active) -->
+          <div class="grid grid-cols-12 gap-8">
+            <!-- Workflow Area -->
+            <div class="col-span-8 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-manrope font-bold text-primary uppercase tracking-wide">
+                  Active Workflow
+                </h3>
+                <div class="flex gap-1 p-1 bg-slate-100/50 rounded-lg">
+                  <button
+                    class="px-3 py-1 text-xs font-bold bg-white text-primary rounded shadow-sm"
+                  >
+                    Active
+                  </button>
+                  <button
+                    class="px-3 py-1 text-xs font-medium text-on-surface-variant hover:bg-white/50 rounded transition-colors"
+                  >
+                    History
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-white border border-outline rounded-2xl p-10 flex flex-col items-center"
+              >
+                <div class="mb-10 text-center">
+                  <div class="flex flex-col items-center gap-1">
+                    <h4 class="text-xl font-manrope font-bold text-primary">
+                      Academic Vocabulary #48-97
+                    </h4>
+                    <div
+                      class="flex gap-2 items-center text-[10px] font-bold text-on-surface-variant uppercase tracking-wider"
+                    >
+                      <span>Level 4</span>
+                      <span class="w-1 h-1 bg-slate-300 rounded-full"></span>
+                      <span>Qty: 50</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Workflow Steps -->
+                <div class="flex items-start justify-center w-full max-w-2xl">
+                  <!-- Step 1: Word -->
+                  <div class="flex-1 flex flex-col items-center group">
+                    <div
+                      class="w-12 h-12 rounded-full border-2 border-success bg-success/5 flex items-center justify-center mb-3"
+                    >
+                      <span class="material-symbols-outlined text-success">check</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-success uppercase">Word</span>
+                    <div class="mt-1 flex flex-col items-center text-center">
+                      <span class="text-[9px] text-on-surface-variant font-bold"
+                        >Oct 20 • 49/50</span
+                      >
+                      <span class="text-[8px] text-on-surface-variant opacity-70"
+                        >Word to Korean</span
+                      >
+                    </div>
+                  </div>
+                  <div class="w-12 h-[2px] bg-success mt-6"></div>
+                  <!-- Step 2: Example -->
+                  <div class="flex-1 flex flex-col items-center">
+                    <div
+                      class="w-12 h-12 rounded-full border-2 border-primary bg-primary flex items-center justify-center mb-3 shadow-lg shadow-primary/20"
+                    >
+                      <span class="material-symbols-outlined text-white">description</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-primary uppercase">Example</span>
+                    <span class="text-[9px] text-primary font-bold">Ready</span>
+                  </div>
+                  <div class="w-12 h-[2px] bg-slate-100 mt-6"></div>
+                  <!-- Step 3: Review 1 -->
+                  <div class="flex-1 flex flex-col items-center">
+                    <div
+                      class="w-12 h-12 rounded-full border border-outline bg-slate-50 flex items-center justify-center mb-3"
+                    >
+                      <span class="material-symbols-outlined text-slate-300 text-sm">lock</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Review 1</span>
+                  </div>
+                  <div class="w-12 h-[2px] bg-slate-50 mt-6"></div>
+                  <!-- Step 4: Review 2 -->
+                  <div class="flex-1 flex flex-col items-center">
+                    <div
+                      class="w-12 h-12 rounded-full border border-outline bg-slate-50 flex items-center justify-center mb-3"
+                    >
+                      <span class="material-symbols-outlined text-slate-300 text-sm">lock</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Review 2</span>
+                  </div>
+                  <div class="w-12 h-[2px] bg-slate-50 mt-6"></div>
+                  <!-- Step 5: Review 3 -->
+                  <div class="flex-1 flex flex-col items-center">
+                    <div
+                      class="w-12 h-12 rounded-full border border-outline bg-slate-50 flex items-center justify-center mb-3"
+                    >
+                      <span class="material-symbols-outlined text-slate-300 text-sm">lock</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Review 3</span>
+                  </div>
+                </div>
+                <div class="mt-12 flex justify-center">
+                  <button
+                    class="primary-gradient text-white px-8 py-3 rounded-xl font-bold text-sm tracking-wide shadow-xl shadow-primary/10 flex items-center gap-2"
+                  >
+                    Generate Example Test
+                    <span class="material-symbols-outlined text-sm">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+              <!-- Cycle Alert -->
+              <div
+                class="bg-red-50/50 border border-red-100 rounded-xl p-4 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-error">error</span>
+                  <div>
+                    <p class="text-xs font-bold text-error">Missing Mastery Threshold</p>
+                    <p class="text-[11px] text-error/70 font-medium">
+                      Cycle 01, Review 1 was failed (62%). Requires re-generation.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="text-xs font-bold text-error border border-red-200 px-4 py-1.5 rounded-lg bg-white hover:bg-red-50 transition-colors"
+                >
+                  Fix Now
+                </button>
+              </div>
+            </div>
+            <!-- Test Configuration Sidebar (from SCREEN_139) -->
+            <div class="col-span-4 flex flex-col space-y-4">
+              <h3
+                class="text-sm font-manrope font-bold text-primary uppercase tracking-wide opacity-0"
+              >
+                Configuration
+              </h3>
+              <div class="bg-white border border-outline rounded-2xl p-8 h-full flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                  <p
+                    class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest"
+                  >
+                    Test Configuration
+                  </p>
+                  <button class="text-[10px] font-bold text-primary hover:underline">
+                    Reset to Default
+                  </button>
+                </div>
+                <div class="space-y-6 flex-1">
+                  <div>
+                    <label class="text-[11px] font-semibold text-on-surface-variant mb-1.5 block"
+                      >Quantity</label
+                    >
+                    <input
+                      class="w-full text-sm border-outline bg-slate-50/50 rounded-lg focus:ring-primary/20 border-slate-200"
+                      type="number"
+                      value="30"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-[11px] font-semibold text-on-surface-variant mb-1.5 block"
+                      >Test Type</label
+                    >
+                    <select
+                      class="w-full text-sm border-outline bg-slate-50/50 rounded-lg focus:ring-primary/20 border-slate-200"
+                    >
+                      <option>Word to Korean</option>
+                      <option>Korean to Word</option>
+                      <option selected="">Meaning to Word</option>
+                    </select>
+                    <div class="mt-3 ml-4 space-y-2 border-l-2 border-primary/10 pl-4">
+                      <label class="flex items-center gap-3 cursor-pointer group">
+                        <input
+                          checked=""
+                          class="w-3.5 h-3.5 text-primary focus:ring-primary/20"
+                          name="meaning_sub"
+                          type="radio"
+                        />
+                        <span class="text-xs text-on-surface font-medium">English to Word</span>
+                      </label>
+                      <label class="flex items-center gap-3 cursor-pointer group">
+                        <input
+                          class="w-3.5 h-3.5 text-primary focus:ring-primary/20"
+                          name="meaning_sub"
+                          type="radio"
+                        />
+                        <span class="text-xs text-on-surface font-medium">Korean to Word</span>
+                      </label>
+                      <label class="flex items-center gap-3 cursor-pointer group">
+                        <input
+                          class="w-3.5 h-3.5 text-primary focus:ring-primary/20"
+                          name="meaning_sub"
+                          type="radio"
+                        />
+                        <span class="text-xs text-on-surface font-medium">En/Ko to Word</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between py-2 border-t border-slate-50">
+                    <span class="text-xs font-medium text-on-surface">Include Synonyms</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input checked="" class="sr-only peer" type="checkbox" />
+                      <div
+                        class="w-8 h-4 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary"
+                      ></div>
+                    </label>
+                  </div>
+                </div>
+                <div class="pt-6 border-t border-slate-50">
+                  <p class="text-[10px] text-on-surface-variant font-medium text-center">
+                    Settings will apply to the next generated test.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

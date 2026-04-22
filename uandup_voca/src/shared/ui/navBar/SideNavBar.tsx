@@ -1,9 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from '@tanstack/react-router';
 
 interface NavItem {
   icon: string;
   label: string;
   to: string;
+  activePrefixes?: readonly string[];
 }
 
 interface SideNavBarProps {
@@ -21,15 +22,17 @@ export function SideNavBar({ navItems }: SideNavBarProps) {
 
       <nav className="flex-1 flex flex-col gap-1">
         {navItems.map((item) => {
-          const isActive = pathname.includes(item.to);
+          const isActive =
+            pathname.includes(item.to) ||
+            (item.activePrefixes?.some((prefix) => pathname.startsWith(prefix)) ?? false);
           return (
             <Link
               key={item.label}
               to={item.to}
               className={
                 isActive
-                  ? "flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-bold shadow-sm rounded-lg transition-transform duration-200"
-                  : "flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200/50 rounded-lg transition-transform duration-200"
+                  ? 'flex items-center gap-3 px-4 py-3 bg-white text-blue-900 font-bold shadow-sm rounded-lg transition-transform duration-200'
+                  : 'flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-200/50 rounded-lg transition-transform duration-200'
               }
             >
               <span className="material-symbols-outlined">{item.icon}</span>
@@ -40,13 +43,13 @@ export function SideNavBar({ navItems }: SideNavBarProps) {
       </nav>
 
       <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-slate-200">
-        <a
+        {/* <a
           href="#"
           className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-200/50 rounded-lg text-sm"
         >
           <span className="material-symbols-outlined">help</span>
           <span>Help Center</span>
-        </a>
+        </a> */}
         <a
           href="#"
           className="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-200/50 rounded-lg text-sm"

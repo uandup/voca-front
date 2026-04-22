@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export interface StudentFormData {
   name: string;
@@ -13,16 +13,10 @@ interface EditStudentModalProps {
   onSave: (data: StudentFormData) => void;
 }
 
-export function EditStudentModal({
-  student,
-  onClose,
-  onSave,
-}: EditStudentModalProps) {
+export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
   const [name, setName] = useState(student.name);
   const [grade, setGrade] = useState(student.grade);
-  const [difficultyLevel, setDifficultyLevel] = useState(
-    student.difficultyLevel,
-  );
+  const [difficultyLevel, setDifficultyLevel] = useState(student.difficultyLevel);
   const [wordCount, setWordCount] = useState(student.wordCount);
 
   function handleSave() {
@@ -40,9 +34,7 @@ export function EditStudentModal({
       >
         {/* Header */}
         <div className="px-8 py-6 border-b border-outline-variant/20 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-primary font-headline">
-            Edit Student Information
-          </h3>
+          <h3 className="text-xl font-bold text-primary font-headline">Edit Student Information</h3>
           <button
             onClick={onClose}
             className="text-on-surface-variant/60 hover:text-on-surface-variant transition-colors p-1 rounded-full hover:bg-surface-container"

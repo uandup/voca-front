@@ -1,2 +1,2 @@
-export { TeacherSideNavBar } from "./TeacherSideNavBar";
-export { StudentSideNavBar } from "./StudentSideNavBar";
+export { TeacherSideNavBar } from './TeacherSideNavBar';
+export { StudentSideNavBar } from './StudentSideNavBar';

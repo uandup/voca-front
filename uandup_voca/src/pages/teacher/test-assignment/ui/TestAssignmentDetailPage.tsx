@@ -1,6 +1,6 @@
-import { PageTitle } from "@/shared/ui/PageTitle";
+import { PageTitle } from '@/shared/ui/PageTitle';
 
-type TestStatus = "Completed" | "Pending";
+type TestStatus = 'Completed' | 'Pending';
 
 interface TestRecord {
   id: string;
@@ -12,40 +12,40 @@ interface TestRecord {
 
 const mockTestHistory: TestRecord[] = [
   {
-    id: "#TX-8821",
-    date: "Oct 24, 2023",
+    id: '#TX-8821',
+    date: 'Oct 24, 2023',
     level: 1,
-    score: "98/100",
-    status: "Completed",
+    score: '98/100',
+    status: 'Completed',
   },
   {
-    id: "#TX-8794",
-    date: "Oct 18, 2023",
+    id: '#TX-8794',
+    date: 'Oct 18, 2023',
     level: 1,
-    score: "92/100",
-    status: "Completed",
+    score: '92/100',
+    status: 'Completed',
   },
   {
-    id: "#TX-8710",
-    date: "Oct 12, 2023",
+    id: '#TX-8710',
+    date: 'Oct 12, 2023',
     level: 1,
-    score: "—",
-    status: "Pending",
+    score: '—',
+    status: 'Pending',
   },
   {
-    id: "#TX-8655",
-    date: "Oct 05, 2023",
+    id: '#TX-8655',
+    date: 'Oct 05, 2023',
     level: 1,
-    score: "100/100",
-    status: "Completed",
+    score: '100/100',
+    status: 'Completed',
   },
 ];
 
 const levelProgress = [
-  { label: "Level 1 Progress", value: "120/1040" },
-  { label: "Level 2 Progress", value: "150/1040" },
-  { label: "Level 3 Progress", value: "180/1040" },
-  { label: "Level 4 Progress", value: "0/1040" },
+  { label: 'Level 1 Progress', value: '120/1040' },
+  { label: 'Level 2 Progress', value: '150/1040' },
+  { label: 'Level 3 Progress', value: '180/1040' },
+  { label: 'Level 4 Progress', value: '0/1040' },
 ];
 
 export function TestAssignmentDetailPage() {
@@ -77,9 +77,7 @@ export function TestAssignmentDetailPage() {
                   <span className="block text-[10px] uppercase tracking-wider text-on-surface-variant font-bold mb-1.5">
                     {item.label}
                   </span>
-                  <span className="text-primary-container font-bold text-lg">
-                    {item.value}
-                  </span>
+                  <span className="text-primary-container font-bold text-lg">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -95,20 +93,18 @@ export function TestAssignmentDetailPage() {
                   Difficulty:
                 </span>
                 <div className="flex bg-surface-container-low p-1 rounded-lg">
-                  {["Level 1", "Level 2", "Level 3", "Level 4"].map(
-                    (lvl, i) => (
-                      <button
-                        key={lvl}
-                        className={
-                          i === 0
-                            ? "px-4 py-1.5 text-xs font-bold rounded-md bg-primary-container text-white shadow-sm transition-all"
-                            : "px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary-container transition-all"
-                        }
-                      >
-                        {lvl}
-                      </button>
-                    ),
-                  )}
+                  {['Level 1', 'Level 2', 'Level 3', 'Level 4'].map((lvl, i) => (
+                    <button
+                      key={lvl}
+                      className={
+                        i === 0
+                          ? 'px-4 py-1.5 text-xs font-bold rounded-md bg-primary-container text-white shadow-sm transition-all'
+                          : 'px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary-container transition-all'
+                      }
+                    >
+                      {lvl}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="h-8 w-px bg-slate-200" />
@@ -139,20 +135,18 @@ export function TestAssignmentDetailPage() {
           {/* Tab Nav */}
           <div className="mb-6">
             <div className="bg-surface-container-low p-1.5 rounded-xl inline-flex items-center gap-1 shadow-inner border border-outline-variant/20">
-              {["Word Test", "Example Sentence Test", "Review Test"].map(
-                (tab, i) => (
-                  <button
-                    key={tab}
-                    className={
-                      i === 0
-                        ? "px-8 py-2.5 bg-white text-primary rounded-lg shadow-sm font-bold text-sm transition-all border border-blue-100/50"
-                        : "px-8 py-2.5 text-on-surface-variant hover:text-primary font-semibold text-sm transition-all"
-                    }
-                  >
-                    {tab}
-                  </button>
-                ),
-              )}
+              {['Word Test', 'Example Sentence Test', 'Review Test'].map((tab, i) => (
+                <button
+                  key={tab}
+                  className={
+                    i === 0
+                      ? 'px-8 py-2.5 bg-white text-primary rounded-lg shadow-sm font-bold text-sm transition-all border border-blue-100/50'
+                      : 'px-8 py-2.5 text-on-surface-variant hover:text-primary font-semibold text-sm transition-all'
+                  }
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -160,17 +154,10 @@ export function TestAssignmentDetailPage() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-surface-container-low">
-                  {[
-                    "TEST ID",
-                    "DATE",
-                    "DIFFICULTY",
-                    "SCORE",
-                    "STATUS",
-                    "ACTIONS",
-                  ].map((col) => (
+                  {['TEST ID', 'DATE', 'DIFFICULTY', 'SCORE', 'STATUS', 'ACTIONS'].map((col) => (
                     <th
                       key={col}
-                      className={`px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant ${col === "ACTIONS" ? "text-right" : "text-left"}`}
+                      className={`px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant ${col === 'ACTIONS' ? 'text-right' : 'text-left'}`}
                     >
                       {col}
                     </th>
@@ -179,18 +166,13 @@ export function TestAssignmentDetailPage() {
               </thead>
               <tbody className="divide-y divide-surface-container">
                 {mockTestHistory.map((record) => (
-                  <tr
-                    key={record.id}
-                    className="group hover:bg-surface-bright transition-all"
-                  >
+                  <tr key={record.id} className="group hover:bg-surface-bright transition-all">
                     <td className="px-6 py-5">
                       <span className="font-headline font-bold text-primary-container">
                         {record.id}
                       </span>
                     </td>
-                    <td className="px-6 py-5 text-sm text-on-surface-variant">
-                      {record.date}
-                    </td>
+                    <td className="px-6 py-5 text-sm text-on-surface-variant">{record.date}</td>
                     <td className="px-6 py-5">
                       <span className="text-xs font-bold text-primary-container">
                         Level {record.level}
@@ -200,7 +182,7 @@ export function TestAssignmentDetailPage() {
                       {record.score}
                     </td>
                     <td className="px-6 py-5">
-                      {record.status === "Completed" ? (
+                      {record.status === 'Completed' ? (
                         <span className="bg-secondary-container text-on-secondary-container text-[10px] font-extrabold uppercase px-2 py-1 rounded-full">
                           Completed
                         </span>
@@ -213,27 +195,19 @@ export function TestAssignmentDetailPage() {
                     <td className="px-6 py-5 text-right">
                       <div className="flex items-center justify-end gap-3">
                         <button className="p-1.5 text-on-surface-variant hover:text-primary-container transition-colors">
-                          <span className="material-symbols-outlined text-xl">
-                            print
-                          </span>
+                          <span className="material-symbols-outlined text-xl">print</span>
                         </button>
                         <button className="p-1.5 text-on-surface-variant hover:text-error transition-colors">
-                          <span className="material-symbols-outlined text-xl">
-                            delete
-                          </span>
+                          <span className="material-symbols-outlined text-xl">delete</span>
                         </button>
-                        {record.status === "Completed" ? (
+                        {record.status === 'Completed' ? (
                           <button className="ml-2 bg-primary-container/10 text-primary-container w-20 h-8 rounded-md text-xs font-bold hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-sm">
-                              edit
-                            </span>
+                            <span className="material-symbols-outlined text-sm">edit</span>
                             Edit
                           </button>
                         ) : (
                           <button className="ml-2 bg-primary-container text-white w-20 h-8 rounded-md text-xs font-bold hover:opacity-90 transition-all flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-sm">
-                              fact_check
-                            </span>
+                            <span className="material-symbols-outlined text-sm">fact_check</span>
                             Grade
                           </button>
                         )}

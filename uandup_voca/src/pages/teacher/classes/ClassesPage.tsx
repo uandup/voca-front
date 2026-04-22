@@ -1,17 +1,15 @@
-import { useNavigate } from "@tanstack/react-router";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from "./mock/timetableMockData";
-import { buildGrid } from "./model/buildGrid";
-import { cellCardStyles } from "./ui/timetableStyles";
+import { useNavigate } from '@tanstack/react-router';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from './mock/timetableMockData';
+import { buildGrid } from './model/buildGrid';
+import { cellCardStyles } from './ui/timetableStyles';
 
 export default function ClassesPage() {
   const navigate = useNavigate();
   const grid = buildGrid(TIME_SLOTS_DEF);
   const numRows = TIME_SLOTS_DEF.length;
 
-  const dataRowTemplate = TIME_SLOTS_DEF.map((s) =>
-    s.isBreak ? "40px" : "60px",
-  ).join(" ");
+  const dataRowTemplate = TIME_SLOTS_DEF.map((s) => (s.isBreak ? '40px' : '60px')).join(' ');
 
   return (
     <main>
@@ -30,7 +28,7 @@ export default function ClassesPage() {
       <div
         className="bg-surface-container-lowest rounded-md shadow-[0_8px_32px_rgba(0,21,80,0.1)] border border-outline-variant/30 overflow-hidden"
         style={{
-          display: "grid",
+          display: 'grid',
           gridTemplateColumns: `60px repeat(${NUM_COLS}, 1fr)`,
           gridTemplateRows: `48px ${dataRowTemplate}`,
         }}
@@ -57,9 +55,9 @@ export default function ClassesPage() {
                 key={`time-${slot.time}`}
                 className={`px-3 justify-center flex items-center border-r border-outline-variant/30 font-headline font-semibold text-xs ${
                   isBreak
-                    ? "bg-surface-container-low text-on-surface-variant/40"
-                    : "bg-white text-outline"
-                } ${rowIdx < numRows - 1 ? "border-b border-outline-variant/30" : ""}`}
+                    ? 'bg-surface-container-low text-on-surface-variant/40'
+                    : 'bg-white text-outline'
+                } ${rowIdx < numRows - 1 ? 'border-b border-outline-variant/30' : ''}`}
                 style={{ gridRow, gridColumn: 1 }}
               >
                 {slot.time}
@@ -69,7 +67,7 @@ export default function ClassesPage() {
                 <div
                   key={`break-${slot.time}`}
                   className="bg-surface-container-low"
-                  style={{ gridRow, gridColumn: "2 / -1" }}
+                  style={{ gridRow, gridColumn: '2 / -1' }}
                 />
               ) : (
                 grid[rowIdx].map((cell, colIdx) => {
@@ -83,7 +81,7 @@ export default function ClassesPage() {
                   return (
                     <div
                       key={`${slot.time}-${colIdx}`}
-                      className={`p-2 border-r border-outline-variant/30 ${isLastCol ? "border-r-0" : ""} border-b border-outline-variant/30`}
+                      className={`p-2 border-r border-outline-variant/30 ${isLastCol ? 'border-r-0' : ''} border-b border-outline-variant/30`}
                       style={{
                         gridRow: `${gridRow} / ${gridRowEnd}`,
                         gridColumn: `${gridColStart} / ${gridColEnd}`,
@@ -95,7 +93,7 @@ export default function ClassesPage() {
                           onClick={() =>
                             cell.classId &&
                             navigate({
-                              to: "/teacher/classes/$classId",
+                              to: '/teacher/classes/$classId',
                               params: { classId: String(cell.classId) },
                             })
                           }

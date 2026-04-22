@@ -1,5 +1,5 @@
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
-import type { ManagedStudent } from "../../mock/studentManageMockData";
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import type { ManagedStudent } from '../../mock/studentManageMockData';
 
 interface DeleteConfirmModalProps {
   student: ManagedStudent;
@@ -7,11 +7,7 @@ interface DeleteConfirmModalProps {
   onConfirm: (id: number) => void;
 }
 
-export function DeleteConfirmModal({
-  student,
-  onClose,
-  onConfirm,
-}: DeleteConfirmModalProps) {
+export function DeleteConfirmModal({ student, onClose, onConfirm }: DeleteConfirmModalProps) {
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
@@ -21,10 +17,11 @@ export function DeleteConfirmModal({
             Delete Student?
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed text-sm">
-            This action will permanently remove{" "}
+            This action will permanently remove{' '}
             <span className="font-bold text-on-surface">
-              "{student.nameKo}"
-            </span>{" "}
+              "{student.nameLastKo}
+              {student.nameFirstKo}"
+            </span>{' '}
             from the roster. This cannot be undone.
           </p>
         </div>
@@ -37,10 +34,11 @@ export function DeleteConfirmModal({
             </p>
             <div className="flex items-center gap-2">
               <span className="font-headline font-bold text-lg text-primary">
-                {student.nameKo}
+                {student.nameLastKo}
+                {student.nameFirstKo}
               </span>
               <span className="text-sm text-on-surface-variant">
-                {student.name}
+                {student.nameFirstEn} {student.nameLastEn}
               </span>
             </div>
           </div>

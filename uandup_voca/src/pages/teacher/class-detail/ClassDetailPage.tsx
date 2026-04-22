@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { BreadcrumbPageTitle } from "@/shared/ui/BreadcrumbPageTitle";
-import { TableContainer } from "@/shared/ui/TableContainer";
-import { CLASS_DETAIL_MOCK } from "./mock/classDetailMockData";
-import { EditMembersModal } from "@/features/roster-manage";
-import { AssignedLevelBlocks } from "@/entities/vocab";
+import { useState } from 'react';
+import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { TableContainer } from '@/shared/ui/TableContainer';
+import { CLASS_DETAIL_MOCK } from './mock/classDetailMockData';
+import { EditMembersModal } from '@/features/roster-manage';
+import { AssignedLevelBlocks } from '@/entities/vocab';
 
 export default function ClassDetailPage() {
   const data = CLASS_DETAIL_MOCK;
@@ -12,26 +12,18 @@ export default function ClassDetailPage() {
   return (
     <main>
       {/* Header */}
-      <BreadcrumbPageTitle parents={["Classes"]} title={data.className} />
+      <BreadcrumbPageTitle parents={['Classes']} title={data.className} />
 
       {/* Overview Cards */}
       <section className="grid grid-cols-3 gap-6 mb-6">
         <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border/10 flex items-center justify-between">
-          <p className="text-on-surface-variant text-lg font-bold">
-            Class Average
-          </p>
-          <h3 className="text-3xl font-headline font-bold text-primary">
-            {data.classAverage}
-          </h3>
+          <p className="text-on-surface-variant text-lg font-bold">Class Average</p>
+          <h3 className="text-3xl font-headline font-bold text-primary">{data.classAverage}</h3>
         </div>
 
         <div className="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_12px_rgba(0,21,80,0.04)] border/10 flex items-center justify-between">
-          <p className="text-on-surface-variant text-lg font-bold">
-            Student Count
-          </p>
-          <h3 className="text-3xl font-headline font-bold text-primary">
-            {data.studentCount}
-          </h3>
+          <p className="text-on-surface-variant text-lg font-bold">Student Count</p>
+          <h3 className="text-3xl font-headline font-bold text-primary">{data.studentCount}</h3>
         </div>
 
         <div className="flex items-end justify-end">
@@ -39,9 +31,7 @@ export default function ClassDetailPage() {
             onClick={() => setIsEditModalOpen(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
           >
-            <span className="material-symbols-outlined text-lg">
-              person_add
-            </span>
+            <span className="material-symbols-outlined text-lg">person_add</span>
             Edit Members
           </button>
         </div>
@@ -124,19 +114,15 @@ export default function ClassDetailPage() {
                           </span>
                         </div>
                       ) : (
-                        <span className="text-on-surface-variant/30 text-sm">
-                          -
-                        </span>
+                        <span className="text-on-surface-variant/30 text-sm">-</span>
                       )}
                     </td>
                   ))}
                   <td className="px-6 py-5 text-center border-r border-outline-variant/20">
-                    <span className="font-headline font-bold text-primary">
-                      {student.accuracy}
-                    </span>
+                    <span className="font-headline font-bold text-primary">{student.accuracy}</span>
                   </td>
                   <td className="px-8 py-5 text-sm text-on-surface-variant">
-                    {student.memo ?? "-"}
+                    {student.memo ?? '-'}
                   </td>
                 </tr>
               ))}
@@ -145,9 +131,7 @@ export default function ClassDetailPage() {
         </div>
       </TableContainer>
 
-      {isEditModalOpen && (
-        <EditMembersModal onClose={() => setIsEditModalOpen(false)} />
-      )}
+      {isEditModalOpen && <EditMembersModal onClose={() => setIsEditModalOpen(false)} />}
     </main>
   );
 }

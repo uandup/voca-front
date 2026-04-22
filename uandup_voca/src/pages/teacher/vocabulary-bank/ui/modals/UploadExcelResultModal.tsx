@@ -17,7 +17,7 @@ interface UploadExcelResultModalProps {
   onDownloadErrors: () => void;
 }
 
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
 export function UploadExcelResultModal({
   result,
@@ -32,9 +32,7 @@ export function UploadExcelResultModal({
         <div className="p-8 pb-6 flex justify-between items-start">
           <div className="flex items-start gap-4">
             <div className="bg-primary/5 p-3 rounded-2xl">
-              <span className="material-symbols-outlined text-primary text-3xl">
-                upload_file
-              </span>
+              <span className="material-symbols-outlined text-primary text-3xl">upload_file</span>
             </div>
             <div>
               <h2 className="text-2xl font-extrabold text-primary font-headline leading-tight">
@@ -85,9 +83,7 @@ export function UploadExcelResultModal({
         {result.errors.length > 0 && (
           <div className="flex-1 overflow-y-auto px-8 pb-8 flex flex-col">
             <div className="flex items-center justify-between mb-4 sticky top-0 bg-white pt-2 pb-2">
-              <h3 className="font-bold text-primary text-base">
-                Detailed Error Log
-              </h3>
+              <h3 className="font-bold text-primary text-base">Detailed Error Log</h3>
               <span className="bg-error text-white px-2.5 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-wider">
                 Critical Review Required
               </span>
@@ -102,9 +98,7 @@ export function UploadExcelResultModal({
                     <div className="font-extrabold text-on-surface font-headline text-base">
                       {entry.word}
                     </div>
-                    <div className="text-xs text-on-surface-variant mt-0.5">
-                      {entry.message}
-                    </div>
+                    <div className="text-xs text-on-surface-variant mt-0.5">{entry.message}</div>
                   </div>
                   <span
                     className="material-symbols-outlined text-error text-2xl"

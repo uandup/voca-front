@@ -1,6 +1,6 @@
-import { useState } from "react";
-import type { Vocab } from "@/entities/vocab";
-import { ModalBackdrop } from "@/shared/ui/ModalBackdrop";
+import { useState } from 'react';
+import type { Vocab } from '@/entities/vocab';
+import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
 interface VocabModalProps {
   onClose: () => void;
@@ -8,45 +8,27 @@ interface VocabModalProps {
   initialData?: Partial<Vocab>;
 }
 
-const PARTS_OF_SPEECH: Vocab["partOfSpeech"][] = [
-  "Noun",
-  "Verb",
-  "Adjective",
-  "Adverb",
-  "Conjunction",
-];
+const PARTS_OF_SPEECH: Vocab['partOfSpeech'][] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
 export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
-  const [word, setWord] = useState(initialData?.word ?? "");
-  const [partOfSpeech, setPartOfSpeech] = useState<Vocab["partOfSpeech"]>(
-    initialData?.partOfSpeech ?? "Noun",
+  const [word, setWord] = useState(initialData?.word ?? '');
+  const [partOfSpeech, setPartOfSpeech] = useState<Vocab['partOfSpeech']>(
+    initialData?.partOfSpeech ?? 'N',
   );
-  const [koreanMeaning, setKoreanMeaning] = useState(
-    initialData?.koreanMeaning ?? "",
-  );
-  const [difficultyLevel, setDifficultyLevel] = useState<1 | 2 | 3 | 4>(
+  const [koreanMeaning, setKoreanMeaning] = useState(initialData?.koreanMeaning ?? '');
+  const [difficultyLevel, setDifficultyLevel] = useState<Vocab['difficultyLevel']>(
     initialData?.difficultyLevel ?? 1,
   );
-  const [englishMeaning, setEnglishMeaning] = useState(
-    initialData?.englishMeaning ?? "",
-  );
-  const [synonyms, setSynonyms] = useState<string[]>(
-    initialData?.synonyms ?? [],
-  );
-  const [synonymInput, setSynonymInput] = useState("");
-  const [exampleSentence, setExampleSentence] = useState(
-    initialData?.exampleSentence ?? "",
-  );
+  const [englishMeaning, setEnglishMeaning] = useState(initialData?.englishMeaning ?? '');
+  const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
+  const [synonymInput, setSynonymInput] = useState('');
+  const [exampleSentence, setExampleSentence] = useState(initialData?.exampleSentence ?? '');
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (
-      e.key === "Enter" &&
-      !e.nativeEvent.isComposing &&
-      synonymInput.trim()
-    ) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && synonymInput.trim()) {
       e.preventDefault();
       setSynonyms((prev) => [...prev, synonymInput.trim()]);
-      setSynonymInput("");
+      setSynonymInput('');
     }
   }
 
@@ -73,7 +55,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
         <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
-              {initialData ? "Edit Word" : "Add New Word"}
+              {initialData ? 'Edit Word' : 'Add New Word'}
             </h2>
           </div>
           <button
@@ -108,9 +90,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={partOfSpeech}
-                  onChange={(e) =>
-                    setPartOfSpeech(e.target.value as Vocab["partOfSpeech"])
-                  }
+                  onChange={(e) => setPartOfSpeech(e.target.value as Vocab['partOfSpeech'])}
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
                     <option key={pos}>{pos}</option>
@@ -141,21 +121,23 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
               </label>
-              <div className="flex p-1 bg-surface-container-low rounded-xl h-14 items-center">
-                {([1, 2, 3, 4] as const).map((level) => (
-                  <button
-                    key={level}
-                    type="button"
-                    onClick={() => setDifficultyLevel(level)}
-                    className={`flex-1 h-full text-xs font-bold rounded-lg transition-colors ${
-                      difficultyLevel === level
-                        ? "bg-white shadow-sm text-primary"
-                        : "text-on-surface-variant hover:bg-white/40"
-                    }`}
-                  >
-                    {level}
-                  </button>
-                ))}
+              <div className="relative">
+                <select
+                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
+                  value={difficultyLevel}
+                  onChange={(e) =>
+                    setDifficultyLevel(Number(e.target.value) as Vocab['difficultyLevel'])
+                  }
+                >
+                  {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
+                    <option key={l} value={l}>
+                      Level {l}
+                    </option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+                  expand_more
+                </span>
               </div>
             </div>
           </div>
@@ -191,9 +173,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                     onClick={() => removeSynonym(i)}
                     className="flex items-center justify-center hover:bg-surface-container-low rounded-md p-0.5"
                   >
-                    <span className="material-symbols-outlined text-[16px]">
-                      close
-                    </span>
+                    <span className="material-symbols-outlined text-[16px]">close</span>
                   </button>
                 </div>
               ))}

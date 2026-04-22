@@ -1,7 +1,8 @@
-import { useState } from "react";
-import type { Vocab } from "@/entities/vocab";
-import { VocabModal } from "./modals/VocabModal";
-import { DeleteVocabModal } from "./modals/DeleteVocabModal";
+import { useState } from 'react';
+import type { Vocab } from '@/entities/vocab';
+
+import { VocabModal } from './modals/VocabModal';
+import { DeleteVocabModal } from './modals/DeleteVocabModal';
 
 type VocabCardProps = Vocab;
 
@@ -45,9 +46,7 @@ export function VocabCard({
                 LEVEL {difficultyLevel}
               </span>
             </div>
-            <h2 className="font-headline font-bold text-2xl text-primary">
-              {word}
-            </h2>
+            <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>
           </div>
 
           {/* Column 2: Meaning + Synonyms */}
@@ -89,7 +88,7 @@ export function VocabCard({
       <div className="px-8 py-5 bg-surface-container-low border-t border-outline-variant/10">
         <div className="flex gap-3 items-baseline">
           <span className="text-md uppercase tracking-wider text-outline font-bold shrink-0">
-            Example:
+            Sentence:
           </span>
           <p className="text-on-surface-variant text-md font-medium leading-relaxed">
             "{exampleSentence}"
@@ -121,7 +120,7 @@ export function VocabCard({
           word={word}
           onClose={() => setIsDeleteOpen(false)}
           onDelete={() => {
-            console.log("delete", word);
+            console.log('delete', word);
             setIsDeleteOpen(false);
           }}
         />

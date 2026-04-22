@@ -15,6 +15,9 @@ dist-ssr
 
 docs/*
 
+# Claude Code 개인 설정 (팀 공유 CLAUDE.md는 커밋, 개인 설정만 제외)
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -25,3 +28,4 @@ docs/*
 *.njsproj
 *.sln
 *.sw?
+.env

@@ -1,26 +1,23 @@
-import { useState } from "react";
-import { PageTitle } from "@/shared/ui/PageTitle";
-import { PendingApprovalsModal } from "./ui/modals/PendingApprovalsModal";
-import { UnassignedStudentsModal } from "./ui/modals/UnassignedStudentsModal";
-
+import { useState } from 'react';
+import { PageTitle } from '@/shared/ui/PageTitle';
+import { UnassignedStudentsModal } from './ui/modals/UnassignedStudentsModal';
 
 const shortcutCards = [
   {
-    icon: "school",
-    current: { label: "SAT", sub: "13:00 - 17:00" },
-    next: { label: "G10 English", sub: "18:00 - 19:00" },
-    title: "Class",
+    icon: 'school',
+    current: { label: 'SAT', sub: '13:00 - 17:00' },
+    next: { label: 'G10 English', sub: '18:00 - 19:00' },
+    title: 'Class',
   },
   {
-    icon: "groups",
-    current: { label: "15:00 - 17:00", sub: "4 / 6 enrolled" },
-    next: { label: "18:00 - 20:00", sub: "3 / 6 enrolled" },
-    title: "Clinic",
+    icon: 'groups',
+    current: { label: '15:00 - 17:00', sub: '4 / 6 enrolled' },
+    next: { label: '18:00 - 20:00', sub: '3 / 6 enrolled' },
+    title: 'Clinic',
   },
 ];
 
 export default function DashBoard() {
-  const [isPendingOpen, setIsPendingOpen] = useState(false);
   const [isUnassignedOpen, setIsUnassignedOpen] = useState(false);
 
   return (
@@ -32,22 +29,7 @@ export default function DashBoard() {
         </p>
       </section>
 
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Pending Approvals */}
-        <button
-          onClick={() => setIsPendingOpen(true)}
-          className="group flex flex-col items-start p-7 rounded-2xl text-left bg-linear-to-br from-primary to-primary-container border-transparent shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
-        >
-          <span className="material-symbols-outlined mb-5 p-2 rounded-xl text-xl bg-white/15 text-white">
-            person_add
-          </span>
-          <span className="text-3xl font-headline font-black mb-1 text-white">4</span>
-          <span className="text-sm font-bold mb-4 text-white/80">Pending Approvals</span>
-          <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/20 text-white transition-colors group-hover:bg-white group-hover:text-primary">
-            4 waiting
-          </span>
-        </button>
-
+      <section className="grid grid-cols-2 lg:grid-cols-3 gap-5">
         {/* Unassigned Students */}
         <button
           onClick={() => setIsUnassignedOpen(true)}
@@ -82,8 +64,8 @@ export default function DashBoard() {
             {/* Current / Next */}
             <div className="flex divide-x divide-outline-variant/20 border-t border-outline-variant/20 flex-1">
               {[
-                { slot: "Current", data: card.current },
-                { slot: "Next", data: card.next },
+                { slot: 'Current', data: card.current },
+                { slot: 'Next', data: card.next },
               ].map(({ slot, data }) => (
                 <button
                   key={slot}
@@ -96,9 +78,7 @@ export default function DashBoard() {
                     <p className="text-base font-headline font-black text-primary leading-tight">
                       {data.label}
                     </p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">
-                      {data.sub}
-                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">{data.sub}</p>
                   </div>
                   <div className="flex justify-end mt-3">
                     <span className="material-symbols-outlined text-sm text-on-surface-variant/30 group-hover/slot:text-primary group-hover/slot:translate-x-0.5 transition-all duration-200">
@@ -112,12 +92,7 @@ export default function DashBoard() {
         ))}
       </section>
 
-      {isPendingOpen && (
-        <PendingApprovalsModal onClose={() => setIsPendingOpen(false)} />
-      )}
-      {isUnassignedOpen && (
-        <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />
-      )}
+      {isUnassignedOpen && <UnassignedStudentsModal onClose={() => setIsUnassignedOpen(false)} />}
 
       {/* Mini Timetable */}
       {/* <section className="mt-8">

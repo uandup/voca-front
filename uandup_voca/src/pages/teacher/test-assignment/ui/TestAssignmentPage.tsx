@@ -1,7 +1,7 @@
-import { useNavigate } from "@tanstack/react-router";
-import { PageTitle } from "@/shared/ui/PageTitle";
+import { useNavigate } from '@tanstack/react-router';
+import { PageTitle } from '@/shared/ui/PageTitle';
 
-type AssignmentStatus = "Active" | "Pending" | "Unassigned";
+type AssignmentStatus = 'Active' | 'Pending' | 'Unassigned';
 
 interface Student {
   id: number;
@@ -9,7 +9,7 @@ interface Student {
   email: string;
   grade: string;
   level: number;
-  levelColor: "secondary" | "neutral";
+  levelColor: 'secondary' | 'neutral';
   wordCount: number;
   status: AssignmentStatus;
 }
@@ -17,50 +17,50 @@ interface Student {
 const mockStudents: Student[] = [
   {
     id: 1,
-    name: "Elena Vance",
-    email: "elena.v@lexicon.edu",
-    grade: "Grade 11",
+    name: 'Elena Vance',
+    email: 'elena.v@lexicon.edu',
+    grade: 'Grade 11',
     level: 4,
-    levelColor: "secondary",
+    levelColor: 'secondary',
     wordCount: 40,
-    status: "Active",
+    status: 'Active',
   },
   {
     id: 2,
-    name: "Marcus Thorne",
-    email: "m.thorne@lexicon.edu",
-    grade: "Grade 10",
+    name: 'Marcus Thorne',
+    email: 'm.thorne@lexicon.edu',
+    grade: 'Grade 10',
     level: 2,
-    levelColor: "neutral",
+    levelColor: 'neutral',
     wordCount: 25,
-    status: "Pending",
+    status: 'Pending',
   },
   {
     id: 3,
-    name: "Sasha Grey",
-    email: "s.grey@lexicon.edu",
-    grade: "Grade 12",
+    name: 'Sasha Grey',
+    email: 's.grey@lexicon.edu',
+    grade: 'Grade 12',
     level: 3,
-    levelColor: "secondary",
+    levelColor: 'secondary',
     wordCount: 35,
-    status: "Active",
+    status: 'Active',
   },
   {
     id: 4,
-    name: "Julian Banks",
-    email: "j.banks@lexicon.edu",
-    grade: "Grade 11",
+    name: 'Julian Banks',
+    email: 'j.banks@lexicon.edu',
+    grade: 'Grade 11',
     level: 4,
-    levelColor: "secondary",
+    levelColor: 'secondary',
     wordCount: 50,
-    status: "Active",
+    status: 'Active',
   },
 ];
 
 const statusDot: Record<AssignmentStatus, string> = {
-  Active: "bg-green-500",
-  Pending: "bg-tertiary-container",
-  Unassigned: "bg-error",
+  Active: 'bg-green-500',
+  Pending: 'bg-tertiary-container',
+  Unassigned: 'bg-error',
 };
 
 export function TestAssignmentPage() {
@@ -73,14 +73,11 @@ export function TestAssignmentPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm font-semibold text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full">
-            Total Students: <span className="text-primary font-bold">124</span>{" "}
-            | Unassigned Students:{" "}
-            <span className="text-error font-bold">12</span>
+            Total Students: <span className="text-primary font-bold">124</span> | Unassigned
+            Students: <span className="text-error font-bold">12</span>
           </p>
           <button className="px-6 py-2.5 rounded-lg bg-primary text-white font-bold shadow-md hover:bg-primary/90 transition-all flex items-center gap-2 text-sm">
-            <span className="material-symbols-outlined text-sm">
-              auto_awesome
-            </span>
+            <span className="material-symbols-outlined text-sm">auto_awesome</span>
             Batch Assign
           </button>
         </div>
@@ -111,9 +108,7 @@ export function TestAssignmentPage() {
             <option value="4">Level 4</option>
           </select>
           <button className="p-2 rounded-lg border border-outline-variant/30 hover:bg-surface-container-low transition-colors text-on-surface-variant">
-            <span className="material-symbols-outlined text-xl">
-              filter_list
-            </span>
+            <span className="material-symbols-outlined text-xl">filter_list</span>
           </button>
         </div>
       </div>
@@ -121,9 +116,7 @@ export function TestAssignmentPage() {
       <div className="bg-surface-container-lowest rounded-2xl shadow-[0px_8px_24px_rgba(0,21,80,0.08)] overflow-hidden">
         {/* Table Header */}
         <div className="px-8 py-5 flex items-center justify-between bg-surface-container-low/50 border-b border-outline-variant/10">
-          <h3 className="font-bold text-primary font-headline">
-            Student Roster
-          </h3>
+          <h3 className="font-bold text-primary font-headline">Student Roster</h3>
           <label className="flex items-center gap-2 cursor-pointer ml-6">
             <input
               className="w-4 h-4 rounded border-outline-variant/30 text-primary focus:ring-primary/20"
@@ -139,14 +132,10 @@ export function TestAssignmentPage() {
             </span>
             <div className="flex items-center gap-1">
               <button className="p-1 rounded hover:bg-surface-container-high text-on-surface-variant">
-                <span className="material-symbols-outlined text-lg">
-                  chevron_left
-                </span>
+                <span className="material-symbols-outlined text-lg">chevron_left</span>
               </button>
               <button className="p-1 rounded hover:bg-surface-container-high text-on-surface-variant">
-                <span className="material-symbols-outlined text-lg">
-                  chevron_right
-                </span>
+                <span className="material-symbols-outlined text-lg">chevron_right</span>
               </button>
             </div>
           </div>
@@ -188,7 +177,7 @@ export function TestAssignmentPage() {
                 className="hover:bg-surface-container-low transition-colors cursor-pointer group"
                 onClick={() =>
                   navigate({
-                    to: "/teacher/test-assignment/$studentId",
+                    to: '/teacher/test-assignment/$studentId',
                     params: { studentId: String(student.id) },
                   })
                 }
@@ -203,19 +192,15 @@ export function TestAssignmentPage() {
                   <p className="font-bold text-on-surface group-hover:text-primary transition-colors">
                     {student.name}
                   </p>
-                  <p className="text-xs text-on-surface-variant">
-                    {student.email}
-                  </p>
+                  <p className="text-xs text-on-surface-variant">{student.email}</p>
                 </td>
-                <td className="py-6 px-4 text-sm font-medium text-on-surface">
-                  {student.grade}
-                </td>
+                <td className="py-6 px-4 text-sm font-medium text-on-surface">{student.grade}</td>
                 <td className="py-6 px-4">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      student.levelColor === "secondary"
-                        ? "bg-secondary-container text-on-secondary-container"
-                        : "bg-surface-container-high text-on-surface-variant"
+                      student.levelColor === 'secondary'
+                        ? 'bg-secondary-container text-on-secondary-container'
+                        : 'bg-surface-container-high text-on-surface-variant'
                     }`}
                   >
                     Level {student.level}
@@ -226,9 +211,7 @@ export function TestAssignmentPage() {
                 </td>
                 <td className="py-6 px-4">
                   <div className="flex items-center gap-2">
-                    <div
-                      className={`w-2 h-2 rounded-full ${statusDot[student.status]}`}
-                    />
+                    <div className={`w-2 h-2 rounded-full ${statusDot[student.status]}`} />
                     <span className="text-xs font-semibold text-on-surface-variant">
                       {student.status}
                     </span>
@@ -236,16 +219,12 @@ export function TestAssignmentPage() {
                 </td>
                 <td className="py-6 px-8 text-right">
                   <div className="flex items-center justify-end gap-3">
-                    <button className="text-primary font-bold text-sm hover:underline">
-                      Edit
-                    </button>
+                    <button className="text-primary font-bold text-sm hover:underline">Edit</button>
                     <button
                       className="text-on-surface-variant hover:text-error transition-colors p-1"
                       title="Delete"
                     >
-                      <span className="material-symbols-outlined text-[1.2rem]">
-                        delete
-                      </span>
+                      <span className="material-symbols-outlined text-[1.2rem]">delete</span>
                     </button>
                   </div>
                 </td>
@@ -257,9 +236,7 @@ export function TestAssignmentPage() {
         <div className="p-8 bg-surface-container-low/20 text-center">
           <button className="text-sm font-bold text-primary hover:text-primary-container flex items-center gap-1 mx-auto">
             View all 124 students
-            <span className="material-symbols-outlined">
-              keyboard_arrow_down
-            </span>
+            <span className="material-symbols-outlined">keyboard_arrow_down</span>
           </button>
         </div>
       </div>
