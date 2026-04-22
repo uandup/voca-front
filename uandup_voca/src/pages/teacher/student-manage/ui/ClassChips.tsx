@@ -7,14 +7,18 @@ interface ClassChipsProps {
 
 export function ClassChips({ classes, onRemove }: ClassChipsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const prevClassesRef = useRef<string[]>(classes);
   // null = 아직 측정 전 (전체 렌더), number = 측정 완료
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
   useLayoutEffect(() => {
-    setVisibleCount(null); // classes 바뀌면 전체 렌더로 리셋
-  }, [classes]);
-
-  useLayoutEffect(() => {
+    // classes가 바뀌었으면 리셋 후 재측정
+    if (prevClassesRef.current !== classes) {
+      prevClassesRef.current = classes;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setVisibleCount(null);
+      return;
+    }
     if (visibleCount !== null) return; // 이미 측정됨
     const container = containerRef.current;
     if (!container) return;

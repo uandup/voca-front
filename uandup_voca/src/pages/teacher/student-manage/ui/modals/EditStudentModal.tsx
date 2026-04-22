@@ -16,8 +16,8 @@ interface EditStudentModalProps {
 const TEST_TYPES: TestType[] = ['Meaning to Word', 'Word to Meaning'];
 
 const TEST_TYPE_LABELS: Record<TestType, string> = {
-  'Meaning to Word': 'Meaning to Word',
-  'Word to Meaning': 'Word to Meaning',
+  'Meaning to Word': 'Meaning to Word ( M to W )',
+  'Word to Meaning': 'Word to Meaning ( W to M )',
 };
 
 const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
