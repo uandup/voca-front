@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import {
   MOCK_VOCAB_ITEMS,
   MOCK_SENTENCE_ITEMS,
@@ -6,11 +7,7 @@ import {
   type TestType,
   type VocabTestType,
 } from '../test/mock/testMockData';
-import {
-  MOCK_ANSWERS_WTM,
-  MOCK_ANSWERS_MTW,
-  MOCK_SENTENCE_ANSWERS,
-} from './mock/reviewMockData';
+import { MOCK_ANSWERS_WTM, MOCK_ANSWERS_MTW, MOCK_SENTENCE_ANSWERS } from './mock/reviewMockData';
 import { TestPagination } from '../test/ui/TestPagination';
 import { ProgressPanel } from '../test/ui/ProgressPanel';
 import { VocabReviewTable } from './ui/VocabReviewTable';
@@ -35,10 +32,7 @@ export default function TestReviewPage() {
 
   const mockVocabAnswers = testType === 'word-to-meaning' ? MOCK_ANSWERS_WTM : MOCK_ANSWERS_MTW;
 
-  const checkedIds = useMemo(
-    () => new Set(sourceItems.map((item) => item.id)),
-    [sourceItems],
-  );
+  const checkedIds = useMemo(() => new Set(sourceItems.map((item) => item.id)), [sourceItems]);
 
   const handleToggleWrong = useCallback((id: number) => {
     setWrongIds((prev) => {
@@ -58,17 +52,23 @@ export default function TestReviewPage() {
     setWrongIds(new Set());
   };
 
+  const navigate = useNavigate();
   const correctCount = totalItems - wrongIds.size;
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-on-surface-variant">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-            rate_review
-          </span>
-          <span className="text-sm font-bold text-on-surface">Test Review</span>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate({ to: '/' })}
+            className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+              logout
+            </span>
+            Exit
+          </button>
         </div>
 
         <div className="flex items-center gap-2 text-on-surface-variant">

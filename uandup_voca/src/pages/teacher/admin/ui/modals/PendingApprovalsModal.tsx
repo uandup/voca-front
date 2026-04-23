@@ -39,7 +39,7 @@ function StudentTab() {
       empty={list.length === 0}
       items={list}
       renderItem={(s) => (
-        <div key={s.id} className="flex items-center justify-between px-7 py-4 min-h-[68px]">
+        <div key={s.id} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
             <p className="text-sm font-bold text-on-surface">{s.nameKo}</p>
             <p className="text-xs text-on-surface-variant mt-0.5">
@@ -243,7 +243,7 @@ function TeacherTab() {
       empty={list.length === 0}
       items={list}
       renderItem={(t) => (
-        <div key={t.id} className="flex items-center justify-between px-7 py-4 min-h-[68px]">
+        <div key={t.id} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
             <p className="text-sm font-bold text-on-surface">{t.nameKo}</p>
             <p className="text-xs text-on-surface-variant mt-0.5">{t.name}</p>
