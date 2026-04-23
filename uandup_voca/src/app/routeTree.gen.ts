@@ -31,6 +31,7 @@ import { Route as StudentWordTestRouteImport } from './../routes/student/word-te
 import { Route as StudentLevelWordListRouteImport } from './../routes/student/level-word-list'
 import { Route as StudentLevelTestRouteImport } from './../routes/student/level-test'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
+import { Route as CommonTestReviewRouteImport } from './../routes/common/test-review'
 import { Route as CommonTestRouteImport } from './../routes/common/test'
 import { Route as TeacherClassesIndexRouteImport } from './../routes/teacher/classes/index'
 import { Route as TeacherTestAssignmentStudentIdRouteImport } from './../routes/teacher/test-assignment_.$studentId'
@@ -147,6 +148,11 @@ const StudentDashboardRoute = StudentDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => StudentRoute,
 } as any)
+const CommonTestReviewRoute = CommonTestReviewRouteImport.update({
+  id: '/test-review',
+  path: '/test-review',
+  getParentRoute: () => CommonRoute,
+} as any)
 const CommonTestRoute = CommonTestRouteImport.update({
   id: '/test',
   path: '/test',
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/common/test': typeof CommonTestRoute
+  '/common/test-review': typeof CommonTestReviewRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/common/test': typeof CommonTestRoute
+  '/common/test-review': typeof CommonTestReviewRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -242,6 +250,7 @@ export interface FileRoutesById {
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/common/test': typeof CommonTestRoute
+  '/common/test-review': typeof CommonTestReviewRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -273,6 +282,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/common/test'
+    | '/common/test-review'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/common/test'
+    | '/common/test-review'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/common/test'
+    | '/common/test-review'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -517,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentDashboardRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/common/test-review': {
+      id: '/common/test-review'
+      path: '/test-review'
+      fullPath: '/common/test-review'
+      preLoaderRoute: typeof CommonTestReviewRouteImport
+      parentRoute: typeof CommonRoute
+    }
     '/common/test': {
       id: '/common/test'
       path: '/test'
@@ -557,10 +576,12 @@ declare module '@tanstack/react-router' {
 
 interface CommonRouteChildren {
   CommonTestRoute: typeof CommonTestRoute
+  CommonTestReviewRoute: typeof CommonTestReviewRoute
 }
 
 const CommonRouteChildren: CommonRouteChildren = {
   CommonTestRoute: CommonTestRoute,
+  CommonTestReviewRoute: CommonTestReviewRoute,
 }
 
 const CommonRouteWithChildren =
