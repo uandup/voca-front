@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import {
   MOCK_VOCAB_ITEMS,
   MOCK_SENTENCE_ITEMS,
@@ -19,6 +18,9 @@ export default function TestReviewPage() {
   const [showSynonym, setShowSynonym] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [wrongIds, setWrongIds] = useState<Set<number>>(new Set());
+  const [mode, setMode] = useState<'grading' | 'result'>('grading');
+  const [isEditing, setIsEditing] = useState(false);
+  const [isStudent, setIsStudent] = useState(false);
 
   const isSentence = testType === 'sentence';
   const sourceItems = isSentence ? MOCK_SENTENCE_ITEMS : MOCK_VOCAB_ITEMS;
@@ -52,16 +54,17 @@ export default function TestReviewPage() {
     setWrongIds(new Set());
   };
 
-  const navigate = useNavigate();
   const correctCount = totalItems - wrongIds.size;
+  const hideCheckbox = mode === 'result';
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
+        {/* Left: always Exit */}
+        <div className="w-24">
           <button
-            onClick={() => navigate({ to: '/' })}
+            onClick={() => setMode('result')}
             className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
@@ -71,20 +74,63 @@ export default function TestReviewPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 text-on-surface-variant">
-          <span className="text-sm font-semibold text-on-surface">
-            {correctCount} / {totalItems}
-          </span>
-          <span className="text-on-surface-variant/30">·</span>
-          <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
+        {/* Center */}
+        <div className="flex items-center gap-2">
+          {mode === 'result' ? (
+            <span className="text-sm font-bold text-on-surface">
+              {correctCount} / {totalItems} correct
+            </span>
+          ) : (
+            <>
+              <span className="text-sm font-semibold text-on-surface">
+                {correctCount} / {totalItems}
+              </span>
+              <span className="text-on-surface-variant/30">·</span>
+              <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
+            </>
+          )}
         </div>
 
-        <button className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-            grade
-          </span>
-          Grade
-        </button>
+        {/* Right */}
+        <div className="w-24 flex justify-end">
+          {mode === 'grading' && !isEditing ? (
+            <button
+              onClick={() => setMode('result')}
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                grade
+              </span>
+              Grade
+            </button>
+          ) : mode === 'grading' && isEditing ? (
+            <button
+              onClick={() => {
+                setMode('result');
+                setIsEditing(false);
+              }}
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                save
+              </span>
+              Save
+            </button>
+          ) : mode === 'result' && !isStudent ? (
+            <button
+              onClick={() => {
+                setMode('grading');
+                setIsEditing(true);
+              }}
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                edit
+              </span>
+              Edit
+            </button>
+          ) : null}
+        </div>
       </header>
 
       <div className="relative flex flex-1 justify-center px-6 py-6">
@@ -94,6 +140,8 @@ export default function TestReviewPage() {
               items={pageItems as typeof MOCK_SENTENCE_ITEMS}
               answers={MOCK_SENTENCE_ANSWERS}
               wrongIds={wrongIds}
+              readOnly={mode === 'result'}
+              hideCheckbox={hideCheckbox}
               onToggleWrong={handleToggleWrong}
             />
           ) : (
@@ -103,6 +151,8 @@ export default function TestReviewPage() {
               showSynonym={showSynonym}
               answers={mockVocabAnswers}
               wrongIds={wrongIds}
+              readOnly={mode === 'result'}
+              hideCheckbox={hideCheckbox}
               onToggleWrong={handleToggleWrong}
             />
           )}
@@ -128,8 +178,12 @@ export default function TestReviewPage() {
       <ReviewDevToolbar
         testType={testType}
         showSynonym={showSynonym}
+        mode={mode}
+        isStudent={isStudent}
         onTestTypeChange={handleTestTypeChange}
         onShowSynonymChange={setShowSynonym}
+        onModeChange={setMode}
+        onIsStudentChange={setIsStudent}
       />
     </div>
   );

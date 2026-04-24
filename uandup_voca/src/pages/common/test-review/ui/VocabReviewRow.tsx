@@ -11,6 +11,8 @@ interface VocabReviewRowProps {
   showSynonym: boolean;
   answer: Answer | undefined;
   isWrong: boolean;
+  readOnly?: boolean;
+  hideCheckbox?: boolean;
   onToggleWrong: (id: number) => void;
 }
 
@@ -24,6 +26,8 @@ export function VocabReviewRow({
   showSynonym,
   answer,
   isWrong,
+  readOnly = false,
+  hideCheckbox = false,
   onToggleWrong,
 }: VocabReviewRowProps) {
   const studentMeaning = answer?.meaning ?? '';
@@ -87,18 +91,21 @@ export function VocabReviewRow({
         )}
 
         {/* Wrong check button */}
-        <button
-          onClick={() => onToggleWrong(id)}
-          className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
-            isWrong
-              ? 'bg-error border-error text-white'
-              : 'border-outline-variant/40 text-transparent hover:border-error/40 hover:text-error/30'
-          }`}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-            close
-          </span>
-        </button>
+        {!hideCheckbox && (
+          <div
+            onClick={readOnly ? undefined : () => onToggleWrong(id)}
+            role={readOnly ? undefined : 'button'}
+            className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
+              isWrong
+                ? 'bg-error border-error text-white'
+                : 'border-outline-variant/40 text-transparent'
+            } ${readOnly ? 'cursor-default' : 'cursor-pointer hover:border-error/40 hover:text-error/30'}`}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+              close
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Correct answer row */}
@@ -133,7 +140,7 @@ export function VocabReviewRow({
         )}
 
         {/* Check button placeholder */}
-        <span className="w-8 shrink-0" />
+        {!hideCheckbox && <span className="w-8 shrink-0" />}
       </div>
     </div>
   );

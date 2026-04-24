@@ -4,6 +4,8 @@ interface SentenceReviewRowProps {
   answerWord: string;
   studentWord: string;
   isWrong: boolean;
+  readOnly?: boolean;
+  hideCheckbox?: boolean;
   onToggleWrong: (id: number) => void;
 }
 
@@ -37,6 +39,8 @@ export function SentenceReviewRow({
   answerWord,
   studentWord,
   isWrong,
+  readOnly = false,
+  hideCheckbox = false,
   onToggleWrong,
 }: SentenceReviewRowProps) {
   const containerBg = isWrong
@@ -44,7 +48,9 @@ export function SentenceReviewRow({
     : 'border-outline-variant/30 bg-surface-container-low/70';
 
   return (
-    <div className={`flex items-center gap-4 px-4 py-3 rounded-xl border transition-colors ${containerBg}`}>
+    <div
+      className={`flex items-center gap-4 px-4 py-3 rounded-xl border transition-colors ${containerBg}`}
+    >
       <span className="text-[11px] font-bold text-on-surface-variant/50 w-5 shrink-0 text-center">
         {String(id).padStart(2, '0')}
       </span>
@@ -53,18 +59,21 @@ export function SentenceReviewRow({
         {renderSentenceWithReview(sentence, studentWord, answerWord, isWrong)}
       </div>
 
-      <button
-        onClick={() => onToggleWrong(id)}
-        className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
-          isWrong
-            ? 'bg-error border-error text-white'
-            : 'border-outline-variant/40 text-transparent hover:border-error/40 hover:text-error/30'
-        }`}
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-          close
-        </span>
-      </button>
+      {!hideCheckbox && (
+        <div
+          className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
+            isWrong
+              ? 'bg-error border-error text-white'
+              : 'border-outline-variant/40 text-transparent'
+          } ${readOnly ? 'cursor-default' : 'cursor-pointer'}`}
+          onClick={readOnly ? undefined : () => onToggleWrong(id)}
+          role={readOnly ? undefined : 'button'}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+            close
+          </span>
+        </div>
+      )}
     </div>
   );
 }

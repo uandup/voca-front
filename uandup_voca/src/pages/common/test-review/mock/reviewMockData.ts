@@ -9,7 +9,10 @@ export type { SentenceAnswer };
 
 // W→M: meaning = 학생이 쓴 한글 뜻, synonym = 학생이 쓴 동의어
 export const MOCK_ANSWERS_WTM: Record<number, Answer> = {
-  1: { meaning: 'to cause someone to agree or do something through reasoning or encouragement.', synonym: 'omnipresent' },
+  1: {
+    meaning: 'to cause someone to agree or do something through reasoning or encouragement.',
+    synonym: 'omnipresent',
+  },
   2: { meaning: '수명이 짧은', synonym: 'transient' },
   3: { meaning: '설득하다', synonym: 'convince' },
   4: { meaning: '침울한', synonym: '' },

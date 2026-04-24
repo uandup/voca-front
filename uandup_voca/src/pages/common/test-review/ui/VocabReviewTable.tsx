@@ -8,6 +8,8 @@ interface VocabReviewTableProps {
   showSynonym: boolean;
   answers: Record<number, Answer>;
   wrongIds: Set<number>;
+  readOnly?: boolean;
+  hideCheckbox?: boolean;
   onToggleWrong: (id: number) => void;
 }
 
@@ -17,6 +19,8 @@ export function VocabReviewTable({
   showSynonym,
   answers,
   wrongIds,
+  readOnly = false,
+  hideCheckbox = false,
   onToggleWrong,
 }: VocabReviewTableProps) {
   return (
@@ -37,9 +41,11 @@ export function VocabReviewTable({
             Synonym
           </span>
         )}
-        <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest w-8 text-center">
-          ✕
-        </span>
+        {!hideCheckbox && (
+          <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest w-8 text-center">
+            ✕
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -55,6 +61,8 @@ export function VocabReviewTable({
             showSynonym={showSynonym}
             answer={answers[item.id]}
             isWrong={wrongIds.has(item.id)}
+            readOnly={readOnly}
+            hideCheckbox={hideCheckbox}
             onToggleWrong={onToggleWrong}
           />
         ))}

@@ -4,7 +4,7 @@ export function TestHeader() {
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate({ to: '/' })}
