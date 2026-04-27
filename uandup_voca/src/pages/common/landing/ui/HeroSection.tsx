@@ -1,5 +1,16 @@
 import type { LandingContent } from '../model/landingContent';
 
+const EXAM_BADGES = [
+  'MAP',
+  'Junior TOEFL',
+  'TOEFL',
+  'SSAT',
+  'ISEE',
+  'SAT',
+  'AP Lang',
+  'IB English',
+] as const;
+
 interface Props {
   t: LandingContent['hero'];
 }
@@ -22,7 +33,7 @@ export function HeroSection({ t }: Props) {
         </div>
 
         {/* 서브카피: 고정 높이 박스 */}
-        <div className="h-28 flex flex-col items-center justify-center mb-10 opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.5s_forwards]">
+        <div className="h-16 flex flex-col items-center justify-center opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.5s_forwards]">
           {t.sub.map((line, i) => (
             <p
               key={i}
@@ -31,6 +42,18 @@ export function HeroSection({ t }: Props) {
             >
               {line}
             </p>
+          ))}
+        </div>
+
+        {/* 시험 종류 뱃지 */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10 opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.7s_forwards]">
+          {EXAM_BADGES.map((badge) => (
+            <span
+              key={badge}
+              className="px-4.5 py-2 rounded-full text-md font-semibold bg-white/10 text-on-primary/80 border border-white/20"
+            >
+              {badge}
+            </span>
           ))}
         </div>
       </div>

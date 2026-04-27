@@ -1,15 +1,13 @@
 export type Lang = 'en' | 'ko';
 
+
 export const LANDING_CONTENT = {
   en: {
     nav: { googleLogin: 'Sign in with Google' },
     hero: {
       badge: 'Official Online Learning System — UandUP Academy',
       headline: {
-        lines: [
-          'The Most Systematic SAT Vocabulary Solution',
-          'Powered by Individual Learning Data.',
-        ],
+        lines: ['The Most Systematic Vocabulary Solution', 'Powered by Individual Learning Data.'],
         fontSize: '2.125rem',
         subFontSize: '1.125rem',
       },
@@ -164,7 +162,7 @@ export const LANDING_CONTENT = {
     hero: {
       badge: '유앤UP국제학원 공식 온라인 학습 시스템',
       headline: {
-        lines: ['개인별 학습 데이터를 기반으로 한', '체계적인 SAT 영단어 솔루션'],
+        lines: ['개인별 학습 데이터를 기반으로 한', '체계적인 영단어 솔루션'],
         fontSize: '2.75rem',
         subFontSize: '1.25rem',
       },
