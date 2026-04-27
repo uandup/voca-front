@@ -94,3 +94,55 @@ export const TEACHER_MOCK: TeacherInfo[] = [
   { id: 4, nameKo: '최선생', name: 'Choi Teacher', isAdmin: false },
   { id: 5, nameKo: '정선생', name: 'Jung Teacher', isAdmin: false },
 ];
+
+export interface ParentInfo {
+  id: number;
+  nameKo: string;
+  phone: string;
+  childNameKo: string;
+  childGrade: string;
+  matchedStudentId: number | null;
+}
+
+export const PARENT_MOCK: ParentInfo[] = [
+  {
+    id: 1,
+    nameKo: '김영희',
+    phone: '010-1111-2222',
+    childNameKo: '김민수',
+    childGrade: 'Grade 11',
+    matchedStudentId: 101,
+  },
+  {
+    id: 2,
+    nameKo: '박철수',
+    phone: '010-3333-4444',
+    childNameKo: '이영희',
+    childGrade: 'Grade 9',
+    matchedStudentId: 102,
+  },
+  {
+    id: 3,
+    nameKo: '이미래',
+    phone: '010-5555-6666',
+    childNameKo: '박지민',
+    childGrade: 'Grade 12',
+    matchedStudentId: 103,
+  },
+  {
+    id: 4,
+    nameKo: '최하늘',
+    phone: '010-7777-8888',
+    childNameKo: '최수연',
+    childGrade: 'Grade 10',
+    matchedStudentId: 104,
+  },
+  {
+    id: 5,
+    nameKo: '정바다',
+    phone: '010-9999-0000',
+    childNameKo: '정도현',
+    childGrade: 'Grade 11',
+    matchedStudentId: 105,
+  },
+];

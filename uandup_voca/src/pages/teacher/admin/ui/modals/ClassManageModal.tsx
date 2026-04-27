@@ -11,6 +11,7 @@ export function ClassManageModal({ onClose }: Props) {
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState('');
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   function handleAdd() {
     const trimmed = newName.trim();
@@ -22,6 +23,7 @@ export function ClassManageModal({ onClose }: Props) {
 
   function handleDelete(id: number) {
     setClasses((prev) => prev.filter((c) => c.id !== id));
+    setDeletingId(null);
   }
 
   function handleEditStart(item: ClassInfo) {
@@ -87,43 +89,71 @@ export function ClassManageModal({ onClose }: Props) {
             </li>
           )}
           {classes.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 px-7 py-3.5">
+            <li key={item.id} className="flex items-center gap-3 px-7 py-3.5 min-h-14">
               {editingId === item.id ? (
-                <input
-                  autoFocus
-                  className="flex-1 min-w-0 border border-primary/40 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  value={editingName}
-                  onChange={(e) => setEditingName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleEditSave(item);
-                    if (e.key === 'Escape') setEditingId(null);
-                  }}
-                  onBlur={() => handleEditSave(item)}
-                />
+                <>
+                  <input
+                    autoFocus
+                    className="flex-1 min-w-0 border border-primary/40 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleEditSave(item);
+                      if (e.key === 'Escape') setEditingId(null);
+                    }}
+                    onBlur={() => handleEditSave(item)}
+                  />
+                </>
+              ) : deletingId === item.id ? (
+                <>
+                  <p className="flex-1 text-sm text-error font-bold">Delete "{item.name}"?</p>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setDeletingId(null)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-low transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(item.id)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold bg-error text-white hover:opacity-90 transition-opacity"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
               ) : (
-                <span className="flex-1 text-sm text-on-surface">{item.name}</span>
-              )}
-              {editingId !== item.id && (
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleEditStart(item)}
-                    className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
-                  >
-                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                      edit
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/5 transition-colors"
-                  >
-                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                      delete
-                    </span>
-                  </button>
-                </div>
+                <>
+                  <span className="flex-1 text-sm text-on-surface">{item.name}</span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleEditStart(item);
+                        setDeletingId(null);
+                      }}
+                      className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                        edit
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeletingId(item.id);
+                        setEditingId(null);
+                      }}
+                      className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/5 transition-colors"
+                    >
+                      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                        delete
+                      </span>
+                    </button>
+                  </div>
+                </>
               )}
             </li>
           ))}

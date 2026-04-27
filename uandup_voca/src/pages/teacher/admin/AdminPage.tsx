@@ -3,12 +3,14 @@ import { PageTitle } from '@/shared/ui/PageTitle';
 import { PendingApprovalsModal } from './ui/modals/PendingApprovalsModal';
 import { ClassManageModal } from './ui/modals/ClassManageModal';
 import { TeacherPermissionModal } from './ui/modals/TeacherPermissionModal';
+import { TeacherManageModal } from './ui/modals/TeacherManageModal';
+import { ParentManageModal } from './ui/modals/ParentManageModal';
 import { GradeBulkModal } from './ui/modals/GradeBulkModal';
-import { PENDING_STUDENTS, PENDING_PARENTS, PENDING_TEACHERS } from './mock/adminMockData';
+import { PENDING_STUDENTS, PENDING_PARENTS, PENDING_TEACHERS, TEACHER_MOCK, PARENT_MOCK } from './mock/adminMockData';
 
 const totalPending = PENDING_STUDENTS.length + PENDING_PARENTS.length + PENDING_TEACHERS.length;
 
-type ModalType = 'pending' | 'class' | 'teacher' | 'grade' | null;
+type ModalType = 'pending' | 'class' | 'teacher' | 'grade' | 'teacher-manage' | 'parent-manage' | null;
 
 const CARDS = [
   {
@@ -43,6 +45,22 @@ const CARDS = [
     count: '±1',
     dark: false,
   },
+  {
+    key: 'teacher-manage' as const,
+    icon: 'person_edit',
+    label: 'Teacher Management',
+    badge: 'Edit / Delete',
+    count: String(TEACHER_MOCK.length),
+    dark: true,
+  },
+  {
+    key: 'parent-manage' as const,
+    icon: 'family_restroom',
+    label: 'Parent Management',
+    badge: 'Edit / Delete',
+    count: String(PARENT_MOCK.length),
+    dark: false,
+  },
 ];
 
 export default function AdminPage() {
@@ -52,7 +70,7 @@ export default function AdminPage() {
     <main>
       <PageTitle title="Admin" />
 
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="grid grid-cols-2 lg:grid-cols-3 gap-5">
         {CARDS.map((card) => (
           <button
             key={card.key}
@@ -101,6 +119,8 @@ export default function AdminPage() {
       {modal === 'class' && <ClassManageModal onClose={() => setModal(null)} />}
       {modal === 'teacher' && <TeacherPermissionModal onClose={() => setModal(null)} />}
       {modal === 'grade' && <GradeBulkModal onClose={() => setModal(null)} />}
+      {modal === 'teacher-manage' && <TeacherManageModal onClose={() => setModal(null)} />}
+      {modal === 'parent-manage' && <ParentManageModal onClose={() => setModal(null)} />}
     </main>
   );
 }
