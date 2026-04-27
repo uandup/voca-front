@@ -64,7 +64,7 @@ export function VocabReviewRow({
         {isWordToMeaning ? (
           <span className="text-sm font-bold w-40 shrink-0 truncate text-on-surface">{word}</span>
         ) : (
-          <p className={`w-40 shrink-0 text-xs font-semibold wrap-break-word ${answerColor}`}>
+          <p className={`w-40 shrink-0 text-sm font-bold wrap-break-word ${answerColor}`}>
             {studentMeaning.trim() === '' ? 'No answer' : studentMeaning}
           </p>
         )}
@@ -77,7 +77,7 @@ export function VocabReviewRow({
         ) : (
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-on-surface leading-tight">{korMeaning}</p>
-            <p className="text-[11px] text-on-surface-variant/60 leading-tight line-clamp-2">
+            <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
               {engMeaning}
             </p>
           </div>
@@ -124,7 +124,7 @@ export function VocabReviewRow({
         {isWordToMeaning ? (
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-primary/80 leading-tight">{korMeaning}</p>
-            <p className="text-[11px] text-on-surface-variant/60 leading-tight line-clamp-2">
+            <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
               {engMeaning}
             </p>
           </div>
