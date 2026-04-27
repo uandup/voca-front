@@ -60,7 +60,7 @@ export function LevelTestTab() {
               <button
                 key={lv}
                 onClick={() => setConfig((prev) => ({ ...prev, selectedLevel: lv }))}
-                className={`w-16 h-12 rounded-xl text-sm font-bold border-2 transition-all ${
+                className={`w-16 h-11 rounded-xl text-sm font-bold border-2 transition-all ${
                   config.selectedLevel === lv
                     ? 'border-primary bg-primary/5 text-primary'
                     : 'border-slate-200 bg-white text-on-surface-variant hover:border-primary/40'
@@ -154,12 +154,12 @@ export function LevelTestTab() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <colgroup>
-              <col className="w-[18%]" />
+              <col className="w-[12%]" />
               <col className="w-[10%]" />
               <col className="w-[10%]" />
-              <col className="w-[14%]" />
-              <col className="w-[16%]" />
-              <col className="w-[32%]" />
+              <col className="w-[12%]" />
+              <col className="w-[12%]" />
+              <col className="w-[44%]" />
             </colgroup>
             <thead>
               <tr className="bg-surface-container-highest/30">
@@ -223,8 +223,11 @@ export function LevelTestTab() {
                           <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
                             Start Test
                           </button>
-                          <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                            Grade
+                          <button className="px-4 py-1.5 border border-primary/30 text-primary text-xs font-bold rounded-full hover:bg-primary/5 transition-colors">
+                            Grade Online
+                          </button>
+                          <button className="px-4 py-1.5 border border-primary/30 text-primary text-xs font-bold rounded-full hover:bg-primary/5 transition-colors">
+                            Grade Offline
                           </button>
                         </>
                       ) : (

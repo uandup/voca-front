@@ -145,11 +145,11 @@ export function WrongWordBankTab() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <colgroup>
-              <col className="w-[25%]" />
-              <col className="w-[10%]" />
               <col className="w-[15%]" />
-              <col className="w-[20%]" />
-              <col className="w-[30%]" />
+              <col className="w-[10%]" />
+              <col className="w-[12%]" />
+              <col className="w-[14%]" />
+              <col className="w-[44%]" />
             </colgroup>
             <thead>
               <tr className="bg-surface-container-highest/30">
@@ -210,8 +210,11 @@ export function WrongWordBankTab() {
                           <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
                             Start Test
                           </button>
-                          <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                            Grade
+                          <button className="px-4 py-1.5 border border-primary/30 text-primary text-xs font-bold rounded-full hover:bg-primary/5 transition-colors">
+                            Grade Online
+                          </button>
+                          <button className="px-4 py-1.5 border border-primary/30 text-primary text-xs font-bold rounded-full hover:bg-primary/5 transition-colors">
+                            Grade Offline
                           </button>
                         </>
                       ) : (
