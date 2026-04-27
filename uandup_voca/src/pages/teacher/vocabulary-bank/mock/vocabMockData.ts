@@ -3,7 +3,7 @@ import type { Vocab } from '@/entities/vocab';
 export const mockVocabData: (Vocab & { id: number })[] = [
   {
     id: 1,
-    difficultyLevel: 3,
+    difficultyLevel: 2,
     word: 'Ambiguity',
     synonyms: ['Vagueness', 'Obscurity', 'Equivocation'],
     partOfSpeech: 'N',
@@ -13,7 +13,7 @@ export const mockVocabData: (Vocab & { id: number })[] = [
   },
   {
     id: 2,
-    difficultyLevel: 4,
+    difficultyLevel: 2,
     word: 'Corroborate',
     synonyms: ['Validate', 'Verify', 'Authenticate'],
     partOfSpeech: 'V',
