@@ -10,20 +10,25 @@ export const LANDING_CONTENT = {
         fontSize: '2.125rem',
         subFontSize: '1.125rem',
       },
-      sub: [
-        'From progress monitoring to structured review, every step is precisely managed through our online system.',
-      ],
+      sub: {
+        lines: [
+          'From progress monitoring to structured review, every step is precisely managed through our online system.',
+        ],
+        fontSize: '1.125rem',
+      },
     },
     curriculum: {
-      label: 'Curriculum',
       headline: {
-        lines: ['An Optimized 10-Level Vocabulary', 'Curriculum for SAT Excellence'],
+        lines: ['From Level 1 to Level 10,', 'A Vocabulary Curriculum Built to Completion'],
         fontSize: '2.25rem',
       },
-      body: [
-        'Master over 5,000 essential SAT vocabulary words.',
-        'Ten precisely graded levels deliver the right words at the right difficulty for each individual student.',
-      ],
+      body: {
+        lines: [
+          'Over 5,000 essential vocabulary words, organized across 10 precisely graded levels.',
+          'Students begin at their current level and advance step by step — building real proficiency all the way to Level 10.',
+        ],
+        fontSize: '0.875rem',
+      },
       completed: 'Completed',
       inProgress: 'In Progress',
     },
@@ -33,10 +38,13 @@ export const LANDING_CONTENT = {
         lines: ['Structured 1-4-7 Review Cycle', 'for Deep Memory Consolidation'],
         fontSize: '2.25rem',
       },
-      body: [
-        'Moving beyond rote memorization, our scientifically designed review intervals follow the forgetting curve.',
-        'Reviews at Day 1, Day 4, and Day 7 reliably convert short-term memory into permanent, long-term retention.',
-      ],
+      body: {
+        lines: [
+          'Moving beyond rote memorization, our scientifically designed review intervals follow the forgetting curve.',
+          'Reviews at Day 1, Day 4, and Day 7 reliably convert short-term memory into permanent, long-term retention.',
+        ],
+        fontSize: '0.875rem',
+      },
       footnote:
         'Each review stage is individually released by the assigned teacher, keeping pace precisely aligned with in-class instruction.',
       steps: [
@@ -72,10 +80,13 @@ export const LANDING_CONTENT = {
         lines: ['Zero Weak Points —', 'Automated Error Tracking & Remediation'],
         fontSize: '2.25rem',
       },
-      body: [
-        'One test is never the end. Every incorrect answer is automatically accumulated in the "Wrong Word Bank" and retested until fully mastered.',
-        "By tracking each word's error count, the system identifies exactly which words a student struggles with and ensures focused, effective remediation.",
-      ],
+      body: {
+        lines: [
+          'One test is never the end. Every incorrect answer is automatically accumulated in the "Wrong Word Bank" and retested until fully mastered.',
+          "By tracking each word's error count, the system identifies exactly which words a student struggles with and ensures focused, effective remediation.",
+        ],
+        fontSize: '0.875rem',
+      },
       cardTitle: 'Wrong Word Bank',
       cardCount: '124 words',
     },
@@ -85,10 +96,13 @@ export const LANDING_CONTENT = {
         lines: ['Final Level Assessment', 'for Complete Mastery Verification'],
         fontSize: '2.25rem',
       },
-      body: [
-        'Even after all study sessions are complete, a comprehensive Level Test verifies long-term retention of every word.',
-        'Any failed level is automatically routed back into the wrong-word review cycle — the system continues managing progress until full mastery is confirmed.',
-      ],
+      body: {
+        lines: [
+          'Even after all study sessions are complete, a comprehensive Level Test verifies long-term retention of every word.',
+          'Any failed level is automatically routed back into the wrong-word review cycle — the system continues managing progress until full mastery is confirmed.',
+        ],
+        fontSize: '0.875rem',
+      },
       flow: [
         {
           icon: 'school',
@@ -118,10 +132,13 @@ export const LANDING_CONTENT = {
         lines: ['Objective Performance Metrics', 'Through Precision Data Analysis'],
         fontSize: '2.25rem',
       },
-      body: [
-        'Beyond simple score records, every aspect of the learning process is logged and analyzed in real time.',
-        "Weekly score trends and level-by-level accuracy are precisely examined to identify each student's weak points and deliver optimized, personalized instruction.",
-      ],
+      body: {
+        lines: [
+          'Beyond simple score records, every aspect of the learning process is logged and analyzed in real time.',
+          "Weekly score trends and level-by-level accuracy are precisely examined to identify each student's weak points and deliver optimized, personalized instruction.",
+        ],
+        fontSize: '0.875rem',
+      },
       metrics: [
         {
           icon: 'show_chart',
@@ -149,9 +166,14 @@ export const LANDING_CONTENT = {
       headline: {
         lines: ['A Proven System That Transforms', 'Learning Efficiency.'],
         fontSize: '2.25rem',
-        bodyFontSize: '1rem',
       },
-      body: 'Through data-driven, systematic management, we are committed to delivering the highest possible learning outcomes for every student.',
+      body: {
+        lines: [
+          'Through data-driven, systematic management, we are committed to delivering the highest possible learning outcomes for every student.',
+        ],
+        fontSize: '1rem',
+      },
+      button: 'Get Started with Google',
     },
     footer: '© 2025 UandUP Academy. All rights reserved.',
   },
@@ -165,20 +187,25 @@ export const LANDING_CONTENT = {
         fontSize: '2.75rem',
         subFontSize: '1.25rem',
       },
-      sub: [
-        '학습 현황 파악부터 체계적인 복습까지, 모든 과정이 온라인 시스템을 통해 정교하게 관리됩니다.',
-      ],
+      sub: {
+        lines: [
+          '학습 현황 파악부터 체계적인 복습까지, 모든 과정이 온라인 시스템을 통해 정교하게 관리됩니다.',
+        ],
+        fontSize: '1.25rem',
+      },
     },
     curriculum: {
-      label: '커리큘럼',
       headline: {
-        lines: ['SAT 고득점을 위한', '최적화된 10단계 어휘 커리큘럼'],
+        lines: ['레벨 1부터 10까지', '체계적으로 완성하는 어휘 커리큘럼'],
         fontSize: '2.25rem',
       },
-      body: [
-        '총 5,000개 이상 SAT 필수 어휘를 정복합니다.',
-        '세분화된 레벨 1~10을 통해 개인 수준별 맞춤 단어를 제공합니다.',
-      ],
+      body: {
+        lines: [
+          '총 5,000개 이상의 필수 어휘를 10단계로 세분화하여 제공합니다.',
+          '학생의 현재 수준에 맞는 단어부터 시작해 레벨 10까지 순차적으로 완성하며 실력을 단계적으로 끌어올립니다.',
+        ],
+        fontSize: '0.875rem',
+      },
       completed: '완료',
       inProgress: '진행 중',
     },
@@ -188,10 +215,13 @@ export const LANDING_CONTENT = {
         lines: ['기억의 고착화를 위한', '1-4-7 체계적 복습 시스템'],
         fontSize: '2.25rem',
       },
-      body: [
-        '단순 반복 암기에서 벗어나, 망각 곡선을 고려한 과학적 복습 주기를 제안합니다.',
-        '학습 후 1일, 4일, 7일 단위로 시행되는 복습 시험을 통해 단기 기억을 장기 기억으로 확실하게 전환합니다.',
-      ],
+      body: {
+        lines: [
+          '단순 반복 암기에서 벗어나, 망각 곡선을 고려한 과학적 복습 주기를 제안합니다.',
+          '학습 후 1일, 4일, 7일 단위로 시행되는 복습 시험을 통해 단기 기억을 장기 기억으로 확실하게 전환합니다.',
+        ],
+        fontSize: '0.875rem',
+      },
       footnote: '각 복습 단계는 담당 선생님이 직접 개방하여 수업 진도와 완벽하게 연동됩니다.',
       steps: [
         {
@@ -226,10 +256,13 @@ export const LANDING_CONTENT = {
         lines: ['취약점 제로를 지향하는', '오답 추적 및 재시험 시스템'],
         fontSize: '2.25rem',
       },
-      body: [
-        "한 번의 시험으로 끝나지 않습니다. 틀린 단어는 '오답 뱅크'에 누적되어 완벽히 숙달될 때까지 테스트됩니다.",
-        '오답 횟수 추적을 통해 학생이 특히 어려워하는 단어를 정확히 파악하고 집중적으로 암기할 수 있도록 돕습니다.',
-      ],
+      body: {
+        lines: [
+          "한 번의 시험으로 끝나지 않습니다. 틀린 단어는 '오답 뱅크'에 누적되어 완벽히 숙달될 때까지 테스트됩니다.",
+          '오답 횟수 추적을 통해 학생이 특히 어려워하는 단어를 정확히 파악하고 집중적으로 암기할 수 있도록 돕습니다.',
+        ],
+        fontSize: '0.875rem',
+      },
       cardTitle: '오답 뱅크',
       cardCount: '124개',
     },
@@ -239,10 +272,13 @@ export const LANDING_CONTENT = {
         lines: ['완벽한 숙달 검증을 위한', '최종 레벨 시험'],
         fontSize: '2.25rem',
       },
-      body: [
-        "모든 학습이 끝난 후에도 '레벨 시험'을 통해 장기 기억 저장 여부를 최종 검증합니다.",
-        '통과하지 못한 레벨은 다시 오답 학습으로 연결되어, 완벽히 마스터할 때까지 시스템이 끝까지 관리합니다.',
-      ],
+      body: {
+        lines: [
+          "모든 학습이 끝난 후에도 '레벨 시험'을 통해 장기 기억 저장 여부를 최종 검증합니다.",
+          '통과하지 못한 레벨은 다시 오답 학습으로 연결되어, 완벽히 마스터할 때까지 시스템이 끝까지 관리합니다.',
+        ],
+        fontSize: '0.875rem',
+      },
       flow: [
         {
           icon: 'school',
@@ -272,10 +308,13 @@ export const LANDING_CONTENT = {
         lines: ['정밀한 데이터 분석을 통한', '객관적 성과 지표 제공'],
         fontSize: '2.25rem',
       },
-      body: [
-        '단순한 점수 기록을 넘어, 학습의 모든 과정은 실시간으로 기록되고 분석됩니다.',
-        '주차별 성적 추이와 레벨별 정확도를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
-      ],
+      body: {
+        lines: [
+          '단순한 점수 기록을 넘어, 학습의 모든 과정은 실시간으로 기록되고 분석됩니다.',
+          '주차별 성적 추이와 레벨별 정확도를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
+        ],
+        fontSize: '0.875rem',
+      },
       metrics: [
         {
           icon: 'show_chart',
@@ -303,9 +342,12 @@ export const LANDING_CONTENT = {
       headline: {
         lines: ['검증된 시스템이', '학습의 효율을 바꿉니다.'],
         fontSize: '2.25rem',
-        bodyFontSize: '1rem',
       },
-      body: '데이터 기반의 체계적인 관리를 통해 최상의 학습 결과를 만드시기 바랍니다.',
+      body: {
+        lines: ['데이터 기반의 체계적인 관리를 통해 최상의 학습 결과를 만드시기 바랍니다.'],
+        fontSize: '1rem',
+      },
+      button: 'Google 계정으로 시작하기',
     },
     footer: '© 2025 유앤UP국제학원. All rights reserved.',
   },

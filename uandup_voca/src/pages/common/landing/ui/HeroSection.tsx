@@ -34,11 +34,11 @@ export function HeroSection({ t }: Props) {
 
         {/* 서브카피: 고정 높이 박스 */}
         <div className="h-16 flex flex-col items-center justify-center opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.5s_forwards]">
-          {t.sub.map((line, i) => (
+          {t.sub.lines.map((line, i) => (
             <p
               key={i}
               className="text-on-primary/70 leading-relaxed max-w-6xl"
-              style={{ fontSize: t.headline.subFontSize }}
+              style={{ fontSize: t.sub.fontSize }}
             >
               {line}
             </p>

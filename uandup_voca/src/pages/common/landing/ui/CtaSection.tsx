@@ -22,13 +22,16 @@ export function CtaSection({ t }: Props) {
           ))}
         </div>
         {/* 본문: 단일 문장, 고정 높이 */}
-        <div className="h-12 flex items-center justify-center mb-10">
-          <p
-            className="text-on-primary/70 leading-relaxed max-w-xl mx-auto"
-            style={{ fontSize: t.headline.bodyFontSize }}
-          >
-            {t.body}
-          </p>
+        <div className="h-12 flex flex-col items-center justify-center mb-10">
+          {t.body.lines.map((sentence, i) => (
+            <p
+              key={i}
+              className="text-on-primary/70 leading-relaxed max-w-xl mx-auto"
+              style={{ fontSize: t.body.fontSize }}
+            >
+              {sentence}
+            </p>
+          ))}
         </div>
       </FadeIn>
     </section>

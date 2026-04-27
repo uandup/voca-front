@@ -27,8 +27,8 @@ export function AnalyticsSection({ t }: Props) {
           </div>
           {/* 본문: 2문장 고정 */}
           <div className="h-16 flex flex-col items-center justify-center max-w-xl mx-auto">
-            {t.body.map((sentence, i) => (
-              <p key={i} className="text-on-surface-variant text-sm leading-relaxed">
+            {t.body.lines.map((sentence, i) => (
+              <p key={i} className="text-on-surface-variant leading-relaxed" style={{ fontSize: t.body.fontSize }}>
                 {sentence}
               </p>
             ))}
