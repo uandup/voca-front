@@ -1,6 +1,5 @@
 export type Lang = 'en' | 'ko';
 
-
 export const LANDING_CONTENT = {
   en: {
     nav: { googleLogin: 'Sign in with Google' },

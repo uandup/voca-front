@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { TestStep, TestType } from './types';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { NumberInput } from '@/shared/ui/NumberInput';
 import {
   WordTestModal,
   SentenceModal,
@@ -191,10 +192,10 @@ function TestConfigSection({
             <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
               Quantity
             </label>
-            <input
-              type="number"
-              value={config.testQty}
-              onChange={(e) => onChange({ testQty: Number(e.target.value) })}
+            <NumberInput
+              value={String(config.testQty)}
+              onChange={(v) => onChange({ testQty: Number(v) })}
+              min={1}
               disabled={!isEditing}
               className={inputClass}
             />
