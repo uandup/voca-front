@@ -5,7 +5,7 @@ import { AssignedLevelBlocks } from '@/entities/vocab/ui/AssignedLevelBlocks';
 import { PageTitle } from '@/shared/ui/PageTitle';
 
 type DifficultyLevel = Vocab['difficultyLevel'];
-type TestStatus = 'pending' | 'completed' | 'fail';
+type TestStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
 
 interface LevelTestRecord {
   date: string;
@@ -16,7 +16,9 @@ interface LevelTestRecord {
 }
 
 const MOCK_HISTORY: LevelTestRecord[] = [
-  { date: '2026.04.25', level: 4, quantity: 100, score: null, status: 'pending' },
+  { date: '2026.05.10', level: 4, quantity: 100, score: null, status: 'pending' },
+  { date: '2026.05.05', level: 4, quantity: 100, score: null, status: 'awaiting-test' },
+  { date: '2026.05.01', level: 4, quantity: 100, score: null, status: 'awaiting-grading' },
   { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
   { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
 ];
@@ -126,6 +128,14 @@ export function LevelTestPage() {
                       <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
                         Pending
                       </span>
+                    ) : row.status === 'awaiting-test' ? (
+                      <span className="px-3 py-1 bg-sky-50 border border-sky-200 rounded-full text-[10px] font-bold text-sky-500 uppercase tracking-wide">
+                        Awaiting Test
+                      </span>
+                    ) : row.status === 'awaiting-grading' ? (
+                      <span className="px-3 py-1 bg-violet-50 border border-violet-200 rounded-full text-[10px] font-bold text-violet-500 uppercase tracking-wide">
+                        Awaiting Grading
+                      </span>
                     ) : row.status === 'fail' ? (
                       <span className="px-3 py-1 bg-error/5 border border-error/20 rounded-full text-[10px] font-bold text-error uppercase tracking-wide">
                         Fail
@@ -138,12 +148,20 @@ export function LevelTestPage() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'pending' ? (
-                        <>
-                          <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                            Start Test
-                          </button>
-                        </>
+                      {row.status === 'pending' ? null : row.status === 'awaiting-test' ? (
+                        <button
+                          disabled
+                          className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
+                        >
+                          Start Online Test
+                        </button>
+                      ) : row.status === 'awaiting-grading' ? (
+                        <button
+                          disabled
+                          className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
+                        >
+                          View Results
+                        </button>
                       ) : (
                         <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
                           View Results

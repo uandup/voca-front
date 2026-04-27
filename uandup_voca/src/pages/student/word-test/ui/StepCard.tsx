@@ -60,7 +60,7 @@ export default function StepCard({ step }: StepCardProps) {
         )}
         {status === 'available' && (
           <button className="w-full py-2.5 rounded-xl bg-primary text-white text-md hover:opacity-90 transition-opacity font-medium">
-            Start Test
+            Start Online Test
           </button>
         )}
         {status === 'grading' && (

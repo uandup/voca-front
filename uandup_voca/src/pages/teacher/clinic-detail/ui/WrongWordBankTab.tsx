@@ -208,7 +208,7 @@ export function WrongWordBankTab() {
                             Preview
                           </button>
                           <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                            Start Test
+                            Start Online Test
                           </button>
                           <button className="px-4 py-1.5 border border-primary/30 text-primary text-xs font-bold rounded-full hover:bg-primary/5 transition-colors">
                             Grade Online

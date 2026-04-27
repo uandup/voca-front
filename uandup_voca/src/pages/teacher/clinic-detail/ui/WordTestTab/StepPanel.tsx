@@ -289,7 +289,7 @@ function CreatedPanel({
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <button className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20">
-            Start Test
+            Start Online Test
           </button>
           <button
             onClick={onOpenPrint}
