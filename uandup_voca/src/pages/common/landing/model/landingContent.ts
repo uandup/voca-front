@@ -20,17 +20,15 @@ export const LANDING_CONTENT = {
     curriculum: {
       headline: {
         lines: ['From Level 1 to Level 10,', 'A Vocabulary Curriculum Built to Completion'],
-        fontSize: '2.25rem',
+        fontSize: '1.4rem',
       },
       body: {
         lines: [
           'Over 5,000 essential vocabulary words, organized across 10 precisely graded levels.',
           'Students begin at their current level and advance step by step — building real proficiency all the way to Level 10.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1rem',
       },
-      completed: 'Completed',
-      inProgress: 'In Progress',
     },
     spaced: {
       label: 'Spaced Repetition System',
@@ -197,17 +195,15 @@ export const LANDING_CONTENT = {
     curriculum: {
       headline: {
         lines: ['레벨 1부터 10까지', '체계적으로 완성하는 어휘 커리큘럼'],
-        fontSize: '2.25rem',
+        fontSize: '2rem',
       },
       body: {
         lines: [
           '총 5,000개 이상의 필수 어휘를 10단계로 세분화하여 제공합니다.',
           '학생의 현재 수준에 맞는 단어부터 시작해 레벨 10까지 순차적으로 완성하며 실력을 단계적으로 끌어올립니다.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1.1rem',
       },
-      completed: '완료',
-      inProgress: '진행 중',
     },
     spaced: {
       label: '간격 반복 시스템',
