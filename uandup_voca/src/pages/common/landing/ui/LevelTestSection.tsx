@@ -10,9 +10,6 @@ export function LevelTestSection({ t }: Props) {
     <section className="min-h-150 flex items-center py-28 px-6 bg-surface-container-low border-y border-outline-variant">
       <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-14 items-center w-full">
         <FadeIn className="flex-1">
-          <span className="text-xs font-semibold text-on-surface-variant tracking-widest uppercase mb-3 block">
-            {t.label}
-          </span>
           {/* 헤드라인: 2줄 고정 */}
           <div className="h-24 flex flex-col justify-center mb-5">
             {t.headline.lines.map((line, i) => (
@@ -28,7 +25,11 @@ export function LevelTestSection({ t }: Props) {
           {/* 본문: 2문장 고정 */}
           <div className="h-20 flex flex-col justify-center">
             {t.body.lines.map((sentence, i) => (
-              <p key={i} className="text-on-surface-variant leading-relaxed" style={{ fontSize: t.body.fontSize }}>
+              <p
+                key={i}
+                className="text-on-surface-variant leading-relaxed"
+                style={{ fontSize: t.body.fontSize }}
+              >
                 {sentence}
               </p>
             ))}

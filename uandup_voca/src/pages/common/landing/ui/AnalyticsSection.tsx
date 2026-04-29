@@ -10,9 +10,6 @@ export function AnalyticsSection({ t }: Props) {
     <section className="py-28 px-6">
       <div className="max-w-5xl mx-auto">
         <FadeIn className="text-center mb-14">
-          <span className="text-xs font-semibold text-on-surface-variant tracking-widest uppercase mb-3 block">
-            {t.label}
-          </span>
           {/* 헤드라인: 2줄 고정 */}
           <div className="h-24 flex flex-col items-center justify-center mb-4">
             {t.headline.lines.map((line, i) => (

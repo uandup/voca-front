@@ -82,23 +82,21 @@ export const LANDING_CONTENT = {
       ],
     },
     wrongWord: {
-      label: 'Wrong Word Bank',
       headline: {
-        lines: ['Zero Weak Points —', 'Automated Error Tracking & Remediation'],
-        fontSize: '2.25rem',
+        lines: ['The Wrong Word Bank System', 'That Guarantees Complete Mastery'],
+        fontSize: '1.625rem',
       },
       body: {
         lines: [
-          'One test is never the end. Every incorrect answer is automatically accumulated in the "Wrong Word Bank" and retested until fully mastered.',
-          "By tracking each word's error count, the system identifies exactly which words a student struggles with and ensures focused, effective remediation.",
+          'Beyond simple review,',
+          'this is a post-learning management solution built for complete mastery.',
+          'Every incorrect answer is instantly recorded,',
+          'and targeted retests continue until every word is fully memorized',
         ],
         fontSize: '0.875rem',
       },
-      cardTitle: 'Wrong Word Bank',
-      cardCount: '124 words',
     },
     levelTest: {
-      label: 'Level Test',
       headline: {
         lines: ['Final Level Assessment', 'for Complete Mastery Verification'],
         fontSize: '2.25rem',
@@ -134,7 +132,6 @@ export const LANDING_CONTENT = {
       ],
     },
     analytics: {
-      label: 'Data Analytics',
       headline: {
         lines: ['Objective Performance Metrics', 'Through Precision Data Analysis'],
         fontSize: '2.25rem',
@@ -254,23 +251,20 @@ export const LANDING_CONTENT = {
       ],
     },
     wrongWord: {
-      label: '오답 관리',
       headline: {
-        lines: ['취약점 제로를 지향하는', '오답 추적 및 재시험 시스템'],
+        lines: ['완벽한 암기를 보장하는', '오답 뱅크 시스템'],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
-          "한 번의 시험으로 끝나지 않습니다. 틀린 단어는 '오답 뱅크'에 누적되어 완벽히 숙달될 때까지 테스트됩니다.",
-          '오답 횟수 추적을 통해 학생이 특히 어려워하는 단어를 정확히 파악하고 집중적으로 암기할 수 있도록 돕습니다.',
+          '단순한 정리를 넘어 완전한 학습을 위한 사후 관리 솔루션을 제안합니다.',
+          '모든 오답은 시스템에 즉시 기록되며,',
+          '단어가 완벽히 숙달될 때까지 오답 시험을 통해 빈틈없는 암기를 보장합니다.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1rem',
       },
-      cardTitle: '오답 뱅크',
-      cardCount: '124개',
     },
     levelTest: {
-      label: '레벨 시험',
       headline: {
         lines: ['완벽한 숙달 검증을 위한', '최종 레벨 시험'],
         fontSize: '2.25rem',
@@ -306,7 +300,6 @@ export const LANDING_CONTENT = {
       ],
     },
     analytics: {
-      label: '데이터 분석',
       headline: {
         lines: ['정밀한 데이터 분석을 통한', '객관적 성과 지표 제공'],
         fontSize: '2.25rem',
