@@ -37,8 +37,8 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          'Moving beyond rote memorization, our scientifically designed review intervals follow the forgetting curve.',
-          'Reviews at Day 1, Day 4, and Day 7 reliably convert short-term memory into permanent, long-term retention.',
+          'Moving beyond rote memorization, our review intervals are built around the forgetting curve.',
+          'Scheduled reviews at Day 1, Day 4, and Day 7 transform short-term recall into lasting long-term retention.',
         ],
         fontSize: '1rem',
       },
@@ -47,9 +47,9 @@ export const LANDING_CONTENT = {
           day: 'D+0',
           label: 'Vocabulary Test',
           desc: [
-            'Immediately after learning,',
-            'a word and sentence test',
-            'locks in initial memory retention.',
+            'A word and sentence test',
+            'taken right after learning',
+            'locks in initial memory',
           ],
           icon: 'edit_note',
         },
@@ -57,25 +57,25 @@ export const LANDING_CONTENT = {
           day: 'D+1',
           label: 'Review 1',
           desc: [
-            'The first review session',
-            'one day later reinforces',
-            'short-term memory consolidation.',
+            'A first review one day later',
+            'strengthens short-term memory',
+            'before it fades.',
           ],
           icon: 'replay',
         },
         {
           day: 'D+4',
           label: 'Review 2',
-          desc: ['A second review at day four', 'effectively interrupts', 'the forgetting curve.'],
+          desc: ['A second review on day four', 'disrupts the forgetting curve.'],
           icon: 'replay',
         },
         {
           day: 'D+7',
           label: 'Review 3',
           desc: [
-            'The final review at day seven',
-            'converts short-term memory',
-            'into long-term retention.',
+            'The final review on day seven',
+            'completes the shift from',
+            'short-term recall to long-term retention.',
           ],
           icon: 'verified',
         },
@@ -213,13 +213,13 @@ export const LANDING_CONTENT = {
     },
     spaced: {
       headline: {
-        lines: ['기억의 고착화를 위한', '1-4-7 체계적 복습 시스템'],
+        lines: ['장기 기억으로 가는', '1-4-7 체계적 복습 시스템'],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
           '단순 반복 암기에서 벗어나, 망각 곡선을 고려한 과학적 복습 주기를 제안합니다.',
-          '학습 후 1일, 4일, 7일 단위로 시행되는 복습 시험을 통해 단기 기억을 장기 기억으로 확실하게 전환합니다.',
+          '학습 후 1일, 4일, 7일 시점에 진행되는 복습 시험을 통해 단기 기억을 장기 기억으로 안정적으로 전환합니다.',
         ],
         fontSize: '1rem',
       },
@@ -233,19 +233,19 @@ export const LANDING_CONTENT = {
         {
           day: 'D+1',
           label: 'Review 1',
-          desc: ['학습 1일 후 첫 번째 복습 시험으로', '단기 기억을 강화합니다.'],
+          desc: ['학습 1일 후 첫 복습 시험으로', '단기 기억을 강화합니다.'],
           icon: 'replay',
         },
         {
           day: 'D+4',
           label: 'Review 2',
-          desc: ['학습 4일 후 두 번째 복습으로', '망각 곡선을 효과적으로 차단합니다.'],
+          desc: ['학습 4일 후 두 번째 복습으로', '망각 곡선을 완만하게 늦춥니다.'],
           icon: 'replay',
         },
         {
           day: 'D+7',
           label: 'Review 3',
-          desc: ['학습 7일 후 최종 복습으로', '단기 기억을 장기 기억으로 전환합니다.'],
+          desc: ['학습 7일 후 최종 복습을 통해', '기억이 장기적으로 자리 잡습니다.'],
           icon: 'verified',
         },
       ],
