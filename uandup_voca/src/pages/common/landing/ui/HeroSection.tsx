@@ -18,6 +18,11 @@ interface Props {
 export function HeroSection({ t }: Props) {
   return (
     <section className="h-145 pt-20 flex items-center justify-center px-6 text-center primary-gradient relative overflow-hidden">
+      <img
+        src="/landing_hero.png"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none select-none"
+      />
       <div className="max-w-5xl w-full relative flex flex-col items-center">
         {/* 헤드라인: 줄 수 고정 + clamp로 폰트 자동 조절 */}
         <div className="h-40 flex flex-col items-center justify-center opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.3s_forwards]">
