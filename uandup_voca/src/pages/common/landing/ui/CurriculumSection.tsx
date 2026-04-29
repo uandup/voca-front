@@ -7,7 +7,7 @@ interface Props {
 
 export function CurriculumSection({ t }: Props) {
   return (
-    <section className="min-h-110 flex items-center py-28 px-6 relative overflow-hidden">
+    <section className="min-h-140 flex items-center py-28 px-6 relative overflow-hidden">
       <div className="max-w-5xl  mx-auto w-full">
         <FadeIn>
           <div className="h-40 flex flex-col justify-center mb-5">
@@ -38,7 +38,7 @@ export function CurriculumSection({ t }: Props) {
       {/* 우측 이미지 */}
       <FadeIn
         delay={150}
-        className="absolute right-[16%] top-[18%] flex items-center pointer-events-none"
+        className="absolute right-[16%] top-[19%] flex items-center pointer-events-none"
       >
         <img src="/voca.png" alt="" className="h-44 w-auto object-contain rounded-xl shadow-lg" />
       </FadeIn>
