@@ -8,7 +8,7 @@ interface Props {
 export function CtaSection({ t }: Props) {
   return (
     <section className="min-h-80 flex items-center py-28 px-6 primary-gradient relative overflow-hidden">
-      <FadeIn className="max-w-2xl mx-auto text-center relative w-full">
+      <FadeIn className="max-w-5xl mx-auto text-center relative w-full">
         {/* 헤드라인: 2줄 고정 */}
         <div className="h-20 flex flex-col items-center justify-center mb-5">
           {t.headline.lines.map((line, i) => (
@@ -26,7 +26,7 @@ export function CtaSection({ t }: Props) {
           {t.body.lines.map((sentence, i) => (
             <p
               key={i}
-              className="text-on-primary/70 leading-relaxed max-w-xl mx-auto"
+              className="text-on-primary/70 leading-relaxed max-w-5xl mx-auto"
               style={{ fontSize: t.body.fontSize }}
             >
               {sentence}

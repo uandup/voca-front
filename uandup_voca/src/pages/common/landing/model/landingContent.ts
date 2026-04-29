@@ -146,14 +146,14 @@ export const LANDING_CONTENT = {
     },
     cta: {
       headline: {
-        lines: ['A Proven System That Transforms', 'Learning Efficiency.'],
-        fontSize: '2.25rem',
+        lines: ['A Structured System That Changes How You Learn.'],
+        fontSize: '1.75rem',
       },
       body: {
         lines: [
-          'Through data-driven, systematic management, we are committed to delivering the highest possible learning outcomes for every student.',
+          'Through data-driven, systematic management, we help every student achieve their best.',
         ],
-        fontSize: '1rem',
+        fontSize: '1.125rem',
       },
       button: 'Get Started with Google',
     },
@@ -292,7 +292,7 @@ export const LANDING_CONTENT = {
     },
     cta: {
       headline: {
-        lines: ['검증된 시스템이', '학습의 효율을 바꿉니다.'],
+        lines: ['체계적인 시스템이 학습의 효율을 바꿉니다.'],
         fontSize: '2.25rem',
       },
       body: {
