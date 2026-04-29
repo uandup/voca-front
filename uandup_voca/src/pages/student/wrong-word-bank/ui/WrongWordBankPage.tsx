@@ -12,17 +12,17 @@ interface WrongWordTestRecord {
 }
 
 const MOCK_TEST_HISTORY: WrongWordTestRecord[] = [
-  { date: '2026.05.10', quantity: 30, score: null, status: 'pending' },
-  { date: '2026.05.05', quantity: 30, score: null, status: 'awaiting-test' },
-  { date: '2026.05.01', quantity: 30, score: null, status: 'awaiting-grading' },
+  { date: '2026.05.10', quantity: 30, score: null, status: 'awaiting-test' },
+  { date: '2026.05.05', quantity: 30, score: 27, status: 'completed' },
+  { date: '2026.05.01', quantity: 30, score: 25, status: 'completed' },
   { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
   { date: '2026.04.25', quantity: 30, score: 28, status: 'completed' },
 ];
 
-const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
+const COLUMNS = ['Date', 'Quantity', 'Score', 'Status', 'Actions'];
 
 export function WrongWordBankPage() {
-  const totalCount = 124;
+  const totalCount = 43;
   const navigate = useNavigate();
 
   return (
@@ -54,8 +54,8 @@ export function WrongWordBankPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <colgroup>
-              <col className="w-[25%]" />
-              <col className="w-[10%]" />
+              <col className="w-[20%]" />
+              <col className="w-[15%]" />
               <col className="w-[15%]" />
               <col className="w-[20%]" />
               <col className="w-[30%]" />
@@ -100,11 +100,11 @@ export function WrongWordBankPage() {
                         Pending
                       </span>
                     ) : row.status === 'awaiting-test' ? (
-                      <span className="px-3 py-1 bg-sky-50 border border-sky-200 rounded-full text-[10px] font-bold text-sky-500 uppercase tracking-wide">
+                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                         Awaiting Test
                       </span>
                     ) : row.status === 'awaiting-grading' ? (
-                      <span className="px-3 py-1 bg-violet-50 border border-violet-200 rounded-full text-[10px] font-bold text-violet-500 uppercase tracking-wide">
+                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                         Awaiting Grading
                       </span>
                     ) : row.status === 'fail' ? (
@@ -119,12 +119,12 @@ export function WrongWordBankPage() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'pending' ? null : row.status === 'awaiting-test' ? (
+                      {row.status === 'awaiting-test' ? (
                         <button
                           disabled
                           className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
                         >
-                          Start Online Test
+                          Start Test
                         </button>
                       ) : row.status === 'awaiting-grading' ? (
                         <button
@@ -133,11 +133,14 @@ export function WrongWordBankPage() {
                         >
                           View Results
                         </button>
-                      ) : (
+                      ) : row.status === 'completed' || row.status === 'fail' ? (
                         <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
                           View Results
                         </button>
-                      )}
+                      ) : null}{' '}
+                      <button className="px-4 py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
+                        View Words
+                      </button>
                     </div>
                   </td>
                 </tr>
