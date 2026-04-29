@@ -98,38 +98,16 @@ export const LANDING_CONTENT = {
     },
     levelTest: {
       headline: {
-        lines: ['Final Level Assessment', 'for Complete Mastery Verification'],
+        lines: ["The Level Test That Cements What You've Learned"],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
-          'Even after all study sessions are complete, a comprehensive Level Test verifies long-term retention of every word.',
-          'Any failed level is automatically routed back into the wrong-word review cycle — the system continues managing progress until full mastery is confirmed.',
+          'A final verification that everything learned has taken root in long-term memory.',
+          'Each test passed builds real confidence — and any words that surface again are fully reinforced, cementing lasting mastery.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1rem',
       },
-      flow: [
-        {
-          icon: 'school',
-          label: 'Complete Level Study',
-          color: 'bg-secondary-container text-on-secondary-container',
-        },
-        {
-          icon: 'quiz',
-          label: 'Take the Level Test',
-          color: 'bg-secondary-container text-on-secondary-container',
-        },
-        {
-          icon: 'check_circle',
-          label: 'Pass → Advance to Next Level',
-          color: 'bg-success-container text-on-success-container',
-        },
-        {
-          icon: 'error',
-          label: 'Fail → Wrong Word Review Loop',
-          color: 'bg-error-container text-on-error-container',
-        },
-      ],
     },
     analytics: {
       headline: {
@@ -244,38 +222,16 @@ export const LANDING_CONTENT = {
     },
     levelTest: {
       headline: {
-        lines: ['완벽한 숙달 검증을 위한', '최종 레벨 시험'],
+        lines: ['흔들리지 않는 실력을 완성하는 레벨 테스트'],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
-          "모든 학습이 끝난 후에도 '레벨 시험'을 통해 장기 기억 저장 여부를 최종 검증합니다.",
-          '통과하지 못한 레벨은 다시 오답 학습으로 연결되어, 완벽히 마스터할 때까지 시스템이 끝까지 관리합니다.',
+          '레벨 테스트로 장기 기억 전환을 최종 검증합니다.',
+          '시험 통과 과정에서 느끼는 성취감과 자신감은 지속적인 학습의 원동력이 되며, 이 과정에서 재발견된 오답까지 완벽히 보완하여 흔들리지 않는 실력을 완성합니다.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1rem',
       },
-      flow: [
-        {
-          icon: 'school',
-          label: '레벨 학습 완료',
-          color: 'bg-secondary-container text-on-secondary-container',
-        },
-        {
-          icon: 'quiz',
-          label: '레벨 시험 응시',
-          color: 'bg-secondary-container text-on-secondary-container',
-        },
-        {
-          icon: 'check_circle',
-          label: '합격 → 다음 레벨 진급',
-          color: 'bg-success-container text-on-success-container',
-        },
-        {
-          icon: 'error',
-          label: '불합격 → 오답 학습 연결',
-          color: 'bg-error-container text-on-error-container',
-        },
-      ],
     },
     analytics: {
       headline: {
