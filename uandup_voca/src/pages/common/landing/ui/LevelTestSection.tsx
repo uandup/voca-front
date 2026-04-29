@@ -7,7 +7,7 @@ interface Props {
 
 export function LevelTestSection({ t }: Props) {
   return (
-    <section className="min-h-150 flex items-center py-28 px-6 bg-surface-container-low border-y border-outline-variant">
+    <section className="min-h-150 flex items-center py-28 px-6 bg-surface-container-low border-none">
       <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-14 items-center w-full">
         <FadeIn className="flex-1">
           {/* 헤드라인: 2줄 고정 */}

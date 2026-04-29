@@ -29,7 +29,7 @@ export default function DashboardPage() {
     <main className="relative">
       {/* Title row with todo toggle */}
       <div className="flex items-center justify-between">
-        <PageTitle title="Welcome back, LES" />
+        <PageTitle title="Welcome back, EunSoo" />
 
         {/* Todo Button */}
         <button

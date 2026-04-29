@@ -1,11 +1,11 @@
 const TOTAL_LEVELS = 10;
-const currentLevel = 4;
-const currentLevelProgress = 60; // % of current level
+const currentLevel = 7;
+const currentLevelProgress = 80; // % of current level
 
 const testConfig = {
   type: 'Word to meaning (Korean)',
   synonyms: true,
-  wordsPerTest: 100,
+  wordsPerTest: 50,
 };
 
 const RADIUS = 54;

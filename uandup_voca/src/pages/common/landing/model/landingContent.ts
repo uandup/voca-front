@@ -133,38 +133,16 @@ export const LANDING_CONTENT = {
     },
     analytics: {
       headline: {
-        lines: ['Objective Performance Metrics', 'Through Precision Data Analysis'],
-        fontSize: '2.25rem',
+        lines: ['A Precision Dashboard That Proves Your Progress'],
+        fontSize: '2rem',
       },
       body: {
         lines: [
-          'Beyond simple score records, every aspect of the learning process is logged and analyzed in real time.',
-          "Weekly score trends and level-by-level accuracy are precisely examined to identify each student's weak points and deliver optimized, personalized instruction.",
+          'Every learning step above is recorded and analyzed.',
+          "Per-test score trends pinpoint each student's weak points and drive personalized instruction.",
         ],
-        fontSize: '0.875rem',
+        fontSize: '1.125rem',
       },
-      metrics: [
-        {
-          icon: 'show_chart',
-          label: 'Weekly Score Trends',
-          desc: 'Visualize score changes across every test session over time.',
-        },
-        {
-          icon: 'analytics',
-          label: 'Level-by-Level Accuracy',
-          desc: 'Pinpoint weak zones at each difficulty level with precision.',
-        },
-        {
-          icon: 'history_edu',
-          label: 'Cumulative Word Count',
-          desc: 'Track total words mastered and full learning history in one place.',
-        },
-        {
-          icon: 'person_search',
-          label: 'Personalized Analysis',
-          desc: 'Data-driven insights that shape an optimized individual learning path.',
-        },
-      ],
     },
     cta: {
       headline: {
@@ -301,38 +279,16 @@ export const LANDING_CONTENT = {
     },
     analytics: {
       headline: {
-        lines: ['정밀한 데이터 분석을 통한', '객관적 성과 지표 제공'],
+        lines: ['학습 성취도를 데이터로 증명하는 정밀 분석 대시보드'],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
-          '단순한 점수 기록을 넘어, 학습의 모든 과정은 실시간으로 기록되고 분석됩니다.',
-          '주차별 성적 추이와 레벨별 정확도를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
+          '앞서 이야기한 모든 학습 과정은 기록되고 분석됩니다.',
+          '시험별 성적 추이를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
         ],
-        fontSize: '0.875rem',
+        fontSize: '1rem',
       },
-      metrics: [
-        {
-          icon: 'show_chart',
-          label: '주차별 성적 추이',
-          desc: '회차별 점수 변화를 시각적으로 추적합니다.',
-        },
-        {
-          icon: 'analytics',
-          label: '레벨별 정확도',
-          desc: '단계별 취약 구간을 정밀하게 진단합니다.',
-        },
-        {
-          icon: 'history_edu',
-          label: '누적 학습량',
-          desc: '습득 단어 수 및 학습 이력을 통합 관리합니다.',
-        },
-        {
-          icon: 'person_search',
-          label: '개인 맞춤 분석',
-          desc: '데이터 기반 최적화된 학습 경로를 제시합니다.',
-        },
-      ],
     },
     cta: {
       headline: {
@@ -341,7 +297,7 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: ['데이터 기반의 체계적인 관리를 통해 최상의 학습 결과를 만드시기 바랍니다.'],
-        fontSize: '1rem',
+        fontSize: '1.125rem',
       },
       button: 'Google 계정으로 시작하기',
     },

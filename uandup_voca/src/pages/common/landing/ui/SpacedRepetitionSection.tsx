@@ -7,7 +7,7 @@ interface Props {
 
 export function SpacedRepetitionSection({ t }: Props) {
   return (
-    <section className="min-h-140 py-28 px-6 bg-surface-container-low border-y border-outline-variant">
+    <section className="min-h-155 py-28 px-6 bg-surface-container-low border-y border-none">
       <div className="max-w-5xl mx-auto">
         <FadeIn className="text-center mb-14">
           {/* 헤드라인: 2줄 고정 */}
@@ -39,7 +39,7 @@ export function SpacedRepetitionSection({ t }: Props) {
         <div className="relative grid grid-cols-1 lg:grid-cols-4 gap-6">
           {t.steps.map((step, idx) => (
             <FadeIn key={step.day} delay={idx * 100} className="relative">
-              <div className="h-44 rounded-2xl bg-surface-container-lowest border border-outline-variant premium-shadow p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300 ">
+              <div className="h-44 rounded-2xl bg-surface-container-lowest border border-outline-variant premium-shadow p-5 flex flex-col gap-3 ">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-on-secondary-container bg-secondary-container px-2.5 py-0.5 rounded-full">
                     {step.day}

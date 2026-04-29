@@ -7,7 +7,7 @@ interface Props {
 
 export function WrongWordSection({ t }: Props) {
   return (
-    <section className="min-h-140 flex items-center py-28 px-6">
+    <section className="min-h-155 flex items-center py-28 px-6">
       <div className="max-w-5xl mx-auto w-full flex items-center gap-16">
         <FadeIn delay={150} className="flex-1 flex justify-center pointer-events-none">
           <img
