@@ -83,15 +83,15 @@ export const LANDING_CONTENT = {
     },
     wrongWord: {
       headline: {
-        lines: ['The Review Deck System', 'That Guarantees Complete Mastery'],
+        lines: ['From Mistake to Mastery, ', 'Automatically'],
         fontSize: '1.625rem',
       },
       body: {
         lines: [
-          'Beyond simple review,',
-          'this is a post-learning management solution built for complete mastery.',
-          'Every incorrect answer is instantly recorded,',
-          'and targeted retests continue until every word is fully memorized',
+          'More than a review tool,',
+          'this system is built to carry students all the way to mastery.',
+          'Every mistake is automatically logged,',
+          'and targeted retests continue until every word sticks.',
         ],
         fontSize: '0.875rem',
       },
@@ -209,14 +209,13 @@ export const LANDING_CONTENT = {
     },
     wrongWord: {
       headline: {
-        lines: ['완벽한 암기를 보장하는', '오답 뱅크 시스템'],
+        lines: ['틀린 단어가 사라질 때까지'],
         fontSize: '2.25rem',
       },
       body: {
         lines: [
-          '단순한 정리를 넘어 완전한 학습을 위한 사후 관리 솔루션을 제안합니다.',
-          '모든 오답은 시스템에 즉시 기록되며,',
-          '단어가 완벽히 숙달될 때까지 오답 시험을 통해 빈틈없는 암기를 보장합니다.',
+          '단순한 정리를 넘어, 완전한 숙달까지 이어지는 학습 관리 시스템입니다.',
+          '틀린 단어는 즉시 기록되고, 완벽히 외울 때까지 맞춤 재시험이 반복됩니다.',
         ],
         fontSize: '1rem',
       },

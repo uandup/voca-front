@@ -11,7 +11,7 @@ export function WrongWordSection({ t }: Props) {
       <div className="max-w-5xl mx-auto w-full flex items-center gap-16">
         <FadeIn delay={150} className="flex-1 flex justify-center pointer-events-none">
           <img
-            src="/wrong_word_bank.png"
+            src="/landing_review.png"
             alt=""
             className="w-full max-w-lg object-contain rounded-xl shadow-xl"
           />
