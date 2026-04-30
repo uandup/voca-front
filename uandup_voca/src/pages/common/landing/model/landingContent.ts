@@ -98,13 +98,14 @@ export const LANDING_CONTENT = {
     },
     levelTest: {
       headline: {
-        lines: ["The Level Test That Cements What You've Learned"],
-        fontSize: '2.25rem',
+        lines: ['The Level Test', "That Cements What You've Learned"],
+        fontSize: '2.125rem',
       },
       body: {
         lines: [
           'A final verification that everything learned has taken root in long-term memory.',
-          'Each test passed builds real confidence — and any words that surface again are fully reinforced, cementing lasting mastery.',
+          'Each test passed builds real confidence',
+          '— and any words that surface again are fully reinforced, cementing lasting mastery.',
         ],
         fontSize: '1rem',
       },
@@ -125,13 +126,13 @@ export const LANDING_CONTENT = {
     cta: {
       headline: {
         lines: ['A Structured System That Changes How You Learn.'],
-        fontSize: '1.75rem',
+        fontSize: '2.25rem',
       },
       body: {
         lines: [
           'Through data-driven, systematic management, we help every student achieve their best.',
         ],
-        fontSize: '1.125rem',
+        fontSize: '1.25rem',
       },
       button: 'Get Started with Google',
     },
@@ -228,9 +229,10 @@ export const LANDING_CONTENT = {
       body: {
         lines: [
           '레벨 테스트로 장기 기억 전환을 최종 검증합니다.',
-          '시험 통과 과정에서 느끼는 성취감과 자신감은 지속적인 학습의 원동력이 되며, 이 과정에서 재발견된 오답까지 완벽히 보완하여 흔들리지 않는 실력을 완성합니다.',
+          '시험 통과 과정에서 느끼는 성취감과 자신감은 지속적인 학습의 원동력이 되며,',
+          '이 과정에서 재발견된 오답까지 완벽히 보완하여 흔들리지 않는 실력을 완성합니다.',
         ],
-        fontSize: '1rem',
+        fontSize: '1.125rem',
       },
     },
     analytics: {
@@ -243,17 +245,17 @@ export const LANDING_CONTENT = {
           '앞서 이야기한 모든 학습 과정은 기록되고 분석됩니다.',
           '시험별 성적 추이를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
         ],
-        fontSize: '1rem',
+        fontSize: '1.125rem',
       },
     },
     cta: {
       headline: {
         lines: ['체계적인 시스템이 학습의 효율을 바꿉니다.'],
-        fontSize: '2.25rem',
+        fontSize: '2.5rem',
       },
       body: {
         lines: ['데이터 기반의 체계적인 관리를 통해 최상의 학습 결과를 만드시기 바랍니다.'],
-        fontSize: '1.125rem',
+        fontSize: '1.25rem',
       },
       button: 'Google 계정으로 시작하기',
     },

@@ -8,10 +8,9 @@ interface Props {
 export function LevelTestSection({ t }: Props) {
   return (
     <section className="min-h-120 flex items-center py-28 px-6 bg-surface-container-low border-none">
-      <div className="max-w-5xl mx-auto w-full">
-        <FadeIn>
-          {/* 헤드라인: 2줄 고정 */}
-          <div className="h-24 flex flex-col justify-center mb-5">
+      <div className="max-w-5xl mx-auto w-full flex items-center gap-12">
+        <FadeIn className="flex-6 flex flex-col gap-5">
+          <div>
             {t.headline.lines.map((line, i) => (
               <h2
                 key={i}
@@ -22,8 +21,7 @@ export function LevelTestSection({ t }: Props) {
               </h2>
             ))}
           </div>
-          {/* 본문: 2문장 고정 */}
-          <div className="h-20 flex flex-col justify-center">
+          <div>
             {t.body.lines.map((sentence, i) => (
               <p
                 key={i}
@@ -34,6 +32,10 @@ export function LevelTestSection({ t }: Props) {
               </p>
             ))}
           </div>
+        </FadeIn>
+
+        <FadeIn delay={150} className="flex-3 flex justify-center pointer-events-none">
+          <img src="/landing_level.png" alt="" className="w-full object-contain" />
         </FadeIn>
       </div>
     </section>
