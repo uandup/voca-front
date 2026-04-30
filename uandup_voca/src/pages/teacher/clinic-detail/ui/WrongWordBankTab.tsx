@@ -48,7 +48,7 @@ export function WrongWordBankTab() {
       <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
         <div className="px-8 py-4 border-b border-outline/20 flex items-center justify-between">
           <div className="flex items-end gap-3">
-            <h3 className="text-xl font-headline font-bold text-primary">Wrong Word Database</h3>
+            <h3 className="text-xl font-headline font-bold text-primary">Review Deck Database</h3>
             <p className="text-xs text-on-surface-variant mb-0.5">
               Total {totalCount} incorrect words tracked
             </p>
@@ -58,7 +58,7 @@ export function WrongWordBankTab() {
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
               open_in_new
             </span>
-            View Wrong Word List
+            View Word List
           </button>
         </div>
 
@@ -140,7 +140,7 @@ export function WrongWordBankTab() {
         </div>
       </div>
 
-      {/* Wrong Word Test History Table */}
+      {/* Review Deck Test History Table */}
       <TableContainer>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">

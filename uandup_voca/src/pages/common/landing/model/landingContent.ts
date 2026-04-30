@@ -83,7 +83,7 @@ export const LANDING_CONTENT = {
     },
     wrongWord: {
       headline: {
-        lines: ['The Wrong Word Bank System', 'That Guarantees Complete Mastery'],
+        lines: ['The Review Deck System', 'That Guarantees Complete Mastery'],
         fontSize: '1.625rem',
       },
       body: {

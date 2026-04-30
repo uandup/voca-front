@@ -43,8 +43,8 @@ export default function WrongWordListPage() {
   return (
     <main>
       <BreadcrumbPageTitle
-        parents={[{ label: 'Wrong Word Bank', onClick: () => router.history.back() }]}
-        title="Wrong Word List"
+        parents={[{ label: 'Review Deck', onClick: () => router.history.back() }]}
+        title="Word List"
       />
       <div className="space-y-5">
         {mockWrongWords.map((word) => (

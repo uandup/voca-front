@@ -27,8 +27,8 @@ export function WrongWordBankPage() {
 
   return (
     <div className="space-y-4">
-      <PageTitle title="Wrong Word Bank" />
-      {/* My Wrong Word Bank Card */}
+      <PageTitle title="Review Deck" />
+      {/* My Review Deck Card */}
       <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
           <div className="flex items-baseline gap-3">
@@ -38,7 +38,7 @@ export function WrongWordBankPage() {
             </span>
           </div>
           <button
-            onClick={() => navigate({ to: '/student/wrong-word-list' })}
+            onClick={() => navigate({ to: '/student/review-deck/words' })}
             className="flex items-center gap-1.5 bg-primary hover:opacity-90 transition-opacity text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/10"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>

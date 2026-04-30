@@ -10,7 +10,7 @@ import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
 
-type MainTab = 'wordTest' | 'wrongWordBank' | 'levelTest';
+type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 type DifficultyLevel = Vocab['difficultyLevel'];
 
 export function ClinicDetailPage() {
@@ -67,7 +67,7 @@ export function ClinicDetailPage() {
             {(
               [
                 { key: 'wordTest', label: 'Word Test' },
-                { key: 'wrongWordBank', label: 'Wrong Word Bank' },
+                { key: 'reviewDeck', label: 'Review Deck Bank' },
                 { key: 'levelTest', label: 'Level Test' },
               ] as { key: MainTab; label: string }[]
             ).map((tab) => (
@@ -91,7 +91,7 @@ export function ClinicDetailPage() {
 
         {mainTab === 'wordTest' && <WordTestTab />}
 
-        {mainTab === 'wrongWordBank' && <WrongWordBankTab />}
+        {mainTab === 'reviewDeck' && <WrongWordBankTab />}
 
         {mainTab === 'levelTest' && <LevelTestTab />}
       </div>
