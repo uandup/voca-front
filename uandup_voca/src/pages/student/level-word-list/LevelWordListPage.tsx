@@ -1,6 +1,6 @@
 import { useRouter } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
-import { VocabCard, MOCK_LEVEL_WORDS } from '@/entities/word';
+import { VocabCard, MOCK_WORDS } from '@/entities/word';
 
 export default function LevelWordListPage() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function LevelWordListPage() {
         title="Level Word List"
       />
       <div className="space-y-5">
-        {MOCK_LEVEL_WORDS.map((word) => (
+        {MOCK_WORDS.map((word) => (
           <VocabCard
             key={word.id}
             difficultyLevel={word.difficultyLevel}

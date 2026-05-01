@@ -1,6 +1,6 @@
 import { useRouter, useParams } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
-import { VocabCard, MOCK_CYCLE_WORDS } from '@/entities/word';
+import { VocabCard, MOCK_WORDS } from '@/entities/word';
 // import { StarButton } from './ui/StarButton';
 
 const CYCLE_META: Record<string, { level: number; wordCount: number }> = {
@@ -22,7 +22,7 @@ export default function VocabListPage() {
       />
 
       <div className="space-y-5">
-        {MOCK_CYCLE_WORDS.map((word) => (
+        {MOCK_WORDS.map((word) => (
           <VocabCard
             key={word.id}
             difficultyLevel={word.difficultyLevel}
@@ -31,7 +31,6 @@ export default function VocabListPage() {
             korMeaning={word.korMeaning}
             engMeaning={word.engMeaning}
             synonyms={word.synonyms}
-            // extraInfo={<StarButton wordId={word.id} starred={word.starred} />}
           />
         ))}
       </div>

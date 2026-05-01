@@ -10,7 +10,7 @@ import {
   SentenceGradingModal,
   SentenceResultModal,
 } from '@/widgets/test-offline';
-import { mockVocabList, mockESRows } from '@/entities/test/lib/mockData';
+import { MOCK_VOCAB_LIST, MOCK_ES_ROWS } from '@/entities/test';
 
 interface StepPanelProps {
   step: TestStep;
@@ -56,12 +56,12 @@ export default function StepPanel({ step }: StepPanelProps) {
       )}
 
       {showPrintModal && step.key === 'sentence' ? (
-        <SentenceModal onClose={() => setShowPrintModal(false)} rows={mockESRows} />
+        <SentenceModal onClose={() => setShowPrintModal(false)} rows={MOCK_ES_ROWS} />
       ) : (
         showPrintModal && (
           <WordTestModal
             onClose={() => setShowPrintModal(false)}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -72,14 +72,14 @@ export default function StepPanel({ step }: StepPanelProps) {
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
           onGrade={() => console.warn('Grade submitted')}
-          rows={mockESRows}
+          rows={MOCK_ES_ROWS}
         />
       ) : (
         showGradingModal && (
           <WordGradingModal
             onClose={() => setShowGradingModal(false)}
             onGrade={() => console.warn('Grade submitted')}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -89,14 +89,14 @@ export default function StepPanel({ step }: StepPanelProps) {
       {showResultModal && step.key === 'sentence' ? (
         <SentenceResultModal
           onClose={() => setShowResultModal(false)}
-          rows={mockESRows}
+          rows={MOCK_ES_ROWS}
           wrongIndices={[1, 4, 7]}
         />
       ) : (
         showResultModal && (
           <WordResultModal
             onClose={() => setShowResultModal(false)}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
             wrongIndices={[1, 4, 7]}

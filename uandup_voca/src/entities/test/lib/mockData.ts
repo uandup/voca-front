@@ -103,7 +103,7 @@ export const MOCK_SENTENCE_ANSWERS: Record<number, TestSentenceAnswer> = Object.
   MOCK_SENTENCE_ITEMS.map((item) => [item.id, { word: item.answerWord ?? '' }]),
 );
 
-export const mockVocabList: WordTestItem[] = [
+export const MOCK_VOCAB_LIST: WordTestItem[] = [
   {
     word: 'abandon',
     korMeaning: '포기하다',
@@ -411,7 +411,7 @@ export const mockVocabList: WordTestItem[] = [
 // ES Mock Data (30개) — Example Sentence
 // ___ 위치에 빈칸이 표시되며 학생이 단어를 채워 넣음
 // ────────────────────────────────────────────────
-export const mockESRows: ESRow[] = [
+export const MOCK_ES_ROWS: ESRow[] = [
   {
     no: '1',
     sentence:
@@ -594,19 +594,6 @@ export const MOCK_STUDENT_LEVEL_TEST_HISTORY: LevelTestRecord[] = [
   { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
 ];
 
-// 클리닉 - Review Deck 테스트 이력 (WrongWordBankTab)
-export const MOCK_CLINIC_REVIEW_DECK_HISTORY: WrongWordTestRecord[] = [
-  { date: '2026.04.25', quantity: 30, score: null, status: 'pending' },
-  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
-  { date: '2026.05.01', quantity: 30, score: 28, status: 'completed' },
-];
-
-// 클리닉 - Level Test 이력 (LevelTestTab)
-export const MOCK_CLINIC_LEVEL_TEST_HISTORY: LevelTestRecord[] = [
-  { date: '2026.04.25', level: 4, quantity: 100, score: null, status: 'pending' },
-  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
-  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
-];
 
 // 클리닉 - Word Test 사이클 목록 (WordTestTab)
 export const MOCK_CLINIC_CYCLES: ClinicCycle[] = [

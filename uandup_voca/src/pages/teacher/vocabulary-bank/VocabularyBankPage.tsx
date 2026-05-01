@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { VocabCard } from './ui/VocabCard';
 import { VocabModal } from './ui/modals/VocabModal';
-import { WORD_MOCK as mockVocabData } from '@/entities/word';
+import { MOCK_WORDS } from '@/entities/word';
 
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +14,7 @@ export default function VocabularyBankPage() {
     setSelectedLevel('');
   }
 
-  const filtered = mockVocabData.filter((v) => {
+  const filtered = MOCK_WORDS.filter((v) => {
     const matchesSearch =
       searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||

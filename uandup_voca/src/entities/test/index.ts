@@ -19,8 +19,8 @@ export type {
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export type { VocabTestType, TestVocabItem } from './lib/mockData';
 export {
-  mockVocabList,
-  mockESRows,
+  MOCK_VOCAB_LIST,
+  MOCK_ES_ROWS,
   ITEMS_PER_PAGE,
   MOCK_TEST_INFO,
   MOCK_SENTENCE_ITEMS,
@@ -31,8 +31,8 @@ export {
   MOCK_CYCLES,
   MOCK_REVIEW_DECK_HISTORY,
   MOCK_STUDENT_LEVEL_TEST_HISTORY,
-  MOCK_CLINIC_REVIEW_DECK_HISTORY,
-  MOCK_CLINIC_LEVEL_TEST_HISTORY,
+  MOCK_REVIEW_DECK_HISTORY as MOCK_CLINIC_REVIEW_DECK_HISTORY,
+  MOCK_STUDENT_LEVEL_TEST_HISTORY as MOCK_CLINIC_LEVEL_TEST_HISTORY,
   MOCK_CLINIC_CYCLES,
   MOCK_ES_TEMPLATE,
 } from './lib/mockData';

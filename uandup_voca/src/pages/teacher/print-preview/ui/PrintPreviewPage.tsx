@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { WordTestModal, SentenceModal, type ESRow } from '@/widgets/test-offline';
-import { mockVocabList, mockESRows, MOCK_ES_TEMPLATE } from '@/entities/test';
+import { WordTestModal, SentenceModal } from '@/widgets/test-offline';
+import { MOCK_VOCAB_LIST, MOCK_ES_ROWS, MOCK_ES_TEMPLATE } from '@/entities/test';
 
 type ModalType = 'WMS' | 'ES' | 'TEST_WMS' | 'TEST_ES' | null;
 
@@ -76,14 +76,14 @@ export function PrintPreviewPage() {
       </div>
 
       {openModal === 'WMS' && (
-        <WordTestModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
+        <WordTestModal onClose={() => setOpenModal(null)} rows={MOCK_VOCAB_LIST} />
       )}
       {openModal === 'ES' && <SentenceModal onClose={() => setOpenModal(null)} rows={MOCK_ES_TEMPLATE} />}
       {openModal === 'TEST_WMS' && (
-        <WordTestModal onClose={() => setOpenModal(null)} rows={mockVocabList} />
+        <WordTestModal onClose={() => setOpenModal(null)} rows={MOCK_VOCAB_LIST} />
       )}
       {openModal === 'TEST_ES' && (
-        <SentenceModal onClose={() => setOpenModal(null)} rows={mockESRows} />
+        <SentenceModal onClose={() => setOpenModal(null)} rows={MOCK_ES_ROWS} />
       )}
     </main>
   );
