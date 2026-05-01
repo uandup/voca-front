@@ -1,4 +1,4 @@
-import type { TestVocabItem, VocabTestType } from '../../test/mock/testMockData';
+import type { TestVocabItem, VocabTestType } from '@/entities/test';
 import type { Answer } from '../../test/ui/VocabAnswerRow';
 import { VocabReviewRow } from './VocabReviewRow';
 

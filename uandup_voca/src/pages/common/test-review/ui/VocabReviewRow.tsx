@@ -1,4 +1,4 @@
-import type { VocabTestType } from '../../test/mock/testMockData';
+import type { VocabTestType } from '@/entities/test';
 import type { Answer } from '../../test/ui/VocabAnswerRow';
 
 interface VocabReviewRowProps {

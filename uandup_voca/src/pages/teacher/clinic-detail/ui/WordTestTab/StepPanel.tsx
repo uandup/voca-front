@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from './types';
+import type { TestStep, TestType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import {
@@ -36,7 +36,7 @@ export default function StepPanel({ step }: StepPanelProps) {
 
   const [config, setConfig] = useState<TestConfig>({
     testQty: 30,
-    testType: 'Meaning to Word',
+    testType: 'meaning-to-word',
     includeSynonyms: true,
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -149,7 +149,7 @@ interface TestConfigSectionProps {
   onChange: (patch: Partial<TestConfig>) => void;
 }
 
-const TEST_TYPE_OPTIONS: TestType[] = ['Meaning to Word', 'Word to Meaning'];
+const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 function TestConfigSection({
   config,

@@ -1,8 +1,8 @@
-import type { TestSentenceItem } from '../mock/testMockData';
+import type { SentenceItem } from '@/entities/test';
 import { SentenceAnswerRow, type SentenceAnswer } from './SentenceAnswerRow';
 
 interface SentenceAnswerTableProps {
-  items: TestSentenceItem[];
+  items: SentenceItem[];
   answers: Record<number, SentenceAnswer>;
   onAnswerChange: (id: number, value: string) => void;
   currentPage: number;

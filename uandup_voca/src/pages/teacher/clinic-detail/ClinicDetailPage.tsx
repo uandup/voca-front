@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { CLINIC_MOCK } from '@/pages/teacher/clinics/mock/clinicMockData';
-import { MemoPopup, type MemoItem } from '@/entities/student';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+import { CLINIC_MOCK } from '@/entities/clinic';
+import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
+import type { Word as Vocab } from '@/entities/word';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
@@ -17,7 +17,7 @@ export function ClinicDetailPage() {
   const { studentId } = useParams({ from: '/teacher/clinics_/$studentId' });
   const navigate = useNavigate();
 
-  const student = CLINIC_MOCK.sessions.flatMap((s) => s.students).find((s) => s.id === studentId);
+  const student = CLINIC_MOCK.sessions.flatMap((s) => s.students).find((s) => String(s.id) === studentId);
 
   const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);

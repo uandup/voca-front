@@ -1,4 +1,4 @@
-import type { TestStep } from './types';
+import type { TestStep } from '@/entities/test';
 
 interface StepCardProps {
   step: TestStep;

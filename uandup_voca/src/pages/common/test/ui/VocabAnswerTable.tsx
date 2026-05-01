@@ -1,4 +1,4 @@
-import type { TestVocabItem, VocabTestType } from '../mock/testMockData';
+import type { TestVocabItem, VocabTestType } from '@/entities/test';
 import { VocabAnswerRow, type Answer } from './VocabAnswerRow';
 
 interface VocabAnswerTableProps {

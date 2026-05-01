@@ -5,7 +5,8 @@ import {
   ITEMS_PER_PAGE,
   type TestType,
   type VocabTestType,
-} from './mock/testMockData';
+  type TestVocabItem,
+} from '@/entities/test';
 import { TestHeader } from './ui/TestHeader';
 import { VocabAnswerTable } from './ui/VocabAnswerTable';
 import { SentenceAnswerTable } from './ui/SentenceAnswerTable';
@@ -86,7 +87,7 @@ export default function TestPage() {
             />
           ) : (
             <VocabAnswerTable
-              items={pageItems as typeof MOCK_VOCAB_ITEMS}
+              items={pageItems as TestVocabItem[]}
               testType={testType as VocabTestType}
               showSynonym={showSynonym}
               answers={vocabAnswers}

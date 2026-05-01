@@ -1,4 +1,4 @@
-import { CLASS_MOCK } from '../../mock/studentManageMockData';
+import { CLASS_MOCK } from '@/entities/class';
 
 interface ClassListPanelProps {
   selectedClasses: string[];

@@ -1,8 +1,8 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { ManagedStudent } from '../../mock/studentManageMockData';
+import type { Student } from '@/entities/member';
 
 interface DeleteConfirmModalProps {
-  student: ManagedStudent;
+  student: Student;
   onClose: () => void;
   onConfirm: (id: number) => void;
 }

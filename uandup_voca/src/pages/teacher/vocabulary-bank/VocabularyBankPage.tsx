@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { VocabCard } from './ui/VocabCard';
 import { VocabModal } from './ui/modals/VocabModal';
-import { mockVocabData } from './mock/vocabMockData';
+import { WORD_MOCK as mockVocabData } from '@/entities/word';
 
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -98,8 +98,8 @@ export default function VocabularyBankPage() {
 
       {/* Vocabulary List */}
       <div className="flex flex-col gap-8">
-        {filtered.map(({ id, ...vocabData }) => (
-          <VocabCard key={id} {...vocabData} />
+        {filtered.map((word) => (
+          <VocabCard key={word.id} {...word} />
         ))}
       </div>
     </main>

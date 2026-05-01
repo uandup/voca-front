@@ -1,4 +1,4 @@
-import type { TestType } from '../mock/testMockData';
+import type { VocabTestType as TestType } from '@/entities/test';
 
 interface Answer {
   meaning: string;

@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import type { ParentInfo } from '../../mock/studentManageMockData';
-import { PARENT_MOCK } from '../../mock/studentManageMockData';
+import type { Parent } from '@/entities/member';
+import { PARENT_MOCK } from '@/entities/member';
 
 interface ParentListPanelProps {
   selectedId: number | null;
-  onSelect: (parent: ParentInfo) => void;
+  onSelect: (parent: Parent) => void;
 }
 
 export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) {
   const [search, setSearch] = useState('');
-  const filtered = PARENT_MOCK.filter((p) => p.name.includes(search) || p.phone.includes(search));
+  const filtered = PARENT_MOCK.filter(
+    (p) =>
+      `${p.nameLastKo}${p.nameFirstKo}`.includes(search) || p.phone.includes(search),
+  );
 
   return (
     <div className="absolute left-full top-0 ml-3 w-64 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full">
@@ -53,7 +56,7 @@ export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) 
                 <p
                   className={`text-sm font-bold flex items-center gap-1 ${isSelected ? 'text-primary' : 'text-on-surface'}`}
                 >
-                  {parent.name}
+                  {parent.nameLastKo}{parent.nameFirstKo}
                   {isSelected && <span className="material-symbols-outlined text-sm">check</span>}
                 </p>
                 <p className="text-xs text-on-surface-variant mt-0.5">{parent.phone}</p>

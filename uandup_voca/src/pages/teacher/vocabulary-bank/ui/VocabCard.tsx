@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import type { Vocab } from '@/entities/vocab';
+import type { Word } from '@/entities/word';
 
 import { VocabModal } from './modals/VocabModal';
 import { DeleteVocabModal } from './modals/DeleteVocabModal';
 
-type VocabCardProps = Vocab;
+type VocabCardProps = Word;
 
 export function VocabCard({
   word,

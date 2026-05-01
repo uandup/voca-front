@@ -1,5 +1,5 @@
-import type { MemoItem } from '@/entities/student';
-import type { ClinicStudent } from '@/pages/teacher/clinics/mock/clinicMockData';
+import type { Memo as MemoItem } from '@/entities/memo';
+import type { ClinicStudent } from '@/entities/clinic';
 
 interface Props {
   student: ClinicStudent;

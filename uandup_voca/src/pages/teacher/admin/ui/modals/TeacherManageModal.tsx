@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TEACHER_MOCK, type TeacherInfo } from '../../mock/adminMockData';
+import { TEACHER_MOCK, type Teacher as TeacherInfo } from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -12,17 +12,26 @@ export function TeacherManageModal({ onClose }: Props) {
   const [editForm, setEditForm] = useState({ nameKo: '', name: '' });
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
+  function nameKo(t: TeacherInfo) { return `${t.nameLastKo}${t.nameFirstKo}`; }
+  function nameEn(t: TeacherInfo) { return `${t.nameLastEn} ${t.nameFirstEn}`; }
+
   function handleEditStart(t: TeacherInfo) {
     setEditingId(t.id);
-    setEditForm({ nameKo: t.nameKo, name: t.name });
+    setEditForm({ nameKo: nameKo(t), name: nameEn(t) });
     setDeletingId(null);
   }
 
   function handleEditSave(id: number) {
-    const nameKo = editForm.nameKo.trim();
-    const name = editForm.name.trim();
-    if (!nameKo || !name) return;
-    setTeachers((prev) => prev.map((t) => (t.id === id ? { ...t, nameKo, name } : t)));
+    const [lastKo, ...restKo] = editForm.nameKo.split('');
+    const [lastEn, firstEn = ''] = editForm.name.split(' ');
+    if (!editForm.nameKo.trim() || !editForm.name.trim()) return;
+    setTeachers((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? { ...t, nameLastKo: lastKo ?? '', nameFirstKo: restKo.join(''), nameLastEn: lastEn ?? '', nameFirstEn: firstEn }
+          : t,
+      ),
+    );
     setEditingId(null);
   }
 
@@ -37,7 +46,6 @@ export function TeacherManageModal({ onClose }: Props) {
         className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '500px' }}
       >
-        {/* 헤더 */}
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <div>
             <h2 className="font-headline text-xl font-bold text-primary">Teacher Management</h2>
@@ -51,7 +59,6 @@ export function TeacherManageModal({ onClose }: Props) {
           </button>
         </div>
 
-        {/* 목록 */}
         <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin]">
           {teachers.length === 0 && (
             <li className="flex flex-col items-center justify-center h-full text-on-surface-variant/50 py-16">
@@ -63,7 +70,6 @@ export function TeacherManageModal({ onClose }: Props) {
           {teachers.map((t) => (
             <li key={t.id} className="px-7 py-4">
               {editingId === t.id ? (
-                /* 편집 폼 */
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2">
                     <input
@@ -106,9 +112,8 @@ export function TeacherManageModal({ onClose }: Props) {
                   </div>
                 </div>
               ) : deletingId === t.id ? (
-                /* 삭제 확인 */
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-error font-bold">Delete {t.nameKo}?</p>
+                  <p className="text-sm text-error font-bold">Delete {nameKo(t)}?</p>
                   <div className="flex gap-2 shrink-0">
                     <button
                       type="button"
@@ -127,11 +132,10 @@ export function TeacherManageModal({ onClose }: Props) {
                   </div>
                 </div>
               ) : (
-                /* 기본 행 */
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-on-surface truncate">{t.nameKo}</p>
+                      <p className="text-sm font-bold text-on-surface truncate">{nameKo(t)}</p>
                       {t.isAdmin && (
                         <span className="inline-flex items-center gap-0.5 text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
                           <span className="material-symbols-outlined" style={{ fontSize: '11px' }}>
@@ -141,7 +145,7 @@ export function TeacherManageModal({ onClose }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-on-surface-variant mt-0.5 truncate">{t.name}</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5 truncate">{nameEn(t)}</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button

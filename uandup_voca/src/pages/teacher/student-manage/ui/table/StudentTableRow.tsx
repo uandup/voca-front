@@ -1,15 +1,15 @@
-import { AssignedLevelBlocks } from '@/entities/vocab';
-import type { ManagedStudent } from '../../mock/studentManageMockData';
+import { AssignedLevelBlocks } from '@/entities/word';
+import type { Student } from '@/entities/member';
 import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {
-  onEdit: (student: ManagedStudent) => void;
-  onDelete: (student: ManagedStudent) => void;
-  onMemo: (student: ManagedStudent) => void;
+  onEdit: (student: Student) => void;
+  onDelete: (student: Student) => void;
+  onMemo: (student: Student) => void;
 }
 
 interface StudentTableRowProps {
-  student: ManagedStudent;
+  student: Student;
   actions: RowActions;
 }
 

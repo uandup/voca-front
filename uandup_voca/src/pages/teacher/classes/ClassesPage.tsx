@@ -1,5 +1,5 @@
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from './mock/timetableMockData';
+import { DAYS, NUM_COLS, TIMETABLE_MOCK as TIME_SLOTS_DEF } from '@/entities/class';
 import { buildGrid } from './model/buildGrid';
 import { cellCardStyles } from './ui/timetableStyles';
 

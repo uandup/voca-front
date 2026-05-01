@@ -1,4 +1,4 @@
-import { DAYS, NUM_COLS, TIME_SLOTS_DEF } from '../../classes/mock/timetableMockData';
+import { DAYS, NUM_COLS, TIMETABLE_MOCK as TIME_SLOTS_DEF } from '@/entities/class';
 import { buildGrid } from '../../classes/model/buildGrid';
 import { cellCardStyles } from '../../classes/ui/timetableStyles';
 
@@ -73,7 +73,7 @@ export function MiniTimetable() {
                   >
                     {cell.label && (
                       <div className={`h-full rounded flex items-center justify-center ${v.card}`}>
-                        <span className={`${v.text} !text-[8px] leading-tight text-center px-0.5`}>
+                        <span className={`${v.text} text-[8px]! leading-tight text-center px-0.5`}>
                           {cell.label}
                         </span>
                       </div>

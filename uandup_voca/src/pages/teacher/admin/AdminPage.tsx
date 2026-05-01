@@ -6,7 +6,13 @@ import { TeacherPermissionModal } from './ui/modals/TeacherPermissionModal';
 import { TeacherManageModal } from './ui/modals/TeacherManageModal';
 import { ParentManageModal } from './ui/modals/ParentManageModal';
 import { GradeBulkModal } from './ui/modals/GradeBulkModal';
-import { PENDING_STUDENTS, PENDING_PARENTS, PENDING_TEACHERS, TEACHER_MOCK, PARENT_MOCK } from './mock/adminMockData';
+import {
+  PENDING_STUDENTS_MOCK as PENDING_STUDENTS,
+  PENDING_PARENTS_MOCK as PENDING_PARENTS,
+  PENDING_TEACHERS_MOCK as PENDING_TEACHERS,
+  TEACHER_MOCK,
+  PARENT_MOCK,
+} from '@/entities/member';
 
 const totalPending = PENDING_STUDENTS.length + PENDING_PARENTS.length + PENDING_TEACHERS.length;
 

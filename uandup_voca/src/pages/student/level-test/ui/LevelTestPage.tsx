@@ -1,7 +1,7 @@
-import { useNavigate } from '@tanstack/react-router';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+// import { useNavigate } from '@tanstack/react-router';
+import type { Word as Vocab } from '@/entities/word';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/vocab/ui/AssignedLevelBlocks';
+import { AssignedLevelBlocks } from '@/entities/word';
 import { PageTitle } from '@/shared/ui/PageTitle';
 
 type DifficultyLevel = Vocab['difficultyLevel'];
@@ -25,17 +25,17 @@ const MOCK_HISTORY: LevelTestRecord[] = [
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
 
-const ASSIGNED_WORD_COUNT = 100; // TODO: API 연동
-const ASSIGNED_LEVEL = 4; // TODO: API 연동
+// const ASSIGNED_WORD_COUNT = 100; // TODO: API 연동
+// const ASSIGNED_LEVEL = 4; // TODO: API 연동
 
 export function LevelTestPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
       <PageTitle title="Level Test" />
       {/* Assigned Words Card */}
-      <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
+      {/* <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
           {ASSIGNED_WORD_COUNT > 0 ? (
             <div className="flex items-baseline gap-3">
@@ -72,7 +72,7 @@ export function LevelTestPage() {
             </button>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* History Table */}
       <TableContainer>

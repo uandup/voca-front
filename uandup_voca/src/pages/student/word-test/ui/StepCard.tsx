@@ -1,4 +1,4 @@
-import type { TestStep } from './types';
+import type { TestStep } from '@/entities/test';
 
 interface StepCardProps {
   step: TestStep;
@@ -11,6 +11,8 @@ const containerClass: Record<TestStep['status'], string> = {
   grading: 'border border-primary/30 bg-primary/5',
   fail: 'border border-error/20 bg-error/5',
   passed: 'border border-success/30 bg-success/5',
+  active: 'border border-primary/30 bg-primary/5',
+  pending: 'border border-primary/30 bg-primary/5',
 };
 
 export default function StepCard({ step }: StepCardProps) {

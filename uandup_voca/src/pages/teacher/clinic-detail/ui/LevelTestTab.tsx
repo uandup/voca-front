@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+import type { Word as Vocab } from '@/entities/word';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { AssignedLevelBlocks } from '@/entities/vocab/ui/AssignedLevelBlocks';
+import { AssignedLevelBlocks } from '@/entities/word';
 
 type DifficultyLevel = Vocab['difficultyLevel'];
 type TestStatus = 'pending' | 'completed' | 'fail';
-type TestType = 'Meaning to Word' | 'Word to Meaning';
+type TestType = 'meaning-to-word' | 'word-to-meaning';
 
 interface LevelTestRecord {
   date: string;
@@ -30,13 +30,13 @@ const MOCK_HISTORY: LevelTestRecord[] = [
 ];
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
-const TEST_TYPE_OPTIONS: TestType[] = ['Meaning to Word', 'Word to Meaning'];
+const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 export function LevelTestTab() {
   const [config, setConfig] = useState<LevelTestConfig>({
     selectedLevel: 4,
     qty: '100',
-    testType: 'Meaning to Word',
+    testType: 'meaning-to-word',
     includeSynonyms: true,
   });
   const [isEditing, setIsEditing] = useState(false);

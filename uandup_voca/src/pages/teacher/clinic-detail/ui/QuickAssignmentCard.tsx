@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+import type { Word as Vocab } from '@/entities/word';
 
 type DifficultyLevel = Vocab['difficultyLevel'];
 

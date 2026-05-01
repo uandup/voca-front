@@ -1,5 +1,5 @@
 import type { GridCell, TimeSlotDef } from './types';
-import { NUM_COLS } from '../mock/timetableMockData';
+import { NUM_COLS } from '@/entities/class';
 
 /** break row(점심·저녁 휴식)를 NUM_COLS 개의 빈 GridCell 배열로 변환한다 */
 function expandBreakRow(): GridCell[] {

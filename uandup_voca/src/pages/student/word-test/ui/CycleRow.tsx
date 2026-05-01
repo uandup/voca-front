@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import StepCard from './StepCard';
-import type { TestStep } from './types';
+import type { TestStep } from '@/entities/test';
 
 export interface CycleRowData {
   id: string;

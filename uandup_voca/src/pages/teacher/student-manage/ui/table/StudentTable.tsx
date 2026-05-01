@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import type { ManagedStudent } from '../../mock/studentManageMockData';
+import type { Student } from '@/entities/member';
 import { StudentTableRow, type RowActions } from './StudentTableRow';
 
 type SortKey = keyof Pick<
-  ManagedStudent,
+  Student,
   'nameLastKo' | 'grade' | 'assignedLevel' | 'assignedWordCount' | 'testQuestionCount' | 'accuracy'
 >;
 type SortDir = 'asc' | 'desc';
@@ -22,10 +22,10 @@ const COLUMNS: { label: string; key?: SortKey; className?: string }[] = [
   { label: 'Actions', className: 'text-right' },
 ];
 
-function sortStudents(data: ManagedStudent[], key: SortKey, dir: SortDir): ManagedStudent[] {
+function sortStudents(data: Student[], key: SortKey, dir: SortDir): Student[] {
   return [...data].sort((a, b) => {
-    const av = key === 'accuracy' ? parseFloat(a[key]) : (a[key] as number | string);
-    const bv = key === 'accuracy' ? parseFloat(b[key]) : (b[key] as number | string);
+    const av = key === 'accuracy' ? parseFloat(a[key] ?? '0') : (a[key] as number | string);
+    const bv = key === 'accuracy' ? parseFloat(b[key] ?? '0') : (b[key] as number | string);
     if (av < bv) return dir === 'asc' ? -1 : 1;
     if (av > bv) return dir === 'asc' ? 1 : -1;
     return 0;
@@ -33,7 +33,7 @@ function sortStudents(data: ManagedStudent[], key: SortKey, dir: SortDir): Manag
 }
 
 interface StudentTableProps {
-  students: ManagedStudent[];
+  students: Student[];
   actions: RowActions;
 }
 

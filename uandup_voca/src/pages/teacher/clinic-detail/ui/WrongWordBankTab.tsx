@@ -3,7 +3,7 @@ import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
 
 type TestStatus = 'pending' | 'completed' | 'fail';
-type TestType = 'Meaning to Word' | 'Word to Meaning';
+type TestType = 'meaning-to-word' | 'word-to-meaning';
 
 interface WrongWordTestRecord {
   date: string;
@@ -25,13 +25,13 @@ const MOCK_TEST_HISTORY: WrongWordTestRecord[] = [
 ];
 
 const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
-const TEST_TYPE_OPTIONS: TestType[] = ['Meaning to Word', 'Word to Meaning'];
+const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 export function WrongWordBankTab() {
   const totalCount = 124;
   const [config, setConfig] = useState<WrongWordConfig>({
     qty: '10',
-    testType: 'Meaning to Word',
+    testType: 'meaning-to-word',
     includeSynonyms: true,
   });
   const [isEditing, setIsEditing] = useState(false);
