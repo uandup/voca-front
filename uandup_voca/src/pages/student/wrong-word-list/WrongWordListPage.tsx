@@ -1,33 +1,6 @@
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { useRouter } from '@tanstack/react-router';
-import { VocabCard } from '@/entities/word';
-import type { WordListItem } from '@/entities/word';
-
-const mockWrongWords: WordListItem[] = [
-  {
-    id: 1,
-    difficultyLevel: 3,
-    word: 'Ambiguity',
-    partOfSpeech: 'N',
-    korMeaning: '모호함, 다의성',
-    engMeaning: 'The quality of being open to more than one interpretation; inexactness.',
-    synonyms: ['vague', 'obscurity', 'uncertainty'],
-    exampleSentence: '',
-    wrongCount: 5,
-  },
-  {
-    id: 2,
-    difficultyLevel: 4,
-    word: 'Juxtaposition',
-    partOfSpeech: 'N',
-    korMeaning: '병치, 나란히 놓기',
-    engMeaning:
-      'The fact of two things being seen or placed close together for contrasting effect.',
-    synonyms: ['comparison', 'proximity', 'adjacency'],
-    exampleSentence: '',
-    wrongCount: 3,
-  },
-];
+import { VocabCard, MOCK_WRONG_WORDS } from '@/entities/word';
 
 export default function WrongWordListPage() {
   const router = useRouter();
@@ -39,7 +12,7 @@ export default function WrongWordListPage() {
         title="Word List"
       />
       <div className="space-y-5">
-        {mockWrongWords.map((word) => (
+        {MOCK_WRONG_WORDS.map((word) => (
           <VocabCard
             key={word.id}
             difficultyLevel={word.difficultyLevel}

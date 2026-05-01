@@ -1,27 +1,8 @@
 // import { useNavigate } from '@tanstack/react-router';
-import type { Word as Vocab } from '@/entities/word';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { AssignedLevelBlocks } from '@/entities/word';
 import { PageTitle } from '@/shared/ui/PageTitle';
-
-type DifficultyLevel = Vocab['difficultyLevel'];
-type TestStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
-
-interface LevelTestRecord {
-  date: string;
-  level: DifficultyLevel;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-const MOCK_HISTORY: LevelTestRecord[] = [
-  { date: '2026.05.10', level: 4, quantity: 100, score: null, status: 'pending' },
-  { date: '2026.05.05', level: 4, quantity: 100, score: null, status: 'awaiting-test' },
-  { date: '2026.05.01', level: 4, quantity: 100, score: null, status: 'awaiting-grading' },
-  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
-  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
-];
+import { MOCK_STUDENT_LEVEL_TEST_HISTORY } from '@/entities/test';
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
 
@@ -99,7 +80,7 @@ export function LevelTestPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_HISTORY.map((row, i) => (
+              {MOCK_STUDENT_LEVEL_TEST_HISTORY.map((row, i) => (
                 <tr key={i}>
                   <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
                     {row.date}

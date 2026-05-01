@@ -12,6 +12,9 @@ export type {
   TestInfo,
   TestVocabAnswer,
   TestSentenceAnswer,
+  WrongWordTestRecord,
+  LevelTestRecord,
+  ClinicCycle,
 } from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export type { VocabTestType, TestVocabItem } from './lib/mockData';
@@ -26,4 +29,10 @@ export {
   MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,
   MOCK_CYCLES,
+  MOCK_REVIEW_DECK_HISTORY,
+  MOCK_STUDENT_LEVEL_TEST_HISTORY,
+  MOCK_CLINIC_REVIEW_DECK_HISTORY,
+  MOCK_CLINIC_LEVEL_TEST_HISTORY,
+  MOCK_CLINIC_CYCLES,
+  MOCK_ES_TEMPLATE,
 } from './lib/mockData';

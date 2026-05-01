@@ -1,6 +1,15 @@
 import type { WordTestItem } from '@/entities/word';
 import type { ESRow } from '@/widgets/test-offline';
-import type { SentenceItem, TestCycle, TestInfo, TestVocabAnswer, TestSentenceAnswer } from '../model/types';
+import type {
+  SentenceItem,
+  TestCycle,
+  TestInfo,
+  TestVocabAnswer,
+  TestSentenceAnswer,
+  WrongWordTestRecord,
+  LevelTestRecord,
+  ClinicCycle,
+} from '../model/types';
 
 export type VocabTestType = 'word-to-meaning' | 'meaning-to-word';
 export type TestVocabItem = Required<Pick<WordTestItem, 'id'>> &
@@ -566,3 +575,70 @@ export const MOCK_CYCLES: TestCycle[] = [
     ],
   },
 ];
+
+// 학생 - Review Deck 테스트 이력 (WrongWordBankPage)
+export const MOCK_REVIEW_DECK_HISTORY: WrongWordTestRecord[] = [
+  { date: '2026.05.10', quantity: 30, score: null, status: 'awaiting-test' },
+  { date: '2026.05.05', quantity: 30, score: 27, status: 'completed' },
+  { date: '2026.05.01', quantity: 30, score: 25, status: 'completed' },
+  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
+  { date: '2026.04.25', quantity: 30, score: 28, status: 'completed' },
+];
+
+// 학생 - Level Test 이력 (LevelTestPage)
+export const MOCK_STUDENT_LEVEL_TEST_HISTORY: LevelTestRecord[] = [
+  { date: '2026.05.10', level: 4, quantity: 100, score: null, status: 'pending' },
+  { date: '2026.05.05', level: 4, quantity: 100, score: null, status: 'awaiting-test' },
+  { date: '2026.05.01', level: 4, quantity: 100, score: null, status: 'awaiting-grading' },
+  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
+  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
+];
+
+// 클리닉 - Review Deck 테스트 이력 (WrongWordBankTab)
+export const MOCK_CLINIC_REVIEW_DECK_HISTORY: WrongWordTestRecord[] = [
+  { date: '2026.04.25', quantity: 30, score: null, status: 'pending' },
+  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
+  { date: '2026.05.01', quantity: 30, score: 28, status: 'completed' },
+];
+
+// 클리닉 - Level Test 이력 (LevelTestTab)
+export const MOCK_CLINIC_LEVEL_TEST_HISTORY: LevelTestRecord[] = [
+  { date: '2026.04.25', level: 4, quantity: 100, score: null, status: 'pending' },
+  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
+  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
+];
+
+// 클리닉 - Word Test 사이클 목록 (WordTestTab)
+export const MOCK_CLINIC_CYCLES: ClinicCycle[] = [
+  {
+    title: 'Cycle #48-97',
+    badge: 'High Priority',
+    scheduledDate: '23.10.23',
+    steps: [
+      { key: 'word', label: 'Word', status: 'pending', date: '23.10.24', totalScore: '30', testType: 'meaning-to-word' },
+      { key: 'sentence', label: 'Sentence', status: 'active', date: '23.10.24', totalScore: '30', testType: 'meaning-to-word' },
+      { key: 'review1', label: 'Review 1', status: 'passed', date: '23.10.23', scores: ['98'], totalScore: '100', testType: 'meaning-to-word' },
+      { key: 'review2', label: 'Review 2', status: 'fail', date: '23.10.24', scores: ['62'], totalScore: '100', testType: 'meaning-to-word' },
+      { key: 'review3', label: 'Review 3', status: 'passed', date: '23.10.25', scores: ['55', '75', '88'], totalScore: '100', testType: 'meaning-to-word' },
+    ],
+  },
+  {
+    title: 'Cycle #01-47',
+    badge: 'Standard',
+    scheduledDate: '23.10.24',
+    steps: [
+      { key: 'word', label: 'Word Test', status: 'fail', date: '23.10.24', scores: ['62'], totalScore: '100', isPassed: false, testType: 'meaning-to-word' },
+      { key: 'sentence', label: 'Sentence', status: 'locked', testType: 'meaning-to-word', subLabel: 'Locked' },
+      { key: 'review1', label: 'Review 1', status: 'locked', testType: 'meaning-to-word', subLabel: 'Locked' },
+      { key: 'review2', label: 'Review 2', status: 'locked', testType: 'meaning-to-word', subLabel: 'Locked' },
+      { key: 'review3', label: 'Review 3', status: 'locked', testType: 'meaning-to-word', subLabel: 'Locked' },
+    ],
+  },
+];
+
+// Print Preview - 빈 예문 시험지 템플릿 (PrintPreviewPage)
+export const MOCK_ES_TEMPLATE: ESRow[] = Array.from({ length: 15 }, (_, i) => ({
+  no: String(i + 1).padStart(2, '0'),
+  sentence: '',
+  answer: '',
+}));

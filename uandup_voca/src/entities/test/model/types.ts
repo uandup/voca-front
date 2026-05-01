@@ -85,3 +85,25 @@ export interface TestVocabAnswer {
 export interface TestSentenceAnswer {
   word: string;
 }
+
+export interface WrongWordTestRecord {
+  date: string;
+  quantity: number;
+  score: number | null;
+  status: TestStatus;
+}
+
+export interface LevelTestRecord {
+  date: string;
+  level: number;
+  quantity: number;
+  score: number | null;
+  status: TestStatus;
+}
+
+export interface ClinicCycle {
+  title: string;
+  badge?: string;
+  scheduledDate: string;
+  steps: TestStep[];
+}

@@ -1,33 +1,17 @@
 import { useState } from 'react';
-import type { Word as Vocab } from '@/entities/word';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { AssignedLevelBlocks } from '@/entities/word';
-
-type DifficultyLevel = Vocab['difficultyLevel'];
-type TestStatus = 'pending' | 'completed' | 'fail';
-type TestType = 'meaning-to-word' | 'word-to-meaning';
-
-interface LevelTestRecord {
-  date: string;
-  level: DifficultyLevel;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
+import type { TestType } from '@/entities/test';
+import type { WordDifficultyLevel } from '@/entities/word';
+import { MOCK_CLINIC_LEVEL_TEST_HISTORY } from '@/entities/test';
 
 interface LevelTestConfig {
-  selectedLevel: DifficultyLevel;
+  selectedLevel: WordDifficultyLevel;
   qty: string;
   testType: TestType;
   includeSynonyms: boolean;
 }
-
-const MOCK_HISTORY: LevelTestRecord[] = [
-  { date: '2026.04.25', level: 4, quantity: 100, score: null, status: 'pending' },
-  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
-  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
-];
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
 const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -56,7 +40,7 @@ export function LevelTestTab() {
             Select Level
           </p>
           <div className="flex gap-4">
-            {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as DifficultyLevel[]).map((lv) => (
+            {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as WordDifficultyLevel[]).map((lv) => (
               <button
                 key={lv}
                 onClick={() => setConfig((prev) => ({ ...prev, selectedLevel: lv }))}
@@ -174,7 +158,7 @@ export function LevelTestTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_HISTORY.map((row, i) => (
+              {MOCK_CLINIC_LEVEL_TEST_HISTORY.map((row, i) => (
                 <tr key={i}>
                   <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
                     {row.date}

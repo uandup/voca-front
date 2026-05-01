@@ -10,6 +10,8 @@ export type {
   PendingTeacher,
   Parent,
   PendingParent,
+  DashboardPendingStudent,
+  UnassignedStudent,
 } from './model/types';
 export {
   STUDENT_MOCK,
@@ -19,4 +21,6 @@ export {
   REGISTERED_STUDENTS_MOCK,
   TEACHER_MOCK,
   PARENT_MOCK,
+  MOCK_PENDING_APPROVALS,
+  MOCK_UNASSIGNED_STUDENTS,
 } from './lib/mockData';

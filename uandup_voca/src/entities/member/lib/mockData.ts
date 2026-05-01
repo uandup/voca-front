@@ -1,4 +1,4 @@
-import type { Student, PendingStudent, PendingParent, PendingTeacher, StudentSummary, Teacher, Parent } from '../model/types';
+import type { Student, PendingStudent, PendingParent, PendingTeacher, StudentSummary, Teacher, Parent, DashboardPendingStudent, UnassignedStudent } from '../model/types';
 
 export const STUDENT_MOCK: Student[] = [
   {
@@ -127,4 +127,22 @@ export const PARENT_MOCK: Parent[] = [
   { id: 3, nameFirstKo: '영미', nameLastKo: '박', nameFirstEn: 'Youngmi', nameLastEn: 'Park', role: 'parent', status: 'approved', phone: '010-3456-7890', matchedStudentId: 3 },
   { id: 4, nameFirstKo: '영진', nameLastKo: '최', nameFirstEn: 'Youngjin', nameLastEn: 'Choi', role: 'parent', status: 'approved', phone: '010-4567-8901', matchedStudentId: 4 },
   { id: 5, nameFirstKo: '미경', nameLastKo: '정', nameFirstEn: 'Mikyung', nameLastEn: 'Jung', role: 'parent', status: 'approved', phone: '010-5678-9012', matchedStudentId: 5 },
+];
+
+export const MOCK_PENDING_APPROVALS: DashboardPendingStudent[] = [
+  { id: 1, nameKo: '김지훈', name: 'Kim Jihun', grade: 10 },
+  { id: 2, nameKo: '박서연', name: 'Park Seoyeon', grade: 9 },
+  { id: 3, nameKo: '이준혁', name: 'Lee Junhyuk', grade: 11 },
+  { id: 4, nameKo: '최아영', name: 'Choi Ayoung', grade: 12 },
+  { id: 5, nameKo: '한도윤', name: 'Han Doyun', grade: 10 },
+  { id: 6, nameKo: '오민준', name: 'Oh Minjun', grade: 9 },
+  { id: 7, nameKo: '신예린', name: 'Shin Yerin', grade: 11 },
+];
+
+export const MOCK_UNASSIGNED_STUDENTS: UnassignedStudent[] = [
+  { id: 1, nameKo: '강지수', name: 'Kang Jisu', grade: 10, clinics: ['MON 13:00~15:00', 'WED 18:00~20:00'] },
+  { id: 2, nameKo: '오민준', name: 'Oh Minjun', grade: 9, clinics: ['TUE 13:00~15:00'] },
+  { id: 3, nameKo: '신예린', name: 'Shin Yerin', grade: 11, clinics: [] },
+  { id: 4, nameKo: '한도윤', name: 'Han Doyun', grade: 10, clinics: ['MON 13:00~15:00', 'THU 15:00~17:00', 'SAT 10:00~12:00'] },
+  { id: 5, nameKo: '이준혁', name: 'Lee Junhyuk', grade: 12, clinics: ['FRI 15:00~17:00'] },
 ];

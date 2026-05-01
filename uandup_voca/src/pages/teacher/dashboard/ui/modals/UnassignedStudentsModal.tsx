@@ -1,45 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-
-interface UnassignedStudent {
-  id: number;
-  nameKo: string;
-  name: string;
-  grade: number;
-  clinics: string[];
-}
-
-const MOCK_UNASSIGNED: UnassignedStudent[] = [
-  {
-    id: 1,
-    nameKo: '강지수',
-    name: 'Kang Jisu',
-    grade: 10,
-    clinics: ['MON 13:00~15:00', 'WED 18:00~20:00'],
-  },
-  {
-    id: 2,
-    nameKo: '오민준',
-    name: 'Oh Minjun',
-    grade: 9,
-    clinics: ['TUE 13:00~15:00'],
-  },
-  { id: 3, nameKo: '신예린', name: 'Shin Yerin', grade: 11, clinics: [] },
-  {
-    id: 4,
-    nameKo: '한도윤',
-    name: 'Han Doyun',
-    grade: 10,
-    clinics: ['MON 13:00~15:00', 'THU 15:00~17:00', 'SAT 10:00~12:00'],
-  },
-  {
-    id: 5,
-    nameKo: '이준혁',
-    name: 'Lee Junhyuk',
-    grade: 12,
-    clinics: ['FRI 15:00~17:00'],
-  },
-];
+import { MOCK_UNASSIGNED_STUDENTS } from '@/entities/member';
 
 interface AssignFormState {
   levels: number[];
@@ -83,7 +44,7 @@ export function UnassignedStudentsModal({ onClose }: UnassignedStudentsModalProp
     setExpandedId((prev) => (prev === id ? null : id));
   }
 
-  const unassigned = MOCK_UNASSIGNED.filter((s) => !assigned.has(s.id));
+  const unassigned = MOCK_UNASSIGNED_STUDENTS.filter((s) => !assigned.has(s.id));
 
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">

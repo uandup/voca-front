@@ -77,3 +77,20 @@ export interface PendingParent extends BaseMember {
   matchedStudentId: number | null;
   submittedAt: string;
 }
+
+// ─── Dashboard Summary Types ──────────────────────────────────────────────────
+
+export interface DashboardPendingStudent {
+  id: number;
+  nameKo: string;
+  name: string;
+  grade: number;
+}
+
+export interface UnassignedStudent {
+  id: number;
+  nameKo: string;
+  name: string;
+  grade: number;
+  clinics: string[];
+}

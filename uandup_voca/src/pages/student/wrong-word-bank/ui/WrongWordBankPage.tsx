@@ -1,23 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
-
-type TestStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
-
-interface WrongWordTestRecord {
-  date: string;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-const MOCK_TEST_HISTORY: WrongWordTestRecord[] = [
-  { date: '2026.05.10', quantity: 30, score: null, status: 'awaiting-test' },
-  { date: '2026.05.05', quantity: 30, score: 27, status: 'completed' },
-  { date: '2026.05.01', quantity: 30, score: 25, status: 'completed' },
-  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
-  { date: '2026.04.25', quantity: 30, score: 28, status: 'completed' },
-];
+import { MOCK_REVIEW_DECK_HISTORY } from '@/entities/test';
 
 const COLUMNS = ['Date', 'Quantity', 'Score', 'Status', 'Actions'];
 
@@ -73,7 +57,7 @@ export function WrongWordBankPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_TEST_HISTORY.map((row, i) => (
+              {MOCK_REVIEW_DECK_HISTORY.map((row, i) => (
                 <tr key={i}>
                   <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
                     {row.date}

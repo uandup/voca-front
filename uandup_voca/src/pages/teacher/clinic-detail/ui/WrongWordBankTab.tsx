@@ -1,28 +1,14 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-
-type TestStatus = 'pending' | 'completed' | 'fail';
-type TestType = 'meaning-to-word' | 'word-to-meaning';
-
-interface WrongWordTestRecord {
-  date: string;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
+import type { TestType } from '@/entities/test';
+import { MOCK_CLINIC_REVIEW_DECK_HISTORY } from '@/entities/test';
 
 interface WrongWordConfig {
   qty: string;
   testType: TestType;
   includeSynonyms: boolean;
 }
-
-const MOCK_TEST_HISTORY: WrongWordTestRecord[] = [
-  { date: '2026.04.25', quantity: 30, score: null, status: 'pending' },
-  { date: '2026.04.28', quantity: 30, score: 12, status: 'fail' },
-  { date: '2026.05.01', quantity: 30, score: 28, status: 'completed' },
-];
 
 const COLUMNS = ['Date', 'QTY', 'Score', 'Status', 'Actions'];
 const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -164,7 +150,7 @@ export function WrongWordBankTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_TEST_HISTORY.map((row, i) => (
+              {MOCK_CLINIC_REVIEW_DECK_HISTORY.map((row, i) => (
                 <tr key={i}>
                   <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
                     {row.date}
