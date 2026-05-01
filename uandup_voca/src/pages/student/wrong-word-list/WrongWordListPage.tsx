@@ -9,8 +9,8 @@ const mockWrongWords: WordListItem[] = [
     difficultyLevel: 3,
     word: 'Ambiguity',
     partOfSpeech: 'N',
-    koreanMeaning: '모호함, 다의성',
-    englishMeaning: 'The quality of being open to more than one interpretation; inexactness.',
+    korMeaning: '모호함, 다의성',
+    engMeaning: 'The quality of being open to more than one interpretation; inexactness.',
     synonyms: ['vague', 'obscurity', 'uncertainty'],
     exampleSentence: '',
     wrongCount: 5,
@@ -20,8 +20,8 @@ const mockWrongWords: WordListItem[] = [
     difficultyLevel: 4,
     word: 'Juxtaposition',
     partOfSpeech: 'N',
-    koreanMeaning: '병치, 나란히 놓기',
-    englishMeaning:
+    korMeaning: '병치, 나란히 놓기',
+    engMeaning:
       'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
     exampleSentence: '',
@@ -45,8 +45,8 @@ export default function WrongWordListPage() {
             difficultyLevel={word.difficultyLevel}
             word={word.word}
             partOfSpeech={word.partOfSpeech}
-            koreanMeaning={word.koreanMeaning}
-            englishMeaning={word.englishMeaning}
+            korMeaning={word.korMeaning}
+            engMeaning={word.engMeaning}
             synonyms={word.synonyms}
             extraInfo={
               <div className="flex flex-col items-center justify-center px-2 py-2 bg-error/5 border border-error/20 rounded-lg">

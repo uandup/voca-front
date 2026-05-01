@@ -18,7 +18,7 @@ export default function VocabularyBankPage() {
     const matchesSearch =
       searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.koreanMeaning.includes(searchQuery) ||
+      v.korMeaning.includes(searchQuery) ||
       v.synonyms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesLevel = selectedLevel === '' || v.difficultyLevel === Number(selectedLevel);
     return matchesSearch && matchesLevel;

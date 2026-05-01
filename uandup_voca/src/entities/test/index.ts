@@ -25,4 +25,5 @@ export {
   MOCK_ANSWERS_WTM,
   MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,
+  MOCK_CYCLES,
 } from './lib/mockData';

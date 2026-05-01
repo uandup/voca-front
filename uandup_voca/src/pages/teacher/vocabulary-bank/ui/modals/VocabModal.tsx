@@ -17,11 +17,11 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   const [partOfSpeech, setPartOfSpeech] = useState<Word['partOfSpeech']>(
     initialData?.partOfSpeech ?? 'N',
   );
-  const [koreanMeaning, setKoreanMeaning] = useState(initialData?.koreanMeaning ?? '');
+  const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
   const [difficultyLevel, setDifficultyLevel] = useState<Word['difficultyLevel']>(
     initialData?.difficultyLevel ?? 1,
   );
-  const [englishMeaning, setEnglishMeaning] = useState(initialData?.englishMeaning ?? '');
+  const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
   const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
   const [synonymInput, setSynonymInput] = useState('');
   const [exampleSentence, setExampleSentence] = useState(initialData?.exampleSentence ?? '');
@@ -42,9 +42,9 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
     onSave({
       word,
       partOfSpeech,
-      koreanMeaning,
+      korMeaning,
       difficultyLevel,
-      englishMeaning,
+      engMeaning,
       synonyms,
       exampleSentence,
     });
@@ -115,7 +115,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
                 placeholder="e.g. 일시적인, 덧없는"
                 type="text"
-                value={koreanMeaning}
+                value={korMeaning}
                 onChange={(e) => setKoreanMeaning(e.target.value)}
               />
             </div>
@@ -153,7 +153,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Describe the nuanced definition..."
               rows={2}
-              value={englishMeaning}
+              value={engMeaning}
               onChange={(e) => setEnglishMeaning(e.target.value)}
             />
           </div>

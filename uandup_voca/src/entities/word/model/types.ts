@@ -5,8 +5,8 @@ export interface Word {
   id: number;
   word: string;
   partOfSpeech: PartOfSpeech;
-  koreanMeaning: string;
-  englishMeaning: string;
+  korMeaning: string;
+  engMeaning: string;
   difficultyLevel: WordDifficultyLevel;
   synonyms: string[];
   exampleSentence: string;

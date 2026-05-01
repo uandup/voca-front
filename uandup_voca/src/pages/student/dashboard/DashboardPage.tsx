@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
+import { STUDENT_MOCK } from '@/entities/member';
 import { ScoreTrendChart } from './ui/ScoreTrendChart';
 import { StatCards } from './ui/StatCards';
 import { LevelProgress } from './ui/LevelProgress';
 import { WordsLearnedCard } from './ui/WordsLearnedCard';
 import { TodoList } from './ui/TodoList';
+
+const mockStudent = STUDENT_MOCK[0];
 
 export default function DashboardPage() {
   const [todoOpen, setTodoOpen] = useState(false);
@@ -29,7 +32,7 @@ export default function DashboardPage() {
     <main className="relative">
       {/* Title row with todo toggle */}
       <div className="flex items-center justify-between">
-        <PageTitle title="Welcome back, EunSoo" />
+        <PageTitle title={`Welcome back, ${mockStudent.nameFirstEn}`} />
 
         {/* Todo Button */}
         <button
@@ -51,13 +54,13 @@ export default function DashboardPage() {
 
       <div className="flex gap-4 items-stretch mb-8">
         <div className="flex-1">
-          <LevelProgress />
+          <LevelProgress student={mockStudent} />
         </div>
         <WordsLearnedCard />
       </div>
       <div className="grid grid-cols-12 gap-8 items-stretch">
         <ScoreTrendChart />
-        <StatCards />
+        <StatCards student={mockStudent} />
       </div>
 
       {/* Slide-in drawer from right edge */}
@@ -67,7 +70,7 @@ export default function DashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList />
+          <TodoList student={mockStudent} />
         </div>
       </div>
     </main>

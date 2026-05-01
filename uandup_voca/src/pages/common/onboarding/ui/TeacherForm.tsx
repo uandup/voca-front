@@ -1,26 +1,15 @@
 import { inputClass } from './formStyles';
+import type { TeacherFormState } from '../model/types';
 
 interface Props {
-  nameLastKo: string;
-  nameFirstKo: string;
-  nameLastEn: string;
-  nameFirstEn: string;
-  onChangeNameLastKo: (v: string) => void;
-  onChangeNameFirstKo: (v: string) => void;
-  onChangeNameLastEn: (v: string) => void;
-  onChangeNameFirstEn: (v: string) => void;
+  value: TeacherFormState;
+  onChange: (next: TeacherFormState) => void;
 }
 
-export function TeacherForm({
-  nameLastKo,
-  nameFirstKo,
-  nameLastEn,
-  nameFirstEn,
-  onChangeNameLastKo,
-  onChangeNameFirstKo,
-  onChangeNameLastEn,
-  onChangeNameFirstEn,
-}: Props) {
+export function TeacherForm({ value, onChange }: Props) {
+  const set = <K extends keyof TeacherFormState>(key: K, val: TeacherFormState[K]) =>
+    onChange({ ...value, [key]: val });
+
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
@@ -31,8 +20,8 @@ export function TeacherForm({
           <input
             type="text"
             placeholder="예) 김"
-            value={nameLastKo}
-            onChange={(e) => onChangeNameLastKo(e.target.value)}
+            value={value.nameLastKo}
+            onChange={(e) => set('nameLastKo', e.target.value)}
             className={inputClass}
           />
         </div>
@@ -43,8 +32,8 @@ export function TeacherForm({
           <input
             type="text"
             placeholder="예) 민수"
-            value={nameFirstKo}
-            onChange={(e) => onChangeNameFirstKo(e.target.value)}
+            value={value.nameFirstKo}
+            onChange={(e) => set('nameFirstKo', e.target.value)}
             className={inputClass}
           />
         </div>
@@ -53,8 +42,8 @@ export function TeacherForm({
           <input
             type="text"
             placeholder="예) Kim"
-            value={nameLastEn}
-            onChange={(e) => onChangeNameLastEn(e.target.value)}
+            value={value.nameLastEn}
+            onChange={(e) => set('nameLastEn', e.target.value)}
             className={inputClass}
           />
         </div>
@@ -63,8 +52,8 @@ export function TeacherForm({
           <input
             type="text"
             placeholder="예) Minsu"
-            value={nameFirstEn}
-            onChange={(e) => onChangeNameFirstEn(e.target.value)}
+            value={value.nameFirstEn}
+            onChange={(e) => set('nameFirstEn', e.target.value)}
             className={inputClass}
           />
         </div>

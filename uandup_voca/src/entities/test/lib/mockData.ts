@@ -1,6 +1,6 @@
 import type { WordTestItem } from '@/entities/word';
 import type { ESRow } from '@/widgets/test-offline';
-import type { SentenceItem, TestInfo, TestVocabAnswer, TestSentenceAnswer } from '../model/types';
+import type { SentenceItem, TestCycle, TestInfo, TestVocabAnswer, TestSentenceAnswer } from '../model/types';
 
 export type VocabTestType = 'word-to-meaning' | 'meaning-to-word';
 export type TestVocabItem = Required<Pick<WordTestItem, 'id'>> &
@@ -525,5 +525,44 @@ export const mockESRows: ESRow[] = [
     no: '30',
     sentence: 'The noise from the construction finally ___ late at night.',
     answer: 'ceased',
+  },
+];
+
+export const MOCK_CYCLES: TestCycle[] = [
+  {
+    id: '1',
+    assignedLevel: 7,
+    wordCount: 50,
+    steps: [
+      { key: 'word', label: 'Word', status: 'waiting', totalScore: '100' },
+      { key: 'sentence', label: 'Sentence', status: 'available', totalScore: '100' },
+      { key: 'review1', label: 'Review 1', status: 'grading', totalScore: '100' },
+      { key: 'review2', label: 'Review 2', status: 'passed', scores: ['98'], totalScore: '100', gradedDate: '23.10.23' },
+      { key: 'review3', label: 'Review 3', status: 'fail', scores: ['62'], totalScore: '100', gradedDate: '23.10.24' },
+    ],
+  },
+  {
+    id: '2',
+    assignedLevel: 3,
+    wordCount: 47,
+    steps: [
+      { key: 'word', label: 'Word', status: 'fail', scores: ['62'], totalScore: '100' },
+      { key: 'sentence', label: 'Sentence', status: 'locked' },
+      { key: 'review1', label: 'Review 1', status: 'locked' },
+      { key: 'review2', label: 'Review 2', status: 'locked' },
+      { key: 'review3', label: 'Review 3', status: 'locked' },
+    ],
+  },
+  {
+    id: '3',
+    assignedLevel: 5,
+    wordCount: 30,
+    steps: [
+      { key: 'word', label: 'Word', status: 'passed', scores: ['95'], totalScore: '100', gradedDate: '23.09.10' },
+      { key: 'sentence', label: 'Sentence', status: 'passed', scores: ['55', '88'], totalScore: '100', gradedDate: '23.09.11' },
+      { key: 'review1', label: 'Review 1', status: 'passed', scores: ['60', '72', '92'], totalScore: '100', gradedDate: '23.09.12' },
+      { key: 'review2', label: 'Review 2', status: 'passed', scores: ['96'], totalScore: '100', gradedDate: '23.09.13' },
+      { key: 'review3', label: 'Review 3', status: 'passed', scores: ['100'], totalScore: '100', gradedDate: '23.09.14' },
+    ],
   },
 ];

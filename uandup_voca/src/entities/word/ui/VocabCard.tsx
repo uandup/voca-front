@@ -3,7 +3,7 @@ import type { Word } from '../model/types';
 
 interface VocabCardProps extends Pick<
   Word,
-  'word' | 'partOfSpeech' | 'koreanMeaning' | 'englishMeaning' | 'synonyms' | 'difficultyLevel'
+  'word' | 'partOfSpeech' | 'korMeaning' | 'engMeaning' | 'synonyms' | 'difficultyLevel'
 > {
   extraInfo?: ReactNode;
 }
@@ -12,8 +12,8 @@ export function VocabCard({
   difficultyLevel,
   word,
   partOfSpeech,
-  koreanMeaning,
-  englishMeaning,
+  korMeaning,
+  engMeaning,
   synonyms,
   extraInfo,
 }: VocabCardProps) {
@@ -34,9 +34,9 @@ export function VocabCard({
             </h4>
             <p className="text-primary font-bold text-lg">
               <span className="text-on-tertiary-container tracking-wider mr-2">{partOfSpeech}</span>
-              {koreanMeaning}
+              {korMeaning}
             </p>
-            <p className="text-sm text-on-surface-variant mt-1">{englishMeaning}</p>
+            <p className="text-sm text-on-surface-variant mt-1">{engMeaning}</p>
           </div>
           <div>
             <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">

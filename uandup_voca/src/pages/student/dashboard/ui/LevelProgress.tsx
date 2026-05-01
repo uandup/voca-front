@@ -1,17 +1,22 @@
+import type { Student } from '@/entities/member';
+
+interface Props {
+  student: Pick<Student, 'assignedLevel' | 'assignedWordCount' | 'testConfig'>;
+}
+
 const TOTAL_LEVELS = 10;
-const currentLevel = 7;
-const currentLevelProgress = 80; // % of current level
-
-const testConfig = {
-  type: 'Word to meaning (Korean)',
-  synonyms: true,
-  wordsPerTest: 50,
-};
-
 const RADIUS = 54;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-export function LevelProgress() {
+const TEST_TYPE_LABEL: Record<string, string> = {
+  'word-to-meaning': 'Word to meaning (Korean)',
+  'meaning-to-word': 'Meaning to word',
+  sentence: 'Sentence',
+};
+
+export function LevelProgress({ student }: Props) {
+  const { assignedLevel, assignedWordCount, testConfig } = student;
+  const currentLevelProgress = 80; // TODO: API 연동 시 실제 진도율로 교체
   const offset = CIRCUMFERENCE * (1 - currentLevelProgress / 100);
 
   return (
@@ -19,7 +24,7 @@ export function LevelProgress() {
       <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6 flex gap-8 items-stretch">
         {/* Left: Circular progress */}
         <div className="flex flex-col items-center gap-2 shrink-0 w-44">
-          <p className="text-xl font-extrabold font-headline text-primary">Level {currentLevel}</p>
+          <p className="text-xl font-extrabold font-headline text-primary">Level {assignedLevel}</p>
           <div className="relative w-36 h-36">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
               <circle
@@ -67,22 +72,22 @@ export function LevelProgress() {
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   translate
                 </span>
-                {testConfig.type}
+                {TEST_TYPE_LABEL[testConfig.type] ?? testConfig.type}
               </span>
               <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   edit_note
                 </span>
-                {testConfig.wordsPerTest} words / test
+                {assignedWordCount} words / test
               </span>
               <span
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-                ${testConfig.synonyms ? 'bg-green-50 text-green-700' : 'bg-surface-container text-on-surface-variant'}`}
+                ${testConfig.includeSynonyms ? 'bg-green-50 text-green-700' : 'bg-surface-container text-on-surface-variant'}`}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  {testConfig.synonyms ? 'library_add_check' : 'block'}
+                  {testConfig.includeSynonyms ? 'library_add_check' : 'block'}
                 </span>
-                Synonyms: {testConfig.synonyms ? 'Included' : 'Excluded'}
+                Synonyms: {testConfig.includeSynonyms ? 'Included' : 'Excluded'}
               </span>
             </div>
           </div>
@@ -95,9 +100,9 @@ export function LevelProgress() {
             <div className="flex items-end gap-2">
               {Array.from({ length: TOTAL_LEVELS }, (_, i) => {
                 const level = i + 1;
-                const isCompleted = level < currentLevel;
-                const isCurrent = level === currentLevel;
-                const isLocked = level > currentLevel;
+                const isCompleted = level < assignedLevel;
+                const isCurrent = level === assignedLevel;
+                const isLocked = level > assignedLevel;
 
                 return (
                   <div key={level} className="flex-1 flex flex-col items-center gap-1">
