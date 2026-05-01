@@ -220,7 +220,7 @@ export default function ClinicsPage() {
                         key={student.id}
                         onClick={() =>
                           navigate({
-                            to: '/teacher/clinics/$studentId',
+                            to: '/teacher/clinics/students/$studentId',
                             params: { studentId: String(student.id) },
                           })
                         }

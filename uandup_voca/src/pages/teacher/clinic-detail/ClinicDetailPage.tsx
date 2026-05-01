@@ -14,7 +14,7 @@ type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 type DifficultyLevel = Vocab['difficultyLevel'];
 
 export function ClinicDetailPage() {
-  const { studentId } = useParams({ from: '/teacher/clinics_/$studentId' });
+  const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
   const navigate = useNavigate();
 
   const student = CLINIC_MOCK.sessions.flatMap((s) => s.students).find((s) => String(s.id) === studentId);

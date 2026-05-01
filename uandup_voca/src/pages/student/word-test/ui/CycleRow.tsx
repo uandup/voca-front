@@ -27,7 +27,7 @@ export default function CycleRow({ id, level, wordCount, steps }: CycleRowData) 
             <span className="text-sm font-bold text-on-surface">{wordCount}</span>
           </div>
           <button
-            onClick={() => navigate({ to: '/student/word-test/$id/vocabulary', params: { id } })}
+            onClick={() => navigate({ to: '/student/word-test/$id/words', params: { id } })}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline/30 text-xs font-semibold text-success hover:bg-slate-50 transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>

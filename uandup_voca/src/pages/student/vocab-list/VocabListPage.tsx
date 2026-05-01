@@ -65,7 +65,7 @@ const mockWords: WordListItem[] = [
 
 export default function VocabListPage() {
   const router = useRouter();
-  const { id } = useParams({ from: '/student/word-test/$id/vocabulary' });
+  const { id } = useParams({ from: '/student/word-test/$id/words' });
   const meta = CYCLE_META[id];
 
   return (
