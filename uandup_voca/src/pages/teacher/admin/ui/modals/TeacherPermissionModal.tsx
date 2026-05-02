@@ -84,8 +84,10 @@ export function TeacherPermissionModal({ onClose }: Props) {
             filtered.map((t) => (
               <li key={t.id} className="flex items-center justify-between px-7 py-4 gap-4">
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-on-surface truncate">{t.nameLastKo}{t.nameFirstKo}</p>
-                  <p className="text-xs text-on-surface-variant mt-0.5 truncate">{t.nameLastEn} {t.nameFirstEn}</p>
+                  <p className="text-sm font-bold text-on-surface truncate">{t.nameKo}</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                    {t.nameFirstEn} {t.nameLastEn}
+                  </p>
                 </div>
                 <button
                   type="button"

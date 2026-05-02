@@ -2,17 +2,13 @@ import type { PendingStudent, PendingParent, PendingTeacher } from '@/entities/m
 
 export type StudentFormState = Pick<
   PendingStudent,
-  'nameLastKo' | 'nameFirstKo' | 'nameLastEn' | 'nameFirstEn' | 'grade'
+  'nameKo' | 'nameLastEn' | 'nameFirstEn' | 'grade'
 >;
 
-export type TeacherFormState = Pick<
-  PendingTeacher,
-  'nameLastKo' | 'nameFirstKo' | 'nameLastEn' | 'nameFirstEn'
->;
+export type TeacherFormState = Pick<PendingTeacher, 'nameKo' | 'nameLastEn' | 'nameFirstEn'>;
 
-export type ParentFormState = Pick<PendingParent, 'nameLastKo' | 'nameFirstKo' | 'phone'> & {
+export type ParentFormState = Pick<PendingParent, 'nameKo' | 'phone'> & {
   phoneConsent: boolean;
-  childNameLastKo: string;
-  childNameFirstKo: string;
+  childNameKo: string;
   childGrade: string;
 };

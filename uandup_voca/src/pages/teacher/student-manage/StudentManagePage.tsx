@@ -31,7 +31,7 @@ export default function StudentManagePage() {
   const filtered = students.filter((s) => {
     const matchesSearch =
       `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()) ||
-      `${s.nameLastKo}${s.nameFirstKo}`.includes(search);
+      s.nameKo.includes(search);
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
     const matchesLevel = levelFilter !== '' ? s.assignedLevel === levelFilter : true;
     const matchesClass = classFilter ? s.classes.includes(classFilter) : true;
@@ -140,7 +140,7 @@ export default function StudentManagePage() {
 
       {memoStudent && (
         <MemoPopup
-          studentName={`${memoStudent.nameLastKo}${memoStudent.nameFirstKo}`}
+          studentName={memoStudent.nameKo}
           memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
           onChange={(newMemos) => {

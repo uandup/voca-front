@@ -78,7 +78,9 @@ export function PrintPreviewPage() {
       {openModal === 'WMS' && (
         <WordTestModal onClose={() => setOpenModal(null)} rows={MOCK_VOCAB_LIST} />
       )}
-      {openModal === 'ES' && <SentenceModal onClose={() => setOpenModal(null)} rows={MOCK_ES_TEMPLATE} />}
+      {openModal === 'ES' && (
+        <SentenceModal onClose={() => setOpenModal(null)} rows={MOCK_ES_TEMPLATE} />
+      )}
       {openModal === 'TEST_WMS' && (
         <WordTestModal onClose={() => setOpenModal(null)} rows={MOCK_VOCAB_LIST} />
       )}

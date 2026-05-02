@@ -13,10 +13,9 @@ import type {
 export const STUDENT_MOCK: Student[] = [
   {
     id: 1,
+    nameKo: '김민수',
     nameFirstEn: 'Minsu',
     nameLastEn: 'Kim',
-    nameFirstKo: '민수',
-    nameLastKo: '김',
     role: 'student',
     status: 'approved',
     grade: 11,
@@ -49,10 +48,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 2,
+    nameKo: '이영희',
     nameFirstEn: 'Younghee',
     nameLastEn: 'Lee',
-    nameFirstKo: '영희',
-    nameLastKo: '이',
     role: 'student',
     status: 'approved',
     grade: 9,
@@ -70,10 +68,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 3,
+    nameKo: '박지민',
     nameFirstEn: 'Jimin',
     nameLastEn: 'Park',
-    nameFirstKo: '지민',
-    nameLastKo: '박',
     role: 'student',
     status: 'approved',
     grade: 12,
@@ -89,10 +86,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 4,
+    nameKo: '최수연',
     nameFirstEn: 'Suyeon',
     nameLastEn: 'Choi',
-    nameFirstKo: '수연',
-    nameLastKo: '최',
     role: 'student',
     status: 'approved',
     grade: 10,
@@ -110,10 +106,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 5,
+    nameKo: '정도현',
     nameFirstEn: 'Dohyun',
     nameLastEn: 'Jung',
-    nameFirstKo: '도현',
-    nameLastKo: '정',
     role: 'student',
     status: 'approved',
     grade: 11,
@@ -129,10 +124,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 6,
+    nameKo: '강지수',
     nameFirstEn: 'Jisu',
     nameLastEn: 'Kang',
-    nameFirstKo: '지수',
-    nameLastKo: '강',
     role: 'student',
     status: 'approved',
     grade: 10,
@@ -148,10 +142,9 @@ export const STUDENT_MOCK: Student[] = [
   },
   {
     id: 7,
+    nameKo: '윤재혁',
     nameFirstEn: 'Jaehyuk',
     nameLastEn: 'Yoon',
-    nameFirstKo: '재혁',
-    nameLastKo: '윤',
     role: 'student',
     status: 'approved',
     grade: 12,
@@ -172,8 +165,7 @@ export const STUDENT_MOCK: Student[] = [
 export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
   {
     id: 101,
-    nameFirstKo: '지훈',
-    nameLastKo: '김',
+    nameKo: '김지훈',
     nameFirstEn: 'Jihun',
     nameLastEn: 'Kim',
     role: 'student',
@@ -183,8 +175,7 @@ export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
   },
   {
     id: 102,
-    nameFirstKo: '서연',
-    nameLastKo: '박',
+    nameKo: '박서연',
     nameFirstEn: 'Seoyeon',
     nameLastEn: 'Park',
     role: 'student',
@@ -194,8 +185,7 @@ export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
   },
   {
     id: 103,
-    nameFirstKo: '준혁',
-    nameLastKo: '이',
+    nameKo: '이준혁',
     nameFirstEn: 'Junhyuk',
     nameLastEn: 'Lee',
     role: 'student',
@@ -205,8 +195,7 @@ export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
   },
   {
     id: 104,
-    nameFirstKo: '아영',
-    nameLastKo: '최',
+    nameKo: '최아영',
     nameFirstEn: 'Ayoung',
     nameLastEn: 'Choi',
     role: 'student',
@@ -216,8 +205,7 @@ export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
   },
   {
     id: 105,
-    nameFirstKo: '도윤',
-    nameLastKo: '한',
+    nameKo: '한도윤',
     nameFirstEn: 'Doyun',
     nameLastEn: 'Han',
     role: 'student',
@@ -230,8 +218,7 @@ export const PENDING_STUDENTS_MOCK: PendingStudent[] = [
 export const PENDING_PARENTS_MOCK: PendingParent[] = [
   {
     id: 201,
-    nameFirstKo: '영희',
-    nameLastKo: '김',
+    nameKo: '김영희',
     nameFirstEn: 'Younghee',
     nameLastEn: 'Kim',
     role: 'parent',
@@ -244,8 +231,7 @@ export const PENDING_PARENTS_MOCK: PendingParent[] = [
   },
   {
     id: 202,
-    nameFirstKo: '철수',
-    nameLastKo: '박',
+    nameKo: '박철수',
     nameFirstEn: 'Chulsoo',
     nameLastEn: 'Park',
     role: 'parent',
@@ -258,8 +244,7 @@ export const PENDING_PARENTS_MOCK: PendingParent[] = [
   },
   {
     id: 203,
-    nameFirstKo: '미래',
-    nameLastKo: '이',
+    nameKo: '이미래',
     nameFirstEn: 'Mirae',
     nameLastEn: 'Lee',
     role: 'parent',
@@ -275,8 +260,7 @@ export const PENDING_PARENTS_MOCK: PendingParent[] = [
 export const PENDING_TEACHERS_MOCK: PendingTeacher[] = [
   {
     id: 301,
-    nameFirstKo: '지수',
-    nameLastKo: '강',
+    nameKo: '강지수',
     nameFirstEn: 'Jisu',
     nameLastEn: 'Kang',
     role: 'teacher',
@@ -285,8 +269,7 @@ export const PENDING_TEACHERS_MOCK: PendingTeacher[] = [
   },
   {
     id: 302,
-    nameFirstKo: '대현',
-    nameLastKo: '윤',
+    nameKo: '윤대현',
     nameFirstEn: 'Daehyun',
     nameLastEn: 'Yoon',
     role: 'teacher',
@@ -296,20 +279,19 @@ export const PENDING_TEACHERS_MOCK: PendingTeacher[] = [
 ];
 
 export const REGISTERED_STUDENTS_MOCK: StudentSummary[] = [
-  { id: 1, nameFirstEn: 'Minsu', nameLastEn: 'Kim', grade: 11 },
-  { id: 2, nameFirstEn: 'Younghee', nameLastEn: 'Lee', grade: 9 },
-  { id: 3, nameFirstEn: 'Jimin', nameLastEn: 'Park', grade: 12 },
-  { id: 4, nameFirstEn: 'Suyeon', nameLastEn: 'Choi', grade: 10 },
-  { id: 5, nameFirstEn: 'Dohyun', nameLastEn: 'Jung', grade: 11 },
-  { id: 6, nameFirstEn: 'Jisu', nameLastEn: 'Kang', grade: 10 },
-  { id: 7, nameFirstEn: 'Jaehyuk', nameLastEn: 'Yoon', grade: 12 },
+  { id: 1, nameKo: '김민수', nameFirstEn: 'Minsu', nameLastEn: 'Kim', grade: 11 },
+  { id: 2, nameKo: '이영희', nameFirstEn: 'Younghee', nameLastEn: 'Lee', grade: 9 },
+  { id: 3, nameKo: '박지민', nameFirstEn: 'Jimin', nameLastEn: 'Park', grade: 12 },
+  { id: 4, nameKo: '최수연', nameFirstEn: 'Suyeon', nameLastEn: 'Choi', grade: 10 },
+  { id: 5, nameKo: '정도현', nameFirstEn: 'Dohyun', nameLastEn: 'Jung', grade: 11 },
+  { id: 6, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', grade: 10 },
+  { id: 7, nameKo: '윤재혁', nameFirstEn: 'Jaehyuk', nameLastEn: 'Yoon', grade: 12 },
 ];
 
 export const TEACHER_MOCK: Teacher[] = [
   {
     id: 1,
-    nameFirstKo: '선생',
-    nameLastKo: '김',
+    nameKo: '김선생',
     nameFirstEn: 'Teacher',
     nameLastEn: 'Kim',
     role: 'teacher',
@@ -318,8 +300,7 @@ export const TEACHER_MOCK: Teacher[] = [
   },
   {
     id: 2,
-    nameFirstKo: '선생',
-    nameLastKo: '이',
+    nameKo: '이선생',
     nameFirstEn: 'Teacher',
     nameLastEn: 'Lee',
     role: 'teacher',
@@ -328,8 +309,7 @@ export const TEACHER_MOCK: Teacher[] = [
   },
   {
     id: 3,
-    nameFirstKo: '선생',
-    nameLastKo: '박',
+    nameKo: '박선생',
     nameFirstEn: 'Teacher',
     nameLastEn: 'Park',
     role: 'teacher',
@@ -338,8 +318,7 @@ export const TEACHER_MOCK: Teacher[] = [
   },
   {
     id: 4,
-    nameFirstKo: '선생',
-    nameLastKo: '최',
+    nameKo: '최선생',
     nameFirstEn: 'Teacher',
     nameLastEn: 'Choi',
     role: 'teacher',
@@ -348,8 +327,7 @@ export const TEACHER_MOCK: Teacher[] = [
   },
   {
     id: 5,
-    nameFirstKo: '선생',
-    nameLastKo: '정',
+    nameKo: '정선생',
     nameFirstEn: 'Teacher',
     nameLastEn: 'Jung',
     role: 'teacher',
@@ -361,8 +339,7 @@ export const TEACHER_MOCK: Teacher[] = [
 export const PARENT_MOCK: Parent[] = [
   {
     id: 1,
-    nameFirstKo: '철수',
-    nameLastKo: '김',
+    nameKo: '김철수',
     nameFirstEn: 'Chulsoo',
     nameLastEn: 'Kim',
     role: 'parent',
@@ -372,8 +349,7 @@ export const PARENT_MOCK: Parent[] = [
   },
   {
     id: 2,
-    nameFirstKo: '상훈',
-    nameLastKo: '이',
+    nameKo: '이상훈',
     nameFirstEn: 'Sanghun',
     nameLastEn: 'Lee',
     role: 'parent',
@@ -383,8 +359,7 @@ export const PARENT_MOCK: Parent[] = [
   },
   {
     id: 3,
-    nameFirstKo: '영미',
-    nameLastKo: '박',
+    nameKo: '박영미',
     nameFirstEn: 'Youngmi',
     nameLastEn: 'Park',
     role: 'parent',
@@ -394,8 +369,7 @@ export const PARENT_MOCK: Parent[] = [
   },
   {
     id: 4,
-    nameFirstKo: '영진',
-    nameLastKo: '최',
+    nameKo: '최영진',
     nameFirstEn: 'Youngjin',
     nameLastEn: 'Choi',
     role: 'parent',
@@ -405,8 +379,7 @@ export const PARENT_MOCK: Parent[] = [
   },
   {
     id: 5,
-    nameFirstKo: '미경',
-    nameLastKo: '정',
+    nameKo: '정미경',
     nameFirstEn: 'Mikyung',
     nameLastEn: 'Jung',
     role: 'parent',

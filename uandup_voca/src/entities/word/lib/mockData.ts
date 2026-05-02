@@ -44,7 +44,6 @@ export const MOCK_WORDS: WordListItem[] = [
   },
 ];
 
-
 // 오답 단어 목록 (WrongWordListPage)
 export const MOCK_WRONG_WORDS: WordListItem[] = [
   {

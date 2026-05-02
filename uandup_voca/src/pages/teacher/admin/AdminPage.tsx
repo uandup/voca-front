@@ -16,7 +16,14 @@ import {
 
 const totalPending = PENDING_STUDENTS.length + PENDING_PARENTS.length + PENDING_TEACHERS.length;
 
-type ModalType = 'pending' | 'class' | 'teacher' | 'grade' | 'teacher-manage' | 'parent-manage' | null;
+type ModalType =
+  | 'pending'
+  | 'class'
+  | 'teacher'
+  | 'grade'
+  | 'teacher-manage'
+  | 'parent-manage'
+  | null;
 
 const CARDS = [
   {

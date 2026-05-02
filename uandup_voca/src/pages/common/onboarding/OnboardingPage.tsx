@@ -8,48 +8,36 @@ import type { StudentFormState, TeacherFormState, ParentFormState } from './mode
 type UserType = '학생' | '학부모' | '선생님';
 
 const INITIAL_STUDENT: StudentFormState = {
-  nameLastKo: '',
-  nameFirstKo: '',
+  nameKo: '',
   nameLastEn: '',
   nameFirstEn: '',
   grade: 0,
 };
 
 const INITIAL_TEACHER: TeacherFormState = {
-  nameLastKo: '',
-  nameFirstKo: '',
+  nameKo: '',
   nameLastEn: '',
   nameFirstEn: '',
 };
 
 const INITIAL_PARENT: ParentFormState = {
-  nameLastKo: '',
-  nameFirstKo: '',
+  nameKo: '',
   phone: '',
   phoneConsent: false,
-  childNameLastKo: '',
-  childNameFirstKo: '',
+  childNameKo: '',
   childGrade: '',
 };
 
 function isStudentValid(f: StudentFormState) {
-  return !!(f.nameLastKo && f.nameFirstKo && f.nameLastEn && f.nameFirstEn && f.grade);
+  return !!(f.nameKo && f.nameLastEn && f.nameFirstEn && f.grade);
 }
 
 function isTeacherValid(f: TeacherFormState) {
-  return !!(f.nameLastKo && f.nameFirstKo);
+  return !!f.nameKo;
 }
 
 function isParentValid(f: ParentFormState) {
-  return !!(
-    f.nameLastKo &&
-    f.nameFirstKo &&
-    f.phone &&
-    f.phoneConsent &&
-    f.childNameLastKo &&
-    f.childNameFirstKo &&
-    f.childGrade
-  );
+  return !!(f.nameKo && f.phone && f.phoneConsent && f.childNameKo && f.childGrade);
 }
 
 export default function OnboardingPage() {
@@ -104,17 +92,11 @@ export default function OnboardingPage() {
             </select>
           </div>
 
-          {userType === '학생' && (
-            <StudentForm value={student} onChange={setStudent} />
-          )}
+          {userType === '학생' && <StudentForm value={student} onChange={setStudent} />}
 
-          {userType === '학부모' && (
-            <ParentForm value={parent} onChange={setParent} />
-          )}
+          {userType === '학부모' && <ParentForm value={parent} onChange={setParent} />}
 
-          {userType === '선생님' && (
-            <TeacherForm value={teacher} onChange={setTeacher} />
-          )}
+          {userType === '선생님' && <TeacherForm value={teacher} onChange={setTeacher} />}
 
           <button
             type="submit"

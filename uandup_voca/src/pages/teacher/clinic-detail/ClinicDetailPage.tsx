@@ -17,7 +17,9 @@ export function ClinicDetailPage() {
   const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
   const navigate = useNavigate();
 
-  const student = CLINIC_MOCK.sessions.flatMap((s) => s.students).find((s) => String(s.id) === studentId);
+  const student = CLINIC_MOCK.sessions
+    .flatMap((s) => s.students)
+    .find((s) => String(s.id) === studentId);
 
   const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
@@ -40,7 +42,7 @@ export function ClinicDetailPage() {
     <div className="max-w-7xl mx-auto space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
-        title={`${student.nameLastKo}${student.nameFirstKo} (${student.nameFirstEn} ${student.nameLastEn})`}
+        title={`${student.nameKo} (${student.nameFirstEn} ${student.nameLastEn})`}
       />
 
       {/* Top Section: Student Info & Quick Assignment */}
@@ -98,7 +100,7 @@ export function ClinicDetailPage() {
 
       {isMemoOpen && (
         <MemoPopup
-          studentName={`${student.nameLastKo}${student.nameFirstKo}`}
+          studentName={student.nameKo}
           memos={memos}
           onClose={() => setIsMemoOpen(false)}
           onChange={(newMemos) => setMemos(newMemos)}

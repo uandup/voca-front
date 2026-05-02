@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { PARENT_MOCK, REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS, type Parent as ParentInfo } from '@/entities/member';
+import {
+  PARENT_MOCK,
+  REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
+  type Parent as ParentInfo,
+} from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -12,23 +16,16 @@ export function ParentManageModal({ onClose }: Props) {
   const [editForm, setEditForm] = useState({ nameKo: '', phone: '' });
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  function nameKo(p: ParentInfo) { return `${p.nameLastKo}${p.nameFirstKo}`; }
-
   function handleEditStart(p: ParentInfo) {
     setEditingId(p.id);
-    setEditForm({ nameKo: nameKo(p), phone: p.phone });
+    setEditForm({ nameKo: p.nameKo, phone: p.phone });
     setDeletingId(null);
   }
 
   function handleEditSave(id: number) {
     if (!editForm.nameKo.trim() || !editForm.phone.trim()) return;
-    const [lastKo, ...restKo] = editForm.nameKo.split('');
     setParents((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? { ...p, nameLastKo: lastKo ?? '', nameFirstKo: restKo.join(''), phone: editForm.phone }
-          : p,
-      ),
+      prev.map((p) => (p.id === id ? { ...p, nameKo: editForm.nameKo, phone: editForm.phone } : p)),
     );
     setEditingId(null);
   }
@@ -113,7 +110,7 @@ export function ParentManageModal({ onClose }: Props) {
                   </div>
                 ) : deletingId === p.id ? (
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-sm text-error font-bold">Delete {nameKo(p)}?</p>
+                    <p className="text-sm text-error font-bold">Delete {p.nameKo}?</p>
                     <div className="flex gap-2 shrink-0">
                       <button
                         type="button"
@@ -135,7 +132,7 @@ export function ParentManageModal({ onClose }: Props) {
                   <div className="flex items-center justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-bold text-on-surface">
-                        {nameKo(p)}
+                        {p.nameKo}
                         <span className="text-xs font-medium text-on-surface-variant ml-1.5">
                           ( {p.phone} )
                         </span>
@@ -143,13 +140,18 @@ export function ParentManageModal({ onClose }: Props) {
                       <div className="mt-1.5">
                         {matched ? (
                           <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                            <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                            <span
+                              className="material-symbols-outlined"
+                              style={{ fontSize: '12px' }}
+                            >
                               link
                             </span>
-                            {matched.nameLastEn} {matched.nameFirstEn} · G{matched.grade}
+                            {matched.nameKo} · G{matched.grade}
                           </span>
                         ) : (
-                          <span className="text-xs text-on-surface-variant">No matched student</span>
+                          <span className="text-xs text-on-surface-variant">
+                            No matched student
+                          </span>
                         )}
                       </div>
                     </div>
@@ -159,14 +161,21 @@ export function ParentManageModal({ onClose }: Props) {
                         onClick={() => handleEditStart(p)}
                         className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
                       >
-                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                          edit
+                        </span>
                       </button>
                       <button
                         type="button"
-                        onClick={() => { setDeletingId(p.id); setEditingId(null); }}
+                        onClick={() => {
+                          setDeletingId(p.id);
+                          setEditingId(null);
+                        }}
                         className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/5 transition-colors"
                       >
-                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>delete</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                          delete
+                        </span>
                       </button>
                     </div>
                   </div>

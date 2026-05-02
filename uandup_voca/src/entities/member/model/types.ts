@@ -7,10 +7,9 @@ export type MemberStatus = 'pending' | 'approved' | 'rejected';
 
 export interface BaseMember {
   id: number;
+  nameKo: string;
   nameFirstEn: string;
   nameLastEn: string;
-  nameFirstKo: string;
-  nameLastKo: string;
   role: MemberRole;
   status: MemberStatus;
 }
@@ -44,6 +43,7 @@ export interface PendingStudent extends BaseMember {
 
 export interface StudentSummary {
   id: number;
+  nameKo: string;
   nameFirstEn: string;
   nameLastEn: string;
   grade: StudentGrade;

@@ -12,23 +12,19 @@ export function TeacherManageModal({ onClose }: Props) {
   const [editForm, setEditForm] = useState({ nameKo: '', name: '' });
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  function nameKo(t: TeacherInfo) { return `${t.nameLastKo}${t.nameFirstKo}`; }
-  function nameEn(t: TeacherInfo) { return `${t.nameLastEn} ${t.nameFirstEn}`; }
-
   function handleEditStart(t: TeacherInfo) {
     setEditingId(t.id);
-    setEditForm({ nameKo: nameKo(t), name: nameEn(t) });
+    setEditForm({ nameKo: t.nameKo, name: `${t.nameFirstEn} ${t.nameLastEn}` });
     setDeletingId(null);
   }
 
   function handleEditSave(id: number) {
-    const [lastKo, ...restKo] = editForm.nameKo.split('');
-    const [lastEn, firstEn = ''] = editForm.name.split(' ');
+    const [firstEn, lastEn = ''] = editForm.name.split(' ');
     if (!editForm.nameKo.trim() || !editForm.name.trim()) return;
     setTeachers((prev) =>
       prev.map((t) =>
         t.id === id
-          ? { ...t, nameLastKo: lastKo ?? '', nameFirstKo: restKo.join(''), nameLastEn: lastEn ?? '', nameFirstEn: firstEn }
+          ? { ...t, nameKo: editForm.nameKo, nameFirstEn: firstEn ?? '', nameLastEn: lastEn }
           : t,
       ),
     );
@@ -113,7 +109,7 @@ export function TeacherManageModal({ onClose }: Props) {
                 </div>
               ) : deletingId === t.id ? (
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-error font-bold">Delete {nameKo(t)}?</p>
+                  <p className="text-sm text-error font-bold">Delete {t.nameKo}?</p>
                   <div className="flex gap-2 shrink-0">
                     <button
                       type="button"
@@ -135,7 +131,7 @@ export function TeacherManageModal({ onClose }: Props) {
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-on-surface truncate">{nameKo(t)}</p>
+                      <p className="text-sm font-bold text-on-surface truncate">{t.nameKo}</p>
                       {t.isAdmin && (
                         <span className="inline-flex items-center gap-0.5 text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
                           <span className="material-symbols-outlined" style={{ fontSize: '11px' }}>
@@ -145,7 +141,9 @@ export function TeacherManageModal({ onClose }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-on-surface-variant mt-0.5 truncate">{nameEn(t)}</p>
+                    <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                      {t.nameFirstEn} {t.nameLastEn}
+                    </p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button

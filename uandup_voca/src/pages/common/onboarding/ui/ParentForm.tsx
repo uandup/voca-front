@@ -13,31 +13,17 @@ export function ParentForm({ value, onChange }: Props) {
   return (
     <>
       {/* 학부모 성함 */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            성 (한글) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 김"
-            value={value.nameLastKo}
-            onChange={(e) => set('nameLastKo', e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            이름 (한글) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 영희"
-            value={value.nameFirstKo}
-            onChange={(e) => set('nameFirstKo', e.target.value)}
-            className={inputClass}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-on-surface">
+          한글 이름 <span className="text-error">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="예) 김영희"
+          value={value.nameKo}
+          onChange={(e) => set('nameKo', e.target.value)}
+          className={inputClass}
+        />
       </div>
 
       {/* 연락처 */}
@@ -70,31 +56,17 @@ export function ParentForm({ value, onChange }: Props) {
       </div>
 
       {/* 자녀 이름 */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            자녀 성 (한글 또는 영어) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 김"
-            value={value.childNameLastKo}
-            onChange={(e) => set('childNameLastKo', e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            자녀 이름 (한글 또는 영어) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 민수"
-            value={value.childNameFirstKo}
-            onChange={(e) => set('childNameFirstKo', e.target.value)}
-            className={inputClass}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-on-surface">
+          자녀 이름 <span className="text-error">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="예) 김민수"
+          value={value.childNameKo}
+          onChange={(e) => set('childNameKo', e.target.value)}
+          className={inputClass}
+        />
       </div>
 
       {/* 학생 학년 */}

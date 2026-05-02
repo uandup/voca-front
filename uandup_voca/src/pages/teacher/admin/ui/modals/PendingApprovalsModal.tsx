@@ -23,13 +23,6 @@ const TAB_LABELS: Record<Tab, string> = {
   teacher: 'Teacher',
 };
 
-function fullNameKo(m: { nameLastKo: string; nameFirstKo: string }) {
-  return `${m.nameLastKo}${m.nameFirstKo}`;
-}
-function fullNameEn(m: { nameLastEn: string; nameFirstEn: string }) {
-  return `${m.nameLastEn} ${m.nameFirstEn}`;
-}
-
 // ─── 학생 탭 ────────────────────────────────────────────────
 function StudentTab() {
   const [list, setList] = useState<PendingStudent[]>(PENDING_STUDENTS);
@@ -48,9 +41,9 @@ function StudentTab() {
       renderItem={(s) => (
         <div key={s.id} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
-            <p className="text-sm font-bold text-on-surface">{fullNameKo(s)}</p>
+            <p className="text-sm font-bold text-on-surface">{s.nameKo}</p>
             <p className="text-xs text-on-surface-variant mt-0.5">
-              {fullNameEn(s)} · G{s.grade}
+              {s.nameFirstEn} {s.nameLastEn} · G{s.grade}
             </p>
           </div>
           <ApproveRejectButtons
@@ -77,7 +70,7 @@ function ParentTab() {
   function handleMatch(parentId: number, student: RegisteredStudent) {
     setList((p) =>
       p.map((x) =>
-        x.id === parentId ? { ...x, matchedStudentId: student.id, childNameKo: `${student.nameLastEn} ${student.nameFirstEn}` } : x,
+        x.id === parentId ? { ...x, matchedStudentId: student.id, childNameKo: student.nameKo } : x,
       ),
     );
     setMatchingId(null);
@@ -102,7 +95,7 @@ function ParentTab() {
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-bold text-on-surface">
-                    {fullNameKo(p)}
+                    {p.nameKo}
                     <span className="text-xs font-medium text-on-surface-variant ml-1.5">
                       ( {p.phone} )
                     </span>
@@ -116,7 +109,7 @@ function ParentTab() {
                         <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
                           link
                         </span>
-                        {fullNameEn(matched)} · G{matched.grade}
+                        {matched.nameKo} · G{matched.grade}
                       </span>
                     ) : (
                       <button
@@ -165,7 +158,7 @@ function StudentMatchPanel({
 }) {
   const [search, setSearch] = useState('');
   const filtered = REGISTERED_STUDENTS.filter((s) =>
-    fullNameEn(s).toLowerCase().includes(search.toLowerCase()),
+    `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -182,7 +175,7 @@ function StudentMatchPanel({
           </button>
         </div>
         <p className="text-xs text-on-surface-variant">
-          학부모: <span className="font-bold text-on-surface">{fullNameKo(parent)}</span> → 자녀:{' '}
+          학부모: <span className="font-bold text-on-surface">{parent.nameKo}</span> → 자녀:{' '}
           <span className="font-bold text-on-surface">{parent.childNameKo}</span>
         </p>
       </div>
@@ -211,7 +204,9 @@ function StudentMatchPanel({
                 className="w-full flex items-center justify-between px-7 py-3.5 hover:bg-primary/5 transition-colors text-left"
               >
                 <div>
-                  <p className="text-sm font-bold text-on-surface">{fullNameEn(s)}</p>
+                  <p className="text-sm font-bold text-on-surface">
+                    {s.nameFirstEn} {s.nameLastEn}
+                  </p>
                   <p className="text-xs text-on-surface-variant mt-0.5">G{s.grade}</p>
                 </div>
                 <span className="material-symbols-outlined text-on-surface-variant/40 text-base">
@@ -244,8 +239,10 @@ function TeacherTab() {
       renderItem={(t) => (
         <div key={t.id} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
-            <p className="text-sm font-bold text-on-surface">{fullNameKo(t)}</p>
-            <p className="text-xs text-on-surface-variant mt-0.5">{fullNameEn(t)}</p>
+            <p className="text-sm font-bold text-on-surface">{t.nameKo}</p>
+            <p className="text-xs text-on-surface-variant mt-0.5">
+              {t.nameFirstEn} {t.nameLastEn}
+            </p>
           </div>
           <ApproveRejectButtons
             onApprove={() => handleApprove(t.id)}

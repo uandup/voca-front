@@ -3,13 +3,13 @@ import type { TestConfig, TestType } from '../model/types';
 const TYPE_STYLES: Record<TestType, string> = {
   'word-to-meaning': 'bg-blue-100 text-blue-700',
   'meaning-to-word': 'bg-emerald-100 text-emerald-700',
-  'sentence': 'bg-violet-100 text-violet-700',
+  sentence: 'bg-violet-100 text-violet-700',
 };
 
 const TYPE_LABELS: Record<TestType, string> = {
   'word-to-meaning': 'W to M',
   'meaning-to-word': 'M to W',
-  'sentence': 'Sentence',
+  sentence: 'Sentence',
 };
 
 export function TestConfigBadges({ config }: { config: TestConfig }) {

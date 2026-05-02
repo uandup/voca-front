@@ -228,8 +228,7 @@ export default function ClinicsPage() {
                       >
                         <td className="px-4 py-4 border-r border-outline-variant/20">
                           <p className="font-headline font-bold text-sm text-primary">
-                            {student.nameLastKo}
-                            {student.nameFirstKo}
+                            {student.nameKo}
                           </p>
                           <p className="text-xs text-on-surface-variant mt-0.5">
                             {student.nameFirstEn} {student.nameLastEn}
@@ -292,7 +291,7 @@ export default function ClinicsPage() {
       {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
       {memoStudent && (
         <MemoPopup
-          studentName={`${memoStudent.nameLastKo}${memoStudent.nameFirstKo}`}
+          studentName={memoStudent.nameKo}
           memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
           onChange={(newMemos) => handleMemoChange(memoStudent.id, newMemos)}

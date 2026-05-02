@@ -21,8 +21,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       {/* Name */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <p className="font-headline font-bold text-sm text-primary group-hover:text-primary/80 transition-colors">
-          {student.nameLastKo}
-          {student.nameFirstKo}
+          {student.nameKo}
         </p>
         <p className="text-xs text-on-surface-variant mt-0.5">
           {student.nameFirstEn} {student.nameLastEn}

@@ -13,27 +13,15 @@ export function TeacherForm({ value, onChange }: Props) {
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
+        <div className="col-span-2 flex flex-col gap-1.5">
           <label className="text-sm font-medium text-on-surface">
-            성 (한글) <span className="text-error">*</span>
+            한글 이름 <span className="text-error">*</span>
           </label>
           <input
             type="text"
-            placeholder="예) 김"
-            value={value.nameLastKo}
-            onChange={(e) => set('nameLastKo', e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            이름 (한글) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 민수"
-            value={value.nameFirstKo}
-            onChange={(e) => set('nameFirstKo', e.target.value)}
+            placeholder="예) 김민수"
+            value={value.nameKo}
+            onChange={(e) => set('nameKo', e.target.value)}
             className={inputClass}
           />
         </div>

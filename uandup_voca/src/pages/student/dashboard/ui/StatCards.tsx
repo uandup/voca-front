@@ -26,7 +26,9 @@ export function StatCards({ student }: Props) {
           <p className="text-xs font-bold text-primary uppercase tracking-widest">Assigned Words</p>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-4xl font-black text-primary font-headline">{assignedWordCount}</span>
+          <span className="text-4xl font-black text-primary font-headline">
+            {assignedWordCount}
+          </span>
           <div className="flex items-center -mr-3">
             <span className="text-lg font-bold text-primary/60">View words</span>
             <span className="material-symbols-outlined text-primary" style={{ fontSize: '40px' }}>
