@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
-import type { TestStep } from './types';
+import type { TestStep } from '@/entities/test';
 
 export interface CycleRowData {
   title: string;

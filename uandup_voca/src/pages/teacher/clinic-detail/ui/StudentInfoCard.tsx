@@ -1,5 +1,5 @@
-import type { MemoItem } from '@/entities/student';
-import type { ClinicStudent } from '@/pages/teacher/clinics/mock/clinicMockData';
+import type { Memo as MemoItem } from '@/entities/memo';
+import type { ClinicStudent } from '@/entities/clinic';
 
 interface Props {
   student: ClinicStudent;
@@ -13,8 +13,7 @@ export function StudentInfoCard({ student, latestMemo, onMemoClick }: Props) {
       {/* Name row */}
       <div className="flex items-center gap-3">
         <h2 className="text-3xl font-headline font-extrabold text-primary tracking-tight">
-          {student.nameLastKo}
-          {student.nameFirstKo}
+          {student.nameKo}
         </h2>
         <span className="text-3xl font-headline font-extrabold text-primary">
           ({student.nameFirstEn} {student.nameLastEn}

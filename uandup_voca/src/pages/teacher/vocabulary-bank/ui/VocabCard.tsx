@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import type { Vocab } from '@/entities/vocab';
+import type { Word } from '@/entities/word';
 
 import { VocabModal } from './modals/VocabModal';
 import { DeleteVocabModal } from './modals/DeleteVocabModal';
 
-type VocabCardProps = Vocab;
+type VocabCardProps = Word;
 
 export function VocabCard({
   word,
   partOfSpeech,
-  koreanMeaning,
+  korMeaning,
   difficultyLevel,
-  englishMeaning,
+  engMeaning,
   synonyms,
   exampleSentence,
 }: VocabCardProps) {
@@ -59,10 +59,10 @@ export function VocabCard({
                 <span className="text-on-tertiary-container tracking-wider mr-2">
                   {partOfSpeech}
                 </span>
-                {koreanMeaning}
+                {korMeaning}
               </p>
               <p className="text-on-surface-variant leading-relaxed font-body text-sm mt-1">
-                {englishMeaning}
+                {engMeaning}
               </p>
             </div>
             <div>
@@ -101,9 +101,9 @@ export function VocabCard({
           initialData={{
             word,
             partOfSpeech,
-            koreanMeaning,
+            korMeaning,
             difficultyLevel,
-            englishMeaning,
+            engMeaning,
             synonyms,
             exampleSentence,
           }}

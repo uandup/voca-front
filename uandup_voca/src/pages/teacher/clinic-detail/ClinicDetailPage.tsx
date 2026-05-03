@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { CLINIC_MOCK } from '@/pages/teacher/clinics/mock/clinicMockData';
-import { MemoPopup, type MemoItem } from '@/entities/student';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+import { CLINIC_MOCK } from '@/entities/clinic';
+import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
+import type { Word as Vocab } from '@/entities/word';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
@@ -10,14 +10,16 @@ import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
 
-type MainTab = 'wordTest' | 'wrongWordBank' | 'levelTest';
+type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 type DifficultyLevel = Vocab['difficultyLevel'];
 
 export function ClinicDetailPage() {
-  const { studentId } = useParams({ from: '/teacher/clinics_/$studentId' });
+  const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
   const navigate = useNavigate();
 
-  const student = CLINIC_MOCK.sessions.flatMap((s) => s.students).find((s) => s.id === studentId);
+  const student = CLINIC_MOCK.sessions
+    .flatMap((s) => s.students)
+    .find((s) => String(s.id) === studentId);
 
   const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
@@ -40,7 +42,7 @@ export function ClinicDetailPage() {
     <div className="max-w-7xl mx-auto space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
-        title={`${student.nameLastKo}${student.nameFirstKo} (${student.nameFirstEn} ${student.nameLastEn})`}
+        title={`${student.nameKo} (${student.nameFirstEn} ${student.nameLastEn})`}
       />
 
       {/* Top Section: Student Info & Quick Assignment */}
@@ -67,7 +69,7 @@ export function ClinicDetailPage() {
             {(
               [
                 { key: 'wordTest', label: 'Word Test' },
-                { key: 'wrongWordBank', label: 'Wrong Word Bank' },
+                { key: 'reviewDeck', label: 'Review Deck Bank' },
                 { key: 'levelTest', label: 'Level Test' },
               ] as { key: MainTab; label: string }[]
             ).map((tab) => (
@@ -91,14 +93,14 @@ export function ClinicDetailPage() {
 
         {mainTab === 'wordTest' && <WordTestTab />}
 
-        {mainTab === 'wrongWordBank' && <WrongWordBankTab />}
+        {mainTab === 'reviewDeck' && <WrongWordBankTab />}
 
         {mainTab === 'levelTest' && <LevelTestTab />}
       </div>
 
       {isMemoOpen && (
         <MemoPopup
-          studentName={`${student.nameLastKo}${student.nameFirstKo}`}
+          studentName={student.nameKo}
           memos={memos}
           onClose={() => setIsMemoOpen(false)}
           onChange={(newMemos) => setMemos(newMemos)}

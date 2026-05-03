@@ -1,99 +1,13 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import CycleRow, { type CycleRowData } from './ui/CycleRow';
-
-const MOCK_CYCLES: CycleRowData[] = [
-  {
-    id: '1',
-    level: 7,
-    wordCount: 50,
-    steps: [
-      { key: 'word', label: 'Word', status: 'waiting', totalScore: '100' },
-      { key: 'sentence', label: 'Sentence', status: 'available', totalScore: '100' },
-      { key: 'review1', label: 'Review 1', status: 'grading', totalScore: '100' },
-      {
-        key: 'review2',
-        label: 'Review 2',
-        status: 'passed',
-        scores: ['98'],
-        totalScore: '100',
-        gradedDate: '23.10.23',
-      },
-      {
-        key: 'review3',
-        label: 'Review 3',
-        status: 'fail',
-        scores: ['62'],
-        totalScore: '100',
-        gradedDate: '23.10.24',
-      },
-    ],
-  },
-  {
-    id: '2',
-    level: 3,
-    wordCount: 47,
-    steps: [
-      { key: 'word', label: 'Word', status: 'fail', scores: ['62'], totalScore: '100' },
-      { key: 'sentence', label: 'Sentence', status: 'locked' },
-      { key: 'review1', label: 'Review 1', status: 'locked' },
-      { key: 'review2', label: 'Review 2', status: 'locked' },
-      { key: 'review3', label: 'Review 3', status: 'locked' },
-    ],
-  },
-  {
-    id: '3',
-    level: 5,
-    wordCount: 30,
-    steps: [
-      {
-        key: 'word',
-        label: 'Word',
-        status: 'passed',
-        scores: ['95'],
-        totalScore: '100',
-        gradedDate: '23.09.10',
-      },
-      {
-        key: 'sentence',
-        label: 'Sentence',
-        status: 'passed',
-        scores: ['55', '88'],
-        totalScore: '100',
-        gradedDate: '23.09.11',
-      },
-      {
-        key: 'review1',
-        label: 'Review 1',
-        status: 'passed',
-        scores: ['60', '72', '92'],
-        totalScore: '100',
-        gradedDate: '23.09.12',
-      },
-      {
-        key: 'review2',
-        label: 'Review 2',
-        status: 'passed',
-        scores: ['96'],
-        totalScore: '100',
-        gradedDate: '23.09.13',
-      },
-      {
-        key: 'review3',
-        label: 'Review 3',
-        status: 'passed',
-        scores: ['100'],
-        totalScore: '100',
-        gradedDate: '23.09.14',
-      },
-    ],
-  },
-];
+import CycleRow from './ui/CycleRow';
+import { MOCK_CYCLES } from '@/entities/test';
+import type { TestCycle } from '@/entities/test';
 
 const TABS = ['Active', 'History'] as const;
 type Tab = (typeof TABS)[number];
 
-function isCompleted(cycle: CycleRowData) {
+function isCompleted(cycle: TestCycle) {
   return cycle.steps.every((s) => s.status === 'passed');
 }
 

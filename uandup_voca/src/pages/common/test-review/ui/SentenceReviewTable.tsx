@@ -1,9 +1,9 @@
-import type { TestSentenceItem } from '../../test/mock/testMockData';
+import type { SentenceItem } from '@/entities/test';
 import type { SentenceAnswer } from '../../test/ui/SentenceAnswerRow';
 import { SentenceReviewRow } from './SentenceReviewRow';
 
 interface SentenceReviewTableProps {
-  items: TestSentenceItem[];
+  items: SentenceItem[];
   answers: Record<number, SentenceAnswer>;
   wrongIds: Set<number>;
   readOnly?: boolean;

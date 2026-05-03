@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { PARENT_MOCK, REGISTERED_STUDENTS, type ParentInfo } from '../../mock/adminMockData';
+import {
+  PARENT_MOCK,
+  REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
+  type Parent as ParentInfo,
+} from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -19,10 +23,10 @@ export function ParentManageModal({ onClose }: Props) {
   }
 
   function handleEditSave(id: number) {
-    const nameKo = editForm.nameKo.trim();
-    const phone = editForm.phone.trim();
-    if (!nameKo || !phone) return;
-    setParents((prev) => prev.map((p) => (p.id === id ? { ...p, nameKo, phone } : p)));
+    if (!editForm.nameKo.trim() || !editForm.phone.trim()) return;
+    setParents((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, nameKo: editForm.nameKo, phone: editForm.phone } : p)),
+    );
     setEditingId(null);
   }
 
@@ -37,7 +41,6 @@ export function ParentManageModal({ onClose }: Props) {
         className="w-full max-w-lg bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '500px' }}
       >
-        {/* 헤더 */}
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <div>
             <h2 className="font-headline text-xl font-bold text-primary">Parent Management</h2>
@@ -51,7 +54,6 @@ export function ParentManageModal({ onClose }: Props) {
           </button>
         </div>
 
-        {/* 목록 */}
         <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin]">
           {parents.length === 0 && (
             <li className="flex flex-col items-center justify-center h-full text-on-surface-variant/50 py-16">

@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE } from '../mock/testMockData';
+import { ITEMS_PER_PAGE } from '@/entities/test';
 
 interface ProgressPanelProps {
   questionIds: number[];

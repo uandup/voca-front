@@ -1,15 +1,15 @@
-import { AssignedLevelBlocks } from '@/entities/vocab';
-import type { ManagedStudent } from '../../mock/studentManageMockData';
+import { AssignedLevelBlocks } from '@/entities/word';
+import type { Student } from '@/entities/member';
 import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {
-  onEdit: (student: ManagedStudent) => void;
-  onDelete: (student: ManagedStudent) => void;
-  onMemo: (student: ManagedStudent) => void;
+  onEdit: (student: Student) => void;
+  onDelete: (student: Student) => void;
+  onMemo: (student: Student) => void;
 }
 
 interface StudentTableRowProps {
-  student: ManagedStudent;
+  student: Student;
   actions: RowActions;
 }
 
@@ -21,8 +21,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       {/* Name */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <p className="font-headline font-bold text-sm text-primary group-hover:text-primary/80 transition-colors">
-          {student.nameLastKo}
-          {student.nameFirstKo}
+          {student.nameKo}
         </p>
         <p className="text-xs text-on-surface-variant mt-0.5">
           {student.nameFirstEn} {student.nameLastEn}

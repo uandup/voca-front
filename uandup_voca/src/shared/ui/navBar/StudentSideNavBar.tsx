@@ -5,9 +5,9 @@ const navItems = [
   { icon: 'book_2', label: 'Word Test', to: '/student/word-test' },
   {
     icon: 'error',
-    label: 'Wrong Word Bank',
-    to: '/student/wrong-word-bank',
-    activePrefixes: ['/student/wrong-word-list'],
+    label: 'Review Deck',
+    to: '/student/review-deck',
+    activePrefixes: ['/student/review-deck/words'],
   },
   {
     icon: 'school',

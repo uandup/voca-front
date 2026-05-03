@@ -3,10 +3,13 @@ import {
   MOCK_VOCAB_ITEMS,
   MOCK_SENTENCE_ITEMS,
   ITEMS_PER_PAGE,
+  MOCK_ANSWERS_WTM,
+  MOCK_ANSWERS_MTW,
+  MOCK_SENTENCE_ANSWERS,
   type TestType,
   type VocabTestType,
-} from '../test/mock/testMockData';
-import { MOCK_ANSWERS_WTM, MOCK_ANSWERS_MTW, MOCK_SENTENCE_ANSWERS } from './mock/reviewMockData';
+  type TestVocabItem,
+} from '@/entities/test';
 import { TestPagination } from '../test/ui/TestPagination';
 import { ProgressPanel } from '../test/ui/ProgressPanel';
 import { VocabReviewTable } from './ui/VocabReviewTable';
@@ -146,7 +149,7 @@ export default function TestReviewPage() {
             />
           ) : (
             <VocabReviewTable
-              items={pageItems as typeof MOCK_VOCAB_ITEMS}
+              items={pageItems as TestVocabItem[]}
               testType={testType as VocabTestType}
               showSynonym={showSynonym}
               answers={mockVocabAnswers}

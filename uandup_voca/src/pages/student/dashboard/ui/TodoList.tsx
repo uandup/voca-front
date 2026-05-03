@@ -1,6 +1,17 @@
-const todos = ['Assigned Word - 80 ', 'Word Test', 'Example Sentence Test', 'Reivew Test (3)'];
+import type { Student } from '@/entities/member';
 
-export function TodoList() {
+interface Props {
+  student: Pick<Student, 'assignedWordCount' | 'testConfig'>;
+}
+
+export function TodoList({ student }: Props) {
+  const todos = [
+    `Assigned Word - ${student.assignedWordCount}`,
+    'Word Test',
+    'Example Sentence Test',
+    'Review Test (3)',
+  ];
+
   return (
     <aside className="h-full">
       <div className="bg-surface-container-lowest rounded-tl-2xl rounded-bl-2xl border border-outline-variant/10 shadow-md p-5 flex flex-col gap-4 h-full">

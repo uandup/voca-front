@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import {
-  PENDING_STUDENTS,
-  PENDING_PARENTS,
-  PENDING_TEACHERS,
-  REGISTERED_STUDENTS,
+  PENDING_STUDENTS_MOCK as PENDING_STUDENTS,
+  PENDING_PARENTS_MOCK as PENDING_PARENTS,
+  PENDING_TEACHERS_MOCK as PENDING_TEACHERS,
+  REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
   type PendingStudent,
   type PendingParent,
   type PendingTeacher,
-  type RegisteredStudent,
-} from '../../mock/adminMockData';
+  type StudentSummary as RegisteredStudent,
+} from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -43,7 +43,7 @@ function StudentTab() {
           <div>
             <p className="text-sm font-bold text-on-surface">{s.nameKo}</p>
             <p className="text-xs text-on-surface-variant mt-0.5">
-              {s.name} · G{s.grade}
+              {s.nameFirstEn} {s.nameLastEn} · G{s.grade}
             </p>
           </div>
           <ApproveRejectButtons
@@ -80,7 +80,6 @@ function ParentTab() {
 
   return (
     <div className="relative flex h-full">
-      {/* 메인 리스트 */}
       <div
         className={`flex-1 overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin] transition-all ${matchingId !== null ? 'opacity-40 pointer-events-none' : ''}`}
       >
@@ -101,7 +100,6 @@ function ParentTab() {
                       ( {p.phone} )
                     </span>
                   </p>
-                  {/* 자녀 정보 / 매칭 상태 */}
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="text-xs text-on-surface-variant">
                       자녀: {p.childNameKo} ({p.childGrade})
@@ -137,7 +135,6 @@ function ParentTab() {
         )}
       </div>
 
-      {/* 학생 매칭 패널 */}
       {matchingId !== null && matchingParent && (
         <StudentMatchPanel
           parent={matchingParent}
@@ -160,13 +157,12 @@ function StudentMatchPanel({
   onClose: () => void;
 }) {
   const [search, setSearch] = useState('');
-  const filtered = REGISTERED_STUDENTS.filter(
-    (s) => s.nameKo.includes(search) || s.name.toLowerCase().includes(search.toLowerCase()),
+  const filtered = REGISTERED_STUDENTS.filter((s) =>
+    `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div className="absolute inset-0 bg-surface flex flex-col">
-      {/* 패널 헤더 */}
       <div className="px-7 py-4 border-b border-outline-variant/20 shrink-0">
         <div className="flex items-center justify-between mb-1">
           <p className="text-sm font-extrabold text-primary">Match Student</p>
@@ -184,22 +180,20 @@ function StudentMatchPanel({
         </p>
       </div>
 
-      {/* 검색 */}
       <div className="px-7 py-3 border-b border-outline-variant/20 shrink-0">
         <input
           autoFocus
           className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-          placeholder="학생 이름 검색"
+          placeholder="Search student name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      {/* 학생 목록 */}
       <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin]">
         {filtered.length === 0 ? (
           <li className="flex items-center justify-center py-10 text-xs text-on-surface-variant">
-            검색 결과가 없습니다
+            No results
           </li>
         ) : (
           filtered.map((s) => (
@@ -210,10 +204,10 @@ function StudentMatchPanel({
                 className="w-full flex items-center justify-between px-7 py-3.5 hover:bg-primary/5 transition-colors text-left"
               >
                 <div>
-                  <p className="text-sm font-bold text-on-surface">{s.nameKo}</p>
-                  <p className="text-xs text-on-surface-variant mt-0.5">
-                    {s.name} · G{s.grade}
+                  <p className="text-sm font-bold text-on-surface">
+                    {s.nameFirstEn} {s.nameLastEn}
                   </p>
+                  <p className="text-xs text-on-surface-variant mt-0.5">G{s.grade}</p>
                 </div>
                 <span className="material-symbols-outlined text-on-surface-variant/40 text-base">
                   chevron_right
@@ -246,7 +240,9 @@ function TeacherTab() {
         <div key={t.id} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
             <p className="text-sm font-bold text-on-surface">{t.nameKo}</p>
-            <p className="text-xs text-on-surface-variant mt-0.5">{t.name}</p>
+            <p className="text-xs text-on-surface-variant mt-0.5">
+              {t.nameFirstEn} {t.nameLastEn}
+            </p>
           </div>
           <ApproveRejectButtons
             onApprove={() => handleApprove(t.id)}
@@ -325,7 +321,6 @@ export function PendingApprovalsModal({ onClose }: Props) {
         className="w-full max-w-lg bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '540px' }}
       >
-        {/* 헤더 */}
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <h2 className="font-headline text-xl font-bold text-primary">Pending Approvals</h2>
           <button
@@ -336,7 +331,6 @@ export function PendingApprovalsModal({ onClose }: Props) {
           </button>
         </div>
 
-        {/* 탭 */}
         <div className="flex border-b border-outline-variant/20 shrink-0">
           {(['student', 'parent', 'teacher'] as Tab[]).map((t) => (
             <button
@@ -366,7 +360,6 @@ export function PendingApprovalsModal({ onClose }: Props) {
           ))}
         </div>
 
-        {/* 탭 콘텐츠 */}
         <div className="flex-1 overflow-hidden relative">
           {tab === 'student' && <StudentTab />}
           {tab === 'parent' && <ParentTab />}

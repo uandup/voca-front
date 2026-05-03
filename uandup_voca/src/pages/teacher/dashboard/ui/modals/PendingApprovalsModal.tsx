@@ -1,22 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-
-interface PendingStudent {
-  id: number;
-  nameKo: string;
-  name: string;
-  grade: number;
-}
-
-const MOCK_PENDING: PendingStudent[] = [
-  { id: 1, nameKo: '김지훈', name: 'Kim Jihun', grade: 10 },
-  { id: 2, nameKo: '박서연', name: 'Park Seoyeon', grade: 9 },
-  { id: 3, nameKo: '이준혁', name: 'Lee Junhyuk', grade: 11 },
-  { id: 4, nameKo: '최아영', name: 'Choi Ayoung', grade: 12 },
-  { id: 5, nameKo: '한도윤', name: 'Han Doyun', grade: 10 },
-  { id: 6, nameKo: '오민준', name: 'Oh Minjun', grade: 9 },
-  { id: 7, nameKo: '신예린', name: 'Shin Yerin', grade: 11 },
-];
+import { MOCK_PENDING_APPROVALS } from '@/entities/member';
 
 interface PendingApprovalsModalProps {
   onClose: () => void;
@@ -25,7 +9,7 @@ interface PendingApprovalsModalProps {
 export function PendingApprovalsModal({ onClose }: PendingApprovalsModalProps) {
   const [decided, setDecided] = useState<Record<number, 'approved' | 'rejected'>>({});
 
-  const pending = MOCK_PENDING.filter((s) => !decided[s.id]);
+  const pending = MOCK_PENDING_APPROVALS.filter((s) => !decided[s.id]);
 
   function handleApprove(id: number) {
     setDecided((prev) => ({ ...prev, [id]: 'approved' }));

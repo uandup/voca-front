@@ -1,4 +1,12 @@
-export function StatCards() {
+import type { Student } from '@/entities/member';
+
+interface Props {
+  student: Pick<Student, 'accuracy' | 'assignedWordCount'>;
+}
+
+export function StatCards({ student }: Props) {
+  const { accuracy, assignedWordCount } = student;
+
   return (
     <div className="lg:col-span-4 flex flex-col gap-6">
       {/* Overall Accuracy */}
@@ -7,7 +15,7 @@ export function StatCards() {
           Overall Accuracy
         </p>
         <div className="flex items-center gap-4">
-          <span className="text-4xl font-black font-headline">92%</span>
+          <span className="text-4xl font-black font-headline">{accuracy ?? '—'}</span>
         </div>
       </div>
 
@@ -18,7 +26,9 @@ export function StatCards() {
           <p className="text-xs font-bold text-primary uppercase tracking-widest">Assigned Words</p>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-4xl font-black text-primary font-headline">80</span>
+          <span className="text-4xl font-black text-primary font-headline">
+            {assignedWordCount}
+          </span>
           <div className="flex items-center -mr-3">
             <span className="text-lg font-bold text-primary/60">View words</span>
             <span className="material-symbols-outlined text-primary" style={{ fontSize: '40px' }}>

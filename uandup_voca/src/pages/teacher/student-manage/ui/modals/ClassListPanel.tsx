@@ -1,4 +1,4 @@
-import { CLASS_MOCK } from '../../mock/studentManageMockData';
+import { CLASS_MOCK } from '@/entities/class';
 
 interface ClassListPanelProps {
   selectedClasses: string[];
@@ -37,9 +37,7 @@ export function ClassListPanel({ selectedClasses, onChange }: ClassListPanelProp
               >
                 <span
                   className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
-                    isSelected
-                      ? 'bg-primary border-primary'
-                      : 'border-outline-variant/50'
+                    isSelected ? 'bg-primary border-primary' : 'border-outline-variant/50'
                   }`}
                 >
                   {isSelected && (

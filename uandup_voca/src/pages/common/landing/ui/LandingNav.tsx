@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router';
 import type { Lang, LandingContent } from '../model/landingContent';
 
 const GoogleIcon = () => (
@@ -53,13 +52,13 @@ export function LandingNav({ lang, t, onToggleLang }: Props) {
           </div>
 
           {/* 구글 로그인 버튼 */}
-          <Link
-            to="/login"
+          <a
+            href={`${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface text-sm font-medium hover:bg-surface-container-low transition-colors"
           >
             <GoogleIcon />
             {t.googleLogin}
-          </Link>
+          </a>
         </div>
       </div>
     </header>

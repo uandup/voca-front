@@ -1,66 +1,29 @@
 import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
+import type { ParentFormState } from '../model/types';
 
 interface Props {
-  nameLastKo: string;
-  nameFirstKo: string;
-  phone: string;
-  phoneConsent: boolean;
-  childLastKo: string;
-  childFirstKo: string;
-  childGrade: string;
-  onChangeNameLastKo: (v: string) => void;
-  onChangeNameFirstKo: (v: string) => void;
-  onChangePhone: (v: string) => void;
-  onChangePhoneConsent: (v: boolean) => void;
-  onChangeChildLastKo: (v: string) => void;
-  onChangeChildFirstKo: (v: string) => void;
-  onChangeChildGrade: (v: string) => void;
+  value: ParentFormState;
+  onChange: (next: ParentFormState) => void;
 }
 
-export function ParentForm({
-  nameLastKo,
-  nameFirstKo,
-  phone,
-  phoneConsent,
-  childLastKo,
-  childFirstKo,
-  childGrade,
-  onChangeNameLastKo,
-  onChangeNameFirstKo,
-  onChangePhone,
-  onChangePhoneConsent,
-  onChangeChildLastKo,
-  onChangeChildFirstKo,
-  onChangeChildGrade,
-}: Props) {
+export function ParentForm({ value, onChange }: Props) {
+  const set = <K extends keyof ParentFormState>(key: K, val: ParentFormState[K]) =>
+    onChange({ ...value, [key]: val });
+
   return (
     <>
       {/* 학부모 성함 */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            성 (한글) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 김"
-            value={nameLastKo}
-            onChange={(e) => onChangeNameLastKo(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            이름 (한글) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 영희"
-            value={nameFirstKo}
-            onChange={(e) => onChangeNameFirstKo(e.target.value)}
-            className={inputClass}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-on-surface">
+          한글 이름 <span className="text-error">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="예) 김영희"
+          value={value.nameKo}
+          onChange={(e) => set('nameKo', e.target.value)}
+          className={inputClass}
+        />
       </div>
 
       {/* 연락처 */}
@@ -71,15 +34,15 @@ export function ParentForm({
         <input
           type="tel"
           placeholder="연락처를 입력해주세요"
-          value={phone}
-          onChange={(e) => onChangePhone(e.target.value)}
+          value={value.phone}
+          onChange={(e) => set('phone', e.target.value)}
           className={inputClass}
         />
         <label className="flex items-start gap-2 mt-1 cursor-pointer">
           <input
             type="checkbox"
-            checked={phoneConsent}
-            onChange={(e) => onChangePhoneConsent(e.target.checked)}
+            checked={value.phoneConsent}
+            onChange={(e) => set('phoneConsent', e.target.checked)}
             className="mt-0.5 w-4 h-4 accent-primary shrink-0"
           />
           <span className="text-xs text-on-surface-variant leading-relaxed">
@@ -93,31 +56,17 @@ export function ParentForm({
       </div>
 
       {/* 자녀 이름 */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            자녀 성 (한글 또는 영어) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 김"
-            value={childLastKo}
-            onChange={(e) => onChangeChildLastKo(e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            자녀 이름 (한글 또는 영어) <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) 민수"
-            value={childFirstKo}
-            onChange={(e) => onChangeChildFirstKo(e.target.value)}
-            className={inputClass}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-on-surface">
+          자녀 이름 <span className="text-error">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="예) 김민수"
+          value={value.childNameKo}
+          onChange={(e) => set('childNameKo', e.target.value)}
+          className={inputClass}
+        />
       </div>
 
       {/* 학생 학년 */}
@@ -126,8 +75,8 @@ export function ParentForm({
           학생 학년 <span className="text-error">*</span>
         </label>
         <select
-          value={childGrade}
-          onChange={(e) => onChangeChildGrade(e.target.value)}
+          value={value.childGrade}
+          onChange={(e) => set('childGrade', e.target.value)}
           className={selectClass}
           style={selectStyle}
         >

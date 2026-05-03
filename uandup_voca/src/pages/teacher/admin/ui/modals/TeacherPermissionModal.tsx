@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TEACHER_MOCK, type TeacherInfo } from '../../mock/adminMockData';
+import { TEACHER_MOCK, type Teacher as TeacherInfo } from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -85,7 +85,9 @@ export function TeacherPermissionModal({ onClose }: Props) {
               <li key={t.id} className="flex items-center justify-between px-7 py-4 gap-4">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-on-surface truncate">{t.nameKo}</p>
-                  <p className="text-xs text-on-surface-variant mt-0.5 truncate">{t.name}</p>
+                  <p className="text-xs text-on-surface-variant mt-0.5 truncate">
+                    {t.nameFirstEn} {t.nameLastEn}
+                  </p>
                 </div>
                 <button
                   type="button"

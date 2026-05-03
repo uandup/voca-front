@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { CLASS_MOCK, type ClassInfo } from '../../../student-manage/mock/studentManageMockData';
+import type { Class } from '@/entities/class';
+import { CLASS_MOCK } from '@/entities/class';
 
 interface Props {
   onClose: () => void;
 }
 
 export function ClassManageModal({ onClose }: Props) {
-  const [classes, setClasses] = useState<ClassInfo[]>(CLASS_MOCK);
+  const [classes, setClasses] = useState<Class[]>(CLASS_MOCK);
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState('');
@@ -26,12 +27,12 @@ export function ClassManageModal({ onClose }: Props) {
     setDeletingId(null);
   }
 
-  function handleEditStart(item: ClassInfo) {
+  function handleEditStart(item: Class) {
     setEditingId(item.id);
     setEditingName(item.name);
   }
 
-  function handleEditSave(item: ClassInfo) {
+  function handleEditSave(item: Class) {
     const trimmed = editingName.trim();
     if (!trimmed || (trimmed !== item.name && classes.some((c) => c.name === trimmed))) {
       setEditingId(null);

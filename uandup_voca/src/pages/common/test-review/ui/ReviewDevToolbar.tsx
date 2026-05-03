@@ -1,4 +1,4 @@
-import type { TestType } from '../../test/mock/testMockData';
+import type { TestType } from '@/entities/test';
 
 type ReviewMode = 'grading' | 'result';
 

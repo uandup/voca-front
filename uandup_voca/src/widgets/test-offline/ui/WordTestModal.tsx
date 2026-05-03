@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { PrintActionBar } from './PrintActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-import type { VocabItem } from '@/entities/test';
+import type { WordTestItem } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -11,7 +11,7 @@ const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 
 interface TestWMSPrintModalProps {
   onClose: () => void;
-  rows: VocabItem[];
+  rows: WordTestItem[];
   testType?: TestType;
   includeSynonyms?: boolean;
 }
@@ -53,7 +53,7 @@ function WordSheet({
   hidden,
 }: {
   id: string;
-  pageRows: VocabItem[];
+  pageRows: WordTestItem[];
   page: number;
   showWord: boolean;
   showKor: boolean;
@@ -168,16 +168,16 @@ function WordSheet({
 export function WordTestModal({
   onClose,
   rows,
-  testType = 'Meaning to Word',
+  testType = 'meaning-to-word',
   includeSynonyms = false,
 }: TestWMSPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const showWord = testType === 'Word to Meaning';
-  const showKor = testType === 'Meaning to Word';
-  const showEng = testType === 'Meaning to Word';
+  const showWord = testType === 'word-to-meaning';
+  const showKor = testType === 'meaning-to-word';
+  const showEng = testType === 'meaning-to-word';
   const showSynonym = includeSynonyms;
 
   const allPageIds = Array.from({ length: totalPages }, (_, i) => `wms-print-sheet-${i + 1}`);

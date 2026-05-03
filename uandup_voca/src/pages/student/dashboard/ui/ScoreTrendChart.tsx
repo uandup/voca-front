@@ -12,20 +12,20 @@ interface DataPoint {
 }
 
 const wordResults: ExamResult[] = [
-  { label: '02.03', value: 80, pass: true },
-  { label: '02.10', value: 85, pass: true },
-  { label: '02.17', value: 55, pass: false },
+  { label: '02.03', value: 72, pass: true },
+  { label: '02.10', value: 78, pass: true },
+  // { label: '02.17', value: 55, pass: false },
   { label: '02.17', value: 82, pass: true }, // 재시험 합격
   { label: '02.24', value: 90, pass: true },
   { label: '03.03', value: 88, pass: true },
   { label: '03.10', value: 93, pass: true },
-  { label: '03.17', value: 100, pass: true },
+  { label: '03.17', value: 98, pass: true },
   { label: '03.24', value: 95, pass: true },
 ];
 
 const sentenceResults: ExamResult[] = [
   { label: '02.03', value: 74, pass: true },
-  { label: '02.10', value: 58, pass: false },
+  // { label: '02.10', value: 58, pass: false },
   { label: '02.10', value: 80, pass: true }, // 재시험 합격
   { label: '02.24', value: 86, pass: true },
   { label: '03.03', value: 82, pass: true },
@@ -50,12 +50,12 @@ const reviewResults: DataPoint[] = [
 ];
 
 const monthlyWords: DataPoint[] = [
-  { label: '25.10', value: 120 },
-  { label: '25.11', value: 180 },
+  { label: '25.10', value: 135 },
+  { label: '25.11', value: 150 },
   { label: '25.12', value: 150 },
-  { label: '26.01', value: 200 },
-  { label: '26.02', value: 150 },
-  { label: '26.03', value: 150 },
+  { label: '26.01', value: 180 },
+  { label: '26.02', value: 200 },
+  { label: '26.03', value: 200 },
 ];
 
 type TabType = 'word' | 'sentence' | 'review' | 'monthly';

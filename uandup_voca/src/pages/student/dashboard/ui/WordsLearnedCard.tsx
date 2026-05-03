@@ -1,4 +1,4 @@
-const wordsLearned = 1450;
+const wordsLearned = 4247;
 
 export function WordsLearnedCard() {
   return (

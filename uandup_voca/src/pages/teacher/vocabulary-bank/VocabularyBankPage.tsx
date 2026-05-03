@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { VocabCard } from './ui/VocabCard';
 import { VocabModal } from './ui/modals/VocabModal';
-import { UploadExcelModal } from './ui/modals/UploadExcelModal';
-import { mockVocabData } from './mock/vocabMockData';
+import { MOCK_WORDS } from '@/entities/word';
 
 export default function VocabularyBankPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
 
@@ -16,11 +14,11 @@ export default function VocabularyBankPage() {
     setSelectedLevel('');
   }
 
-  const filtered = mockVocabData.filter((v) => {
+  const filtered = MOCK_WORDS.filter((v) => {
     const matchesSearch =
       searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.koreanMeaning.includes(searchQuery) ||
+      v.korMeaning.includes(searchQuery) ||
       v.synonyms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesLevel = selectedLevel === '' || v.difficultyLevel === Number(selectedLevel);
     return matchesSearch && matchesLevel;
@@ -32,13 +30,6 @@ export default function VocabularyBankPage() {
       <header className="flex justify-between items-start mb-4">
         <PageTitle title="Vocabulary Bank" />
         <div className="flex gap-3">
-          <button
-            className="border-2 border-primary text-primary px-4 py-2 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all"
-            onClick={() => setIsUploadModalOpen(true)}
-          >
-            <span className="material-symbols-outlined">file_upload</span>
-            <span className="font-bold">Excel Upload</span>
-          </button>
           <button
             className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
             onClick={() => setIsModalOpen(true)}
@@ -87,16 +78,6 @@ export default function VocabularyBankPage() {
         </div>
       </section>
 
-      {isUploadModalOpen && (
-        <UploadExcelModal
-          onClose={() => setIsUploadModalOpen(false)}
-          onUpload={(file) => {
-            console.log(file);
-            setIsUploadModalOpen(false);
-          }}
-        />
-      )}
-
       {isModalOpen && (
         <VocabModal
           onClose={() => setIsModalOpen(false)}
@@ -117,8 +98,8 @@ export default function VocabularyBankPage() {
 
       {/* Vocabulary List */}
       <div className="flex flex-col gap-8">
-        {filtered.map(({ id, ...vocabData }) => (
-          <VocabCard key={id} {...vocabData} />
+        {filtered.map((word) => (
+          <VocabCard key={word.id} {...word} />
         ))}
       </div>
     </main>

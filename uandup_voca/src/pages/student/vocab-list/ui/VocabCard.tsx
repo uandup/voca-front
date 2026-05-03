@@ -2,8 +2,8 @@ interface VocabularyCardProps {
   level: number;
   word: string;
   partOfSpeech: string;
-  koreanMeaning: string;
-  englishMeaning: string;
+  korMeaning: string;
+  engMeaning: string;
   synonyms: string[];
   starred: boolean;
 }
@@ -12,8 +12,8 @@ export function VocabCard({
   level,
   word,
   partOfSpeech,
-  koreanMeaning,
-  englishMeaning,
+  korMeaning,
+  engMeaning,
   synonyms,
   // starred,
 }: VocabularyCardProps) {
@@ -38,9 +38,9 @@ export function VocabCard({
             </h4>
             <p className="text-primary font-bold text-lg">
               <span className="text-on-tertiary-container tracking-wider mr-2">{partOfSpeech}</span>
-              {koreanMeaning}
+              {korMeaning}
             </p>
-            <p className="text-sm text-on-surface-variant mt-1">{englishMeaning}</p>
+            <p className="text-sm text-on-surface-variant mt-1">{engMeaning}</p>
           </div>
           <div>
             <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">

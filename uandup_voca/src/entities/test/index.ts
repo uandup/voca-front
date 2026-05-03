@@ -1,4 +1,38 @@
-export type { TestType, TestConfig } from './types/testConfig';
+export type {
+  TestType,
+  TestConfig,
+  TestStepStatus,
+  TestStatus,
+  TestStep,
+  TestCycle,
+  TestRecord,
+  TestScore,
+  TestItem,
+  SentenceItem,
+  TestInfo,
+  TestVocabAnswer,
+  TestSentenceAnswer,
+  WrongWordTestRecord,
+  LevelTestRecord,
+  ClinicCycle,
+} from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';
-export type { VocabItem } from './lib/mockData';
-export { mockVocabList, mockESRows } from './lib/mockData';
+export type { VocabTestType, TestVocabItem } from './lib/mockData';
+export {
+  MOCK_VOCAB_LIST,
+  MOCK_ES_ROWS,
+  ITEMS_PER_PAGE,
+  MOCK_TEST_INFO,
+  MOCK_SENTENCE_ITEMS,
+  MOCK_VOCAB_ITEMS,
+  MOCK_ANSWERS_WTM,
+  MOCK_ANSWERS_MTW,
+  MOCK_SENTENCE_ANSWERS,
+  MOCK_CYCLES,
+  MOCK_REVIEW_DECK_HISTORY,
+  MOCK_STUDENT_LEVEL_TEST_HISTORY,
+  MOCK_REVIEW_DECK_HISTORY as MOCK_CLINIC_REVIEW_DECK_HISTORY,
+  MOCK_STUDENT_LEVEL_TEST_HISTORY as MOCK_CLINIC_LEVEL_TEST_HISTORY,
+  MOCK_CLINIC_CYCLES,
+  MOCK_ES_TEMPLATE,
+} from './lib/mockData';

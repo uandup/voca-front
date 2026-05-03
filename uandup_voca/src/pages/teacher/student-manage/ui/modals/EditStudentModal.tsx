@@ -1,30 +1,31 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { ManagedStudent, TestType, ParentInfo } from '../../mock/studentManageMockData';
-import { PARENT_MOCK } from '../../mock/studentManageMockData';
+import type { Student, Parent } from '@/entities/member';
+import type { TestType } from '@/entities/test';
+import { PARENT_MOCK } from '@/entities/member';
 import { ParentListPanel } from './ParentListPanel';
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
-  student: ManagedStudent;
+  student: Student;
   onClose: () => void;
-  onSave: (updated: ManagedStudent) => void;
+  onSave: (updated: Student) => void;
 }
 
-const TEST_TYPES: TestType[] = ['Meaning to Word', 'Word to Meaning'];
+const TEST_TYPES: TestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 const TEST_TYPE_LABELS: Record<TestType, string> = {
-  'Meaning to Word': 'Meaning to Word ( M to W )',
-  'Word to Meaning': 'Word to Meaning ( W to M )',
+  'meaning-to-word': 'Meaning to Word ( M to W )',
+  'word-to-meaning': 'Word to Meaning ( W to M )',
+  sentence: 'Sentence',
 };
 
 const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
 export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
-  const [nameFirstKo, setNameFirstKo] = useState(student.nameFirstKo);
-  const [nameLastKo, setNameLastKo] = useState(student.nameLastKo);
+  const [nameKo, setNameKo] = useState(student.nameKo);
   const [nameFirstEn, setNameFirstEn] = useState(student.nameFirstEn);
   const [nameLastEn, setNameLastEn] = useState(student.nameLastEn);
   const [grade, setGrade] = useState(student.grade);
@@ -33,8 +34,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
   const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
   const [testType, setTestType] = useState<TestType>(student.testConfig.type);
   const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedParent, setSelectedParent] = useState<ParentInfo | null>(
-    student.parentName ? (PARENT_MOCK.find((p) => p.name === student.parentName) ?? null) : null,
+  const [selectedParent, setSelectedParent] = useState<Parent | null>(
+    student.parentName ? (PARENT_MOCK.find((p) => p.nameKo === student.parentName) ?? null) : null,
   );
   const [showParentList, setShowParentList] = useState(false);
   const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
@@ -43,8 +44,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
   function handleSave() {
     onSave({
       ...student,
-      nameFirstKo,
-      nameLastKo,
+      nameKo,
       nameFirstEn,
       nameLastEn,
       grade,
@@ -52,7 +52,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
       assignedWordCount: Number(wordCount),
       testQuestionCount: Number(testQuestionCount),
       testConfig: { type: testType, includeSynonyms },
-      parentName: selectedParent?.name,
+      parentName: selectedParent ? selectedParent.nameKo : undefined,
       parentPhone: selectedParent?.phone,
       classes: selectedClasses,
     });
@@ -82,24 +82,14 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
           <div className="p-8 flex flex-col gap-6 overflow-y-auto">
             {/* 이름 */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
+              <div className="col-span-2 flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Last Name (Korean)
+                  Korean Name
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameLastKo}
-                  onChange={(e) => setNameLastKo(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  First Name (Korean)
-                </label>
-                <input
-                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameFirstKo}
-                  onChange={(e) => setNameFirstKo(e.target.value)}
+                  value={nameKo}
+                  onChange={(e) => setNameKo(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -155,7 +145,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
                     value={level}
-                    onChange={(e) => setLevel(Number(e.target.value))}
+                    onChange={(e) => setLevel(Number(e.target.value) as typeof level)}
                   >
                     {ALL_LEVELS.map((l) => (
                       <option key={l} value={l}>
@@ -299,7 +289,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               {selectedParent ? (
                 <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
                   <div>
-                    <p className="text-sm font-bold text-on-surface">{selectedParent.name}</p>
+                    <p className="text-sm font-bold text-on-surface">{selectedParent.nameKo}</p>
                     <p className="text-xs text-on-surface-variant mt-0.5">{selectedParent.phone}</p>
                   </div>
                   <button

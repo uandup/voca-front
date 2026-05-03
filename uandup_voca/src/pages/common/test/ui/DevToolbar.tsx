@@ -1,4 +1,4 @@
-import type { TestType } from '../mock/testMockData';
+import type { TestType } from '@/entities/test';
 
 const TEST_TYPE_LABELS: Record<TestType, string> = {
   'word-to-meaning': 'W → M',

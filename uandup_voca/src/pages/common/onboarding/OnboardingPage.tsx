@@ -3,51 +3,59 @@ import { StudentForm } from './ui/StudentForm';
 import { ParentForm } from './ui/ParentForm';
 import { TeacherForm } from './ui/TeacherForm';
 import { selectClass, selectStyle } from './ui/formStyles';
+import type { StudentFormState, TeacherFormState, ParentFormState } from './model/types';
 
 type UserType = '학생' | '학부모' | '선생님';
 
+const INITIAL_STUDENT: StudentFormState = {
+  nameKo: '',
+  nameLastEn: '',
+  nameFirstEn: '',
+  grade: 0,
+};
+
+const INITIAL_TEACHER: TeacherFormState = {
+  nameKo: '',
+  nameLastEn: '',
+  nameFirstEn: '',
+};
+
+const INITIAL_PARENT: ParentFormState = {
+  nameKo: '',
+  phone: '',
+  phoneConsent: false,
+  childNameKo: '',
+  childGrade: '',
+};
+
+function isStudentValid(f: StudentFormState) {
+  return !!(f.nameKo && f.nameLastEn && f.nameFirstEn && f.grade);
+}
+
+function isTeacherValid(f: TeacherFormState) {
+  return !!f.nameKo;
+}
+
+function isParentValid(f: ParentFormState) {
+  return !!(f.nameKo && f.phone && f.phoneConsent && f.childNameKo && f.childGrade);
+}
+
 export default function OnboardingPage() {
   const [userType, setUserType] = useState<UserType>('학생');
+  const [student, setStudent] = useState<StudentFormState>(INITIAL_STUDENT);
+  const [teacher, setTeacher] = useState<TeacherFormState>(INITIAL_TEACHER);
+  const [parent, setParent] = useState<ParentFormState>(INITIAL_PARENT);
 
-  const [studentLastKo, setStudentLastKo] = useState('');
-  const [studentFirstKo, setStudentFirstKo] = useState('');
-  const [studentLastEn, setStudentLastEn] = useState('');
-  const [studentFirstEn, setStudentFirstEn] = useState('');
-  const [studentGrade, setStudentGrade] = useState('');
+  const isValid =
+    userType === '학생'
+      ? isStudentValid(student)
+      : userType === '선생님'
+        ? isTeacherValid(teacher)
+        : isParentValid(parent);
 
-  const [parentLastKo, setParentLastKo] = useState('');
-  const [parentFirstKo, setParentFirstKo] = useState('');
-  const [parentPhone, setParentPhone] = useState('');
-  const [parentPhoneConsent, setParentPhoneConsent] = useState(false);
-  const [childLastKo, setChildLastKo] = useState('');
-  const [childFirstKo, setChildFirstKo] = useState('');
-  const [childGrade, setChildGrade] = useState('');
-
-  const [teacherLastKo, setTeacherLastKo] = useState('');
-  const [teacherFirstKo, setTeacherFirstKo] = useState('');
-  const [teacherLastEn, setTeacherLastEn] = useState('');
-  const [teacherFirstEn, setTeacherFirstEn] = useState('');
-
-  const isValid = () => {
-    if (userType === '학생')
-      return !!(studentLastKo && studentFirstKo && studentLastEn && studentFirstEn && studentGrade);
-    if (userType === '학부모')
-      return !!(
-        parentLastKo &&
-        parentFirstKo &&
-        parentPhone &&
-        parentPhoneConsent &&
-        childLastKo &&
-        childFirstKo &&
-        childGrade
-      );
-    if (userType === '선생님') return !!(teacherLastKo && teacherFirstKo);
-    return false;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isValid()) return;
+    if (!isValid) return;
     // TODO: 회원가입 로직
   };
 
@@ -84,56 +92,15 @@ export default function OnboardingPage() {
             </select>
           </div>
 
-          {userType === '학생' && (
-            <StudentForm
-              nameLastKo={studentLastKo}
-              nameFirstKo={studentFirstKo}
-              nameLastEn={studentLastEn}
-              nameFirstEn={studentFirstEn}
-              grade={studentGrade}
-              onChangeNameLastKo={setStudentLastKo}
-              onChangeNameFirstKo={setStudentFirstKo}
-              onChangeNameLastEn={setStudentLastEn}
-              onChangeNameFirstEn={setStudentFirstEn}
-              onChangeGrade={setStudentGrade}
-            />
-          )}
+          {userType === '학생' && <StudentForm value={student} onChange={setStudent} />}
 
-          {userType === '학부모' && (
-            <ParentForm
-              nameLastKo={parentLastKo}
-              nameFirstKo={parentFirstKo}
-              phone={parentPhone}
-              phoneConsent={parentPhoneConsent}
-              childLastKo={childLastKo}
-              childFirstKo={childFirstKo}
-              childGrade={childGrade}
-              onChangeNameLastKo={setParentLastKo}
-              onChangeNameFirstKo={setParentFirstKo}
-              onChangePhone={setParentPhone}
-              onChangePhoneConsent={setParentPhoneConsent}
-              onChangeChildLastKo={setChildLastKo}
-              onChangeChildFirstKo={setChildFirstKo}
-              onChangeChildGrade={setChildGrade}
-            />
-          )}
+          {userType === '학부모' && <ParentForm value={parent} onChange={setParent} />}
 
-          {userType === '선생님' && (
-            <TeacherForm
-              nameLastKo={teacherLastKo}
-              nameFirstKo={teacherFirstKo}
-              nameLastEn={teacherLastEn}
-              nameFirstEn={teacherFirstEn}
-              onChangeNameLastKo={setTeacherLastKo}
-              onChangeNameFirstKo={setTeacherFirstKo}
-              onChangeNameLastEn={setTeacherLastEn}
-              onChangeNameFirstEn={setTeacherFirstEn}
-            />
-          )}
+          {userType === '선생님' && <TeacherForm value={teacher} onChange={setTeacher} />}
 
           <button
             type="submit"
-            disabled={!isValid()}
+            disabled={!isValid}
             className="w-full py-3.5 rounded-xl bg-primary text-white text-sm font-semibold transition-opacity mt-1 disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:opacity-90"
           >
             완료

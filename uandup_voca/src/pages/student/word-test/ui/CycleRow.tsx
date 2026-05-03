@@ -1,16 +1,9 @@
 import { Fragment } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import StepCard from './StepCard';
-import type { TestStep } from './types';
+import type { TestCycle } from '@/entities/test';
 
-export interface CycleRowData {
-  id: string;
-  level: number;
-  wordCount: number;
-  steps: TestStep[];
-}
-
-export default function CycleRow({ id, level, wordCount, steps }: CycleRowData) {
+export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestCycle) {
   const navigate = useNavigate();
 
   return (
@@ -19,7 +12,7 @@ export default function CycleRow({ id, level, wordCount, steps }: CycleRowData) 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span className="text-sm text-on-surface-variant">Level</span>
-            <span className="text-sm font-bold text-on-surface">{level}</span>
+            <span className="text-sm font-bold text-on-surface">{assignedLevel}</span>
           </div>
           <div className="w-px h-3.5 bg-outline/20" />
           <div className="flex items-center gap-1.5">
@@ -27,7 +20,7 @@ export default function CycleRow({ id, level, wordCount, steps }: CycleRowData) 
             <span className="text-sm font-bold text-on-surface">{wordCount}</span>
           </div>
           <button
-            onClick={() => navigate({ to: '/student/word-test/$id/vocabulary', params: { id } })}
+            onClick={() => navigate({ to: '/student/word-test/$id/words', params: { id } })}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline/30 text-xs font-semibold text-success hover:bg-slate-50 transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>

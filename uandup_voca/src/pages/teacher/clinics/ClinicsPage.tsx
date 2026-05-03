@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/vocab';
-import { CLINIC_MOCK, type ClinicStudent } from './mock/clinicMockData';
+import { AssignedLevelBlocks } from '@/entities/word';
+import { CLINIC_MOCK, type ClinicStudent } from '@/entities/clinic';
 import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
-import { MemoPopup, type MemoItem } from '@/entities/student';
+import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 type Day = (typeof DAYS)[number];
@@ -57,7 +57,7 @@ export default function ClinicsPage() {
     setSelectedDay(DAYS[(idx + 1) % DAYS.length]);
   }
 
-  function handleMemoChange(studentId: string, newMemos: MemoItem[]) {
+  function handleMemoChange(studentId: number, newMemos: MemoItem[]) {
     setSessions((prev) =>
       prev.map((session) => ({
         ...session,
@@ -220,16 +220,15 @@ export default function ClinicsPage() {
                         key={student.id}
                         onClick={() =>
                           navigate({
-                            to: '/teacher/clinics/$studentId',
-                            params: { studentId: student.id },
+                            to: '/teacher/clinics/students/$studentId',
+                            params: { studentId: String(student.id) },
                           })
                         }
                         className="transition-colors group hover:bg-surface-container-low/30 cursor-pointer"
                       >
                         <td className="px-4 py-4 border-r border-outline-variant/20">
                           <p className="font-headline font-bold text-sm text-primary">
-                            {student.nameLastKo}
-                            {student.nameFirstKo}
+                            {student.nameKo}
                           </p>
                           <p className="text-xs text-on-surface-variant mt-0.5">
                             {student.nameFirstEn} {student.nameLastEn}
@@ -292,7 +291,7 @@ export default function ClinicsPage() {
       {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
       {memoStudent && (
         <MemoPopup
-          studentName={`${memoStudent.nameLastKo}${memoStudent.nameFirstKo}`}
+          studentName={memoStudent.nameKo}
           memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
           onChange={(newMemos) => handleMemoChange(memoStudent.id, newMemos)}

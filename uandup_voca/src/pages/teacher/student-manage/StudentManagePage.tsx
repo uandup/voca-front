@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { STUDENT_MANAGE_MOCK, type ManagedStudent } from './mock/studentManageMockData';
+import type { Student } from '@/entities/member';
+import { STUDENT_MOCK as STUDENT_MANAGE_MOCK } from '@/entities/member';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
 import { MemoPopup } from './ui/modals/MemoPopup';
@@ -11,15 +12,15 @@ export default function StudentManagePage() {
   const [gradeFilter, setGradeFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState<number | ''>('');
   const [classFilter, setClassFilter] = useState('');
-  const [students, setStudents] = useState<ManagedStudent[]>(STUDENT_MANAGE_MOCK);
-  const [editingStudent, setEditingStudent] = useState<ManagedStudent | null>(null);
-  const [deletingStudent, setDeletingStudent] = useState<ManagedStudent | null>(null);
-  const [memoStudent, setMemoStudent] = useState<ManagedStudent | null>(null);
+  const [students, setStudents] = useState<Student[]>(STUDENT_MANAGE_MOCK);
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
+  const [memoStudent, setMemoStudent] = useState<Student | null>(null);
 
   const grades = [...new Set(students.map((s) => s.grade))].sort((a, b) => a - b);
   const allClasses = [...new Set(students.flatMap((s) => s.classes))].sort();
 
-  function handleSave(updated: ManagedStudent) {
+  function handleSave(updated: Student) {
     setStudents((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
   }
 
@@ -30,7 +31,7 @@ export default function StudentManagePage() {
   const filtered = students.filter((s) => {
     const matchesSearch =
       `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()) ||
-      `${s.nameLastKo}${s.nameFirstKo}`.includes(search);
+      s.nameKo.includes(search);
     const matchesGrade = gradeFilter ? s.grade === Number(gradeFilter) : true;
     const matchesLevel = levelFilter !== '' ? s.assignedLevel === levelFilter : true;
     const matchesClass = classFilter ? s.classes.includes(classFilter) : true;
@@ -139,7 +140,7 @@ export default function StudentManagePage() {
 
       {memoStudent && (
         <MemoPopup
-          studentName={`${memoStudent.nameLastKo}${memoStudent.nameFirstKo}`}
+          studentName={memoStudent.nameKo}
           memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
           onChange={(newMemos) => {

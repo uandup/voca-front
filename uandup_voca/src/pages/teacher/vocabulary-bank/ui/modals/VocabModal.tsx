@@ -1,25 +1,27 @@
 import { useState } from 'react';
-import type { Vocab } from '@/entities/vocab';
+import type { Word } from '@/entities/word';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+
+type WordFormData = Omit<Word, 'id'>;
 
 interface VocabModalProps {
   onClose: () => void;
-  onSave: (data: Vocab) => void;
-  initialData?: Partial<Vocab>;
+  onSave: (data: WordFormData) => void;
+  initialData?: Partial<WordFormData>;
 }
 
-const PARTS_OF_SPEECH: Vocab['partOfSpeech'][] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
+const PARTS_OF_SPEECH: Word['partOfSpeech'][] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
 export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
   const [word, setWord] = useState(initialData?.word ?? '');
-  const [partOfSpeech, setPartOfSpeech] = useState<Vocab['partOfSpeech']>(
+  const [partOfSpeech, setPartOfSpeech] = useState<Word['partOfSpeech']>(
     initialData?.partOfSpeech ?? 'N',
   );
-  const [koreanMeaning, setKoreanMeaning] = useState(initialData?.koreanMeaning ?? '');
-  const [difficultyLevel, setDifficultyLevel] = useState<Vocab['difficultyLevel']>(
+  const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
+  const [difficultyLevel, setDifficultyLevel] = useState<Word['difficultyLevel']>(
     initialData?.difficultyLevel ?? 1,
   );
-  const [englishMeaning, setEnglishMeaning] = useState(initialData?.englishMeaning ?? '');
+  const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
   const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
   const [synonymInput, setSynonymInput] = useState('');
   const [exampleSentence, setExampleSentence] = useState(initialData?.exampleSentence ?? '');
@@ -40,9 +42,9 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
     onSave({
       word,
       partOfSpeech,
-      koreanMeaning,
+      korMeaning,
       difficultyLevel,
-      englishMeaning,
+      engMeaning,
       synonyms,
       exampleSentence,
     });
@@ -90,7 +92,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={partOfSpeech}
-                  onChange={(e) => setPartOfSpeech(e.target.value as Vocab['partOfSpeech'])}
+                  onChange={(e) => setPartOfSpeech(e.target.value as Word['partOfSpeech'])}
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
                     <option key={pos}>{pos}</option>
@@ -113,7 +115,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
                 placeholder="e.g. 일시적인, 덧없는"
                 type="text"
-                value={koreanMeaning}
+                value={korMeaning}
                 onChange={(e) => setKoreanMeaning(e.target.value)}
               />
             </div>
@@ -126,7 +128,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={difficultyLevel}
                   onChange={(e) =>
-                    setDifficultyLevel(Number(e.target.value) as Vocab['difficultyLevel'])
+                    setDifficultyLevel(Number(e.target.value) as Word['difficultyLevel'])
                   }
                 >
                   {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
@@ -151,7 +153,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Describe the nuanced definition..."
               rows={2}
-              value={englishMeaning}
+              value={engMeaning}
               onChange={(e) => setEnglishMeaning(e.target.value)}
             />
           </div>

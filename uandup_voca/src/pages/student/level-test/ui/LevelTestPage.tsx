@@ -1,39 +1,22 @@
-import { useNavigate } from '@tanstack/react-router';
-import type { Vocab } from '@/entities/vocab/types/vocab';
+// import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/vocab/ui/AssignedLevelBlocks';
+import { AssignedLevelBlocks } from '@/entities/word';
 import { PageTitle } from '@/shared/ui/PageTitle';
-
-type DifficultyLevel = Vocab['difficultyLevel'];
-type TestStatus = 'pending' | 'completed' | 'fail';
-
-interface LevelTestRecord {
-  date: string;
-  level: DifficultyLevel;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-const MOCK_HISTORY: LevelTestRecord[] = [
-  { date: '2026.04.25', level: 4, quantity: 100, score: null, status: 'pending' },
-  { date: '2026.04.24', level: 4, quantity: 50, score: 42, status: 'fail' },
-  { date: '2026.04.12', level: 3, quantity: 100, score: 98, status: 'completed' },
-];
+import { MOCK_STUDENT_LEVEL_TEST_HISTORY } from '@/entities/test';
 
 const COLUMNS = ['Date', 'Level', 'QTY', 'Score', 'Status', 'Actions'];
 
-const ASSIGNED_WORD_COUNT = 100; // TODO: API 연동
-const ASSIGNED_LEVEL = 4; // TODO: API 연동
+// const ASSIGNED_WORD_COUNT = 100; // TODO: API 연동
+// const ASSIGNED_LEVEL = 4; // TODO: API 연동
 
 export function LevelTestPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
       <PageTitle title="Level Test" />
       {/* Assigned Words Card */}
-      <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
+      {/* <div className="bg-white border border-outline/20 rounded-2xl overflow-hidden">
         <div className="px-8 py-6 flex items-center justify-between border-b border-outline/20">
           {ASSIGNED_WORD_COUNT > 0 ? (
             <div className="flex items-baseline gap-3">
@@ -70,7 +53,7 @@ export function LevelTestPage() {
             </button>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* History Table */}
       <TableContainer>
@@ -97,7 +80,7 @@ export function LevelTestPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_HISTORY.map((row, i) => (
+              {MOCK_STUDENT_LEVEL_TEST_HISTORY.map((row, i) => (
                 <tr key={i}>
                   <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
                     {row.date}
@@ -126,6 +109,14 @@ export function LevelTestPage() {
                       <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
                         Pending
                       </span>
+                    ) : row.status === 'awaiting-test' ? (
+                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+                        Awaiting Test
+                      </span>
+                    ) : row.status === 'awaiting-grading' ? (
+                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+                        Awaiting Grading
+                      </span>
                     ) : row.status === 'fail' ? (
                       <span className="px-3 py-1 bg-error/5 border border-error/20 rounded-full text-[10px] font-bold text-error uppercase tracking-wide">
                         Fail
@@ -138,17 +129,28 @@ export function LevelTestPage() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'pending' ? (
-                        <>
-                          <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                            Start Test
-                          </button>
-                        </>
-                      ) : (
+                      {row.status === 'awaiting-test' ? (
+                        <button
+                          disabled
+                          className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
+                        >
+                          Start Test
+                        </button>
+                      ) : row.status === 'awaiting-grading' ? (
+                        <button
+                          disabled
+                          className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
+                        >
+                          View Results
+                        </button>
+                      ) : row.status === 'completed' || row.status === 'fail' ? (
                         <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
                           View Results
                         </button>
-                      )}
+                      ) : null}{' '}
+                      <button className="px-4 py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
+                        View Words
+                      </button>
                     </div>
                   </td>
                 </tr>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from './types';
+import type { TestStep, TestType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { NumberInput } from '@/shared/ui/NumberInput';
 import {
   WordTestModal,
   SentenceModal,
@@ -9,7 +10,7 @@ import {
   SentenceGradingModal,
   SentenceResultModal,
 } from '@/widgets/test-offline';
-import { mockVocabList, mockESRows } from '@/entities/test/lib/mockData';
+import { MOCK_VOCAB_LIST, MOCK_ES_ROWS } from '@/entities/test';
 
 interface StepPanelProps {
   step: TestStep;
@@ -35,7 +36,7 @@ export default function StepPanel({ step }: StepPanelProps) {
 
   const [config, setConfig] = useState<TestConfig>({
     testQty: 30,
-    testType: 'Meaning to Word',
+    testType: 'meaning-to-word',
     includeSynonyms: true,
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -55,12 +56,12 @@ export default function StepPanel({ step }: StepPanelProps) {
       )}
 
       {showPrintModal && step.key === 'sentence' ? (
-        <SentenceModal onClose={() => setShowPrintModal(false)} rows={mockESRows} />
+        <SentenceModal onClose={() => setShowPrintModal(false)} rows={MOCK_ES_ROWS} />
       ) : (
         showPrintModal && (
           <WordTestModal
             onClose={() => setShowPrintModal(false)}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -71,14 +72,14 @@ export default function StepPanel({ step }: StepPanelProps) {
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
           onGrade={() => console.warn('Grade submitted')}
-          rows={mockESRows}
+          rows={MOCK_ES_ROWS}
         />
       ) : (
         showGradingModal && (
           <WordGradingModal
             onClose={() => setShowGradingModal(false)}
             onGrade={() => console.warn('Grade submitted')}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -88,14 +89,14 @@ export default function StepPanel({ step }: StepPanelProps) {
       {showResultModal && step.key === 'sentence' ? (
         <SentenceResultModal
           onClose={() => setShowResultModal(false)}
-          rows={mockESRows}
+          rows={MOCK_ES_ROWS}
           wrongIndices={[1, 4, 7]}
         />
       ) : (
         showResultModal && (
           <WordResultModal
             onClose={() => setShowResultModal(false)}
-            rows={mockVocabList}
+            rows={MOCK_VOCAB_LIST}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
             wrongIndices={[1, 4, 7]}
@@ -148,7 +149,7 @@ interface TestConfigSectionProps {
   onChange: (patch: Partial<TestConfig>) => void;
 }
 
-const TEST_TYPE_OPTIONS: TestType[] = ['Meaning to Word', 'Word to Meaning'];
+const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 function TestConfigSection({
   config,
@@ -191,10 +192,10 @@ function TestConfigSection({
             <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
               Quantity
             </label>
-            <input
-              type="number"
-              value={config.testQty}
-              onChange={(e) => onChange({ testQty: Number(e.target.value) })}
+            <NumberInput
+              value={String(config.testQty)}
+              onChange={(v) => onChange({ testQty: Number(v) })}
+              min={1}
               disabled={!isEditing}
               className={inputClass}
             />
@@ -288,7 +289,7 @@ function CreatedPanel({
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <button className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20">
-            Start Test
+            Start Online Test
           </button>
           <button
             onClick={onOpenPrint}
