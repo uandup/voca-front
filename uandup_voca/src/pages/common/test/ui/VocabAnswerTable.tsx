@@ -1,9 +1,9 @@
-import type { TestVocabItem, VocabTestType } from '@/entities/test';
+import type { TestWordItem, WordTestType } from '@/entities/test';
 import { VocabAnswerRow, type Answer } from './VocabAnswerRow';
 
 interface VocabAnswerTableProps {
-  items: TestVocabItem[];
-  testType: VocabTestType;
+  items: TestWordItem[];
+  testType: WordTestType;
   showSynonym: boolean;
   answers: Record<number, Answer>;
   onAnswerChange: (id: number, field: keyof Answer, value: string) => void;

@@ -5,4 +5,4 @@ export type {
   TimetableTimeSlot,
   TimetableGridCell,
 } from './model/types';
-export { CLASS_MOCK, DAYS, NUM_COLS, TIMETABLE_MOCK } from './lib/mockData';
+export { CLASS_MOCK } from './lib/mockData';

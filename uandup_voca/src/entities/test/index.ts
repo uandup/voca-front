@@ -1,5 +1,7 @@
 export type {
   TestType,
+  WordTestType,
+  TestWordItem,
   TestConfig,
   TestStepStatus,
   TestStatus,
@@ -14,10 +16,8 @@ export type {
   TestSentenceAnswer,
   WrongWordTestRecord,
   LevelTestRecord,
-  ClinicCycle,
 } from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';
-export type { VocabTestType, TestVocabItem } from './lib/mockData';
 export {
   MOCK_VOCAB_LIST,
   MOCK_ES_ROWS,

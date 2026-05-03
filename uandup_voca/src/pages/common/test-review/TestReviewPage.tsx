@@ -7,8 +7,8 @@ import {
   MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,
   type TestType,
-  type VocabTestType,
-  type TestVocabItem,
+  type WordTestType,
+  type TestWordItem,
 } from '@/entities/test';
 import { TestPagination } from '../test/ui/TestPagination';
 import { ProgressPanel } from '../test/ui/ProgressPanel';
@@ -149,8 +149,8 @@ export default function TestReviewPage() {
             />
           ) : (
             <VocabReviewTable
-              items={pageItems as TestVocabItem[]}
-              testType={testType as VocabTestType}
+              items={pageItems as TestWordItem[]}
+              testType={testType as WordTestType}
               showSynonym={showSynonym}
               answers={mockVocabAnswers}
               wrongIds={wrongIds}

@@ -41,13 +41,9 @@ export interface PendingStudent extends BaseMember {
   submittedAt: string;
 }
 
-export interface StudentSummary {
-  id: number;
-  nameKo: string;
-  nameFirstEn: string;
-  nameLastEn: string;
+export type StudentSummary = Pick<BaseMember, 'id' | 'nameKo' | 'nameFirstEn' | 'nameLastEn'> & {
   grade: StudentGrade;
-}
+};
 
 // ─── Teacher ─────────────────────────────────────────────────────────────────
 
@@ -80,17 +76,12 @@ export interface PendingParent extends BaseMember {
 
 // ─── Dashboard Summary Types ──────────────────────────────────────────────────
 
-export interface DashboardPendingStudent {
-  id: number;
-  nameKo: string;
-  name: string;
-  grade: number;
-}
+export type DashboardPendingStudent = Pick<
+  BaseMember,
+  'id' | 'nameKo' | 'nameFirstEn' | 'nameLastEn'
+> & { grade: number };
 
-export interface UnassignedStudent {
-  id: number;
-  nameKo: string;
-  name: string;
-  grade: number;
-  clinics: string[];
-}
+export type UnassignedStudent = Pick<
+  BaseMember,
+  'id' | 'nameKo' | 'nameFirstEn' | 'nameLastEn'
+> & { grade: number; clinics: string[] };

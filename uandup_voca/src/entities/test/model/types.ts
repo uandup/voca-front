@@ -1,4 +1,9 @@
+import type { WordTestItem } from '@/entities/word/@x/test';
+
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
+export type WordTestType = Exclude<TestType, 'sentence'>;
+export type TestWordItem = Required<Pick<WordTestItem, 'id'>> &
+  Omit<WordTestItem, 'id'> & { synonymAnswer?: string };
 
 export interface TestConfig {
   type: TestType;
@@ -86,24 +91,15 @@ export interface TestSentenceAnswer {
   word: string;
 }
 
-export interface WrongWordTestRecord {
+interface BaseTestRecord {
   date: string;
   quantity: number;
   score: number | null;
   status: TestStatus;
 }
 
-export interface LevelTestRecord {
-  date: string;
+export interface WrongWordTestRecord extends BaseTestRecord {}
+
+export interface LevelTestRecord extends BaseTestRecord {
   level: number;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-export interface ClinicCycle {
-  title: string;
-  badge?: string;
-  scheduledDate: string;
-  steps: TestStep[];
 }

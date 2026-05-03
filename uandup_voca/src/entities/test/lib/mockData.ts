@@ -1,19 +1,16 @@
-import type { WordTestItem } from '@/entities/word';
 import type { ESRow } from '@/widgets/test-offline';
+import type { WordTestItem } from '@/entities/word/@x/test';
+import type { ClinicCycle } from '@/entities/clinic';
 import type {
   SentenceItem,
   TestCycle,
   TestInfo,
   TestVocabAnswer,
   TestSentenceAnswer,
+  TestWordItem,
   WrongWordTestRecord,
   LevelTestRecord,
-  ClinicCycle,
 } from '../model/types';
-
-export type VocabTestType = 'word-to-meaning' | 'meaning-to-word';
-export type TestVocabItem = Required<Pick<WordTestItem, 'id'>> &
-  Omit<WordTestItem, 'id'> & { synonymAnswer?: string };
 
 export const ITEMS_PER_PAGE = 10;
 
@@ -79,7 +76,7 @@ export const MOCK_SENTENCE_ITEMS: SentenceItem[] = [
   },
 ];
 
-export const MOCK_VOCAB_ITEMS: TestVocabItem[] = [
+export const MOCK_VOCAB_ITEMS: TestWordItem[] = [
   {
     id: 1,
     word: 'Ubiquitous',

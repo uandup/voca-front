@@ -1,10 +1,10 @@
-import type { TestVocabItem, VocabTestType } from '@/entities/test';
+import type { TestWordItem, WordTestType } from '@/entities/test';
 import type { Answer } from '../../test/ui/VocabAnswerRow';
 import { VocabReviewRow } from './VocabReviewRow';
 
 interface VocabReviewTableProps {
-  items: TestVocabItem[];
-  testType: VocabTestType;
+  items: TestWordItem[];
+  testType: WordTestType;
   showSynonym: boolean;
   answers: Record<number, Answer>;
   wrongIds: Set<number>;

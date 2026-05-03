@@ -1,4 +1,4 @@
-import type { VocabTestType as TestType } from '@/entities/test';
+import type { WordTestType as TestType } from '@/entities/test';
 
 interface Answer {
   meaning: string;

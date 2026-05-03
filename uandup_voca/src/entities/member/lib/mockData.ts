@@ -390,31 +390,47 @@ export const PARENT_MOCK: Parent[] = [
 ];
 
 export const MOCK_PENDING_APPROVALS: DashboardPendingStudent[] = [
-  { id: 1, nameKo: '김지훈', name: 'Kim Jihun', grade: 10 },
-  { id: 2, nameKo: '박서연', name: 'Park Seoyeon', grade: 9 },
-  { id: 3, nameKo: '이준혁', name: 'Lee Junhyuk', grade: 11 },
-  { id: 4, nameKo: '최아영', name: 'Choi Ayoung', grade: 12 },
-  { id: 5, nameKo: '한도윤', name: 'Han Doyun', grade: 10 },
-  { id: 6, nameKo: '오민준', name: 'Oh Minjun', grade: 9 },
-  { id: 7, nameKo: '신예린', name: 'Shin Yerin', grade: 11 },
+  { id: 1, nameKo: '김지훈', nameFirstEn: 'Jihun', nameLastEn: 'Kim', grade: 10 },
+  { id: 2, nameKo: '박서연', nameFirstEn: 'Seoyeon', nameLastEn: 'Park', grade: 9 },
+  { id: 3, nameKo: '이준혁', nameFirstEn: 'Junhyuk', nameLastEn: 'Lee', grade: 11 },
+  { id: 4, nameKo: '최아영', nameFirstEn: 'Ayoung', nameLastEn: 'Choi', grade: 12 },
+  { id: 5, nameKo: '한도윤', nameFirstEn: 'Doyun', nameLastEn: 'Han', grade: 10 },
+  { id: 6, nameKo: '오민준', nameFirstEn: 'Minjun', nameLastEn: 'Oh', grade: 9 },
+  { id: 7, nameKo: '신예린', nameFirstEn: 'Yerin', nameLastEn: 'Shin', grade: 11 },
 ];
 
 export const MOCK_UNASSIGNED_STUDENTS: UnassignedStudent[] = [
   {
     id: 1,
     nameKo: '강지수',
-    name: 'Kang Jisu',
+    nameFirstEn: 'Jisu',
+    nameLastEn: 'Kang',
     grade: 10,
     clinics: ['MON 13:00~15:00', 'WED 18:00~20:00'],
   },
-  { id: 2, nameKo: '오민준', name: 'Oh Minjun', grade: 9, clinics: ['TUE 13:00~15:00'] },
-  { id: 3, nameKo: '신예린', name: 'Shin Yerin', grade: 11, clinics: [] },
+  {
+    id: 2,
+    nameKo: '오민준',
+    nameFirstEn: 'Minjun',
+    nameLastEn: 'Oh',
+    grade: 9,
+    clinics: ['TUE 13:00~15:00'],
+  },
+  { id: 3, nameKo: '신예린', nameFirstEn: 'Yerin', nameLastEn: 'Shin', grade: 11, clinics: [] },
   {
     id: 4,
     nameKo: '한도윤',
-    name: 'Han Doyun',
+    nameFirstEn: 'Doyun',
+    nameLastEn: 'Han',
     grade: 10,
     clinics: ['MON 13:00~15:00', 'THU 15:00~17:00', 'SAT 10:00~12:00'],
   },
-  { id: 5, nameKo: '이준혁', name: 'Lee Junhyuk', grade: 12, clinics: ['FRI 15:00~17:00'] },
+  {
+    id: 5,
+    nameKo: '이준혁',
+    nameFirstEn: 'Junhyuk',
+    nameLastEn: 'Lee',
+    grade: 12,
+    clinics: ['FRI 15:00~17:00'],
+  },
 ];
