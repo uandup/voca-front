@@ -5,12 +5,12 @@ import { StudentTableRow, type RowActions } from './StudentTableRow';
 
 type SortKey = keyof Pick<
   Student,
-  'nameLastKo' | 'grade' | 'assignedLevel' | 'assignedWordCount' | 'testQuestionCount' | 'accuracy'
+  'nameKo' | 'grade' | 'assignedLevel' | 'assignedWordCount' | 'testQuestionCount' | 'accuracy'
 >;
 type SortDir = 'asc' | 'desc';
 
 const COLUMNS: { label: string; key?: SortKey; className?: string }[] = [
-  { label: 'Name', key: 'nameLastKo' },
+  { label: 'Name', key: 'nameKo' },
   { label: 'Grade', key: 'grade', className: 'text-center' },
   { label: 'Level', key: 'assignedLevel', className: 'text-center' },
   { label: 'QTY', key: 'assignedWordCount', className: 'text-center' },
