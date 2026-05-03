@@ -1,8 +1,2 @@
-export type {
-  Class,
-  ClassMember,
-  TimetableCellDef,
-  TimetableTimeSlot,
-  TimetableGridCell,
-} from './model/types';
+export type { Class } from './model/types';
 export { CLASS_MOCK } from './lib/mockData';
