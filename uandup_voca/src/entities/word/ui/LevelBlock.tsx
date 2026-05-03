@@ -1,4 +1,4 @@
-function getLevelStyle(level: number): string {
+function getLevelColor(level: number): string {
   if (level === 1) return 'bg-primary/10';
   if (level === 2) return 'bg-primary/20';
   if (level === 3) return 'bg-primary/30';
@@ -11,10 +11,14 @@ function getLevelStyle(level: number): string {
   return 'bg-primary';
 }
 
-export function AssignedLevelBlocks({ level }: { level: number }) {
+interface LevelBlockProps {
+  level: number;
+}
+
+export function LevelBlock({ level }: LevelBlockProps) {
   return (
     <span
-      className={`w-7 h-7 flex items-center justify-center rounded-md text-xs font-bold text-white ${getLevelStyle(level)}`}
+      className={`w-7 h-7 flex items-center justify-center rounded-md text-xs font-bold text-white ${getLevelColor(level)}`}
     >
       {level}
     </span>

@@ -98,7 +98,7 @@ interface BaseTestRecord {
   status: TestStatus;
 }
 
-export interface WrongWordTestRecord extends BaseTestRecord {}
+export type WrongWordTestRecord = BaseTestRecord;
 
 export interface LevelTestRecord extends BaseTestRecord {
   level: number;

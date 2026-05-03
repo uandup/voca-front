@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { AssignedLevelBlocks } from '@/entities/word';
+import { LevelBlock } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 import type { WordDifficultyLevel } from '@/entities/word';
 import { MOCK_CLINIC_LEVEL_TEST_HISTORY } from '@/entities/test';
@@ -164,7 +164,7 @@ export function LevelTestTab() {
                     {row.date}
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    <AssignedLevelBlocks level={row.level} />
+                    <LevelBlock level={row.level} />
                   </td>
                   <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
                     {row.quantity}

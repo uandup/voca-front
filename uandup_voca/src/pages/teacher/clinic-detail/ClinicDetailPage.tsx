@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { CLINIC_MOCK } from '@/entities/clinic';
 import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
-import type { Word as Vocab } from '@/entities/word';
+import type { Word } from '@/entities/word';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
@@ -11,7 +11,7 @@ import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
-type DifficultyLevel = Vocab['difficultyLevel'];
+type DifficultyLevel = Word['difficulty'];
 
 export function ClinicDetailPage() {
   const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });

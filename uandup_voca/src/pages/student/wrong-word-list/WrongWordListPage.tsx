@@ -1,6 +1,6 @@
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { useRouter } from '@tanstack/react-router';
-import { VocabCard, MOCK_WRONG_WORDS } from '@/entities/word';
+import { StudentWordCard, MOCK_WRONG_WORDS } from '@/entities/word';
 
 export default function WrongWordListPage() {
   const router = useRouter();
@@ -13,9 +13,9 @@ export default function WrongWordListPage() {
       />
       <div className="space-y-5">
         {MOCK_WRONG_WORDS.map((word) => (
-          <VocabCard
+          <StudentWordCard
             key={word.id}
-            difficultyLevel={word.difficultyLevel}
+            difficulty={word.difficulty}
             word={word.word}
             partOfSpeech={word.partOfSpeech}
             korMeaning={word.korMeaning}

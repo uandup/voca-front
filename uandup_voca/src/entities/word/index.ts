@@ -1,10 +1,13 @@
 export type {
   Word,
-  WordListItem,
+  WrongWord,
   WordTestItem,
   PartOfSpeech,
   WordDifficultyLevel,
 } from './model/types';
-export { AssignedLevelBlocks } from './ui/AssignedLevelBlocks';
-export { VocabCard } from './ui/VocabCard';
+export { LevelBlock } from './ui/LevelBlock';
+export { StudentWordCard } from './ui/StudentWordCard';
+export { TeacherWordCard } from './ui/TeacherWordCard';
+export { WordFormModal } from './ui/WordFormModal';
+export { DeleteWordModal } from './ui/DeleteWordModal';
 export { MOCK_WORDS, MOCK_WRONG_WORDS } from './lib/mockData';

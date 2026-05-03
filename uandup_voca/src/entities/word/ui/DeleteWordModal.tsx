@@ -1,17 +1,16 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
-interface DeleteVocabModalProps {
+interface DeleteWordModalProps {
   word: string;
   pronunciation?: string;
   onClose: () => void;
   onDelete: () => void;
 }
 
-export function DeleteVocabModal({ word, onClose, onDelete }: DeleteVocabModalProps) {
+export function DeleteWordModal({ word, onClose, onDelete }: DeleteWordModalProps) {
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
-        {/* Modal Content */}
         <div className="p-8 pb-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-extrabold font-headline text-on-surface mb-3 tracking-tight">
             Delete Word?
@@ -23,7 +22,6 @@ export function DeleteVocabModal({ word, onClose, onDelete }: DeleteVocabModalPr
           </p>
         </div>
 
-        {/* Deletion Context Block */}
         <div className="mx-8 mb-8 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
           <div className="flex flex-col gap-1 items-start text-left">
             <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.15em] font-label">
@@ -35,7 +33,6 @@ export function DeleteVocabModal({ word, onClose, onDelete }: DeleteVocabModalPr
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="px-8 pb-8 flex flex-col gap-3">
           <button
             onClick={onDelete}

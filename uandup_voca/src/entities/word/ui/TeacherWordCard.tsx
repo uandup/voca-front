@@ -1,35 +1,33 @@
-import { useState } from 'react';
-import type { Word } from '@/entities/word';
+import type { Word } from '../model/types';
 
-import { VocabModal } from './modals/VocabModal';
-import { DeleteVocabModal } from './modals/DeleteVocabModal';
+interface TeacherWordCardProps extends Word {
+  onEdit: () => void;
+  onDelete: () => void;
+}
 
-type VocabCardProps = Word;
-
-export function VocabCard({
+export function TeacherWordCard({
   word,
   partOfSpeech,
   korMeaning,
-  difficultyLevel,
+  difficulty: difficulty,
   engMeaning,
   synonyms,
   exampleSentence,
-}: VocabCardProps) {
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
+  onEdit,
+  onDelete,
+}: TeacherWordCardProps) {
   return (
     <article className="bg-surface-container-lowest rounded-xl overflow-hidden border shadow-sm border-outline-variant/60 relative group">
       <div className="absolute top-6 right-6 flex gap-2 z-10">
         <button
-          onClick={() => setIsEditOpen(true)}
+          onClick={onEdit}
           className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
         >
           <span className="material-symbols-outlined text-[18px]">edit</span>
           Edit
         </button>
         <button
-          onClick={() => setIsDeleteOpen(true)}
+          onClick={onDelete}
           className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
         >
           <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -39,17 +37,15 @@ export function VocabCard({
 
       <div className="p-8">
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Column 1: Level + Word */}
           <div className="w-1/4">
             <div className="flex items-center gap-3 mb-2">
               <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-                LEVEL {difficultyLevel}
+                LEVEL {difficulty}
               </span>
             </div>
             <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>
           </div>
 
-          {/* Column 2: Meaning + Synonyms */}
           <div className="flex-1 space-y-4">
             <div>
               <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
@@ -84,7 +80,6 @@ export function VocabCard({
         </div>
       </div>
 
-      {/* Full Width Bottom: Example */}
       <div className="px-8 py-5 bg-surface-container-low border-t border-outline-variant/10">
         <div className="flex gap-3 items-baseline">
           <span className="text-md uppercase tracking-wider text-outline font-bold shrink-0">
@@ -95,36 +90,6 @@ export function VocabCard({
           </p>
         </div>
       </div>
-
-      {isEditOpen && (
-        <VocabModal
-          initialData={{
-            word,
-            partOfSpeech,
-            korMeaning,
-            difficultyLevel,
-            engMeaning,
-            synonyms,
-            exampleSentence,
-          }}
-          onClose={() => setIsEditOpen(false)}
-          onSave={(data) => {
-            console.log(data);
-            setIsEditOpen(false);
-          }}
-        />
-      )}
-
-      {isDeleteOpen && (
-        <DeleteVocabModal
-          word={word}
-          onClose={() => setIsDeleteOpen(false)}
-          onDelete={() => {
-            console.log('delete', word);
-            setIsDeleteOpen(false);
-          }}
-        />
-      )}
     </article>
   );
 }

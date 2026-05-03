@@ -1,6 +1,6 @@
 // import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/word';
+import { LevelBlock } from '@/entities/word';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { MOCK_STUDENT_LEVEL_TEST_HISTORY } from '@/entities/test';
 
@@ -86,7 +86,7 @@ export function LevelTestPage() {
                     {row.date}
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    <AssignedLevelBlocks level={row.level} />
+                    <LevelBlock level={row.level} />
                   </td>
                   <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
                     {row.quantity}

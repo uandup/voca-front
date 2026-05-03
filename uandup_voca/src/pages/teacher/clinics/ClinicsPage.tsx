@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/word';
+import { LevelBlock } from '@/entities/word';
 import { CLINIC_MOCK, type ClinicStudent } from '@/entities/clinic';
 import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
@@ -241,7 +241,7 @@ export default function ClinicsPage() {
                         </td>
                         <td className="px-4 py-4 text-center border-r border-outline-variant/20">
                           <div className="flex justify-center">
-                            <AssignedLevelBlocks level={student.assignedLevel} />
+                            <LevelBlock level={student.assignedLevel} />
                           </div>
                         </td>
                         <td className="px-4 py-4 text-center border-r border-outline-variant/20">

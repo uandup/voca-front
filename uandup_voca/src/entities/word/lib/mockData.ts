@@ -1,9 +1,9 @@
-import type { WordListItem } from '../model/types';
+import type { WrongWord, Word } from '../model/types';
 
-export const MOCK_WORDS: WordListItem[] = [
+export const MOCK_WORDS: Word[] = [
   {
     id: 1,
-    difficultyLevel: 3,
+    difficulty: 3,
     word: 'Ambiguity',
     partOfSpeech: 'N',
     korMeaning: '모호함, 다의성',
@@ -13,7 +13,7 @@ export const MOCK_WORDS: WordListItem[] = [
   },
   {
     id: 2,
-    difficultyLevel: 4,
+    difficulty: 4,
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     korMeaning: '병치, 나란히 놓기',
@@ -24,7 +24,7 @@ export const MOCK_WORDS: WordListItem[] = [
   },
   {
     id: 3,
-    difficultyLevel: 3,
+    difficulty: 3,
     word: 'Inherent',
     partOfSpeech: 'Adj',
     korMeaning: '내재하는, 본질적인',
@@ -34,7 +34,7 @@ export const MOCK_WORDS: WordListItem[] = [
   },
   {
     id: 4,
-    difficultyLevel: 5,
+    difficulty: 5,
     word: 'Pragmatic',
     partOfSpeech: 'Adj',
     korMeaning: '실용적인, 실제적인',
@@ -45,10 +45,10 @@ export const MOCK_WORDS: WordListItem[] = [
 ];
 
 // 오답 단어 목록 (WrongWordListPage)
-export const MOCK_WRONG_WORDS: WordListItem[] = [
+export const MOCK_WRONG_WORDS: WrongWord[] = [
   {
     id: 1,
-    difficultyLevel: 3,
+    difficulty: 3,
     word: 'Ambiguity',
     partOfSpeech: 'N',
     korMeaning: '모호함, 다의성',
@@ -59,7 +59,7 @@ export const MOCK_WRONG_WORDS: WordListItem[] = [
   },
   {
     id: 2,
-    difficultyLevel: 4,
+    difficulty: 4,
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     korMeaning: '병치, 나란히 놓기',

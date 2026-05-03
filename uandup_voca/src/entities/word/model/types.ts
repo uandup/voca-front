@@ -7,19 +7,17 @@ export interface Word {
   partOfSpeech: PartOfSpeech;
   korMeaning: string;
   engMeaning: string;
-  difficultyLevel: WordDifficultyLevel;
+  difficulty: WordDifficultyLevel;
   synonyms: string[];
   exampleSentence: string;
 }
 
-export type WordListItem = Word & {
-  category?: string;
-  starred?: boolean;
+export type WrongWord = Word & {
   wrongCount?: number;
 };
 
 export interface WordTestItem {
-  id?: number;
+  id: number;
   word: string;
   korMeaning: string;
   engMeaning: string;

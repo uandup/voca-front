@@ -1,4 +1,4 @@
-import { AssignedLevelBlocks } from '@/entities/word';
+import { LevelBlock } from '@/entities/word';
 import type { Student } from '@/entities/member';
 import { TestConfigBadges } from '@/entities/test';
 
@@ -38,7 +38,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       {/* Level */}
       <td className="px-4 py-4 text-center border-r border-outline-variant/20">
         <div className="flex justify-center">
-          <AssignedLevelBlocks level={student.assignedLevel} />
+          <LevelBlock level={student.assignedLevel} />
         </div>
       </td>
 

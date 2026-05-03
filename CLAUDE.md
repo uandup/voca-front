@@ -71,7 +71,7 @@ npm run preview   # 프로덕션 빌드 미리보기
 
 ### 주요 도메인 타입
 
-- `Vocab` (`src/entities/vocab/types/vocab.ts`) — word, partOfSpeech, koreanMeaning, difficultyLevel(1–4), englishMeaning, synonyms, exampleSentence
+- `Word` (`src/entities/word/types.ts`) — word, partOfSpeech, koreanMeaning, difficulty(1–10), englishMeaning, synonyms, exampleSentence
 - 사용자 역할: `학생` | `학부모` | `선생님` | `관리자`
 
 ### 반드시 지켜야 할 점

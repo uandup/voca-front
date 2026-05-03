@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { VocabCard } from './ui/VocabCard';
-import { VocabModal } from './ui/modals/VocabModal';
-import { MOCK_WORDS } from '@/entities/word';
+import { TeacherWordCard, WordFormModal, DeleteWordModal, MOCK_WORDS } from '@/entities/word';
+import type { Word } from '@/entities/word';
 
 export default function VocabularyBankPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
+  const [editTarget, setEditTarget] = useState<Word | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Word | null>(null);
 
   function handleResetFilters() {
     setSearchQuery('');
@@ -20,19 +20,18 @@ export default function VocabularyBankPage() {
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
       v.korMeaning.includes(searchQuery) ||
       v.synonyms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesLevel = selectedLevel === '' || v.difficultyLevel === Number(selectedLevel);
+    const matchesLevel = selectedLevel === '' || v.difficulty === Number(selectedLevel);
     return matchesSearch && matchesLevel;
   });
 
   return (
     <main>
-      {/* Header Section */}
       <header className="flex justify-between items-start mb-4">
         <PageTitle title="Vocabulary Bank" />
         <div className="flex gap-3">
           <button
             className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setEditTarget({} as Word)}
           >
             <span className="material-symbols-outlined">add</span>
             <span className="font-bold">Add New Word</span>
@@ -40,7 +39,6 @@ export default function VocabularyBankPage() {
         </div>
       </header>
 
-      {/* Filters & Search */}
       <section className="mb-4">
         <div className="bg-surface-container-low p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 w-full">
@@ -78,17 +76,6 @@ export default function VocabularyBankPage() {
         </div>
       </section>
 
-      {isModalOpen && (
-        <VocabModal
-          onClose={() => setIsModalOpen(false)}
-          onSave={(data) => {
-            console.log(data);
-            setIsModalOpen(false);
-          }}
-        />
-      )}
-
-      {/* Result count */}
       <p className="text-4xl font-bold text-primary my-6 ml-2">
         {filtered.length}{' '}
         <span className="text-2xl font-bold text-primary/80">
@@ -96,12 +83,38 @@ export default function VocabularyBankPage() {
         </span>
       </p>
 
-      {/* Vocabulary List */}
       <div className="flex flex-col gap-8">
         {filtered.map((word) => (
-          <VocabCard key={word.id} {...word} />
+          <TeacherWordCard
+            key={word.id}
+            {...word}
+            onEdit={() => setEditTarget(word)}
+            onDelete={() => setDeleteTarget(word)}
+          />
         ))}
       </div>
+
+      {editTarget && (
+        <WordFormModal
+          initialData={editTarget.id ? editTarget : undefined}
+          onClose={() => setEditTarget(null)}
+          onSave={(data) => {
+            console.log(data);
+            setEditTarget(null);
+          }}
+        />
+      )}
+
+      {deleteTarget && (
+        <DeleteWordModal
+          word={deleteTarget.word}
+          onClose={() => setDeleteTarget(null)}
+          onDelete={() => {
+            console.log('delete', deleteTarget.word);
+            setDeleteTarget(null);
+          }}
+        />
+      )}
     </main>
   );
 }
