@@ -5,8 +5,8 @@ import {
   ITEMS_PER_PAGE,
   type TestType,
   type WordTestType,
-  type TestWordItem,
 } from '@/entities/test';
+import type { TestWord } from '@/entities/word';
 import { TestHeader } from './ui/TestHeader';
 import { VocabAnswerTable } from './ui/VocabAnswerTable';
 import { SentenceAnswerTable } from './ui/SentenceAnswerTable';
@@ -87,7 +87,7 @@ export default function TestPage() {
             />
           ) : (
             <VocabAnswerTable
-              items={pageItems as TestWordItem[]}
+              items={pageItems as TestWord[]}
               testType={testType as WordTestType}
               showSynonym={showSynonym}
               answers={vocabAnswers}

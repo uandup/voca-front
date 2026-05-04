@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ResultActionBar } from './ResultActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
-import type { WordTestItem } from '@/entities/word';
+import type { TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -9,7 +9,7 @@ const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 
 interface WordResultModalProps {
   onClose: () => void;
-  rows: WordTestItem[];
+  rows: TestWord[];
   testType?: TestType;
   includeSynonyms?: boolean;
   wrongIndices: number[];
@@ -31,7 +31,7 @@ function ResultSheet({
   hidden,
 }: {
   id: string;
-  pageRows: WordTestItem[];
+  pageRows: TestWord[];
   page: number;
   includeSynonyms: boolean;
   wrongSet: Set<number>;

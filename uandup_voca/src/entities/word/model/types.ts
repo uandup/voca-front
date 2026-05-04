@@ -16,10 +16,11 @@ export type WrongWord = Word & {
   wrongCount?: number;
 };
 
-export interface WordTestItem {
+export interface TestWord {
   id: number;
   word: string;
   korMeaning: string;
   engMeaning: string;
   synonym?: string;
 }
+

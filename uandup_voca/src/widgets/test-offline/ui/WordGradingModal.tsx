@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { GradeActionBar } from './GradeActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
-import type { WordTestItem } from '@/entities/word';
+import type { TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -10,7 +10,7 @@ const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 interface WordGradingModalProps {
   onClose: () => void;
   onGrade?: () => void;
-  rows: WordTestItem[];
+  rows: TestWord[];
   testType?: TestType;
   includeSynonyms?: boolean;
 }
@@ -25,7 +25,7 @@ function GradingSheet({
   hidden,
 }: {
   id: string;
-  pageRows: WordTestItem[];
+  pageRows: TestWord[];
   page: number;
   includeSynonyms: boolean;
   checked: boolean[];

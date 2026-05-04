@@ -1,7 +1,7 @@
 export type {
   Word,
   WrongWord,
-  WordTestItem,
+  TestWord,
   PartOfSpeech,
   WordDifficultyLevel,
 } from './model/types';

@@ -1,16 +1,32 @@
-import type { WordTestItem } from '@/entities/word/@x/test';
-
+// ── Test Type ────────────────────────────────────────────────
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
 export type WordTestType = Exclude<TestType, 'sentence'>;
-export type TestWordItem = Required<Pick<WordTestItem, 'id'>> &
-  Omit<WordTestItem, 'id'> & { synonymAnswer?: string };
 
+// ── Test Config ──────────────────────────────────────────────
 export interface TestConfig {
   type: TestType;
   includeSynonyms: boolean;
 }
 
-export type TestStepStatus =
+// ── Test Item (문제 데이터) ───────────────────────────────────
+export interface SentenceItem {
+  id: number;
+  sentence: string;
+  answerWord?: string;
+}
+
+// ── Test Answer (답안) ───────────────────────────────────────
+export interface TestWordAnswer {
+  meaning: string;
+  synonym: string;
+}
+
+export interface TestSentenceAnswer {
+  word: string;
+}
+
+// ── Test Step / Cycle (진행 단계) ────────────────────────────
+type TestStepStatus =
   | 'locked'
   | 'waiting'
   | 'available'
@@ -19,8 +35,6 @@ export type TestStepStatus =
   | 'passed'
   | 'active'
   | 'pending';
-
-export type TestStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
 
 export interface TestStep {
   key: string;
@@ -44,62 +58,16 @@ export interface TestCycle {
   steps: TestStep[];
 }
 
-export interface TestRecord {
-  id: string;
-  date: string;
-  testType: TestType;
-  assignedLevel?: number;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
+// ── Test Record (시험 기록) ──────────────────────────────────
+type TestRecordStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
 
-export interface TestScore {
-  score: number;
-  total: number;
-  date: string;
-}
-
-export interface TestItem {
-  id: number;
-  testId: number;
-  wordId: number;
-  studentAnswer: string | null;
-  isCorrect: boolean | null;
-}
-
-export interface SentenceItem {
-  id: number;
-  sentence: string;
-  answerWord?: string;
-}
-
-export interface TestInfo {
-  title: string;
-  subtitle: string;
-  description: string;
-  totalQuestions: number;
-  durationSeconds: number;
-}
-
-export interface TestVocabAnswer {
-  meaning: string;
-  synonym: string;
-}
-
-export interface TestSentenceAnswer {
-  word: string;
-}
-
-interface BaseTestRecord {
+export interface WrongWordTestRecord {
   date: string;
   quantity: number;
   score: number | null;
-  status: TestStatus;
+  status: TestRecordStatus;
 }
 
-export type WrongWordTestRecord = BaseTestRecord;
-
-export interface LevelTestRecord extends BaseTestRecord {
+export interface LevelTestRecord extends WrongWordTestRecord {
   level: number;
 }
