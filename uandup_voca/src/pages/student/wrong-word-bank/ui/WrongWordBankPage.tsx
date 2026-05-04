@@ -79,11 +79,7 @@ export function WrongWordBankPage() {
                     </span>
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    {row.status === 'pending' ? (
-                      <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
-                        Pending
-                      </span>
-                    ) : row.status === 'awaiting-test' ? (
+                    {row.status === 'awaiting-test' ? (
                       <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                         Awaiting Test
                       </span>
@@ -117,7 +113,7 @@ export function WrongWordBankPage() {
                         >
                           View Results
                         </button>
-                      ) : row.status === 'completed' || row.status === 'fail' ? (
+                      ) : row.status === 'pass' || row.status === 'fail' ? (
                         <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
                           View Results
                         </button>

@@ -167,7 +167,7 @@ export function LevelTestTab() {
                     <LevelBlock level={row.level} />
                   </td>
                   <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
-                    {row.quantity}
+                    {row.assignedQty}
                   </td>
                   <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
                     <span
@@ -179,7 +179,7 @@ export function LevelTestTab() {
                             : 'text-on-surface-variant/40'
                       }
                     >
-                      {row.score !== null ? `${row.score}/${row.quantity}` : '--'}
+                      {row.score !== null ? `${row.score}/${row.testQty}` : `- / ${row.testQty}`}
                     </span>
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">

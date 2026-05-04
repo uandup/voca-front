@@ -52,7 +52,7 @@ export interface TestCycle {
 }
 
 // ── Test Record (시험 기록) ──────────────────────────────────
-type TestRecordStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
+type TestRecordStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'pass' | 'fail';
 
 export interface WrongWordTestRecord {
   date: string;
@@ -61,6 +61,11 @@ export interface WrongWordTestRecord {
   status: TestRecordStatus;
 }
 
-export interface LevelTestRecord extends WrongWordTestRecord {
+export interface LevelTestRecord {
+  date: string;
+  assignedQty: number;
+  testQty: number;
+  score: number | null;
+  status: TestRecordStatus;
   level: number;
 }

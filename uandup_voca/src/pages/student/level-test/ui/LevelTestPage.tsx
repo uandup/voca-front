@@ -89,7 +89,7 @@ export function LevelTestPage() {
                     <LevelBlock level={row.level} />
                   </td>
                   <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
-                    {row.quantity}
+                    {row.testQty}
                   </td>
                   <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
                     <span
@@ -101,15 +101,11 @@ export function LevelTestPage() {
                             : 'text-on-surface-variant/40'
                       }
                     >
-                      {row.score !== null ? `${row.score}/${row.quantity}` : '--'}
+                      {row.score !== null ? `${row.score}/${row.testQty}` : '--'}
                     </span>
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    {row.status === 'pending' ? (
-                      <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
-                        Pending
-                      </span>
-                    ) : row.status === 'awaiting-test' ? (
+                    {row.status === 'awaiting-test' ? (
                       <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                         Awaiting Test
                       </span>
@@ -143,7 +139,7 @@ export function LevelTestPage() {
                         >
                           View Results
                         </button>
-                      ) : row.status === 'completed' || row.status === 'fail' ? (
+                      ) : row.status === 'pass' || row.status === 'fail' ? (
                         <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
                           View Results
                         </button>
