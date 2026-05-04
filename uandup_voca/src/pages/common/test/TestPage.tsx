@@ -46,7 +46,7 @@ export default function TestPage() {
       Object.entries(vocabAnswers)
         .filter(([, a]) => {
           const meaningFilled = a.answer.trim() !== '';
-          return showSynonym ? meaningFilled && a.synonym.trim() !== '' : meaningFilled;
+          return showSynonym ? meaningFilled && a.synonym?.trim() !== '' : meaningFilled;
         })
         .map(([id]) => Number(id)),
     );

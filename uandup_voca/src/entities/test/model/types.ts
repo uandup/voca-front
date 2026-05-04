@@ -11,7 +11,7 @@ export interface TestConfig {
 // ── Test Answer (답안) ───────────────────────────────────────
 export interface WordTestAnswer {
   answer: string;
-  synonym: string;
+  synonym?: string;
 }
 
 export interface SentenceTestAnswer {

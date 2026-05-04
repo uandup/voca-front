@@ -2,7 +2,7 @@ import type { WordTestType as TestType } from '@/entities/test';
 
 interface Answer {
   answer: string;
-  synonym: string;
+  synonym?: string;
 }
 
 interface VocabAnswerRowProps {
