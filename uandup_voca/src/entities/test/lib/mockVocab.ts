@@ -1,5 +1,5 @@
 import type { TestWord } from '@/entities/word';
-import type { TestWordAnswer } from '../model/types';
+import type { WordTestAnswer } from '../model/types';
 
 export const MOCK_VOCAB_ITEMS: TestWord[] = [
   {
@@ -355,18 +355,15 @@ export const MOCK_VOCAB_ITEMS: TestWord[] = [
   },
 ];
 
-export const MOCK_ANSWERS_WTM: Record<number, TestWordAnswer> = Object.fromEntries(
+export const MOCK_ANSWERS_WTM: Record<number, WordTestAnswer> = Object.fromEntries(
   MOCK_VOCAB_ITEMS.map((item) => [
     item.id,
-    { meaning: item.korMeaning, synonym: item.synonym ?? '' },
+    { answer: item.korMeaning, synonym: item.synonym ?? '' },
   ]),
 );
 
-export const MOCK_ANSWERS_MTW: Record<number, TestWordAnswer> = Object.fromEntries(
-  MOCK_VOCAB_ITEMS.map((item) => [
-    item.id,
-    { meaning: item.word, synonym: item.synonym ?? '' },
-  ]),
+export const MOCK_ANSWERS_MTW: Record<number, WordTestAnswer> = Object.fromEntries(
+  MOCK_VOCAB_ITEMS.map((item) => [item.id, { answer: item.word, synonym: item.synonym ?? '' }]),
 );
 
 export const MOCK_VOCAB_LIST: TestWord[] = [

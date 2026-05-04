@@ -1,62 +1,63 @@
 import type { ESRow } from '@/widgets/test-offline';
-import type { SentenceItem, TestSentenceAnswer } from '../model/types';
+import type { SentenceTestAnswer } from '../model/types';
+import type { Sentence } from '@/entities/word/model/types';
 
-export const MOCK_SENTENCE_ITEMS: SentenceItem[] = [
+export const MOCK_SENTENCE_ITEMS: Sentence[] = [
   {
     id: 1,
+    word: 'abscond',
     sentence:
       'The thief tried to ___ when the police arrived, hoping to escape with the stolen money before anyone could stop him.',
-    answerWord: 'abscond',
   },
   {
     id: 2,
+    word: 'ambivalent',
     sentence: 'She was ___ about the outcome, refusing to commit to either side.',
-    answerWord: 'ambivalent',
   },
   {
     id: 3,
+    word: 'truculent',
     sentence: 'His ___ remarks at the meeting made everyone uncomfortable.',
-    answerWord: 'truculent',
   },
   {
     id: 4,
+    word: 'ethereal',
     sentence: 'The forest had a ___ beauty that left visitors in silence.',
-    answerWord: 'ethereal',
   },
   {
     id: 5,
+    word: 'frugal',
     sentence: 'Despite his wealth, he lived a ___ life, avoiding unnecessary expenses.',
-    answerWord: 'frugal',
   },
   {
     id: 6,
+    word: 'laconic',
     sentence: 'The politician gave a ___ speech, using few words to great effect.',
-    answerWord: 'laconic',
   },
   {
     id: 7,
+    word: 'capricious',
     sentence: 'Her ___ nature made it hard for others to keep up with her decisions.',
-    answerWord: 'capricious',
   },
   {
     id: 8,
+    word: 'nefarious',
     sentence: "The company's ___ practices were eventually exposed by journalists.",
-    answerWord: 'nefarious',
   },
   {
     id: 9,
+    word: 'sanguine',
     sentence: 'He remained ___ even when everyone around him was panicking.',
-    answerWord: 'sanguine',
   },
   {
     id: 10,
+    word: 'inimical',
     sentence: 'The new policy was seen as ___ to the interests of small businesses.',
-    answerWord: 'inimical',
   },
 ];
 
-export const MOCK_SENTENCE_ANSWERS: Record<number, TestSentenceAnswer> = Object.fromEntries(
-  MOCK_SENTENCE_ITEMS.map((item) => [item.id, { word: item.answerWord ?? '' }]),
+export const MOCK_SENTENCE_ANSWERS: Record<number, SentenceTestAnswer> = Object.fromEntries(
+  MOCK_SENTENCE_ITEMS.map((item) => [item.id, { answer: item.word }]),
 );
 
 export const MOCK_ES_ROWS: ESRow[] = [

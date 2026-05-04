@@ -9,7 +9,7 @@ export const MOCK_WORDS: Word[] = [
     korMeaning: '모호함, 다의성',
     engMeaning: 'The quality of being open to more than one interpretation; inexactness.',
     synonyms: ['vague', 'obscurity', 'uncertainty'],
-    exampleSentence: '',
+    sentence: '',
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ export const MOCK_WORDS: Word[] = [
     engMeaning:
       'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
-    exampleSentence: '',
+    sentence: '',
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ export const MOCK_WORDS: Word[] = [
     korMeaning: '내재하는, 본질적인',
     engMeaning: 'Existing as a natural or permanent quality of something.',
     synonyms: ['intrinsic', 'innate', 'essential'],
-    exampleSentence: '',
+    sentence: '',
   },
   {
     id: 4,
@@ -40,7 +40,7 @@ export const MOCK_WORDS: Word[] = [
     korMeaning: '실용적인, 실제적인',
     engMeaning: 'Dealing with things sensibly and realistically based on practical considerations.',
     synonyms: ['practical', 'utilitarian', 'sensible'],
-    exampleSentence: '',
+    sentence: '',
   },
 ];
 
@@ -54,7 +54,7 @@ export const MOCK_WRONG_WORDS: WrongWord[] = [
     korMeaning: '모호함, 다의성',
     engMeaning: 'The quality of being open to more than one interpretation; inexactness.',
     synonyms: ['vague', 'obscurity', 'uncertainty'],
-    exampleSentence: '',
+    sentence: '',
     wrongCount: 5,
   },
   {
@@ -66,7 +66,7 @@ export const MOCK_WRONG_WORDS: WrongWord[] = [
     engMeaning:
       'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
-    exampleSentence: '',
+    sentence: '',
     wrongCount: 3,
   },
 ];

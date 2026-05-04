@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Word } from '../model/types';
 
-interface StudentWordCardProps extends Omit<Word, 'id' | 'exampleSentence'> {
+interface StudentWordCardProps extends Omit<Word, 'id' | 'sentence'> {
   extraInfo?: ReactNode;
 }
 

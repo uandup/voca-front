@@ -4,9 +4,8 @@ export type {
   TestConfig,
   TestStep,
   TestCycle,
-  SentenceItem,
-  TestWordAnswer,
-  TestSentenceAnswer,
+  WordTestAnswer,
+  SentenceTestAnswer,
   WrongWordTestRecord,
   LevelTestRecord,
 } from './model/types';

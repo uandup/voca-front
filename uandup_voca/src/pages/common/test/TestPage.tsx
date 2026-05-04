@@ -14,7 +14,7 @@ import { TestPagination } from './ui/TestPagination';
 import { ProgressPanel } from './ui/ProgressPanel';
 import { DevToolbar } from './ui/DevToolbar';
 import type { Answer } from './ui/VocabAnswerRow';
-import type { SentenceAnswer } from './ui/SentenceAnswerRow';
+import type { SentenceTestAnswer } from '@/entities/test';
 
 export default function TestPage() {
   const [testType, setTestType] = useState<TestType>('word-to-meaning');
@@ -22,7 +22,7 @@ export default function TestPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [vocabAnswers, setVocabAnswers] = useState<Record<number, Answer>>({});
-  const [sentenceAnswers, setSentenceAnswers] = useState<Record<number, SentenceAnswer>>({});
+  const [sentenceAnswers, setSentenceAnswers] = useState<Record<number, SentenceTestAnswer>>({});
 
   const isSentence = testType === 'sentence';
   const sourceItems = isSentence ? MOCK_SENTENCE_ITEMS : MOCK_VOCAB_ITEMS;
@@ -38,14 +38,14 @@ export default function TestPage() {
     if (isSentence) {
       return new Set(
         Object.entries(sentenceAnswers)
-          .filter(([, a]) => a.word.trim() !== '')
+          .filter(([, a]) => a.answer.trim() !== '')
           .map(([id]) => Number(id)),
       );
     }
     return new Set(
       Object.entries(vocabAnswers)
         .filter(([, a]) => {
-          const meaningFilled = a.meaning.trim() !== '';
+          const meaningFilled = a.answer.trim() !== '';
           return showSynonym ? meaningFilled && a.synonym.trim() !== '' : meaningFilled;
         })
         .map(([id]) => Number(id)),
@@ -63,7 +63,7 @@ export default function TestPage() {
   }, []);
 
   const handleSentenceAnswerChange = useCallback((id: number, value: string) => {
-    setSentenceAnswers((prev) => ({ ...prev, [id]: { word: value } }));
+    setSentenceAnswers((prev) => ({ ...prev, [id]: { answer: value } }));
   }, []);
 
   const handleTestTypeChange = (type: TestType) => {

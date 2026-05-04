@@ -1,9 +1,10 @@
-import type { SentenceItem } from '@/entities/test';
-import { SentenceAnswerRow, type SentenceAnswer } from './SentenceAnswerRow';
+import type { TestSentence } from '@/entities/word';
+import type { SentenceTestAnswer } from '@/entities/test';
+import { SentenceAnswerRow } from './SentenceAnswerRow';
 
 interface SentenceAnswerTableProps {
-  items: SentenceItem[];
-  answers: Record<number, SentenceAnswer>;
+  items: TestSentence[];
+  answers: Record<number, SentenceTestAnswer>;
   onAnswerChange: (id: number, value: string) => void;
   currentPage: number;
   totalPages: number;

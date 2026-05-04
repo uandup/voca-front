@@ -8,21 +8,14 @@ export interface TestConfig {
   includeSynonyms: boolean;
 }
 
-// ── Test Item (문제 데이터) ───────────────────────────────────
-export interface SentenceItem {
-  id: number;
-  sentence: string;
-  answerWord?: string;
-}
-
 // ── Test Answer (답안) ───────────────────────────────────────
-export interface TestWordAnswer {
-  meaning: string;
+export interface WordTestAnswer {
+  answer: string;
   synonym: string;
 }
 
-export interface TestSentenceAnswer {
-  word: string;
+export interface SentenceTestAnswer {
+  answer: string;
 }
 
 // ── Test Step / Cycle (진행 단계) ────────────────────────────

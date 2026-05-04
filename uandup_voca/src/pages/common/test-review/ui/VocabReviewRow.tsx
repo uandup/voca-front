@@ -30,7 +30,7 @@ export function VocabReviewRow({
   hideCheckbox = false,
   onToggleWrong,
 }: VocabReviewRowProps) {
-  const studentMeaning = answer?.meaning ?? '';
+  const studentMeaning = answer?.answer ?? '';
   const studentSynonym = answer?.synonym ?? '';
   const isWordToMeaning = testType === 'word-to-meaning';
 

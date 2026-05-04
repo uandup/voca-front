@@ -9,12 +9,8 @@ export interface Word {
   engMeaning: string;
   difficulty: WordDifficultyLevel;
   synonyms: string[];
-  exampleSentence: string;
+  sentence: string;
 }
-
-export type WrongWord = Word & {
-  wrongCount?: number;
-};
 
 export interface TestWord {
   id: number;
@@ -24,3 +20,14 @@ export interface TestWord {
   synonym?: string;
 }
 
+export type WrongWord = Word & {
+  wrongCount?: number;
+};
+
+export interface Sentence {
+  id: number;
+  word: string;
+  sentence: string;
+}
+
+export type TestSentence = Pick<Sentence, 'id' | 'sentence'>;

@@ -12,7 +12,7 @@ export function TeacherWordCard({
   difficulty: difficulty,
   engMeaning,
   synonyms,
-  exampleSentence,
+  sentence,
   onEdit,
   onDelete,
 }: TeacherWordCardProps) {
@@ -86,7 +86,7 @@ export function TeacherWordCard({
             Sentence:
           </span>
           <p className="text-on-surface-variant text-md font-medium leading-relaxed">
-            "{exampleSentence}"
+            "{sentence}"
           </p>
         </div>
       </div>

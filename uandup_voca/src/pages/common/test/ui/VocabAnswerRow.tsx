@@ -1,7 +1,7 @@
 import type { WordTestType as TestType } from '@/entities/test';
 
 interface Answer {
-  meaning: string;
+  answer: string;
   synonym: string;
 }
 
@@ -32,7 +32,7 @@ export function VocabAnswerRow({
   onAnswerChange,
   isLast,
 }: VocabAnswerRowProps) {
-  const meaningFilled = (answer?.meaning ?? '').trim() !== '';
+  const meaningFilled = (answer?.answer ?? '').trim() !== '';
   const synonymFilled = (answer?.synonym ?? '').trim() !== '';
   const completed = showSynonym ? meaningFilled && synonymFilled : meaningFilled;
 
@@ -42,14 +42,14 @@ export function VocabAnswerRow({
     if (showSynonym) {
       focusInput(id, 'synonym');
     } else if (!isLast) {
-      focusInput(id + 1, 'meaning');
+      focusInput(id + 1, 'answer');
     }
   };
 
   const handleSynonymKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !isLast) {
       e.preventDefault();
-      focusInput(id + 1, 'meaning');
+      focusInput(id + 1, 'answer');
     }
   };
 
@@ -80,8 +80,8 @@ export function VocabAnswerRow({
           data-row={id}
           data-field="meaning"
           type="text"
-          value={answer?.meaning ?? ''}
-          onChange={(e) => onAnswerChange(id, 'meaning', e.target.value)}
+          value={answer?.answer ?? ''}
+          onChange={(e) => onAnswerChange(id, 'answer', e.target.value)}
           onKeyDown={handleMeaningKeyDown}
           placeholder="Word"
           className="w-40 shrink-0 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"
@@ -94,8 +94,8 @@ export function VocabAnswerRow({
           data-row={id}
           data-field="meaning"
           type="text"
-          value={answer?.meaning ?? ''}
-          onChange={(e) => onAnswerChange(id, 'meaning', e.target.value)}
+          value={answer?.answer ?? ''}
+          onChange={(e) => onAnswerChange(id, 'answer', e.target.value)}
           onKeyDown={handleMeaningKeyDown}
           placeholder="Meaning"
           className="flex-1 min-w-0 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"

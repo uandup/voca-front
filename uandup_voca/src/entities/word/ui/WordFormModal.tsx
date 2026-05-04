@@ -24,7 +24,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
   const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
   const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
   const [synonymInput, setSynonymInput] = useState('');
-  const [exampleSentence, setExampleSentence] = useState(initialData?.exampleSentence ?? '');
+  const [sentence, setExampleSentence] = useState(initialData?.sentence ?? '');
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing && synonymInput.trim()) {
@@ -46,7 +46,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
       difficulty: difficulty,
       engMeaning,
       synonyms,
-      exampleSentence,
+      sentence,
     });
   }
 
@@ -190,7 +190,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
-              value={exampleSentence}
+              value={sentence}
               onChange={(e) => setExampleSentence(e.target.value)}
             />
           </div>
