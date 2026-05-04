@@ -1,10 +1,10 @@
-import type { TestStep } from '@/entities/test';
+import type { Test } from '@/entities/test';
 
 interface StepCardProps {
-  step: TestStep;
+  step: Test;
 }
 
-const containerClass: Record<TestStep['status'], string> = {
+const containerClass: Record<Test['status'], string> = {
   locked: 'border border-primary/30 bg-primary/5',
   waiting: 'border border-primary/30 bg-primary/5',
   available: 'border border-primary/30 bg-primary/5',

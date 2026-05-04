@@ -1,7 +1,7 @@
 import type { ClinicCycle } from '@/entities/clinic';
-import type { TestCycle } from '../model/types';
+import type { TestBundle } from '../model/types';
 
-export const MOCK_CYCLES: TestCycle[] = [
+export const MOCK_CYCLES: TestBundle[] = [
   {
     id: '1',
     assignedLevel: 7,

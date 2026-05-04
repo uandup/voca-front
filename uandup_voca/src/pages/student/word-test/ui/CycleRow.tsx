@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import StepCard from './StepCard';
-import type { TestCycle } from '@/entities/test';
+import type { TestBundle } from '@/entities/test';
 
-export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestCycle) {
+export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBundle) {
   const navigate = useNavigate();
 
   return (

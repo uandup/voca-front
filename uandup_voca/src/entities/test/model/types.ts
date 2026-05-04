@@ -29,7 +29,7 @@ type TestStepStatus =
   | 'active'
   | 'pending';
 
-export interface TestStep {
+export interface Test {
   key: string;
   label: string;
   status: TestStepStatus;
@@ -44,11 +44,11 @@ export interface TestStep {
   date?: string;
 }
 
-export interface TestCycle {
+export interface TestBundle {
   id: string;
   assignedLevel: number;
   wordCount: number;
-  steps: TestStep[];
+  steps: Test[];
 }
 
 // ── Test Record (시험 기록) ──────────────────────────────────

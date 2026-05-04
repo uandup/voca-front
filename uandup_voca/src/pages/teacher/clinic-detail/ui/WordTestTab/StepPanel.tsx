@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from '@/entities/test';
+import type { Test, TestType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import {
@@ -13,7 +13,7 @@ import {
 import { MOCK_VOCAB_LIST, MOCK_ES_ROWS } from '@/entities/test';
 
 interface StepPanelProps {
-  step: TestStep;
+  step: Test;
 }
 
 type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
@@ -24,7 +24,7 @@ interface TestConfig {
   includeSynonyms: boolean;
 }
 
-function inferPhase(step: TestStep): PanelPhase {
+function inferPhase(step: Test): PanelPhase {
   if (step.status === 'passed') return 'passed';
   if (step.status === 'fail') return 'fail';
   if (step.status === 'active') return 'created';
@@ -260,7 +260,7 @@ function CreatedPanel({
   onGradeOnline,
   onGradeOffline,
 }: {
-  step: TestStep;
+  step: Test;
   onOpenPrint: () => void;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
@@ -334,7 +334,7 @@ function FailPanel({
   onOpenGrading,
   onOpenResult,
 }: {
-  step: TestStep;
+  step: Test;
   onOpenGrading: () => void;
   onOpenResult: () => void;
 }) {
@@ -425,7 +425,7 @@ function FailPanel({
   );
 }
 
-function PassedPanel({ step, onOpenResult }: { step: TestStep; onOpenResult: () => void }) {
+function PassedPanel({ step, onOpenResult }: { step: Test; onOpenResult: () => void }) {
   const scores = step.scores ?? [];
 
   return (

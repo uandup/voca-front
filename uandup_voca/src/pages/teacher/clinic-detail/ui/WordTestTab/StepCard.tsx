@@ -1,7 +1,7 @@
-import type { TestStep } from '@/entities/test';
+import type { Test } from '@/entities/test';
 
 interface StepCardProps {
-  step: TestStep;
+  step: Test;
   isSelected: boolean;
   onClick: () => void;
 }

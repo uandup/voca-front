@@ -1,13 +1,13 @@
 import { Fragment, useState } from 'react';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
-import type { TestStep } from '@/entities/test';
+import type { Test } from '@/entities/test';
 
 export interface CycleRowData {
   title: string;
   badge?: string;
   scheduledDate: string;
-  steps: TestStep[];
+  steps: Test[];
 }
 
 export default function CycleRow({ title, badge, scheduledDate, steps }: CycleRowData) {

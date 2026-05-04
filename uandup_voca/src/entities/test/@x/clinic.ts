@@ -1,1 +1,1 @@
-export type { TestStep } from '../model/types';
+export type { Test } from '../model/types';
