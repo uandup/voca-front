@@ -3,7 +3,14 @@
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
 
 type TestStep = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
-type TestStatus = 'locked' | 'grading' | 'fail' | 'passed' | 'active' | 'pending';
+
+type TestStatus =
+  | 'locked' // 이전 Step 끝나지 않아 잠긴 상태
+  | 'pending' // Step이 열린 후 시험이 생성되지 않은 상태
+  | 'active' // 시험 생성 후 시험 시작 대기 상태
+  | 'grading' // 시험 시작 후 채점 대기 중인 상태
+  | 'fail' // 시험 채점 후 시험 불합격 상태
+  | 'passed'; // 시험 채점 후 시험 합격 상태 ( 다음 Step Open )
 
 export type WordTestType = Exclude<TestType, 'sentence'>;
 
