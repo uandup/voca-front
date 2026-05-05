@@ -29,25 +29,25 @@ export default function StepCard({ step, isSelected, onClick }: StepCardProps) {
         <span
           className={`text-sm font-bold leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface'}`}
         >
-          {step.label}
+          {step.name}
         </span>
       </div>
 
-      {step.date && (
+      {step.createdAt && (
         <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          {step.date}
+          {step.createdAt}
         </span>
       )}
 
       {(isPassed || isFail) && step.scores && step.scores.length > 0 && (
         <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
-          {step.scores[step.scores.length - 1]} / {step.totalScore ?? 'N'}
+          {step.scores[step.scores.length - 1]} / {step.maxScore ?? 'N'}
         </span>
       )}
 
-      {step.subLabel && (
+      {step.status === 'locked' && (
         <span className={`text-xs font-medium ${isLocked ? 'text-slate-400' : 'text-slate-500'}`}>
-          {step.subLabel}
+          Locked
         </span>
       )}
     </button>

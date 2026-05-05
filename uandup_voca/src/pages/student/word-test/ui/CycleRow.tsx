@@ -34,9 +34,9 @@ export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBu
       <div className="flex items-stretch gap-0">
         {steps.map((step, idx) => {
           const isInactive =
-            step.status === 'locked' || step.status === 'waiting' || step.status === 'grading';
+            step.status === 'locked' || step.status === 'pending' || step.status === 'grading';
           return (
-            <Fragment key={step.key}>
+            <Fragment key={step.name}>
               <div className="relative flex-1 min-w-0 h-44">
                 <StepCard step={step} />
                 {isInactive && <div className="absolute inset-0 rounded-2xl bg-white/60" />}

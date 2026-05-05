@@ -6,8 +6,8 @@ export type {
   TestBundle,
   WordTestAnswer,
   SentenceTestAnswer,
-  WrongWordTestRecord,
-  LevelTestRecord,
+  ReviewDeckTest,
+  LevelTest,
 } from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export {

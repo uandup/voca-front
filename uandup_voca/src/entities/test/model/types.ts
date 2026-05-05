@@ -1,11 +1,49 @@
-// ── Test Type ────────────────────────────────────────────────
+// ── Test ────────────────────────────
+
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
+
+type TestStep = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
+type TestStatus = 'locked' | 'grading' | 'fail' | 'passed' | 'active' | 'pending';
+
 export type WordTestType = Exclude<TestType, 'sentence'>;
 
-// ── Test Config ──────────────────────────────────────────────
 export interface TestConfig {
-  type: TestType;
+  type: WordTestType;
   includeSynonyms: boolean;
+}
+
+export interface TestBundle {
+  id: string;
+  assignedLevel: number;
+  wordCount: number;
+  steps: Test[];
+}
+
+export interface Test {
+  name: TestStep;
+  status: TestStatus;
+  testType?: TestType;
+  scores?: number[];
+  maxScore?: number;
+  failState?: 'awaiting-grading';
+  createdAt?: string;
+  gradedAt?: string;
+}
+
+export interface ReviewDeckTest {
+  date: string;
+  quantity: number;
+  score: number | null;
+  status: TestStatus;
+}
+
+export interface LevelTest {
+  date: string;
+  assignedQty: number;
+  testQty: number;
+  score: number | null;
+  status: TestStatus;
+  level: number;
 }
 
 // ── Test Answer (답안) ───────────────────────────────────────
@@ -16,56 +54,4 @@ export interface WordTestAnswer {
 
 export interface SentenceTestAnswer {
   answer: string;
-}
-
-// ── Test Step / Cycle (진행 단계) ────────────────────────────
-type TestStepStatus =
-  | 'locked'
-  | 'waiting'
-  | 'available'
-  | 'grading'
-  | 'fail'
-  | 'passed'
-  | 'active'
-  | 'pending';
-
-export interface Test {
-  key: string;
-  label: string;
-  status: TestStepStatus;
-  testType?: TestType;
-  scores?: string[];
-  totalScore?: string;
-  gradedDate?: string;
-  scheduledDate?: string;
-  subLabel?: string;
-  failState?: 'fail' | 'awaiting';
-  isPassed?: boolean;
-  date?: string;
-}
-
-export interface TestBundle {
-  id: string;
-  assignedLevel: number;
-  wordCount: number;
-  steps: Test[];
-}
-
-// ── Test Record (시험 기록) ──────────────────────────────────
-type TestRecordStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'pass' | 'fail';
-
-export interface WrongWordTestRecord {
-  date: string;
-  quantity: number;
-  score: number | null;
-  status: TestRecordStatus;
-}
-
-export interface LevelTestRecord {
-  date: string;
-  assignedQty: number;
-  testQty: number;
-  score: number | null;
-  status: TestRecordStatus;
-  level: number;
 }

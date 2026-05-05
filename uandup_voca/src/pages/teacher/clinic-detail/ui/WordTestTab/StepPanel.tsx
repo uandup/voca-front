@@ -55,7 +55,7 @@ export default function StepPanel({ step }: StepPanelProps) {
         />
       )}
 
-      {showPrintModal && step.key === 'sentence' ? (
+      {showPrintModal && step.name === 'Sentence' ? (
         <SentenceModal onClose={() => setShowPrintModal(false)} rows={MOCK_ES_ROWS} />
       ) : (
         showPrintModal && (
@@ -68,7 +68,7 @@ export default function StepPanel({ step }: StepPanelProps) {
         )
       )}
 
-      {showGradingModal && step.key === 'sentence' ? (
+      {showGradingModal && step.name === 'Sentence' ? (
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
           onGrade={() => console.warn('Grade submitted')}
@@ -86,7 +86,7 @@ export default function StepPanel({ step }: StepPanelProps) {
         )
       )}
 
-      {showResultModal && step.key === 'sentence' ? (
+      {showResultModal && step.name === 'Sentence' ? (
         <SentenceResultModal
           onClose={() => setShowResultModal(false)}
           rows={MOCK_ES_ROWS}
@@ -268,12 +268,12 @@ function CreatedPanel({
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.createdAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.createdAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -281,7 +281,7 @@ function CreatedPanel({
             check_circle
           </span>
           <span>
-            Score : {step.scores?.[0] ?? '-'} / {step.totalScore ?? 'N'}
+            Score : {step.scores?.[0] ?? '-'} / {step.maxScore ?? 'N'}
           </span>
         </div>
       </div>
@@ -338,18 +338,19 @@ function FailPanel({
   onOpenGrading: () => void;
   onOpenResult: () => void;
 }) {
-  const [failState, setFailState] = useState<'fail' | 'awaiting'>(step.failState ?? 'fail');
+  const [isAwaitingGrading, setIsAwaitingGrading] = useState(step.failState === 'awaiting-grading');
+
   const scores = step.scores ?? [];
 
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.createdAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.createdAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -363,18 +364,18 @@ function FailPanel({
                 <span key={i} className="flex items-center gap-1.5">
                   {i > 0 && <span className="text-on-surface-variant">→</span>}
                   <span className="text-error font-semibold">
-                    {score} / {step.totalScore ?? 'N'}
+                    {score} / {step.maxScore ?? 'N'}
                   </span>
                 </span>
               ))
             ) : (
-              <span className="text-error font-semibold">- / {step.totalScore ?? 'N'}</span>
+              <span className="text-error font-semibold">- / {step.maxScore ?? 'N'}</span>
             )}
-            {failState === 'awaiting' && (
+            {isAwaitingGrading && (
               <>
                 <span className="text-on-surface-variant">→</span>
                 <span className="text-on-surface-variant font-semibold">
-                  - / {step.totalScore ?? 'N'}
+                  - / {step.maxScore ?? 'N'}
                 </span>
               </>
             )}
@@ -384,25 +385,25 @@ function FailPanel({
 
       {/* DEV ONLY */}
       <div className="flex items-center gap-3 text-xs text-on-surface-variant">
-        {(['fail', 'awaiting'] as const).map((s) => (
-          <label key={s} className="flex items-center gap-1 cursor-pointer">
+        {([false, true] as const).map((v) => (
+          <label key={String(v)} className="flex items-center gap-1 cursor-pointer">
             <input
               type="radio"
-              checked={failState === s}
-              onChange={() => setFailState(s)}
+              checked={isAwaitingGrading === v}
+              onChange={() => setIsAwaitingGrading(v)}
               className="accent-primary"
             />
-            {s}
+            {v ? 'awaiting-grading' : 'fail'}
           </label>
         ))}
       </div>
 
       <div className="flex items-center gap-2">
         <button
-          disabled={failState === 'awaiting'}
+          disabled={isAwaitingGrading}
           className="px-4 py-2 rounded-xl bg-error text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-error/20 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {failState === 'awaiting' ? 'Awaiting Grading' : 'Retake Test'}
+          {isAwaitingGrading ? 'Awaiting Grading' : 'Retake Test'}
         </button>
         <button
           onClick={onOpenResult}
@@ -410,7 +411,7 @@ function FailPanel({
         >
           View Results
         </button>
-        {failState === 'awaiting' && (
+        {isAwaitingGrading && (
           <div className="ml-auto">
             <button
               onClick={onOpenGrading}
@@ -431,12 +432,12 @@ function PassedPanel({ step, onOpenResult }: { step: Test; onOpenResult: () => v
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.createdAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.createdAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -451,7 +452,7 @@ function PassedPanel({ step, onOpenResult }: { step: Test; onOpenResult: () => v
                 <span
                   className={`font-semibold ${i === scores.length - 1 ? 'text-success' : 'text-error'}`}
                 >
-                  {score} / {step.totalScore ?? 'N'}
+                  {score} / {step.maxScore ?? 'N'}
                 </span>
               </span>
             ))}

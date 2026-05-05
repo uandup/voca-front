@@ -183,7 +183,7 @@ export function LevelTestTab() {
                     </span>
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    {row.status === 'pending' ? (
+                    {row.status === 'active' ? (
                       <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
                         Pending
                       </span>
@@ -199,7 +199,7 @@ export function LevelTestTab() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'pending' ? (
+                      {row.status === 'active' ? (
                         <>
                           <button className="px-4 py-1.5 border border-outline-variant/30 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 hover:text-primary transition-colors">
                             Preview

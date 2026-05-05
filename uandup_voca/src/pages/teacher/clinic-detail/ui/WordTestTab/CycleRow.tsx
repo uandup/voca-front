@@ -4,42 +4,53 @@ import StepPanel from './StepPanel';
 import type { Test } from '@/entities/test';
 
 export interface CycleRowData {
-  title: string;
-  badge?: string;
-  scheduledDate: string;
+  id: string;
+  assignedLevel: number;
+  wordCount: number;
   steps: Test[];
 }
 
-export default function CycleRow({ title, badge, scheduledDate, steps }: CycleRowData) {
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+export default function CycleRow({ id, assignedLevel, wordCount, steps }: CycleRowData) {
+  const [selectedName, setSelectedName] = useState<string | null>(null);
 
-  const selectedStep = steps.find((s) => s.key === selectedKey) ?? null;
+  const selectedStep = steps.find((s) => s.name === selectedName) ?? null;
 
-  function handleStepClick(key: string) {
-    setSelectedKey((prev) => (prev === key ? null : key));
+  function handleStepClick(name: string) {
+    setSelectedName((prev) => (prev === name ? null : name));
   }
 
   return (
-    <div className="bg-white border border-outline/20 rounded-2xl p-5 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h4 className="text-sm font-bold text-on-surface">{title}</h4>
-          {badge && (
-            <span className="text-[10px] font-bold text-on-surface-variant bg-slate-100 px-2 py-0.5 rounded-full uppercase tracking-wide">
-              {badge}
+    <div className="bg-white border border-outline/20 rounded-2xl px-5 py-4 flex flex-col gap-4">
+      <div className="flex items-center justify-start">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm text-on-surface-variant">Level</span>
+            <span className="text-sm font-bold text-on-surface">{assignedLevel}</span>
+          </div>
+          <div className="w-px h-3.5 bg-outline/20" />
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm text-on-surface-variant">Words</span>
+            <span className="text-sm font-bold text-on-surface">{wordCount}</span>
+          </div>
+          <a
+            href={`/teacher/word-list/${id}`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline/30 text-xs font-semibold text-success hover:bg-slate-50 transition-colors"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+              menu_book
             </span>
-          )}
+            View Words
+          </a>
         </div>
-        <span className="text-xs text-on-surface-variant">Scheduled: {scheduledDate}</span>
       </div>
 
       <div className="flex items-stretch">
         {steps.map((step, idx) => (
-          <Fragment key={step.key}>
+          <Fragment key={step.name}>
             <StepCard
               step={step}
-              isSelected={selectedKey === step.key}
-              onClick={() => handleStepClick(step.key)}
+              isSelected={selectedName === step.name}
+              onClick={() => handleStepClick(step.name)}
             />
             {idx < steps.length - 1 && (
               <div className="flex items-center shrink-0">
