@@ -1,9 +1,9 @@
-import type { Sentence } from '@/entities/word';
+import type { SentenceTestItem } from '@/entities/word';
 import type { SentenceTestAnswer } from '@/entities/test';
 import { SentenceReviewRow } from './SentenceReviewRow';
 
 interface SentenceReviewTableProps {
-  items: Sentence[];
+  items: SentenceTestItem[];
   answers: Record<number, SentenceTestAnswer>;
   wrongIds: Set<number>;
   readOnly?: boolean;
@@ -27,7 +27,7 @@ export function SentenceReviewTable({
             key={item.id}
             id={item.id}
             sentence={item.sentence}
-            answerWord={item.word}
+            answerWord={answers[item.id]?.answer ?? ''}
             studentWord={answers[item.id]?.answer ?? ''}
             isWrong={wrongIds.has(item.id)}
             readOnly={readOnly}

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ResultActionBar } from './ResultActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
-import type { TestWord } from '@/entities/word';
+import type { VocabReviewItem as TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -107,7 +107,7 @@ function ResultSheet({
             </tr>
           </thead>
           <tbody style={{ height: '100%' }}>
-            {pageRows.map(({ word, korMeaning, engMeaning, synonym }, idx) => {
+            {pageRows.map(({ word, korMeaning, engMeaning, synonymAnswer: synonym }, idx) => {
               const globalIdx = (page - 1) * PAGE_SIZE + idx;
               const isWrong = isEditing ? checkedWrong.has(globalIdx) : wrongSet.has(globalIdx);
               return (

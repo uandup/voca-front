@@ -3,7 +3,7 @@ import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import {
   PARENT_MOCK,
   REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
-  type Parent as ParentInfo,
+  type RegisteredParentRow,
 } from '@/entities/member';
 
 interface Props {
@@ -11,12 +11,12 @@ interface Props {
 }
 
 export function ParentManageModal({ onClose }: Props) {
-  const [parents, setParents] = useState<ParentInfo[]>(PARENT_MOCK);
+  const [parents, setParents] = useState<RegisteredParentRow[]>(PARENT_MOCK);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ nameKo: '', phone: '' });
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  function handleEditStart(p: ParentInfo) {
+  function handleEditStart(p: RegisteredParentRow) {
     setEditingId(p.id);
     setEditForm({ nameKo: p.nameKo, phone: p.phone });
     setDeletingId(null);

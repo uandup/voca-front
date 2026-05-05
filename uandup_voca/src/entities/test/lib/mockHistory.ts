@@ -1,6 +1,6 @@
-import type { ReviewDeckTest, LevelTest } from '../model/types';
+import type { ReviewDeckHistoryRow, LevelTestHistoryRow } from '../model/types';
 
-export const MOCK_REVIEW_DECK_HISTORY: ReviewDeckTest[] = [
+export const MOCK_REVIEW_DECK_HISTORY: ReviewDeckHistoryRow[] = [
   { date: '2026.05.10', quantity: 30, score: null, status: 'active' },
   { date: '2026.05.05', quantity: 30, score: 27, status: 'passed' },
   { date: '2026.05.01', quantity: 30, score: 25, status: 'passed' },
@@ -8,7 +8,7 @@ export const MOCK_REVIEW_DECK_HISTORY: ReviewDeckTest[] = [
   { date: '2026.04.25', quantity: 30, score: 28, status: 'passed' },
 ];
 
-export const MOCK_STUDENT_LEVEL_TEST_HISTORY: LevelTest[] = [
+export const MOCK_STUDENT_LEVEL_TEST_HISTORY: LevelTestHistoryRow[] = [
   {
     date: '2026.05.10',
     level: 4,

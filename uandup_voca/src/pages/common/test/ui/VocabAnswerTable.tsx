@@ -1,5 +1,5 @@
 import type { WordTestType } from '@/entities/test';
-import type { TestWord } from '@/entities/word';
+import type { VocabTestItem as TestWord } from '@/entities/word';
 import { VocabAnswerRow, type Answer } from './VocabAnswerRow';
 
 interface VocabAnswerTableProps {

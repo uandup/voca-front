@@ -1,64 +1,39 @@
 import type { ESRow } from '@/widgets/test-offline';
 import type { SentenceTestAnswer } from '../model/types';
-import type { Sentence } from '@/entities/word/model/types';
+import type { SentenceTestItem } from '@/entities/word';
 
-export const MOCK_SENTENCE_ITEMS: Sentence[] = [
+export const MOCK_SENTENCE_ITEMS: SentenceTestItem[] = [
   {
     id: 1,
-    word: 'abscond',
     sentence:
       'The thief tried to ___ when the police arrived, hoping to escape with the stolen money before anyone could stop him.',
   },
-  {
-    id: 2,
-    word: 'ambivalent',
-    sentence: 'She was ___ about the outcome, refusing to commit to either side.',
-  },
-  {
-    id: 3,
-    word: 'truculent',
-    sentence: 'His ___ remarks at the meeting made everyone uncomfortable.',
-  },
-  {
-    id: 4,
-    word: 'ethereal',
-    sentence: 'The forest had a ___ beauty that left visitors in silence.',
-  },
+  { id: 2, sentence: 'She was ___ about the outcome, refusing to commit to either side.' },
+  { id: 3, sentence: 'His ___ remarks at the meeting made everyone uncomfortable.' },
+  { id: 4, sentence: 'The forest had a ___ beauty that left visitors in silence.' },
   {
     id: 5,
-    word: 'frugal',
     sentence: 'Despite his wealth, he lived a ___ life, avoiding unnecessary expenses.',
   },
-  {
-    id: 6,
-    word: 'laconic',
-    sentence: 'The politician gave a ___ speech, using few words to great effect.',
-  },
-  {
-    id: 7,
-    word: 'capricious',
-    sentence: 'Her ___ nature made it hard for others to keep up with her decisions.',
-  },
-  {
-    id: 8,
-    word: 'nefarious',
-    sentence: "The company's ___ practices were eventually exposed by journalists.",
-  },
-  {
-    id: 9,
-    word: 'sanguine',
-    sentence: 'He remained ___ even when everyone around him was panicking.',
-  },
-  {
-    id: 10,
-    word: 'inimical',
-    sentence: 'The new policy was seen as ___ to the interests of small businesses.',
-  },
+  { id: 6, sentence: 'The politician gave a ___ speech, using few words to great effect.' },
+  { id: 7, sentence: 'Her ___ nature made it hard for others to keep up with her decisions.' },
+  { id: 8, sentence: "The company's ___ practices were eventually exposed by journalists." },
+  { id: 9, sentence: 'He remained ___ even when everyone around him was panicking.' },
+  { id: 10, sentence: 'The new policy was seen as ___ to the interests of small businesses.' },
 ];
 
-export const MOCK_SENTENCE_ANSWERS: Record<number, SentenceTestAnswer> = Object.fromEntries(
-  MOCK_SENTENCE_ITEMS.map((item) => [item.id, { answer: item.word }]),
-);
+export const MOCK_SENTENCE_ANSWERS: Record<number, SentenceTestAnswer> = {
+  1: { answer: 'abscond' },
+  2: { answer: 'ambivalent' },
+  3: { answer: 'truculent' },
+  4: { answer: 'ethereal' },
+  5: { answer: 'frugal' },
+  6: { answer: 'laconic' },
+  7: { answer: 'capricious' },
+  8: { answer: 'nefarious' },
+  9: { answer: 'sanguine' },
+  10: { answer: 'inimical' },
+};
 
 export const MOCK_ES_ROWS: ESRow[] = [
   {

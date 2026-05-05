@@ -1,10 +1,10 @@
 import type { WordTestType } from '@/entities/test';
-import type { TestWord } from '@/entities/word';
+import type { VocabReviewItem } from '@/entities/word';
 import type { Answer } from '../../test/ui/VocabAnswerRow';
 import { VocabReviewRow } from './VocabReviewRow';
 
 interface VocabReviewTableProps {
-  items: TestWord[];
+  items: VocabReviewItem[];
   testType: WordTestType;
   showSynonym: boolean;
   answers: Record<number, Answer>;
@@ -34,7 +34,7 @@ export function VocabReviewTable({
             word={item.word}
             korMeaning={item.korMeaning}
             engMeaning={item.engMeaning}
-            synonymAnswer={item.synonym ?? ''}
+            synonymAnswer={item.synonymAnswer}
             testType={testType}
             showSynonym={showSynonym}
             answer={answers[item.id]}

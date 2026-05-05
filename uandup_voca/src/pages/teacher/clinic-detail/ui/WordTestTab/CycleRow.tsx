@@ -1,19 +1,12 @@
 import { Fragment, useState } from 'react';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
-import type { Test } from '@/entities/test';
+import type { TestBundleRow, StepCardVM } from '@/entities/test';
 
-export interface CycleRowData {
-  id: string;
-  assignedLevel: number;
-  wordCount: number;
-  steps: Test[];
-}
-
-export default function CycleRow({ id, assignedLevel, wordCount, steps }: CycleRowData) {
+export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBundleRow) {
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
-  const selectedStep = steps.find((s) => s.name === selectedName) ?? null;
+  const selectedStep: StepCardVM | null = steps.find((s) => s.name === selectedName) ?? null;
 
   function handleStepClick(name: string) {
     setSelectedName((prev) => (prev === name ? null : name));

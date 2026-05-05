@@ -1,6 +1,6 @@
-import type { Class } from '../model/types';
+import type { ClassListItem } from '../model/types';
 
-export const CLASS_MOCK: Class[] = [
+export const CLASS_MOCK: ClassListItem[] = [
   { id: 1, name: 'G10 English' },
   { id: 2, name: 'G9 English' },
   { id: 3, name: 'SAT' },

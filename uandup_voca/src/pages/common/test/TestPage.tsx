@@ -6,7 +6,7 @@ import {
   type TestType,
   type WordTestType,
 } from '@/entities/test';
-import type { TestWord } from '@/entities/word';
+import type { VocabTestItem as TestWord } from '@/entities/word';
 import { TestHeader } from './ui/TestHeader';
 import { VocabAnswerTable } from './ui/VocabAnswerTable';
 import { SentenceAnswerTable } from './ui/SentenceAnswerTable';

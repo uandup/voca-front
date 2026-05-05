@@ -1,28 +1,16 @@
-import type { TestBundle } from '../model/types';
+import type { TestBundleRow } from '../model/types';
 
-export const MOCK_CYCLES: TestBundle[] = [
+export const MOCK_CYCLES: TestBundleRow[] = [
   {
     id: '1',
     assignedLevel: 7,
     wordCount: 50,
     steps: [
-      { name: 'Word', status: 'pending', maxScore: 100 },
-      { name: 'Sentence', status: 'active', maxScore: 100 },
-      { name: 'Review 1', status: 'grading', maxScore: 100 },
-      {
-        name: 'Review 2',
-        status: 'passed',
-        scores: [98],
-        maxScore: 100,
-        gradedAt: '23.10.23',
-      },
-      {
-        name: 'Review 3',
-        status: 'fail',
-        scores: [62],
-        maxScore: 100,
-        gradedAt: '23.10.24',
-      },
+      { name: 'Word', status: 'pending', gradedAt: null, lastScore: null, maxScore: 100, retakeCount: 0 },
+      { name: 'Sentence', status: 'active', gradedAt: null, lastScore: null, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 1', status: 'grading', gradedAt: null, lastScore: null, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 2', status: 'passed', gradedAt: '23.10.23', lastScore: 98, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 3', status: 'fail', gradedAt: '23.10.24', lastScore: 62, maxScore: 100, retakeCount: 0 },
     ],
   },
   {
@@ -30,11 +18,11 @@ export const MOCK_CYCLES: TestBundle[] = [
     assignedLevel: 3,
     wordCount: 47,
     steps: [
-      { name: 'Word', status: 'fail', scores: [62], maxScore: 100 },
-      { name: 'Sentence', status: 'locked' },
-      { name: 'Review 1', status: 'locked' },
-      { name: 'Review 2', status: 'locked' },
-      { name: 'Review 3', status: 'locked' },
+      { name: 'Word', status: 'fail', gradedAt: null, lastScore: 62, maxScore: 100, retakeCount: 0 },
+      { name: 'Sentence', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 1', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 2', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 3', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
     ],
   },
   {
@@ -42,89 +30,26 @@ export const MOCK_CYCLES: TestBundle[] = [
     assignedLevel: 5,
     wordCount: 30,
     steps: [
-      {
-        name: 'Word',
-        status: 'passed',
-        scores: [95],
-        maxScore: 100,
-        gradedAt: '23.09.10',
-      },
-      {
-        name: 'Sentence',
-        status: 'passed',
-        scores: [55, 88],
-        maxScore: 100,
-        gradedAt: '23.09.11',
-      },
-      {
-        name: 'Review 1',
-        status: 'passed',
-        scores: [60, 72, 92],
-        maxScore: 100,
-        gradedAt: '23.09.12',
-      },
-      {
-        name: 'Review 2',
-        status: 'passed',
-        scores: [96],
-        maxScore: 100,
-        createdAt: '23.09.13',
-      },
-      {
-        name: 'Review 3',
-        status: 'passed',
-        scores: [100],
-        maxScore: 100,
-        createdAt: '23.09.14',
-      },
+      { name: 'Word', status: 'passed', gradedAt: '23.09.10', lastScore: 95, maxScore: 100, retakeCount: 0 },
+      { name: 'Sentence', status: 'passed', gradedAt: '23.09.11', lastScore: 88, maxScore: 100, retakeCount: 1 },
+      { name: 'Review 1', status: 'passed', gradedAt: '23.09.12', lastScore: 92, maxScore: 100, retakeCount: 2 },
+      { name: 'Review 2', status: 'passed', gradedAt: '23.09.13', lastScore: 96, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 3', status: 'passed', gradedAt: '23.09.14', lastScore: 100, maxScore: 100, retakeCount: 0 },
     ],
   },
 ];
 
-export const MOCK_CLINIC_CYCLES: TestBundle[] = [
+export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
   {
     id: 'c1',
     assignedLevel: 7,
     wordCount: 50,
     steps: [
-      {
-        name: 'Word',
-        status: 'pending',
-        createdAt: '23.10.24',
-        maxScore: 30,
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Sentence',
-        status: 'active',
-        createdAt: '23.10.24',
-        maxScore: 30,
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 1',
-        status: 'passed',
-        createdAt: '23.10.23',
-        scores: [98],
-        maxScore: 100,
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 2',
-        status: 'fail',
-        createdAt: '23.10.24',
-        scores: [62],
-        maxScore: 100,
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 3',
-        status: 'passed',
-        createdAt: '23.10.25',
-        scores: [55, 75, 88],
-        maxScore: 100,
-        testType: 'meaning-to-word',
-      },
+      { name: 'Word', status: 'pending', gradedAt: '23.10.24', lastScore: null, maxScore: 30, retakeCount: 0 },
+      { name: 'Sentence', status: 'active', gradedAt: '23.10.24', lastScore: null, maxScore: 30, retakeCount: 0 },
+      { name: 'Review 1', status: 'passed', gradedAt: '23.10.23', lastScore: 98, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 2', status: 'fail', gradedAt: '23.10.24', lastScore: 62, maxScore: 100, retakeCount: 0 },
+      { name: 'Review 3', status: 'passed', gradedAt: '23.10.25', lastScore: 88, maxScore: 100, retakeCount: 2 },
     ],
   },
   {
@@ -132,34 +57,11 @@ export const MOCK_CLINIC_CYCLES: TestBundle[] = [
     assignedLevel: 3,
     wordCount: 47,
     steps: [
-      {
-        name: 'Word',
-        status: 'fail',
-        createdAt: '23.10.24',
-        scores: [62],
-        maxScore: 100,
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Sentence',
-        status: 'locked',
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 1',
-        status: 'locked',
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 2',
-        status: 'locked',
-        testType: 'meaning-to-word',
-      },
-      {
-        name: 'Review 3',
-        status: 'locked',
-        testType: 'meaning-to-word',
-      },
+      { name: 'Word', status: 'fail', gradedAt: '23.10.24', lastScore: 62, maxScore: 100, retakeCount: 0 },
+      { name: 'Sentence', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 1', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 2', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
+      { name: 'Review 3', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 },
     ],
   },
 ];

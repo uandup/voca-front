@@ -1,4 +1,4 @@
-import type { TestSentence } from '@/entities/word';
+import type { SentenceTestItem as TestSentence } from '@/entities/word';
 import type { SentenceTestAnswer } from '@/entities/test';
 import { SentenceAnswerRow } from './SentenceAnswerRow';
 

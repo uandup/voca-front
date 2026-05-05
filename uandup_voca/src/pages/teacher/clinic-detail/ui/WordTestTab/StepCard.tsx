@@ -1,7 +1,7 @@
-import type { Test } from '@/entities/test';
+import type { StepCardVM } from '@/entities/test';
 
 interface StepCardProps {
-  step: Test;
+  step: StepCardVM;
   isSelected: boolean;
   onClick: () => void;
 }
@@ -33,15 +33,15 @@ export default function StepCard({ step, isSelected, onClick }: StepCardProps) {
         </span>
       </div>
 
-      {step.createdAt && (
+      {step.gradedAt && (
         <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          {step.createdAt}
+          {step.gradedAt}
         </span>
       )}
 
-      {(isPassed || isFail) && step.scores && step.scores.length > 0 && (
+      {(isPassed || isFail) && step.lastScore !== null && (
         <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
-          {step.scores[step.scores.length - 1]} / {step.maxScore ?? 'N'}
+          {step.lastScore} / {step.maxScore ?? 'N'}
         </span>
       )}
 

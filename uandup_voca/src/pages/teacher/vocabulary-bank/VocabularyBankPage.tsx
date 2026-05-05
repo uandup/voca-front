@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { TeacherWordCard, WordFormModal, DeleteWordModal, MOCK_WORDS } from '@/entities/word';
-import type { Word } from '@/entities/word';
+import { TeacherWordCard, WordFormModal, DeleteWordModal, MOCK_TEACHER_WORD_CARDS } from '@/entities/word';
+import type { TeacherWordCardVM } from '@/entities/word';
 
 export default function VocabularyBankPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
-  const [editTarget, setEditTarget] = useState<Word | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<Word | null>(null);
+  const [editTarget, setEditTarget] = useState<TeacherWordCardVM | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<TeacherWordCardVM | null>(null);
 
   function handleResetFilters() {
     setSearchQuery('');
     setSelectedLevel('');
   }
 
-  const filtered = MOCK_WORDS.filter((v) => {
+  const filtered = MOCK_TEACHER_WORD_CARDS.filter((v) => {
     const matchesSearch =
       searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,7 +31,7 @@ export default function VocabularyBankPage() {
         <div className="flex gap-3">
           <button
             className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
-            onClick={() => setEditTarget({} as Word)}
+            onClick={() => setEditTarget({} as TeacherWordCardVM)}
           >
             <span className="material-symbols-outlined">add</span>
             <span className="font-bold">Add New Word</span>

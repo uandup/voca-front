@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TEACHER_MOCK, type Teacher as TeacherInfo } from '@/entities/member';
+import { TEACHER_MOCK, type RegisteredTeacherRow } from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -9,7 +9,7 @@ interface Props {
 type Tab = 'teacher' | 'admin';
 
 export function TeacherPermissionModal({ onClose }: Props) {
-  const [teachers, setTeachers] = useState<TeacherInfo[]>(TEACHER_MOCK);
+  const [teachers, setTeachers] = useState<RegisteredTeacherRow[]>(TEACHER_MOCK);
   const [tab, setTab] = useState<Tab>('teacher');
 
   function handleToggleAdmin(id: number) {

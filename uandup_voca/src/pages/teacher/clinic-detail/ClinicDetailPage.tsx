@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { CLINIC_MOCK } from '@/entities/clinic';
+import { MOCK_SESSION_STUDENTS } from '@/entities/clinic';
 import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
-import type { Word } from '@/entities/word';
+import type { WordDifficultyLevel } from '@/entities/word';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
@@ -11,21 +11,20 @@ import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
-type DifficultyLevel = Word['difficulty'];
 
 export function ClinicDetailPage() {
   const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
   const navigate = useNavigate();
 
-  const student = CLINIC_MOCK.sessions
-    .flatMap((s) => s.students)
+  const student = Object.values(MOCK_SESSION_STUDENTS)
+    .flat()
     .find((s) => String(s.id) === studentId);
 
   const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [mainTab, setMainTab] = useState<MainTab>('wordTest');
 
-  const [assignTargetLevel, setAssignTargetLevel] = useState<DifficultyLevel>(4);
+  const [assignTargetLevel, setAssignTargetLevel] = useState<WordDifficultyLevel>(4);
   const [assignQty, setAssignQty] = useState(50);
 
   if (!student) {

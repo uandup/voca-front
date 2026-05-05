@@ -1,64 +1,80 @@
-// ── Test ────────────────────────────
+// ── Domain Primitives ───────────────────────────────────────────────────────
 
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
-
-type TestStep = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
-
-type TestStatus =
-  | 'locked' // 이전 Step 끝나지 않아 잠긴 상태
-  | 'pending' // Step이 열린 후 시험이 생성되지 않은 상태
-  | 'active' // 시험 생성 후 시험 시작 대기 상태
-  | 'grading' // 시험 시작 후 채점 대기 중인 상태
-  | 'fail' // 시험 채점 후 시험 불합격 상태
-  | 'passed'; // 시험 채점 후 시험 합격 상태 ( 다음 Step Open )
-
 export type WordTestType = Exclude<TestType, 'sentence'>;
 
-export interface TestConfig {
+// ── Shared ──────────────────────────────────────────────────────────────────
+
+/** TestConfigBadges, StudentDashboardStats, ClinicStudentRow에서 공통 사용 */
+export interface TestConfigDisplay {
   type: WordTestType;
   includeSynonyms: boolean;
 }
 
-export interface TestBundle {
+// ── Test Step Card ──────────────────────────────────────────────────────────
+
+export type TestStepName = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
+
+export type StepStatus =
+  | 'locked'   // "Locked" 버튼, 비활성
+  | 'pending'  // "Pending Release" 버튼, 비활성
+  | 'active'   // "Start Online Test" 버튼, 활성
+  | 'grading'  // "Awaiting Grading" 버튼, 비활성
+  | 'fail'     // 점수(빨간색) + "Pending Re-Test" + "View Results"
+  | 'passed';  // 점수(초록색) + "View Results"
+
+/** StepCard — WordTestPage CycleRow, ClinicDetailPage WordTestTab */
+export interface StepCardVM {
+  name: TestStepName;
+  status: StepStatus;
+  gradedAt: string | null;
+  lastScore: number | null;
+  maxScore: number | null;
+  retakeCount: number;
+}
+
+// ── Test Bundle Row ─────────────────────────────────────────────────────────
+
+/** WordTestPage CycleRow / ClinicDetailPage WordTestTab row */
+export interface TestBundleRow {
   id: string;
   assignedLevel: number;
   wordCount: number;
-  steps: Test[];
+  steps: StepCardVM[];
 }
 
-export interface Test {
-  name: TestStep;
-  status: TestStatus;
-  testType?: TestType;
-  scores?: number[];
-  maxScore?: number;
-  failState?: 'awaiting-grading';
-  createdAt?: string;
-  gradedAt?: string;
-}
+// ── History Row ─────────────────────────────────────────────────────────────
 
-export interface ReviewDeckTest {
+/** LevelTestHistoryRow, ReviewDeckHistoryRow 공통 status */
+export type HistoryRowStatus = 'active' | 'grading' | 'fail' | 'passed';
+
+/** LevelTestTab (ClinicDetailPage teacher / student LevelTestPage) */
+export interface LevelTestHistoryRow {
   date: string;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-export interface LevelTest {
-  date: string;
+  level: number;
   assignedQty: number;
   testQty: number;
   score: number | null;
-  status: TestStatus;
-  level: number;
+  status: HistoryRowStatus;
 }
 
-// ── Test Answer (답안) ───────────────────────────────────────
+/** ReviewDeckBankTab (ClinicDetailPage teacher / student ReviewDeckPage) */
+export interface ReviewDeckHistoryRow {
+  date: string;
+  quantity: number;
+  score: number | null;
+  status: HistoryRowStatus;
+}
+
+// ── Test Answer ─────────────────────────────────────────────────────────────
+
+/** 단어 시험 답안 (페이지 로컬 state) */
 export interface WordTestAnswer {
   answer: string;
   synonym?: string;
 }
 
+/** 문장 시험 답안 (페이지 로컬 state) */
 export interface SentenceTestAnswer {
   answer: string;
 }

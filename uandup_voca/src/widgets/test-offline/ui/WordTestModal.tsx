@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { PrintActionBar } from './PrintActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-import type { TestWord } from '@/entities/word';
+import type { VocabTestItem as TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;

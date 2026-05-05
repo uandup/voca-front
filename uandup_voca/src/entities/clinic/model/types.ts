@@ -1,14 +1,6 @@
-import type { Student } from '@/entities/member/@x/clinic';
-
-export type { Student as ClinicStudent };
-
-export interface ClinicSession {
+/** ClinicsPage 좌측 세션 목록 item */
+export interface ClinicSessionListItem {
   id: string;
   timeSlot: string;
   enrolled: number;
-  students: Student[];
-}
-
-export interface ClinicData {
-  sessions: ClinicSession[];
 }

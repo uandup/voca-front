@@ -1,10 +1,10 @@
-import type { Test } from '@/entities/test';
+import type { StepCardVM, StepStatus } from '@/entities/test';
 
 interface StepCardProps {
-  step: Test;
+  step: StepCardVM;
 }
 
-const containerClass: Record<Test['status'], string> = {
+const containerClass: Record<StepStatus, string> = {
   locked: 'border border-primary/30 bg-primary/5',
   grading: 'border border-primary/30 bg-primary/5',
   fail: 'border border-error/20 bg-error/5',
@@ -14,9 +14,7 @@ const containerClass: Record<Test['status'], string> = {
 };
 
 export default function StepCard({ step }: StepCardProps) {
-  const { status, name, scores, maxScore: totalScore, gradedAt: gradedDate } = step;
-  const lastScore = scores?.[scores.length - 1];
-  const retakeCount = scores && scores.length > 1 ? scores.length - 1 : 0;
+  const { status, name, lastScore, maxScore: totalScore, gradedAt: gradedDate, retakeCount } = step;
 
   return (
     <div

@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { Student, Parent } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/member';
 import type { WordTestType } from '@/entities/test';
-import { PARENT_MOCK } from '@/entities/member';
 import { ParentListPanel } from './ParentListPanel';
+
+interface ParentEntry {
+  id: number;
+  nameKo: string;
+  phone: string;
+}
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
-  student: Student;
+  student: StudentManageTableRow;
   onClose: () => void;
-  onSave: (updated: Student) => void;
+  onSave: (updated: StudentManageTableRow) => void;
 }
 
 const TEST_TYPES: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -33,9 +38,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
   const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
   const [testType, setTestType] = useState<WordTestType>(student.testConfig.type);
   const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedParent, setSelectedParent] = useState<Parent | null>(
-    student.parentName ? (PARENT_MOCK.find((p) => p.nameKo === student.parentName) ?? null) : null,
-  );
+  const [selectedParent, setSelectedParent] = useState<ParentEntry | null>(null);
   const [showParentList, setShowParentList] = useState(false);
   const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
   const [showClassList, setShowClassList] = useState(false);
@@ -51,8 +54,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
       assignedWordCount: Number(wordCount),
       testQuestionCount: Number(testQuestionCount),
       testConfig: { type: testType, includeSynonyms },
-      parentName: selectedParent ? selectedParent.nameKo : undefined,
-      parentPhone: selectedParent?.phone,
+      parentName: selectedParent ? selectedParent.nameKo : null,
       classes: selectedClasses,
     });
     onClose();

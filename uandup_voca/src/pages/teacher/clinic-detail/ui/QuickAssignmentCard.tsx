@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import type { Word as Vocab } from '@/entities/word';
-
-type DifficultyLevel = Vocab['difficulty'];
+import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
 
 interface Props {
   targetLevel: DifficultyLevel;

@@ -1,13 +1,16 @@
 export type {
   TestType,
   WordTestType,
-  TestConfig,
-  Test,
-  TestBundle,
+  TestConfigDisplay,
+  TestStepName,
+  StepStatus,
+  StepCardVM,
+  TestBundleRow,
+  HistoryRowStatus,
+  LevelTestHistoryRow,
+  ReviewDeckHistoryRow,
   WordTestAnswer,
   SentenceTestAnswer,
-  ReviewDeckTest,
-  LevelTest,
 } from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export {
@@ -16,6 +19,7 @@ export {
   ITEMS_PER_PAGE,
   MOCK_SENTENCE_ITEMS,
   MOCK_VOCAB_ITEMS,
+  MOCK_VOCAB_REVIEW_ITEMS,
   MOCK_ANSWERS_WTM,
   MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,

@@ -1,6 +1,6 @@
-import type { Word } from '../model/types';
+import type { TeacherWordCardVM } from '../model/types';
 
-interface TeacherWordCardProps extends Word {
+interface TeacherWordCardProps extends TeacherWordCardVM {
   onEdit: () => void;
   onDelete: () => void;
 }

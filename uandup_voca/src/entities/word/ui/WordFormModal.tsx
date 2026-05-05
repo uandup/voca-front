@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import type { Word } from '../model/types';
+import type { TeacherWordCardVM, PartOfSpeech, WordDifficultyLevel } from '../model/types';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
-type WordFormData = Omit<Word, 'id'>;
+type WordFormData = Omit<TeacherWordCardVM, 'id'>;
 
 interface WordFormModalProps {
   onClose: () => void;
@@ -10,15 +10,15 @@ interface WordFormModalProps {
   initialData?: Partial<WordFormData>;
 }
 
-const PARTS_OF_SPEECH: Word['partOfSpeech'][] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
+const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
 export function WordFormModal({ onClose, onSave, initialData }: WordFormModalProps) {
   const [word, setWord] = useState(initialData?.word ?? '');
-  const [partOfSpeech, setPartOfSpeech] = useState<Word['partOfSpeech']>(
+  const [partOfSpeech, setPartOfSpeech] = useState<PartOfSpeech>(
     initialData?.partOfSpeech ?? 'N',
   );
   const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
-  const [difficulty, setDifficultyLevel] = useState<Word['difficulty']>(
+  const [difficulty, setDifficultyLevel] = useState<WordDifficultyLevel>(
     initialData?.difficulty ?? 1,
   );
   const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
@@ -89,7 +89,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={partOfSpeech}
-                  onChange={(e) => setPartOfSpeech(e.target.value as Word['partOfSpeech'])}
+                  onChange={(e) => setPartOfSpeech(e.target.value as PartOfSpeech)}
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
                     <option key={pos}>{pos}</option>
@@ -123,7 +123,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={difficulty}
-                  onChange={(e) => setDifficultyLevel(Number(e.target.value) as Word['difficulty'])}
+                  onChange={(e) => setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)}
                 >
                   {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
                     <option key={l} value={l}>
