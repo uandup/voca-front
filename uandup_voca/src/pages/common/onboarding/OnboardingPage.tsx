@@ -92,7 +92,7 @@ export default function OnboardingPage() {
           className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none select-none"
         />
         {/* Left — Hero */}
-        <div className="hidden lg:flex flex-1 w-3/5 flex-col items-center justify-center relative">
+        <div className="pl-20 hidden lg:flex flex-1 w-1/2 flex-col items-center justify-center relative">
           <div className="flex flex-col items-center text-center max-w-lg">
             <div className="flex flex-col items-center justify-center mb-6 opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.3s_forwards]">
               <h1
@@ -142,7 +142,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Right — Sign-up form */}
-        <div className="w-full lg:w-2/5 flex items-center justify-center px-6 py-10 relative">
+        <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-10 relative">
           <div className="w-full max-w-md">
             {/* Card */}
             <div className="bg-surface rounded-2xl p-8 shadow-[0_8px_40px_rgba(0,0,0,0.22)]">

@@ -20,7 +20,7 @@ export const LANDING_CONTENT = {
     curriculum: {
       headline: {
         lines: ['From Level 1 to Level 10,', 'A Vocabulary Curriculum Built to Completion'],
-        fontSize: '1.4rem',
+        fontSize: '1.375rem',
       },
       body: {
         lines: [
