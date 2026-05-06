@@ -10,4 +10,4 @@ export const selectStyle = {
   backgroundPosition: 'right 16px center',
 };
 
-export const GRADES = Array.from({ length: 12 }, (_, i) => `Grade ${i + 1}`);
+export const GRADES = Array.from({ length: 12 }, (_, i) => i + 1);

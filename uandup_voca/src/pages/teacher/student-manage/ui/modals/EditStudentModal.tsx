@@ -1,25 +1,29 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { Student, Parent } from '@/entities/member';
-import type { TestType } from '@/entities/test';
-import { PARENT_MOCK } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/member';
+import type { WordTestType } from '@/entities/test';
 import { ParentListPanel } from './ParentListPanel';
+
+interface ParentEntry {
+  id: number;
+  nameKo: string;
+  phone: string;
+}
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
-  student: Student;
+  student: StudentManageTableRow;
   onClose: () => void;
-  onSave: (updated: Student) => void;
+  onSave: (updated: StudentManageTableRow) => void;
 }
 
-const TEST_TYPES: TestType[] = ['meaning-to-word', 'word-to-meaning'];
+const TEST_TYPES: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
 
-const TEST_TYPE_LABELS: Record<TestType, string> = {
+const TEST_TYPE_LABELS: Record<WordTestType, string> = {
   'meaning-to-word': 'Meaning to Word ( M to W )',
   'word-to-meaning': 'Word to Meaning ( W to M )',
-  sentence: 'Sentence',
 };
 
 const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
@@ -32,11 +36,9 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
   const [level, setLevel] = useState(student.assignedLevel);
   const [wordCount, setWordCount] = useState(String(student.assignedWordCount));
   const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
-  const [testType, setTestType] = useState<TestType>(student.testConfig.type);
+  const [testType, setTestType] = useState<WordTestType>(student.testConfig.type);
   const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedParent, setSelectedParent] = useState<Parent | null>(
-    student.parentName ? (PARENT_MOCK.find((p) => p.nameKo === student.parentName) ?? null) : null,
-  );
+  const [selectedParent, setSelectedParent] = useState<ParentEntry | null>(null);
   const [showParentList, setShowParentList] = useState(false);
   const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
   const [showClassList, setShowClassList] = useState(false);
@@ -52,8 +54,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
       assignedWordCount: Number(wordCount),
       testQuestionCount: Number(testQuestionCount),
       testConfig: { type: testType, includeSynonyms },
-      parentName: selectedParent ? selectedParent.nameKo : undefined,
-      parentPhone: selectedParent?.phone,
+      parentName: selectedParent ? selectedParent.nameKo : null,
       classes: selectedClasses,
     });
     onClose();
@@ -196,7 +197,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
                     value={testType}
-                    onChange={(e) => setTestType(e.target.value as TestType)}
+                    onChange={(e) => setTestType(e.target.value as WordTestType)}
                   >
                     {TEST_TYPES.map((t) => (
                       <option key={t} value={t}>

@@ -1,4 +1,4 @@
-import type { TestConfig, TestType } from '../model/types';
+import type { TestType, TestConfigDisplay } from '../model/types';
 
 const TYPE_STYLES: Record<TestType, string> = {
   'word-to-meaning': 'bg-blue-100 text-blue-700',
@@ -12,7 +12,7 @@ const TYPE_LABELS: Record<TestType, string> = {
   sentence: 'Sentence',
 };
 
-export function TestConfigBadges({ config }: { config: TestConfig }) {
+export function TestConfigBadges({ config }: { config: TestConfigDisplay }) {
   return (
     <div className="flex flex-row items-center gap-1">
       <span

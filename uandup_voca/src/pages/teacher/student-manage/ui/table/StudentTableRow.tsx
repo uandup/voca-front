@@ -1,20 +1,20 @@
-import { AssignedLevelBlocks } from '@/entities/word';
-import type { Student } from '@/entities/member';
+import { LevelBlock } from '@/entities/word';
+import type { StudentManageTableRow } from '@/entities/member';
 import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {
-  onEdit: (student: Student) => void;
-  onDelete: (student: Student) => void;
-  onMemo: (student: Student) => void;
+  onEdit: (student: StudentManageTableRow) => void;
+  onDelete: (student: StudentManageTableRow) => void;
+  onMemo: (student: StudentManageTableRow) => void;
 }
 
 interface StudentTableRowProps {
-  student: Student;
+  student: StudentManageTableRow;
   actions: RowActions;
 }
 
 export function StudentTableRow({ student, actions }: StudentTableRowProps) {
-  const latestMemo = [...student.memos].sort((a, b) => b.date.localeCompare(a.date))[0];
+  const latestMemo = student.latestMemoContent;
 
   return (
     <tr className="hover:bg-surface-container-low/30 transition-colors group">
@@ -38,7 +38,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       {/* Level */}
       <td className="px-4 py-4 text-center border-r border-outline-variant/20">
         <div className="flex justify-center">
-          <AssignedLevelBlocks level={student.assignedLevel} />
+          <LevelBlock level={student.assignedLevel} />
         </div>
       </td>
 
@@ -84,7 +84,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <div className="flex items-center gap-1.5">
           <p className="text-xs text-on-surface-variant truncate flex-1">
-            {latestMemo ? latestMemo.content : '—'}
+            {latestMemo ?? '—'}
           </p>
           <button
             onClick={() => actions.onMemo(student)}

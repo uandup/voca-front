@@ -1,2 +1,2 @@
-export type { ClinicSession, ClinicData, ClinicStudent } from './model/types';
-export { CLINIC_MOCK } from './lib/mockData';
+export type { ClinicSessionListItem } from './model/types';
+export { MOCK_CLINIC_SESSIONS, MOCK_SESSION_STUDENTS } from './lib/mockData';

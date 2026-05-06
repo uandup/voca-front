@@ -1,30 +1,30 @@
 import { useState } from 'react';
-import type { Word } from '@/entities/word';
+import type { TeacherWordCardVM, PartOfSpeech, WordDifficultyLevel } from '../model/types';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
-type WordFormData = Omit<Word, 'id'>;
+type WordFormData = Omit<TeacherWordCardVM, 'id'>;
 
-interface VocabModalProps {
+interface WordFormModalProps {
   onClose: () => void;
   onSave: (data: WordFormData) => void;
   initialData?: Partial<WordFormData>;
 }
 
-const PARTS_OF_SPEECH: Word['partOfSpeech'][] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
+const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
-export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
+export function WordFormModal({ onClose, onSave, initialData }: WordFormModalProps) {
   const [word, setWord] = useState(initialData?.word ?? '');
-  const [partOfSpeech, setPartOfSpeech] = useState<Word['partOfSpeech']>(
+  const [partOfSpeech, setPartOfSpeech] = useState<PartOfSpeech>(
     initialData?.partOfSpeech ?? 'N',
   );
   const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
-  const [difficultyLevel, setDifficultyLevel] = useState<Word['difficultyLevel']>(
-    initialData?.difficultyLevel ?? 1,
+  const [difficulty, setDifficultyLevel] = useState<WordDifficultyLevel>(
+    initialData?.difficulty ?? 1,
   );
   const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
   const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
   const [synonymInput, setSynonymInput] = useState('');
-  const [exampleSentence, setExampleSentence] = useState(initialData?.exampleSentence ?? '');
+  const [sentence, setExampleSentence] = useState(initialData?.sentence ?? '');
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing && synonymInput.trim()) {
@@ -43,17 +43,16 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
       word,
       partOfSpeech,
       korMeaning,
-      difficultyLevel,
+      difficulty: difficulty,
       engMeaning,
       synonyms,
-      exampleSentence,
+      sentence,
     });
   }
 
   return (
     <ModalBackdrop onClose={onClose}>
       <div className="bg-white w-full max-w-160 rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col max-h-[90vh]">
-        {/* Header */}
         <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
@@ -68,9 +67,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
           </button>
         </div>
 
-        {/* Body */}
         <div className="px-10 pb-10 space-y-4 overflow-y-auto">
-          {/* Row 1: Word & POS */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
@@ -92,7 +89,7 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={partOfSpeech}
-                  onChange={(e) => setPartOfSpeech(e.target.value as Word['partOfSpeech'])}
+                  onChange={(e) => setPartOfSpeech(e.target.value as PartOfSpeech)}
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
                     <option key={pos}>{pos}</option>
@@ -105,7 +102,6 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
             </div>
           </div>
 
-          {/* Row 2: Korean Meaning & Difficulty */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
@@ -126,10 +122,8 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               <div className="relative">
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
-                  value={difficultyLevel}
-                  onChange={(e) =>
-                    setDifficultyLevel(Number(e.target.value) as Word['difficultyLevel'])
-                  }
+                  value={difficulty}
+                  onChange={(e) => setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)}
                 >
                   {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
                     <option key={l} value={l}>
@@ -144,7 +138,6 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
             </div>
           </div>
 
-          {/* English Meaning */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               English Meaning
@@ -158,7 +151,6 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
             />
           </div>
 
-          {/* Synonyms */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Synonyms
@@ -190,7 +182,6 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
             </div>
           </div>
 
-          {/* Example Sentence */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Example Sentence
@@ -199,12 +190,11 @@ export function VocabModal({ onClose, onSave, initialData }: VocabModalProps) {
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
-              value={exampleSentence}
+              value={sentence}
               onChange={(e) => setExampleSentence(e.target.value)}
             />
           </div>
 
-          {/* Actions */}
           <div className="flex items-center justify-end gap-6">
             <button
               type="button"

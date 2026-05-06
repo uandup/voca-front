@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { PrintActionBar } from './PrintActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-import type { WordTestItem } from '@/entities/word';
+import type { VocabTestItem as TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -11,7 +11,7 @@ const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 
 interface TestWMSPrintModalProps {
   onClose: () => void;
-  rows: WordTestItem[];
+  rows: TestWord[];
   testType?: TestType;
   includeSynonyms?: boolean;
 }
@@ -53,7 +53,7 @@ function WordSheet({
   hidden,
 }: {
   id: string;
-  pageRows: WordTestItem[];
+  pageRows: TestWord[];
   page: number;
   showWord: boolean;
   showKor: boolean;

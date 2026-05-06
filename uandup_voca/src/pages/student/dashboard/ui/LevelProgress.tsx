@@ -1,7 +1,7 @@
-import type { Student } from '@/entities/member';
+import type { StudentDashboardStats } from '@/entities/member';
 
 interface Props {
-  student: Pick<Student, 'assignedLevel' | 'assignedWordCount' | 'testConfig'>;
+  student: Pick<StudentDashboardStats, 'assignedLevel' | 'assignedWordCount' | 'testConfig'>;
 }
 
 const TOTAL_LEVELS = 10;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import type { Student } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/member';
 import { STUDENT_MOCK as STUDENT_MANAGE_MOCK } from '@/entities/member';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
@@ -12,15 +12,15 @@ export default function StudentManagePage() {
   const [gradeFilter, setGradeFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState<number | ''>('');
   const [classFilter, setClassFilter] = useState('');
-  const [students, setStudents] = useState<Student[]>(STUDENT_MANAGE_MOCK);
-  const [editingStudent, setEditingStudent] = useState<Student | null>(null);
-  const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
-  const [memoStudent, setMemoStudent] = useState<Student | null>(null);
+  const [students, setStudents] = useState<StudentManageTableRow[]>(STUDENT_MANAGE_MOCK);
+  const [editingStudent, setEditingStudent] = useState<StudentManageTableRow | null>(null);
+  const [deletingStudent, setDeletingStudent] = useState<StudentManageTableRow | null>(null);
+  const [memoStudent, setMemoStudent] = useState<StudentManageTableRow | null>(null);
 
   const grades = [...new Set(students.map((s) => s.grade))].sort((a, b) => a - b);
   const allClasses = [...new Set(students.flatMap((s) => s.classes))].sort();
 
-  function handleSave(updated: Student) {
+  function handleSave(updated: StudentManageTableRow) {
     setStudents((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
   }
 

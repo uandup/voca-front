@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { AssignedLevelBlocks } from '@/entities/word';
+import { LevelBlock } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 import type { WordDifficultyLevel } from '@/entities/word';
 import { MOCK_CLINIC_LEVEL_TEST_HISTORY } from '@/entities/test';
@@ -164,10 +164,10 @@ export function LevelTestTab() {
                     {row.date}
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    <AssignedLevelBlocks level={row.level} />
+                    <LevelBlock level={row.level} />
                   </td>
                   <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
-                    {row.quantity}
+                    {row.assignedQty}
                   </td>
                   <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
                     <span
@@ -179,11 +179,11 @@ export function LevelTestTab() {
                             : 'text-on-surface-variant/40'
                       }
                     >
-                      {row.score !== null ? `${row.score}/${row.quantity}` : '--'}
+                      {row.score !== null ? `${row.score}/${row.testQty}` : `- / ${row.testQty}`}
                     </span>
                   </td>
                   <td className="px-4 py-4 border-r border-outline-variant/20">
-                    {row.status === 'pending' ? (
+                    {row.status === 'active' ? (
                       <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
                         Pending
                       </span>
@@ -199,7 +199,7 @@ export function LevelTestTab() {
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'pending' ? (
+                      {row.status === 'active' ? (
                         <>
                           <button className="px-4 py-1.5 border border-outline-variant/30 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 hover:text-primary transition-colors">
                             Preview

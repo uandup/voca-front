@@ -25,9 +25,10 @@ interface Props {
   lang: Lang;
   t: LandingContent['nav'];
   onToggleLang: () => void;
+  onGoogleLogin: () => void;
 }
 
-export function LandingNav({ lang, t, onToggleLang }: Props) {
+export function LandingNav({ lang, t, onToggleLang, onGoogleLogin }: Props) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur border-b border-outline-variant">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -52,13 +53,13 @@ export function LandingNav({ lang, t, onToggleLang }: Props) {
           </div>
 
           {/* 구글 로그인 버튼 */}
-          <a
-            href={`${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`}
+          <button
+            onClick={onGoogleLogin}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-outline-variant bg-surface text-on-surface text-sm font-medium hover:bg-surface-container-low transition-colors"
           >
             <GoogleIcon />
             {t.googleLogin}
-          </a>
+          </button>
         </div>
       </div>
     </header>

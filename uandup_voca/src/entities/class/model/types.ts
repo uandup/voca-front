@@ -1,32 +1,6 @@
-export interface Class {
+/** ClassManageModal — 클래스 목록 edit/delete row */
+/** ClassListPanel — 클래스 선택 체크박스 목록 */
+export interface ClassListItem {
   id: number;
   name: string;
-}
-
-export interface ClassMember {
-  classId: number;
-  memberId: number;
-}
-
-export interface TimetableCellDef {
-  label: string;
-  style: string;
-  colSpan?: number;
-  classId?: number;
-}
-
-export interface TimetableTimeSlot {
-  time: string;
-  isBreak?: boolean;
-  cols?: (TimetableCellDef | null)[];
-}
-
-export interface TimetableGridCell {
-  label: string;
-  style: string;
-  colSpan: number;
-  rowSpan: number;
-  skip: boolean;
-  isBreak: boolean;
-  classId?: number;
 }

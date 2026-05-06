@@ -1,10 +1,22 @@
 import { useState } from 'react';
-import type { Parent } from '@/entities/member';
-import { PARENT_MOCK } from '@/entities/member';
+
+interface ParentEntry {
+  id: number;
+  nameKo: string;
+  phone: string;
+}
+
+const PARENT_MOCK: ParentEntry[] = [
+  { id: 1, nameKo: '김철수', phone: '010-1234-5678' },
+  { id: 2, nameKo: '이상훈', phone: '010-2345-6789' },
+  { id: 3, nameKo: '박영미', phone: '010-3456-7890' },
+  { id: 4, nameKo: '최영진', phone: '010-4567-8901' },
+  { id: 5, nameKo: '정미경', phone: '010-5678-9012' },
+];
 
 interface ParentListPanelProps {
   selectedId: number | null;
-  onSelect: (parent: Parent) => void;
+  onSelect: (parent: ParentEntry) => void;
 }
 
 export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) {

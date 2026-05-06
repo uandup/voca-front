@@ -1,4 +1,4 @@
-import type { VocabTestType } from '@/entities/test';
+import type { WordTestType } from '@/entities/test';
 import type { Answer } from '../../test/ui/VocabAnswerRow';
 
 interface VocabReviewRowProps {
@@ -7,7 +7,7 @@ interface VocabReviewRowProps {
   korMeaning: string;
   engMeaning: string;
   synonymAnswer: string;
-  testType: VocabTestType;
+  testType: WordTestType;
   showSynonym: boolean;
   answer: Answer | undefined;
   isWrong: boolean;
@@ -30,7 +30,7 @@ export function VocabReviewRow({
   hideCheckbox = false,
   onToggleWrong,
 }: VocabReviewRowProps) {
-  const studentMeaning = answer?.meaning ?? '';
+  const studentMeaning = answer?.answer ?? '';
   const studentSynonym = answer?.synonym ?? '';
   const isWordToMeaning = testType === 'word-to-meaning';
 

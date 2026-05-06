@@ -92,7 +92,7 @@ export function UnassignedStudentsModal({ onClose }: UnassignedStudentsModalProp
                       <p className="font-headline font-bold text-sm text-on-surface">
                         {student.nameKo}
                         <span className="text-xs font-medium text-on-surface-variant ml-1.5">
-                          ( {student.name} · G{student.grade} )
+                          ( {student.nameFirstEn} {student.nameLastEn} · G{student.grade} )
                         </span>
                       </p>
                       {student.clinics.length > 0 ? (

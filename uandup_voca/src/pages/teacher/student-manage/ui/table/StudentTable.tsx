@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import type { Student } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/member';
 import { StudentTableRow, type RowActions } from './StudentTableRow';
 
 type SortKey = keyof Pick<
-  Student,
+  StudentManageTableRow,
   'nameKo' | 'grade' | 'assignedLevel' | 'assignedWordCount' | 'testQuestionCount' | 'accuracy'
 >;
 type SortDir = 'asc' | 'desc';
@@ -22,7 +22,11 @@ const COLUMNS: { label: string; key?: SortKey; className?: string }[] = [
   { label: 'Actions', className: 'text-right' },
 ];
 
-function sortStudents(data: Student[], key: SortKey, dir: SortDir): Student[] {
+function sortStudents(
+  data: StudentManageTableRow[],
+  key: SortKey,
+  dir: SortDir,
+): StudentManageTableRow[] {
   return [...data].sort((a, b) => {
     const av = key === 'accuracy' ? parseFloat(a[key] ?? '0') : (a[key] as number | string);
     const bv = key === 'accuracy' ? parseFloat(b[key] ?? '0') : (b[key] as number | string);
@@ -33,7 +37,7 @@ function sortStudents(data: Student[], key: SortKey, dir: SortDir): Student[] {
 }
 
 interface StudentTableProps {
-  students: Student[];
+  students: StudentManageTableRow[];
   actions: RowActions;
 }
 

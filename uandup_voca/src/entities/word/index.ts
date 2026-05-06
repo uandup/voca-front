@@ -1,10 +1,17 @@
 export type {
-  Word,
-  WordListItem,
-  WordTestItem,
   PartOfSpeech,
   WordDifficultyLevel,
+  WordCard,
+  WrongWordCard,
+  TeacherWordCardVM,
+  VocabTestItem,
+  SentenceTestItem,
+  VocabReviewItem,
+  SentenceReviewItem,
 } from './model/types';
-export { AssignedLevelBlocks } from './ui/AssignedLevelBlocks';
-export { VocabCard } from './ui/VocabCard';
-export { MOCK_WORDS, MOCK_WRONG_WORDS } from './lib/mockData';
+export { LevelBlock } from './ui/LevelBlock';
+export { StudentWordCard } from './ui/StudentWordCard';
+export { TeacherWordCard } from './ui/TeacherWordCard';
+export { WordFormModal } from './ui/WordFormModal';
+export { DeleteWordModal } from './ui/DeleteWordModal';
+export { MOCK_WORDS, MOCK_WRONG_WORDS, MOCK_TEACHER_WORD_CARDS } from './lib/mockData';

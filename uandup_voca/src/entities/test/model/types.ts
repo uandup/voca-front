@@ -1,109 +1,80 @@
-export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
+// ── Domain Primitives ───────────────────────────────────────────────────────
 
-export interface TestConfig {
-  type: TestType;
+export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
+export type WordTestType = Exclude<TestType, 'sentence'>;
+
+// ── Shared ──────────────────────────────────────────────────────────────────
+
+/** TestConfigBadges, StudentDashboardStats, ClinicStudentRow에서 공통 사용 */
+export interface TestConfigDisplay {
+  type: WordTestType;
   includeSynonyms: boolean;
 }
 
-export type TestStepStatus =
-  | 'locked'
-  | 'waiting'
-  | 'available'
-  | 'grading'
-  | 'fail'
-  | 'passed'
-  | 'active'
-  | 'pending';
+// ── Test Step Card ──────────────────────────────────────────────────────────
 
-export type TestStatus = 'pending' | 'awaiting-test' | 'awaiting-grading' | 'completed' | 'fail';
+export type TestStepName = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
 
-export interface TestStep {
-  key: string;
-  label: string;
-  status: TestStepStatus;
-  testType?: TestType;
-  scores?: string[];
-  totalScore?: string;
-  gradedDate?: string;
-  scheduledDate?: string;
-  subLabel?: string;
-  failState?: 'fail' | 'awaiting';
-  isPassed?: boolean;
-  date?: string;
+export type StepStatus =
+  | 'locked' // "Locked" 버튼, 비활성
+  | 'pending' // "Pending Release" 버튼, 비활성
+  | 'active' // "Start Online Test" 버튼, 활성
+  | 'grading' // "Awaiting Grading" 버튼, 비활성
+  | 'fail' // 점수(빨간색) + "Pending Re-Test" + "View Results"
+  | 'passed'; // 점수(초록색) + "View Results"
+
+/** StepCard — WordTestPage CycleRow, ClinicDetailPage WordTestTab */
+export interface StepCardVM {
+  name: TestStepName;
+  status: StepStatus;
+  gradedAt: string | null;
+  lastScore: number | null;
+  maxScore: number | null;
+  retakeCount: number;
 }
 
-export interface TestCycle {
+// ── Test Bundle Row ─────────────────────────────────────────────────────────
+
+/** WordTestPage CycleRow / ClinicDetailPage WordTestTab row */
+export interface TestBundleRow {
   id: string;
   assignedLevel: number;
   wordCount: number;
-  steps: TestStep[];
+  steps: StepCardVM[];
 }
 
-export interface TestRecord {
-  id: string;
-  date: string;
-  testType: TestType;
-  assignedLevel?: number;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
+// ── History Row ─────────────────────────────────────────────────────────────
 
-export interface TestScore {
-  score: number;
-  total: number;
-  date: string;
-}
+/** LevelTestHistoryRow, ReviewDeckHistoryRow 공통 status */
+export type HistoryRowStatus = 'active' | 'grading' | 'fail' | 'passed';
 
-export interface TestItem {
-  id: number;
-  testId: number;
-  wordId: number;
-  studentAnswer: string | null;
-  isCorrect: boolean | null;
-}
-
-export interface SentenceItem {
-  id: number;
-  sentence: string;
-  answerWord?: string;
-}
-
-export interface TestInfo {
-  title: string;
-  subtitle: string;
-  description: string;
-  totalQuestions: number;
-  durationSeconds: number;
-}
-
-export interface TestVocabAnswer {
-  meaning: string;
-  synonym: string;
-}
-
-export interface TestSentenceAnswer {
-  word: string;
-}
-
-export interface WrongWordTestRecord {
-  date: string;
-  quantity: number;
-  score: number | null;
-  status: TestStatus;
-}
-
-export interface LevelTestRecord {
+/** LevelTestTab (ClinicDetailPage teacher / student LevelTestPage) */
+export interface LevelTestHistoryRow {
   date: string;
   level: number;
-  quantity: number;
+  assignedQty: number;
+  testQty: number;
   score: number | null;
-  status: TestStatus;
+  status: HistoryRowStatus;
 }
 
-export interface ClinicCycle {
-  title: string;
-  badge?: string;
-  scheduledDate: string;
-  steps: TestStep[];
+/** ReviewDeckBankTab (ClinicDetailPage teacher / student ReviewDeckPage) */
+export interface ReviewDeckHistoryRow {
+  date: string;
+  quantity: number;
+  score: number | null;
+  status: HistoryRowStatus;
+}
+
+// ── Test Answer ─────────────────────────────────────────────────────────────
+
+/** 단어 시험 답안 (페이지 로컬 state) */
+export interface WordTestAnswer {
+  answer: string;
+  synonym?: string;
+}
+
+/** 문장 시험 답안 (페이지 로컬 state) */
+export interface SentenceTestAnswer {
+  answer: string;
 }

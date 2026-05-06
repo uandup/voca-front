@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { TestStep, TestType } from '@/entities/test';
+import type { StepCardVM, TestType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import {
@@ -10,10 +10,10 @@ import {
   SentenceGradingModal,
   SentenceResultModal,
 } from '@/widgets/test-offline';
-import { MOCK_VOCAB_LIST, MOCK_ES_ROWS } from '@/entities/test';
+import { MOCK_VOCAB_REVIEW_ITEMS, MOCK_ES_ROWS } from '@/entities/test';
 
 interface StepPanelProps {
-  step: TestStep;
+  step: StepCardVM;
 }
 
 type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
@@ -24,7 +24,7 @@ interface TestConfig {
   includeSynonyms: boolean;
 }
 
-function inferPhase(step: TestStep): PanelPhase {
+function inferPhase(step: StepCardVM): PanelPhase {
   if (step.status === 'passed') return 'passed';
   if (step.status === 'fail') return 'fail';
   if (step.status === 'active') return 'created';
@@ -55,20 +55,20 @@ export default function StepPanel({ step }: StepPanelProps) {
         />
       )}
 
-      {showPrintModal && step.key === 'sentence' ? (
+      {showPrintModal && step.name === 'Sentence' ? (
         <SentenceModal onClose={() => setShowPrintModal(false)} rows={MOCK_ES_ROWS} />
       ) : (
         showPrintModal && (
           <WordTestModal
             onClose={() => setShowPrintModal(false)}
-            rows={MOCK_VOCAB_LIST}
+            rows={MOCK_VOCAB_REVIEW_ITEMS}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
         )
       )}
 
-      {showGradingModal && step.key === 'sentence' ? (
+      {showGradingModal && step.name === 'Sentence' ? (
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
           onGrade={() => console.warn('Grade submitted')}
@@ -79,14 +79,14 @@ export default function StepPanel({ step }: StepPanelProps) {
           <WordGradingModal
             onClose={() => setShowGradingModal(false)}
             onGrade={() => console.warn('Grade submitted')}
-            rows={MOCK_VOCAB_LIST}
+            rows={MOCK_VOCAB_REVIEW_ITEMS}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
         )
       )}
 
-      {showResultModal && step.key === 'sentence' ? (
+      {showResultModal && step.name === 'Sentence' ? (
         <SentenceResultModal
           onClose={() => setShowResultModal(false)}
           rows={MOCK_ES_ROWS}
@@ -96,7 +96,7 @@ export default function StepPanel({ step }: StepPanelProps) {
         showResultModal && (
           <WordResultModal
             onClose={() => setShowResultModal(false)}
-            rows={MOCK_VOCAB_LIST}
+            rows={MOCK_VOCAB_REVIEW_ITEMS}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
             wrongIndices={[1, 4, 7]}
@@ -260,7 +260,7 @@ function CreatedPanel({
   onGradeOnline,
   onGradeOffline,
 }: {
-  step: TestStep;
+  step: StepCardVM;
   onOpenPrint: () => void;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
@@ -268,12 +268,12 @@ function CreatedPanel({
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.gradedAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.gradedAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -281,7 +281,7 @@ function CreatedPanel({
             check_circle
           </span>
           <span>
-            Score : {step.scores?.[0] ?? '-'} / {step.totalScore ?? 'N'}
+            Score : {step.lastScore ?? '-'} / {step.maxScore ?? 'N'}
           </span>
         </div>
       </div>
@@ -334,22 +334,21 @@ function FailPanel({
   onOpenGrading,
   onOpenResult,
 }: {
-  step: TestStep;
+  step: StepCardVM;
   onOpenGrading: () => void;
   onOpenResult: () => void;
 }) {
-  const [failState, setFailState] = useState<'fail' | 'awaiting'>(step.failState ?? 'fail');
-  const scores = step.scores ?? [];
+  const [isAwaitingGrading, setIsAwaitingGrading] = useState(false);
 
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.gradedAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.gradedAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -358,23 +357,18 @@ function FailPanel({
           </span>
           <span className="flex items-center gap-1.5">
             Score :{' '}
-            {scores.length > 0 ? (
-              scores.map((score, i) => (
-                <span key={i} className="flex items-center gap-1.5">
-                  {i > 0 && <span className="text-on-surface-variant">→</span>}
-                  <span className="text-error font-semibold">
-                    {score} / {step.totalScore ?? 'N'}
-                  </span>
-                </span>
-              ))
+            {step.lastScore !== null ? (
+              <span className="text-error font-semibold">
+                {step.lastScore} / {step.maxScore ?? 'N'}
+              </span>
             ) : (
-              <span className="text-error font-semibold">- / {step.totalScore ?? 'N'}</span>
+              <span className="text-error font-semibold">- / {step.maxScore ?? 'N'}</span>
             )}
-            {failState === 'awaiting' && (
+            {isAwaitingGrading && (
               <>
                 <span className="text-on-surface-variant">→</span>
                 <span className="text-on-surface-variant font-semibold">
-                  - / {step.totalScore ?? 'N'}
+                  - / {step.maxScore ?? 'N'}
                 </span>
               </>
             )}
@@ -384,25 +378,25 @@ function FailPanel({
 
       {/* DEV ONLY */}
       <div className="flex items-center gap-3 text-xs text-on-surface-variant">
-        {(['fail', 'awaiting'] as const).map((s) => (
-          <label key={s} className="flex items-center gap-1 cursor-pointer">
+        {([false, true] as const).map((v) => (
+          <label key={String(v)} className="flex items-center gap-1 cursor-pointer">
             <input
               type="radio"
-              checked={failState === s}
-              onChange={() => setFailState(s)}
+              checked={isAwaitingGrading === v}
+              onChange={() => setIsAwaitingGrading(v)}
               className="accent-primary"
             />
-            {s}
+            {v ? 'awaiting-grading' : 'fail'}
           </label>
         ))}
       </div>
 
       <div className="flex items-center gap-2">
         <button
-          disabled={failState === 'awaiting'}
+          disabled={isAwaitingGrading}
           className="px-4 py-2 rounded-xl bg-error text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-error/20 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {failState === 'awaiting' ? 'Awaiting Grading' : 'Retake Test'}
+          {isAwaitingGrading ? 'Awaiting Grading' : 'Retake Test'}
         </button>
         <button
           onClick={onOpenResult}
@@ -410,7 +404,7 @@ function FailPanel({
         >
           View Results
         </button>
-        {failState === 'awaiting' && (
+        {isAwaitingGrading && (
           <div className="ml-auto">
             <button
               onClick={onOpenGrading}
@@ -425,18 +419,16 @@ function FailPanel({
   );
 }
 
-function PassedPanel({ step, onOpenResult }: { step: TestStep; onOpenResult: () => void }) {
-  const scores = step.scores ?? [];
-
+function PassedPanel({ step, onOpenResult }: { step: StepCardVM; onOpenResult: () => void }) {
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.date && (
+        {step.gradedAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.date}</span>
+            <span>Created At : {step.gradedAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">
@@ -445,16 +437,13 @@ function PassedPanel({ step, onOpenResult }: { step: TestStep; onOpenResult: () 
           </span>
           <span className="flex items-center gap-1.5">
             Score :{' '}
-            {scores.map((score, i) => (
-              <span key={i} className="flex items-center gap-1.5">
-                {i > 0 && <span className="text-on-surface-variant">→</span>}
-                <span
-                  className={`font-semibold ${i === scores.length - 1 ? 'text-success' : 'text-error'}`}
-                >
-                  {score} / {step.totalScore ?? 'N'}
-                </span>
+            {step.lastScore !== null ? (
+              <span className="font-semibold text-success">
+                {step.lastScore} / {step.maxScore ?? 'N'}
               </span>
-            ))}
+            ) : (
+              <span>- / {step.maxScore ?? 'N'}</span>
+            )}
           </span>
         </div>
       </div>

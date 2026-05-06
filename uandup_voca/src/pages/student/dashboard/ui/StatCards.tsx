@@ -1,7 +1,7 @@
-import type { Student } from '@/entities/member';
+import type { StudentDashboardStats } from '@/entities/member';
 
 interface Props {
-  student: Pick<Student, 'accuracy' | 'assignedWordCount'>;
+  student: Pick<StudentDashboardStats, 'accuracy' | 'assignedWordCount'>;
 }
 
 export function StatCards({ student }: Props) {

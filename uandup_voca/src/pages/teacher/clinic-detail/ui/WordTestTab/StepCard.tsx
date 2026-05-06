@@ -1,7 +1,7 @@
-import type { TestStep } from '@/entities/test';
+import type { StepCardVM } from '@/entities/test';
 
 interface StepCardProps {
-  step: TestStep;
+  step: StepCardVM;
   isSelected: boolean;
   onClick: () => void;
 }
@@ -29,25 +29,25 @@ export default function StepCard({ step, isSelected, onClick }: StepCardProps) {
         <span
           className={`text-sm font-bold leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface'}`}
         >
-          {step.label}
+          {step.name}
         </span>
       </div>
 
-      {step.date && (
+      {step.gradedAt && (
         <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          {step.date}
+          {step.gradedAt}
         </span>
       )}
 
-      {(isPassed || isFail) && step.scores && step.scores.length > 0 && (
+      {(isPassed || isFail) && step.lastScore !== null && (
         <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
-          {step.scores[step.scores.length - 1]} / {step.totalScore ?? 'N'}
+          {step.lastScore} / {step.maxScore ?? 'N'}
         </span>
       )}
 
-      {step.subLabel && (
+      {step.status === 'locked' && (
         <span className={`text-xs font-medium ${isLocked ? 'text-slate-400' : 'text-slate-500'}`}>
-          {step.subLabel}
+          Locked
         </span>
       )}
     </button>

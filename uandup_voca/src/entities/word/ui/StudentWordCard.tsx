@@ -1,28 +1,25 @@
 import type { ReactNode } from 'react';
-import type { Word } from '../model/types';
+import type { WordCard } from '../model/types';
 
-interface VocabCardProps extends Pick<
-  Word,
-  'word' | 'partOfSpeech' | 'korMeaning' | 'engMeaning' | 'synonyms' | 'difficultyLevel'
-> {
+interface StudentWordCardProps extends Omit<WordCard, 'id'> {
   extraInfo?: ReactNode;
 }
 
-export function VocabCard({
-  difficultyLevel,
+export function StudentWordCard({
+  difficulty: difficulty,
   word,
   partOfSpeech,
   korMeaning,
   engMeaning,
   synonyms,
   extraInfo,
-}: VocabCardProps) {
+}: StudentWordCardProps) {
   return (
     <div className="group relative overflow-hidden rounded-xl bg-surface-container-lowest py-5 px-6 border shadow-sm border-outline-variant/60">
       <div className="flex flex-col md:flex-row items-start justify-between gap-6">
         <div className="w-full md:w-1/3 space-y-2">
           <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-            LEVEL {difficultyLevel}
+            LEVEL {difficulty}
           </span>
           <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>
         </div>

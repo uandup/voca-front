@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import StepCard from './StepCard';
-import type { TestCycle } from '@/entities/test';
+import type { TestBundleRow } from '@/entities/test';
 
-export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestCycle) {
+export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBundleRow) {
   const navigate = useNavigate();
 
   return (
@@ -34,9 +34,9 @@ export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestCy
       <div className="flex items-stretch gap-0">
         {steps.map((step, idx) => {
           const isInactive =
-            step.status === 'locked' || step.status === 'waiting' || step.status === 'grading';
+            step.status === 'locked' || step.status === 'pending' || step.status === 'grading';
           return (
-            <Fragment key={step.key}>
+            <Fragment key={step.name}>
               <div className="relative flex-1 min-w-0 h-44">
                 <StepCard step={step} />
                 {isInactive && <div className="absolute inset-0 rounded-2xl bg-white/60" />}

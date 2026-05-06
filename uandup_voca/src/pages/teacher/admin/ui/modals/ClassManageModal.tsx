@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { Class } from '@/entities/class';
+import type { ClassListItem as Class } from '@/entities/class';
 import { CLASS_MOCK } from '@/entities/class';
 
 interface Props {

@@ -1,8 +1,8 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { Student } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/member';
 
 interface DeleteConfirmModalProps {
-  student: Student;
+  student: StudentManageTableRow;
   onClose: () => void;
   onConfirm: (id: number) => void;
 }

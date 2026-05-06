@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { AssignedLevelBlocks } from '@/entities/word';
-import { CLINIC_MOCK, type ClinicStudent } from '@/entities/clinic';
+import { LevelBlock } from '@/entities/word';
+import { MOCK_CLINIC_SESSIONS, MOCK_SESSION_STUDENTS } from '@/entities/clinic';
+import type { ClinicStudentRow } from '@/entities/member';
 import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
 import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
@@ -29,10 +30,11 @@ function getTimeGroup(timeSlot: string): TimeGroup {
 }
 
 export default function ClinicsPage() {
-  const [sessions, setSessions] = useState(CLINIC_MOCK.sessions);
+  const [sessions] = useState(MOCK_CLINIC_SESSIONS);
+  const [sessionStudents, setSessionStudents] = useState(MOCK_SESSION_STUDENTS);
   const [selectedDay, setSelectedDay] = useState<Day>(todayDay);
-  const [selectedSessionId, setSelectedSessionId] = useState<string>(CLINIC_MOCK.sessions[0].id);
-  const [memoStudent, setMemoStudent] = useState<ClinicStudent | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<string>(MOCK_CLINIC_SESSIONS[0].id);
+  const [memoStudent, setMemoStudent] = useState<ClinicStudentRow | null>(null);
   const navigate = useNavigate();
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<TimeGroup, boolean>>({
@@ -45,7 +47,7 @@ export default function ClinicsPage() {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   }
 
-  const selectedSession = sessions.find((s) => s.id === selectedSessionId) ?? sessions[0];
+  const selectedStudents = sessionStudents[selectedSessionId] ?? [];
 
   function handlePrevDay() {
     const idx = DAYS.indexOf(selectedDay);
@@ -58,12 +60,15 @@ export default function ClinicsPage() {
   }
 
   function handleMemoChange(studentId: number, newMemos: MemoItem[]) {
-    setSessions((prev) =>
-      prev.map((session) => ({
-        ...session,
-        students: session.students.map((s) => (s.id === studentId ? { ...s, memos: newMemos } : s)),
-      })),
-    );
+    setSessionStudents((prev) => {
+      const updated = { ...prev };
+      for (const sid of Object.keys(updated)) {
+        updated[sid] = updated[sid].map((s) =>
+          s.id === studentId ? { ...s, memos: newMemos } : s,
+        );
+      }
+      return updated;
+    });
     setMemoStudent((prev) => (prev?.id === studentId ? { ...prev, memos: newMemos } : prev));
   }
 
@@ -211,76 +216,71 @@ export default function ClinicsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/20">
-                  {selectedSession.students.map((student) => {
-                    const latestMemo = [...student.memos].sort((a, b) =>
-                      b.date.localeCompare(a.date),
-                    )[0];
-                    return (
-                      <tr
-                        key={student.id}
-                        onClick={() =>
-                          navigate({
-                            to: '/teacher/clinics/students/$studentId',
-                            params: { studentId: String(student.id) },
-                          })
-                        }
-                        className="transition-colors group hover:bg-surface-container-low/30 cursor-pointer"
-                      >
-                        <td className="px-4 py-4 border-r border-outline-variant/20">
-                          <p className="font-headline font-bold text-sm text-primary">
-                            {student.nameKo}
+                  {selectedStudents.map((student) => (
+                    <tr
+                      key={student.id}
+                      onClick={() =>
+                        navigate({
+                          to: '/teacher/clinics/students/$studentId',
+                          params: { studentId: String(student.id) },
+                        })
+                      }
+                      className="transition-colors group hover:bg-surface-container-low/30 cursor-pointer"
+                    >
+                      <td className="px-4 py-4 border-r border-outline-variant/20">
+                        <p className="font-headline font-bold text-sm text-primary">
+                          {student.nameKo}
+                        </p>
+                        <p className="text-xs text-on-surface-variant mt-0.5">
+                          {student.nameFirstEn} {student.nameLastEn}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                        <span className="px-2 py-1 bg-surface-container-highest text-primary font-bold text-xs rounded-full">
+                          {student.grade}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                        <div className="flex justify-center">
+                          <LevelBlock level={student.assignedLevel} />
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                        <span className="font-headline font-bold text-sm text-on-surface">
+                          {student.assignedWordCount}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                        <span className="font-headline font-bold text-sm text-on-surface">
+                          {student.testQuestionCount}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r border-outline-variant/20">
+                        <div className="flex justify-center">
+                          <TestConfigBadges config={student.testConfig} />
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-xs text-on-surface-variant truncate flex-1">
+                            {student.latestMemoContent ?? '—'}
                           </p>
-                          <p className="text-xs text-on-surface-variant mt-0.5">
-                            {student.nameFirstEn} {student.nameLastEn}
-                          </p>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-                          <span className="px-2 py-1 bg-surface-container-highest text-primary font-bold text-xs rounded-full">
-                            {student.grade}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-                          <div className="flex justify-center">
-                            <AssignedLevelBlocks level={student.assignedLevel} />
-                          </div>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-                          <span className="font-headline font-bold text-sm text-on-surface">
-                            {student.assignedWordCount}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-                          <span className="font-headline font-bold text-sm text-on-surface">
-                            {student.testQuestionCount}
-                          </span>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-                          <div className="flex justify-center">
-                            <TestConfigBadges config={student.testConfig} />
-                          </div>
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="flex items-center gap-1.5">
-                            <p className="text-xs text-on-surface-variant truncate flex-1">
-                              {latestMemo ? latestMemo.content : '—'}
-                            </p>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setMemoStudent(student);
-                              }}
-                              className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
-                            >
-                              <span className="material-symbols-outlined text-base">
-                                sticky_note_2
-                              </span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMemoStudent(student);
+                            }}
+                            className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-base">
+                              sticky_note_2
+                            </span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

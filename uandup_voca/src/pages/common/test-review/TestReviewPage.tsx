@@ -1,14 +1,13 @@
 import { useState, useCallback, useMemo } from 'react';
 import {
-  MOCK_VOCAB_ITEMS,
+  MOCK_VOCAB_REVIEW_ITEMS,
   MOCK_SENTENCE_ITEMS,
   ITEMS_PER_PAGE,
   MOCK_ANSWERS_WTM,
   MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,
   type TestType,
-  type VocabTestType,
-  type TestVocabItem,
+  type WordTestType,
 } from '@/entities/test';
 import { TestPagination } from '../test/ui/TestPagination';
 import { ProgressPanel } from '../test/ui/ProgressPanel';
@@ -26,18 +25,24 @@ export default function TestReviewPage() {
   const [isStudent, setIsStudent] = useState(false);
 
   const isSentence = testType === 'sentence';
-  const sourceItems = isSentence ? MOCK_SENTENCE_ITEMS : MOCK_VOCAB_ITEMS;
-  const totalItems = sourceItems.length;
+  const vocabItems = MOCK_VOCAB_REVIEW_ITEMS;
+  const sentenceItems = MOCK_SENTENCE_ITEMS;
+  const totalItems = isSentence ? sentenceItems.length : vocabItems.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  const pageItems = sourceItems.slice(
+  const vocabPageItems = vocabItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+  const sentencePageItems = sentenceItems.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
 
   const mockVocabAnswers = testType === 'word-to-meaning' ? MOCK_ANSWERS_WTM : MOCK_ANSWERS_MTW;
 
-  const checkedIds = useMemo(() => new Set(sourceItems.map((item) => item.id)), [sourceItems]);
+  const allIds = isSentence ? sentenceItems.map((item) => item.id) : vocabItems.map((item) => item.id);
+  const checkedIds = useMemo(() => new Set<number>(allIds), [isSentence]);
 
   const handleToggleWrong = useCallback((id: number) => {
     setWrongIds((prev) => {
@@ -140,7 +145,7 @@ export default function TestReviewPage() {
         <div className="w-240 flex flex-col gap-4">
           {isSentence ? (
             <SentenceReviewTable
-              items={pageItems as typeof MOCK_SENTENCE_ITEMS}
+              items={sentencePageItems}
               answers={MOCK_SENTENCE_ANSWERS}
               wrongIds={wrongIds}
               readOnly={mode === 'result'}
@@ -149,8 +154,8 @@ export default function TestReviewPage() {
             />
           ) : (
             <VocabReviewTable
-              items={pageItems as TestVocabItem[]}
-              testType={testType as VocabTestType}
+              items={vocabPageItems}
+              testType={testType as WordTestType}
               showSynonym={showSynonym}
               answers={mockVocabAnswers}
               wrongIds={wrongIds}
@@ -168,7 +173,7 @@ export default function TestReviewPage() {
         </div>
 
         <ProgressPanel
-          questionIds={sourceItems.map((item) => item.id)}
+          questionIds={allIds}
           completedCount={checkedIds.size}
           remainingCount={totalItems - checkedIds.size}
           completedIds={checkedIds}

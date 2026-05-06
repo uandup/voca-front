@@ -1,7 +1,7 @@
-import type { Student } from '@/entities/member';
+import type { StudentTodoConfig } from '@/entities/member';
 
 interface Props {
-  student: Pick<Student, 'assignedWordCount' | 'testConfig'>;
+  student: StudentTodoConfig;
 }
 
 export function TodoList({ student }: Props) {

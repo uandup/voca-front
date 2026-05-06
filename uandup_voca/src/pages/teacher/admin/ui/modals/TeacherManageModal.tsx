@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TEACHER_MOCK, type Teacher as TeacherInfo } from '@/entities/member';
+import { TEACHER_MOCK, type RegisteredTeacherRow } from '@/entities/member';
 
 interface Props {
   onClose: () => void;
 }
 
 export function TeacherManageModal({ onClose }: Props) {
-  const [teachers, setTeachers] = useState<TeacherInfo[]>(TEACHER_MOCK);
+  const [teachers, setTeachers] = useState<RegisteredTeacherRow[]>(TEACHER_MOCK);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ nameKo: '', name: '' });
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  function handleEditStart(t: TeacherInfo) {
+  function handleEditStart(t: RegisteredTeacherRow) {
     setEditingId(t.id);
     setEditForm({ nameKo: t.nameKo, name: `${t.nameFirstEn} ${t.nameLastEn}` });
     setDeletingId(null);

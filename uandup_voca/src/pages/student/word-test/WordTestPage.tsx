@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import CycleRow from './ui/CycleRow';
 import { MOCK_CYCLES } from '@/entities/test';
-import type { TestCycle } from '@/entities/test';
+import type { TestBundleRow } from '@/entities/test';
 
 const TABS = ['Active', 'History'] as const;
 type Tab = (typeof TABS)[number];
 
-function isCompleted(cycle: TestCycle) {
+function isCompleted(cycle: TestBundleRow) {
   return cycle.steps.every((s) => s.status === 'passed');
 }
 

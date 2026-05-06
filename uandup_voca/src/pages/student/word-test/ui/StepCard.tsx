@@ -1,13 +1,11 @@
-import type { TestStep } from '@/entities/test';
+import type { StepCardVM, StepStatus } from '@/entities/test';
 
 interface StepCardProps {
-  step: TestStep;
+  step: StepCardVM;
 }
 
-const containerClass: Record<TestStep['status'], string> = {
+const containerClass: Record<StepStatus, string> = {
   locked: 'border border-primary/30 bg-primary/5',
-  waiting: 'border border-primary/30 bg-primary/5',
-  available: 'border border-primary/30 bg-primary/5',
   grading: 'border border-primary/30 bg-primary/5',
   fail: 'border border-error/20 bg-error/5',
   passed: 'border border-success/30 bg-success/5',
@@ -16,15 +14,13 @@ const containerClass: Record<TestStep['status'], string> = {
 };
 
 export default function StepCard({ step }: StepCardProps) {
-  const { status, label, scores, totalScore, gradedDate } = step;
-  const lastScore = scores?.[scores.length - 1];
-  const retakeCount = scores && scores.length > 1 ? scores.length - 1 : 0;
+  const { status, name, lastScore, maxScore: totalScore, gradedAt: gradedDate, retakeCount } = step;
 
   return (
     <div
       className={`flex-1 min-w-0 h-44 rounded-2xl p-4 flex flex-col gap-2 ${containerClass[status]}`}
     >
-      <span className="text-sm font-bold leading-tight text-on-surface">{label}</span>
+      <span className="text-sm font-bold leading-tight text-on-surface">{name}</span>
 
       <span className="text-xs text-on-surface-variant">{gradedDate ?? ''}</span>
 
@@ -52,7 +48,7 @@ export default function StepCard({ step }: StepCardProps) {
             Locked
           </button>
         )}
-        {status === 'waiting' && (
+        {status === 'pending' && (
           <button
             disabled
             className="w-full py-2.5 rounded-xl border border-outline/20 text-md font-medium"
@@ -60,7 +56,7 @@ export default function StepCard({ step }: StepCardProps) {
             Pending Release
           </button>
         )}
-        {status === 'available' && (
+        {status === 'active' && (
           <button className="w-full py-2.5 rounded-xl bg-primary text-white text-md hover:opacity-90 transition-opacity font-medium">
             Start Online Test
           </button>

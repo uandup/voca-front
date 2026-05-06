@@ -1,11 +1,9 @@
-interface SentenceAnswer {
-  word: string;
-}
+import type { SentenceTestAnswer } from '@/entities/test';
 
 interface SentenceAnswerRowProps {
   id: number;
   sentence: string;
-  answer: SentenceAnswer | undefined;
+  answer: SentenceTestAnswer | undefined;
   onAnswerChange: (id: number, value: string) => void;
   isLast: boolean;
 }
@@ -47,7 +45,7 @@ export function SentenceAnswerRow({
   onAnswerChange,
   isLast,
 }: SentenceAnswerRowProps) {
-  const inputValue = answer?.word ?? '';
+  const inputValue = answer?.answer ?? '';
   const completed = inputValue.trim() !== '';
 
   return (
@@ -69,4 +67,4 @@ export function SentenceAnswerRow({
   );
 }
 
-export type { SentenceAnswer };
+export type { SentenceTestAnswer };

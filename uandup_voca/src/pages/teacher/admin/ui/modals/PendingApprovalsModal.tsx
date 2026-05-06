@@ -5,10 +5,10 @@ import {
   PENDING_PARENTS_MOCK as PENDING_PARENTS,
   PENDING_TEACHERS_MOCK as PENDING_TEACHERS,
   REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
-  type PendingStudent,
-  type PendingParent,
-  type PendingTeacher,
-  type StudentSummary as RegisteredStudent,
+  type PendingStudentRow as PendingStudent,
+  type PendingParentRow as PendingParent,
+  type PendingTeacherRow as PendingTeacher,
+  type RegisteredStudentRow as RegisteredStudent,
 } from '@/entities/member';
 
 interface Props {
@@ -70,7 +70,7 @@ function ParentTab() {
   function handleMatch(parentId: number, student: RegisteredStudent) {
     setList((p) =>
       p.map((x) =>
-        x.id === parentId ? { ...x, matchedStudentId: student.id, childNameKo: student.nameKo } : x,
+        x.id === parentId ? { ...x, childNameKo: student.nameKo } : x,
       ),
     );
     setMatchingId(null);
@@ -86,52 +86,40 @@ function ParentTab() {
         {list.length === 0 ? (
           <EmptyState />
         ) : (
-          list.map((p) => {
-            const matched = REGISTERED_STUDENTS.find((s) => s.id === p.matchedStudentId);
-            return (
-              <div
-                key={p.id}
-                className="flex items-center justify-between px-7 py-4 min-h-19 gap-3"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-on-surface">
-                    {p.nameKo}
-                    <span className="text-xs font-medium text-on-surface-variant ml-1.5">
-                      ( {p.phone} )
+          list.map((p) => (
+            <div
+              key={p.id}
+              className="flex items-center justify-between px-7 py-4 min-h-19 gap-3"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-on-surface">
+                  {p.nameKo}
+                  <span className="text-xs font-medium text-on-surface-variant ml-1.5">
+                    ( {p.phone} )
+                  </span>
+                </p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="text-xs text-on-surface-variant">
+                    자녀: {p.childNameKo} ({p.childGrade})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setMatchingId(p.id)}
+                    className="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant border border-outline-variant/40 px-2 py-0.5 rounded-full hover:border-primary/40 hover:text-primary transition-colors"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                      person_search
                     </span>
-                  </p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="text-xs text-on-surface-variant">
-                      자녀: {p.childNameKo} ({p.childGrade})
-                    </span>
-                    {matched ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
-                          link
-                        </span>
-                        {matched.nameKo} · G{matched.grade}
-                      </span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setMatchingId(p.id)}
-                        className="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant border border-outline-variant/40 px-2 py-0.5 rounded-full hover:border-primary/40 hover:text-primary transition-colors"
-                      >
-                        <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
-                          person_search
-                        </span>
-                        Match Student
-                      </button>
-                    )}
-                  </div>
+                    Match Student
+                  </button>
                 </div>
-                <ApproveRejectButtons
-                  onApprove={() => handleApprove(p.id)}
-                  onReject={() => handleReject(p.id)}
-                />
               </div>
-            );
-          })
+              <ApproveRejectButtons
+                onApprove={() => handleApprove(p.id)}
+                onReject={() => handleReject(p.id)}
+              />
+            </div>
+          ))
         )}
       </div>
 
