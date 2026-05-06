@@ -66,7 +66,7 @@ export function StudentForm({ value, onChange }: Props) {
           </option>
           {GRADES.map((g) => (
             <option key={g} value={g}>
-              {g}
+              Grade {g}
             </option>
           ))}
         </select>
