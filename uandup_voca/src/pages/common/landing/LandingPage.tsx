@@ -25,7 +25,9 @@ export default function LandingPage() {
   const t = LANDING_CONTENT[lang];
 
   const toggleLang = () => setLang((l) => (l === 'en' ? 'ko' : 'en'));
-  const handleGoogleLogin = () => { window.location.href = GOOGLE_AUTH_URL; };
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL;
+  };
 
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface overflow-x-hidden">

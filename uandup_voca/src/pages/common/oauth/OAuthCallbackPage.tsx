@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { loginWithGoogle } from '@/entities/auth';
+import { isAxiosError } from 'axios';
 
 export default function OAuthCallbackPage() {
   const navigate = useNavigate();
@@ -28,7 +29,13 @@ export default function OAuthCallbackPage() {
           navigate({ to: data.role === 'STUDENT' ? '/student' : '/teacher' });
         }
       })
-      .catch(() => navigate({ to: '/' }));
+      .catch((error) => {
+        if (isAxiosError(error) && error.response?.status === 403) {
+          navigate({ to: '/pending' });
+        } else {
+          navigate({ to: '/' });
+        }
+      });
   }, [navigate]);
 
   return (
