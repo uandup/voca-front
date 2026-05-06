@@ -12,7 +12,7 @@ export const LANDING_CONTENT = {
       },
       sub: {
         lines: [
-          'From progress monitoring to structured review, every step is precisely managed through our online system.',
+          'From progress tracking to structured review, every step is precisely managed through our online system.',
         ],
         fontSize: '1.125rem',
       },
@@ -24,8 +24,8 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          'Over 5,000 essential vocabulary words, organized across 10 precisely graded levels.',
-          'Students begin at their current level and advance step by step — building real proficiency all the way to Level 10.',
+          'Over 8,000 essential vocabulary words, structured across 10 graded levels.',
+          'Students start where they are and build steadily toward Level 10, gaining real proficiency along the way.',
         ],
         fontSize: '1rem',
       },
@@ -49,7 +49,7 @@ export const LANDING_CONTENT = {
           desc: [
             'A word and sentence test',
             'taken right after learning',
-            'locks in initial memory',
+            'locks the words into memory.',
           ],
           icon: 'edit_note',
         },
@@ -66,7 +66,7 @@ export const LANDING_CONTENT = {
         {
           day: 'D+4',
           label: 'Review 2',
-          desc: ['A second review on day four', 'disrupts the forgetting curve.'],
+          desc: ['A second review on day four', 'pushes back against the forgetting curve.'],
           icon: 'replay',
         },
         {
@@ -103,9 +103,9 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          'A final verification that everything learned has taken root in long-term memory.',
-          'Each test passed builds real confidence',
-          '— and any words that surface again are fully reinforced, cementing lasting mastery.',
+          'A final check that everything learned has taken root in long-term memory.',
+          'Each test passed builds real confidence,',
+          'and any remaining gaps are fully reinforced for lasting mastery.',
         ],
         fontSize: '1rem',
       },
@@ -117,8 +117,8 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          'Every learning step above is recorded and analyzed.',
-          "Per-test score trends pinpoint each student's weak points and drive personalized instruction.",
+          'Every step of the learning journey is recorded and analyzed.',
+          "Detailed score trends reveal each student's weak points and guide personalized instruction.",
         ],
         fontSize: '1.125rem',
       },
@@ -130,13 +130,13 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          'Through data-driven, systematic management, we help every student achieve their best.',
+          'With data-driven learning management, every student reaches their full potential.',
         ],
         fontSize: '1.25rem',
       },
       button: 'Get Started with Google',
     },
-    footer: '© 2025 UandUP Academy. All rights reserved.',
+    footer: '© Future Forum. All rights reserved',
   },
 
   ko: {
@@ -162,8 +162,8 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          '총 5,000개 이상의 필수 어휘를 10단계로 세분화하여 제공합니다.',
-          '학생의 현재 수준에 맞는 단어부터 시작해 레벨 10까지 순차적으로 완성하며 실력을 단계적으로 끌어올립니다.',
+          '총 8,000개 이상의 필수 어휘를 10단계로 나누어 제공합니다.',
+          '학생의 현재 수준에 맞는 단어부터 시작해 레벨 10까지 차근차근 학습하며 어휘력을 안정적으로 끌어올립니다.',
         ],
         fontSize: '1.1rem',
       },
@@ -175,7 +175,7 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          '단순 반복 암기에서 벗어나, 망각 곡선을 고려한 과학적 복습 주기를 제안합니다.',
+          '단순 반복 암기에서 벗어나, 망각 곡선에 기반한 과학적 복습 주기를 적용합니다.',
           '학습 후 1일, 4일, 7일 시점에 진행되는 복습 시험을 통해 단기 기억을 장기 기억으로 안정적으로 전환합니다.',
         ],
         fontSize: '1rem',
@@ -196,7 +196,7 @@ export const LANDING_CONTENT = {
         {
           day: 'D+4',
           label: 'Review 2',
-          desc: ['학습 4일 후 두 번째 복습으로', '망각 곡선을 완만하게 늦춥니다.'],
+          desc: ['학습 4일 후 두 번째 복습으로', '망각 속도를 완만하게 늦춥니다.'],
           icon: 'replay',
         },
         {
@@ -227,9 +227,9 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          '레벨 테스트로 장기 기억 전환을 최종 검증합니다.',
-          '시험 통과 과정에서 느끼는 성취감과 자신감은 지속적인 학습의 원동력이 되며,',
-          '이 과정에서 재발견된 오답까지 완벽히 보완하여 흔들리지 않는 실력을 완성합니다.',
+          '레벨 테스트로 장기 기억 전환 여부를 최종 점검합니다.',
+          '시험을 통과하며 쌓이는 성취감과 자신감은 꾸준한 학습의 원동력이 되고,',
+          '이 과정에서 드러난 오답까지 빠짐없이 보완해 진짜 실력을 완성합니다.',
         ],
         fontSize: '1.125rem',
       },
@@ -241,7 +241,7 @@ export const LANDING_CONTENT = {
       },
       body: {
         lines: [
-          '앞서 이야기한 모든 학습 과정은 기록되고 분석됩니다.',
+          '앞서 소개한 모든 학습 과정은 기록되고 분석됩니다.',
           '시험별 성적 추이를 정밀하게 분석하여 학생의 취약점을 진단하고, 최적화된 개인 맞춤형 학습을 제공합니다.',
         ],
         fontSize: '1.125rem',
@@ -253,12 +253,12 @@ export const LANDING_CONTENT = {
         fontSize: '2.5rem',
       },
       body: {
-        lines: ['데이터 기반의 체계적인 관리를 통해 최상의 학습 결과를 만드시기 바랍니다.'],
+        lines: ['데이터로 관리되는 학습, 지금 시작하세요.'],
         fontSize: '1.25rem',
       },
       button: 'Google 계정으로 시작하기',
     },
-    footer: '© 2025 유앤UP국제학원. All rights reserved.',
+    footer: '© Future Forum. All rights reserved',
   },
 } as const;
 
