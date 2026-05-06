@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { LANDING_CONTENT, type Lang } from './model/landingContent';
 import { LandingNav } from './ui/LandingNav';
 import { HeroSection } from './ui/HeroSection';
@@ -12,12 +13,19 @@ import { CtaSection } from './ui/CtaSection';
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>('en');
   const t = LANDING_CONTENT[lang];
+  const navigate = useNavigate();
 
   const toggleLang = () => setLang((l) => (l === 'en' ? 'ko' : 'en'));
+  const handleGoogleLogin = () => navigate({ to: '/onboarding' });
 
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface overflow-x-hidden">
-      <LandingNav lang={lang} t={t.nav} onToggleLang={toggleLang} />
+      <LandingNav
+        lang={lang}
+        t={t.nav}
+        onToggleLang={toggleLang}
+        onGoogleLogin={handleGoogleLogin}
+      />
       <div key={lang}>
         <HeroSection t={t.hero} />
         <CurriculumSection t={t.curriculum} />
