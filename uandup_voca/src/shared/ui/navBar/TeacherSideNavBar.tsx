@@ -1,21 +1,22 @@
 import { SideNavBar } from './SideNavBar';
+import { getTokenPayload } from '@/shared/jwt';
 
-const navItems = [
+const BASE_NAV_ITEMS = [
   // { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },
   { icon: 'people', label: 'Students', to: '/teacher/student-manage' },
-  // { icon: 'calendar_today', label: 'Classes', to: '/teacher/classes' },
-  // {
-  //   icon: "assignment",
-  //   label: "Test Assignment",
-  //   to: "/teacher/test-assignment",
-  // },
-  // { icon: "grading", label: "Test Grading", to: "/teacher/test-grading" },
   { icon: 'clinical_notes', label: 'Clinics', to: '/teacher/clinics' },
   { icon: 'book_2', label: 'Vocabulary Bank', to: '/teacher/vocabulary-bank' },
-  // { icon: 'print', label: 'Print Preview', to: '/teacher/print-preview' },
-  { icon: 'admin_panel_settings', label: 'Admin', to: '/teacher/admin' },
 ] as const;
 
+const ADMIN_NAV_ITEM = {
+  icon: 'admin_panel_settings',
+  label: 'Admin',
+  to: '/teacher/admin',
+} as const;
+
 export function TeacherSideNavBar() {
-  return <SideNavBar navItems={[...navItems]} />;
+  const isAdmin = getTokenPayload()?.isAdmin ?? false;
+  const navItems = isAdmin ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM] : [...BASE_NAV_ITEMS];
+
+  return <SideNavBar navItems={navItems} />;
 }
