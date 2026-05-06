@@ -14,7 +14,7 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-// 응답 인터셉터: 401이면 로그인 페이지로 이동
+// 응답 인터셉터: 401이면 랜딩 페이지로 이동
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {

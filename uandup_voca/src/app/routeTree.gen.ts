@@ -27,6 +27,7 @@ import { Route as StudentWordTestRouteImport } from './../routes/student/word-te
 import { Route as StudentLevelWordListRouteImport } from './../routes/student/level-word-list'
 import { Route as StudentLevelTestRouteImport } from './../routes/student/level-test'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
+import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
 import { Route as CommonTestReviewRouteImport } from './../routes/common/test-review'
 import { Route as CommonTestRouteImport } from './../routes/common/test'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
@@ -124,6 +125,11 @@ const StudentDashboardRoute = StudentDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => StudentRoute,
 } as any)
+const OauthCallbackRoute = OauthCallbackRouteImport.update({
+  id: '/oauth/callback',
+  path: '/oauth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommonTestReviewRoute = CommonTestReviewRouteImport.update({
   id: '/test-review',
   path: '/test-review',
@@ -165,6 +171,7 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/common/test': typeof CommonTestRoute
   '/common/test-review': typeof CommonTestReviewRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/pending': typeof PendingRoute
   '/common/test': typeof CommonTestRoute
   '/common/test-review': typeof CommonTestReviewRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/common/test': typeof CommonTestRoute
   '/common/test-review': typeof CommonTestReviewRoute
+  '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
   '/student/level-word-list': typeof StudentLevelWordListRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/common/test'
     | '/common/test-review'
+    | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/common/test'
     | '/common/test-review'
+    | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/common/test'
     | '/common/test-review'
+    | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
     | '/student/level-word-list'
@@ -319,6 +331,7 @@ export interface RootRouteChildren {
   PendingRoute: typeof PendingRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
+  OauthCallbackRoute: typeof OauthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -449,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentDashboardRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/oauth/callback': {
+      id: '/oauth/callback'
+      path: '/oauth/callback'
+      fullPath: '/oauth/callback'
+      preLoaderRoute: typeof OauthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/common/test-review': {
       id: '/common/test-review'
       path: '/test-review'
@@ -564,6 +584,7 @@ const rootRouteChildren: RootRouteChildren = {
   PendingRoute: PendingRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
+  OauthCallbackRoute: OauthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

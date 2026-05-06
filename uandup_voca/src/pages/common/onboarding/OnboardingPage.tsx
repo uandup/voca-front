@@ -203,8 +203,8 @@ export default function OnboardingPage() {
                   info
                 </span>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Your account will be reviewed by an administrator. You will gain access to the
-                  service once approved.
+                  Your account will be reviewed by an administrator.
+                  <br /> You will gain access to the service once approved.
                 </p>
               </div>
             </div>
