@@ -26,6 +26,7 @@ export default function OAuthCallbackPage() {
         } else if (data.status === 'PENDING_APPROVAL') {
           navigate({ to: '/pending' });
         } else {
+          console.log(data);
           navigate({ to: data.role === 'STUDENT' ? '/student' : '/teacher' });
         }
       })
