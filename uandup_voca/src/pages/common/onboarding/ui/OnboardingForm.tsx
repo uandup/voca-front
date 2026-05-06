@@ -25,7 +25,7 @@ export function OnboardingForm() {
   const [teacher, setTeacher] = useState<TeacherFormState>(INITIAL_TEACHER);
   const [parent, setParent] = useState<ParentFormState>(INITIAL_PARENT);
 
-  const { isSubmitting, submit } = useRegist();
+  const { mutate, isPending } = useRegist();
 
   const isValid =
     userType === 'STUDENT'
@@ -36,8 +36,8 @@ export function OnboardingForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isValid || isSubmitting) return;
-    submit(buildProfileBody(userType, student, teacher, parent));
+    if (!isValid || isPending) return;
+    mutate(buildProfileBody(userType, student, teacher, parent));
   };
 
   return (
@@ -87,10 +87,10 @@ export function OnboardingForm() {
 
             <button
               type="submit"
-              disabled={!isValid || isSubmitting}
+              disabled={!isValid || isPending}
               className="w-full py-3.5 rounded-xl bg-primary text-on-primary text-sm font-semibold transition-opacity mt-1 disabled:opacity-40 disabled:cursor-not-allowed hover:enabled:opacity-90"
             >
-              {isSubmitting ? 'Submitting...' : 'Sign Up'}
+              {isPending ? 'Submitting...' : 'Sign Up'}
             </button>
           </form>
 
