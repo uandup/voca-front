@@ -1,6 +1,6 @@
-import type { Memo } from '@/entities/memo';
-import type { WordDifficultyLevel } from '@/entities/word';
-import type { TestConfigDisplay } from '@/entities/test';
+import type { Memo } from '@/entities/memo/@x/member';
+import type { WordDifficultyLevel } from '@/entities/word/@x/member';
+import type { TestConfigDisplay } from '@/entities/test/@x/member';
 
 // ── Domain Primitives ───────────────────────────────────────────────────────
 

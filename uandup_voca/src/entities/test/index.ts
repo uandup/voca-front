@@ -1,7 +1,6 @@
 export type {
   TestType,
   WordTestType,
-  TestConfigDisplay,
   TestStepName,
   StepStatus,
   StepCardVM,

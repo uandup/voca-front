@@ -16,12 +16,12 @@ export interface TestConfigDisplay {
 export type TestStepName = 'Word' | 'Sentence' | 'Review 1' | 'Review 2' | 'Review 3';
 
 export type StepStatus =
-  | 'locked'   // "Locked" 버튼, 비활성
-  | 'pending'  // "Pending Release" 버튼, 비활성
-  | 'active'   // "Start Online Test" 버튼, 활성
-  | 'grading'  // "Awaiting Grading" 버튼, 비활성
-  | 'fail'     // 점수(빨간색) + "Pending Re-Test" + "View Results"
-  | 'passed';  // 점수(초록색) + "View Results"
+  | 'locked' // "Locked" 버튼, 비활성
+  | 'pending' // "Pending Release" 버튼, 비활성
+  | 'active' // "Start Online Test" 버튼, 활성
+  | 'grading' // "Awaiting Grading" 버튼, 비활성
+  | 'fail' // 점수(빨간색) + "Pending Re-Test" + "View Results"
+  | 'passed'; // 점수(초록색) + "View Results"
 
 /** StepCard — WordTestPage CycleRow, ClinicDetailPage WordTestTab */
 export interface StepCardVM {
