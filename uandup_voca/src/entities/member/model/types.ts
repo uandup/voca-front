@@ -4,8 +4,8 @@ import type { TestConfigDisplay } from '@/entities/test/@x/member';
 
 // ── Domain Primitives ───────────────────────────────────────────────────────
 
-export type MemberRole = 'student' | 'teacher' | 'parent' | 'admin';
-export type MemberStatus = 'pending' | 'approved' | 'rejected';
+export type MemberRole = 'STUDENT' | 'TEACHER' | 'PARENT';
+export type MemberStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type StudentGrade = number;
 
 // ── Shared Base ─────────────────────────────────────────────────────────────
