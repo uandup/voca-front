@@ -1,5 +1,5 @@
 import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
-import type { StudentFormState } from '../model/types';
+import type { StudentFormState } from '@/entities/member';
 
 interface Props {
   value: StudentFormState;
@@ -61,9 +61,6 @@ export function StudentForm({ value, onChange }: Props) {
           className={selectClass}
           style={selectStyle}
         >
-          <option value="" disabled>
-            학년을 선택해주세요
-          </option>
           {GRADES.map((g) => (
             <option key={g} value={g}>
               Grade {g}

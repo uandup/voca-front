@@ -5,7 +5,7 @@ import { StudentForm } from './ui/StudentForm';
 import { ParentForm } from './ui/ParentForm';
 import { TeacherForm } from './ui/TeacherForm';
 import { selectClass, selectStyle } from './ui/formStyles';
-import type { StudentFormState, TeacherFormState, ParentFormState } from './model/types';
+import type { StudentFormState, TeacherFormState, ParentFormState } from '@/entities/member';
 
 type UserType = '학생' | '학부모' | '선생님';
 
@@ -24,7 +24,7 @@ const INITIAL_STUDENT: StudentFormState = {
   nameKo: '',
   nameLastEn: '',
   nameFirstEn: '',
-  grade: 0,
+  grade: 1,
 };
 
 const INITIAL_TEACHER: TeacherFormState = {
@@ -38,7 +38,7 @@ const INITIAL_PARENT: ParentFormState = {
   phone: '',
   phoneConsent: false,
   childNameKo: '',
-  childGrade: '',
+  childGrade: 1,
 };
 
 function isStudentValid(f: StudentFormState) {
@@ -92,7 +92,7 @@ export default function OnboardingPage() {
           className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none select-none"
         />
         {/* Left — Hero */}
-        <div className="pl-20 hidden lg:flex flex-1 w-1/2 flex-col items-center justify-center relative">
+        <div className="pl-60 hidden lg:flex flex-1 w-1/2 flex-col items-center justify-center relative">
           <div className="flex flex-col items-center text-center max-w-lg">
             <div className="flex flex-col items-center justify-center mb-6 opacity-0 translate-y-4 animate-[fadeUp_0.7s_ease_0.3s_forwards]">
               <h1

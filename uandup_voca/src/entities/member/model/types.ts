@@ -110,7 +110,7 @@ export interface ParentFormState {
   phone: string;
   phoneConsent: boolean;
   childNameKo: string;
-  childGrade: string;
+  childGrade: StudentGrade;
 }
 
 // ── Admin: Registered Member Lists ─────────────────────────────────────────
