@@ -30,3 +30,19 @@ export {
   MOCK_PENDING_APPROVALS,
   MOCK_UNASSIGNED_STUDENTS,
 } from './lib/mockData';
+export {
+  getPendingCount,
+  getPendingStudents,
+  getPendingParents,
+  getPendingTeachers,
+  approveMember,
+  rejectMember,
+  promoteAllStudentsGrade,
+  demoteAllStudentsGrade,
+} from './api/adminApi';
+export {
+  getNonAdminTeachers,
+  getAdminTeachers,
+  promoteTeacherToAdmin,
+  demoteAdminToTeacher,
+} from './api/teacherApi';

@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { promoteAllStudentsGrade, demoteAllStudentsGrade } from '@/entities/member';
 
 interface Props {
   onClose: () => void;
@@ -7,10 +9,28 @@ interface Props {
 
 export function GradeBulkModal({ onClose }: Props) {
   const [delta, setDelta] = useState<-1 | 1 | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
+  const [result, setResult] = useState<{ updated: number; skipped: number } | null>(null);
+
+  const promote = useMutation({
+    mutationFn: promoteAllStudentsGrade,
+    onSuccess: (res) => {
+      setResult({ updated: res.data?.updated ?? 0, skipped: res.data?.skipped ?? 0 });
+    },
+  });
+  const demote = useMutation({
+    mutationFn: demoteAllStudentsGrade,
+    onSuccess: (res) => {
+      setResult({ updated: res.data?.updated ?? 0, skipped: res.data?.skipped ?? 0 });
+    },
+  });
+
+  const isPending = promote.isPending || demote.isPending;
 
   function handleApply() {
-    setConfirmed(true);
+    if (delta === null) return;
+    setResult(null);
+    if (delta === 1) promote.mutate();
+    else demote.mutate();
   }
 
   return (
@@ -40,7 +60,7 @@ export function GradeBulkModal({ onClose }: Props) {
               type="button"
               onClick={() => {
                 setDelta(-1);
-                setConfirmed(false);
+                setResult(null);
               }}
               className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                 delta === -1
@@ -54,7 +74,7 @@ export function GradeBulkModal({ onClose }: Props) {
               type="button"
               onClick={() => {
                 setDelta(1);
-                setConfirmed(false);
+                setResult(null);
               }}
               className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                 delta === 1
@@ -68,10 +88,10 @@ export function GradeBulkModal({ onClose }: Props) {
         </div>
 
         <div className="px-7 py-4 border-t border-outline-variant/20 flex items-center justify-between shrink-0">
-          {confirmed ? (
+          {result !== null ? (
             <p className="text-xs font-bold text-primary flex items-center gap-1">
               <span className="material-symbols-outlined text-base">check_circle</span>
-              Applied successfully
+              {result.updated} updated · {result.skipped} skipped
             </p>
           ) : (
             <span />
@@ -79,10 +99,10 @@ export function GradeBulkModal({ onClose }: Props) {
           <button
             type="button"
             onClick={handleApply}
-            disabled={delta === null}
+            disabled={delta === null || isPending}
             className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold shadow-sm disabled:opacity-40 hover:opacity-90 active:scale-95 transition-all"
           >
-            Apply
+            {isPending ? 'Applying...' : 'Apply'}
           </button>
         </div>
       </div>

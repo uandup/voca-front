@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { PendingApprovalsModal } from './ui/modals/PendingApprovalsModal';
 import { ClassManageModal } from './ui/modals/ClassManageModal';
@@ -6,15 +7,7 @@ import { TeacherPermissionModal } from './ui/modals/TeacherPermissionModal';
 import { TeacherManageModal } from './ui/modals/TeacherManageModal';
 import { ParentManageModal } from './ui/modals/ParentManageModal';
 import { GradeBulkModal } from './ui/modals/GradeBulkModal';
-import {
-  PENDING_STUDENTS_MOCK as PENDING_STUDENTS,
-  PENDING_PARENTS_MOCK as PENDING_PARENTS,
-  PENDING_TEACHERS_MOCK as PENDING_TEACHERS,
-  TEACHER_MOCK,
-  PARENT_MOCK,
-} from '@/entities/member';
-
-const totalPending = PENDING_STUDENTS.length + PENDING_PARENTS.length + PENDING_TEACHERS.length;
+import { getPendingCount } from '@/entities/member';
 
 type ModalType =
   | 'pending'
@@ -25,59 +18,66 @@ type ModalType =
   | 'parent-manage'
   | null;
 
-const CARDS = [
-  {
-    key: 'pending' as const,
-    icon: 'person_add',
-    label: 'Pending Approvals',
-    badge: `${totalPending} waiting`,
-    count: String(totalPending),
-    dark: true,
-  },
-  {
-    key: 'class' as const,
-    icon: 'school',
-    label: 'Class Management',
-    badge: 'Add / Edit / Delete',
-    count: 'Class',
-    dark: false,
-  },
-  {
-    key: 'teacher' as const,
-    icon: 'manage_accounts',
-    label: 'Teacher Permissions',
-    badge: 'Manage roles',
-    count: 'Role',
-    dark: true,
-  },
-  {
-    key: 'grade' as const,
-    icon: 'upgrade',
-    label: 'Grade Bulk Update',
-    badge: 'Bulk adjust',
-    count: '±1',
-    dark: false,
-  },
-  {
-    key: 'teacher-manage' as const,
-    icon: 'person_edit',
-    label: 'Teacher Management',
-    badge: 'Edit / Delete',
-    count: String(TEACHER_MOCK.length),
-    dark: true,
-  },
-  {
-    key: 'parent-manage' as const,
-    icon: 'family_restroom',
-    label: 'Parent Management',
-    badge: 'Edit / Delete',
-    count: String(PARENT_MOCK.length),
-    dark: false,
-  },
-];
-
 export default function AdminPage() {
   const [modal, setModal] = useState<ModalType>(null);
+
+  const { data: pendingCountRes } = useQuery({
+    queryKey: ['admin', 'pending-count'],
+    queryFn: getPendingCount,
+    refetchInterval: 30_000,
+  });
+  const totalPending = pendingCountRes?.data ?? 0;
+
+  const CARDS = [
+    {
+      key: 'pending' as const,
+      icon: 'person_add',
+      label: 'Pending Approvals',
+      badge: `${totalPending} waiting`,
+      count: String(totalPending),
+      dark: true,
+    },
+    {
+      key: 'class' as const,
+      icon: 'school',
+      label: 'Class Management',
+      badge: 'Add / Edit / Delete',
+      count: 'Class',
+      dark: false,
+    },
+    {
+      key: 'teacher' as const,
+      icon: 'manage_accounts',
+      label: 'Teacher Permissions',
+      badge: 'Manage roles',
+      count: 'Role',
+      dark: true,
+    },
+    {
+      key: 'grade' as const,
+      icon: 'upgrade',
+      label: 'Grade Bulk Update',
+      badge: 'Bulk adjust',
+      count: '±1',
+      dark: false,
+    },
+    {
+      key: 'teacher-manage' as const,
+      icon: 'person_edit',
+      label: 'Teacher Management',
+      badge: 'Edit / Delete',
+      count: 'Teachers',
+      dark: true,
+    },
+    {
+      key: 'parent-manage' as const,
+      icon: 'family_restroom',
+      label: 'Parent Management',
+      badge: 'Edit / Delete',
+      count: 'Parents',
+      dark: false,
+    },
+  ];
 
   return (
     <main>

@@ -1,15 +1,18 @@
 import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import {
-  PENDING_STUDENTS_MOCK as PENDING_STUDENTS,
-  PENDING_PARENTS_MOCK as PENDING_PARENTS,
-  PENDING_TEACHERS_MOCK as PENDING_TEACHERS,
-  REGISTERED_STUDENTS_MOCK as REGISTERED_STUDENTS,
-  type PendingStudentRow as PendingStudent,
-  type PendingParentRow as PendingParent,
-  type PendingTeacherRow as PendingTeacher,
-  type RegisteredStudentRow as RegisteredStudent,
+  getPendingStudents,
+  getPendingParents,
+  getPendingTeachers,
+  approveMember,
+  rejectMember,
 } from '@/entities/member';
+import type { components } from '@/shared/api/schema.gen';
+
+type PendingStudent = components['schemas']['PendingStudentResponse'];
+type PendingParent = components['schemas']['PendingParentResponse'];
+type PendingTeacher = components['schemas']['PendingTeacherResponse'];
 
 interface Props {
   onClose: () => void;
@@ -25,30 +28,39 @@ const TAB_LABELS: Record<Tab, string> = {
 
 // ─── 학생 탭 ────────────────────────────────────────────────
 function StudentTab() {
-  const [list, setList] = useState<PendingStudent[]>(PENDING_STUDENTS);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ['admin', 'pending', 'students'],
+    queryFn: getPendingStudents,
+  });
+  const list: PendingStudent[] = data?.data ?? [];
 
-  function handleApprove(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
-  function handleReject(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
+  const approve = useMutation({
+    mutationFn: (id: number) => approveMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
+  const reject = useMutation({
+    mutationFn: (id: number) => rejectMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
+
+  if (isLoading) return <LoadingState />;
 
   return (
     <PendingList
       empty={list.length === 0}
       items={list}
       renderItem={(s) => (
-        <div key={s.id} className="flex items-center justify-between px-7 py-4 min-h-17">
+        <div key={s.studentId} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
-            <p className="text-sm font-bold text-on-surface">{s.nameKo}</p>
+            <p className="text-sm font-bold text-on-surface">{s.name}</p>
             <p className="text-xs text-on-surface-variant mt-0.5">
-              {s.nameFirstEn} {s.nameLastEn} · G{s.grade}
+              {s.englishName} · G{s.grade}
             </p>
           </div>
           <ApproveRejectButtons
-            onApprove={() => handleApprove(s.id)}
-            onReject={() => handleReject(s.id)}
+            onApprove={() => approve.mutate(s.studentId!)}
+            onReject={() => reject.mutate(s.studentId!)}
           />
         </div>
       )}
@@ -58,25 +70,27 @@ function StudentTab() {
 
 // ─── 학부모 탭 ──────────────────────────────────────────────
 function ParentTab() {
-  const [list, setList] = useState<PendingParent[]>(PENDING_PARENTS);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ['admin', 'pending', 'parents'],
+    queryFn: getPendingParents,
+  });
+  const list: PendingParent[] = data?.data ?? [];
+
   const [matchingId, setMatchingId] = useState<number | null>(null);
 
-  function handleApprove(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
-  function handleReject(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
-  function handleMatch(parentId: number, student: RegisteredStudent) {
-    setList((p) =>
-      p.map((x) =>
-        x.id === parentId ? { ...x, childNameKo: student.nameKo } : x,
-      ),
-    );
-    setMatchingId(null);
-  }
+  const approve = useMutation({
+    mutationFn: (id: number) => approveMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
+  const reject = useMutation({
+    mutationFn: (id: number) => rejectMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
 
-  const matchingParent = list.find((p) => p.id === matchingId) ?? null;
+  const matchingParent = list.find((p) => p.parentId === matchingId) ?? null;
+
+  if (isLoading) return <LoadingState />;
 
   return (
     <div className="relative flex h-full">
@@ -88,23 +102,23 @@ function ParentTab() {
         ) : (
           list.map((p) => (
             <div
-              key={p.id}
+              key={p.parentId}
               className="flex items-center justify-between px-7 py-4 min-h-19 gap-3"
             >
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-on-surface">
-                  {p.nameKo}
+                  {p.name}
                   <span className="text-xs font-medium text-on-surface-variant ml-1.5">
-                    ( {p.phone} )
+                    ( {p.phoneNumber} )
                   </span>
                 </p>
                 <div className="flex items-center gap-2 mt-1.5">
                   <span className="text-xs text-on-surface-variant">
-                    자녀: {p.childNameKo} ({p.childGrade})
+                    Child: {p.requestedChildName} (G{p.requestedChildGrade})
                   </span>
                   <button
                     type="button"
-                    onClick={() => setMatchingId(p.id)}
+                    onClick={() => setMatchingId(p.parentId!)}
                     className="inline-flex items-center gap-1 text-xs font-bold text-on-surface-variant border border-outline-variant/40 px-2 py-0.5 rounded-full hover:border-primary/40 hover:text-primary transition-colors"
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
@@ -115,8 +129,8 @@ function ParentTab() {
                 </div>
               </div>
               <ApproveRejectButtons
-                onApprove={() => handleApprove(p.id)}
-                onReject={() => handleReject(p.id)}
+                onApprove={() => approve.mutate(p.parentId!)}
+                onReject={() => reject.mutate(p.parentId!)}
               />
             </div>
           ))
@@ -124,30 +138,15 @@ function ParentTab() {
       </div>
 
       {matchingId !== null && matchingParent && (
-        <StudentMatchPanel
-          parent={matchingParent}
-          onSelect={(s) => handleMatch(matchingId, s)}
-          onClose={() => setMatchingId(null)}
-        />
+        <StudentMatchPanel parent={matchingParent} onClose={() => setMatchingId(null)} />
       )}
     </div>
   );
 }
 
 // ─── 학생 매칭 패널 ──────────────────────────────────────────
-function StudentMatchPanel({
-  parent,
-  onSelect,
-  onClose,
-}: {
-  parent: PendingParent;
-  onSelect: (s: RegisteredStudent) => void;
-  onClose: () => void;
-}) {
+function StudentMatchPanel({ parent, onClose }: { parent: PendingParent; onClose: () => void }) {
   const [search, setSearch] = useState('');
-  const filtered = REGISTERED_STUDENTS.filter((s) =>
-    `${s.nameFirstEn} ${s.nameLastEn}`.toLowerCase().includes(search.toLowerCase()),
-  );
 
   return (
     <div className="absolute inset-0 bg-surface flex flex-col">
@@ -163,8 +162,8 @@ function StudentMatchPanel({
           </button>
         </div>
         <p className="text-xs text-on-surface-variant">
-          학부모: <span className="font-bold text-on-surface">{parent.nameKo}</span> → 자녀:{' '}
-          <span className="font-bold text-on-surface">{parent.childNameKo}</span>
+          Parent: <span className="font-bold text-on-surface">{parent.name}</span> → Child:{' '}
+          <span className="font-bold text-on-surface">{parent.requestedChildName}</span>
         </p>
       </div>
 
@@ -178,63 +177,46 @@ function StudentMatchPanel({
         />
       </div>
 
-      <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20 [scrollbar-width:thin]">
-        {filtered.length === 0 ? (
-          <li className="flex items-center justify-center py-10 text-xs text-on-surface-variant">
-            No results
-          </li>
-        ) : (
-          filtered.map((s) => (
-            <li key={s.id}>
-              <button
-                type="button"
-                onClick={() => onSelect(s)}
-                className="w-full flex items-center justify-between px-7 py-3.5 hover:bg-primary/5 transition-colors text-left"
-              >
-                <div>
-                  <p className="text-sm font-bold text-on-surface">
-                    {s.nameFirstEn} {s.nameLastEn}
-                  </p>
-                  <p className="text-xs text-on-surface-variant mt-0.5">G{s.grade}</p>
-                </div>
-                <span className="material-symbols-outlined text-on-surface-variant/40 text-base">
-                  chevron_right
-                </span>
-              </button>
-            </li>
-          ))
-        )}
-      </ul>
+      <div className="flex-1 flex items-center justify-center text-xs text-on-surface-variant">
+        Student matching will be available via API
+      </div>
     </div>
   );
 }
 
 // ─── 선생님 탭 ──────────────────────────────────────────────
 function TeacherTab() {
-  const [list, setList] = useState<PendingTeacher[]>(PENDING_TEACHERS);
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ['admin', 'pending', 'teachers'],
+    queryFn: getPendingTeachers,
+  });
+  const list: PendingTeacher[] = data?.data ?? [];
 
-  function handleApprove(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
-  function handleReject(id: number) {
-    setList((p) => p.filter((s) => s.id !== id));
-  }
+  const approve = useMutation({
+    mutationFn: (id: number) => approveMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
+  const reject = useMutation({
+    mutationFn: (id: number) => rejectMember(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+  });
+
+  if (isLoading) return <LoadingState />;
 
   return (
     <PendingList
       empty={list.length === 0}
       items={list}
       renderItem={(t) => (
-        <div key={t.id} className="flex items-center justify-between px-7 py-4 min-h-17">
+        <div key={t.teacherId} className="flex items-center justify-between px-7 py-4 min-h-17">
           <div>
-            <p className="text-sm font-bold text-on-surface">{t.nameKo}</p>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              {t.nameFirstEn} {t.nameLastEn}
-            </p>
+            <p className="text-sm font-bold text-on-surface">{t.name}</p>
+            <p className="text-xs text-on-surface-variant mt-0.5">{t.englishName}</p>
           </div>
           <ApproveRejectButtons
-            onApprove={() => handleApprove(t.id)}
-            onReject={() => handleReject(t.id)}
+            onApprove={() => approve.mutate(t.teacherId!)}
+            onReject={() => reject.mutate(t.teacherId!)}
           />
         </div>
       )}
@@ -268,6 +250,14 @@ function EmptyState() {
   );
 }
 
+function LoadingState() {
+  return (
+    <div className="flex items-center justify-center h-full text-on-surface-variant/50 py-16">
+      <span className="material-symbols-outlined text-3xl animate-spin">progress_activity</span>
+    </div>
+  );
+}
+
 function ApproveRejectButtons({
   onApprove,
   onReject,
@@ -297,10 +287,23 @@ function ApproveRejectButtons({
 export function PendingApprovalsModal({ onClose }: Props) {
   const [tab, setTab] = useState<Tab>('student');
 
+  const { data: studentsRes } = useQuery({
+    queryKey: ['admin', 'pending', 'students'],
+    queryFn: getPendingStudents,
+  });
+  const { data: parentsRes } = useQuery({
+    queryKey: ['admin', 'pending', 'parents'],
+    queryFn: getPendingParents,
+  });
+  const { data: teachersRes } = useQuery({
+    queryKey: ['admin', 'pending', 'teachers'],
+    queryFn: getPendingTeachers,
+  });
+
   const counts: Record<Tab, number> = {
-    student: PENDING_STUDENTS.length,
-    parent: PENDING_PARENTS.length,
-    teacher: PENDING_TEACHERS.length,
+    student: studentsRes?.data?.length ?? 0,
+    parent: parentsRes?.data?.length ?? 0,
+    teacher: teachersRes?.data?.length ?? 0,
   };
 
   return (
