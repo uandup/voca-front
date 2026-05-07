@@ -10,7 +10,6 @@ import {
   INITIAL_PARENT,
 } from '../model/constants';
 import { isStudentValid, isTeacherValid, isParentValid } from '../lib/validate';
-import { buildProfileBody } from '../api/utils';
 import { useRegist } from '../model/useRegist';
 import type {
   MemberRole,
@@ -37,7 +36,7 @@ export function OnboardingForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isValid || isPending) return;
-    mutate(buildProfileBody(userType, student, teacher, parent));
+    mutate({ userType, student, teacher, parent });
   };
 
   return (
