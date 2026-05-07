@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { PendingApprovalsModal } from './ui/modals/PendingApprovalsModal';
-import { ClassManageModal } from './ui/modals/ClassManageModal';
-import { TeacherPermissionModal } from './ui/modals/TeacherPermissionModal';
-import { TeacherManageModal } from './ui/modals/TeacherManageModal';
-import { ParentManageModal } from './ui/modals/ParentManageModal';
-import { GradeBulkModal } from './ui/modals/GradeBulkModal';
+import { PendingApprovalsModal } from './ui/PendingApprovalsModal';
+import { ClassManageModal } from './ui/ClassManageModal';
+import { TeacherPermissionModal } from './ui/TeacherPermissionModal';
+import { TeacherManageModal } from './ui/TeacherManageModal';
+import { ParentManageModal } from './ui/ParentManageModal';
+import { GradeBulkModal } from './ui/GradeBulkModal';
 import { getPendingCount } from '@/entities/member';
 
 type ModalType =
