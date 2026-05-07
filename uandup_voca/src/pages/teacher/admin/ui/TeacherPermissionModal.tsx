@@ -1,15 +1,7 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import {
-  getNonAdminTeachers,
-  getAdminTeachers,
-  promoteTeacherToAdmin,
-  demoteAdminToTeacher,
-} from '@/entities/member';
-import type { components } from '@/shared/api/schema.gen';
-
-type TeacherListResponse = components['schemas']['TeacherListResponse'];
+import type { TeacherRow } from '@/entities/member';
+import { useTeacherPermission } from '../model/useTeacherPermission';
 
 interface Props {
   onClose: () => void;
@@ -18,47 +10,19 @@ interface Props {
 type Tab = 'teacher' | 'admin';
 
 export function TeacherPermissionModal({ onClose }: Props) {
-  const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('teacher');
+  const { teachers, admins, loadingTeachers, loadingAdmins, isPending, promote, demote } =
+    useTeacherPermission();
 
-  const { data: nonAdminsRes, isLoading: loadingNonAdmins } = useQuery({
-    queryKey: ['admin', 'teachers', 'non-admins'],
-    queryFn: getNonAdminTeachers,
-  });
-  const { data: adminsRes, isLoading: loadingAdmins } = useQuery({
-    queryKey: ['admin', 'teachers', 'admins'],
-    queryFn: getAdminTeachers,
-  });
+  const filtered = tab === 'admin' ? admins : teachers;
+  const isLoading = tab === 'admin' ? loadingAdmins : loadingTeachers;
+  const counts: Record<Tab, number> = { teacher: teachers.length, admin: admins.length };
 
-  const promote = useMutation({
-    mutationFn: (id: number) => promoteTeacherToAdmin(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'teachers'] });
-    },
-  });
-  const demote = useMutation({
-    mutationFn: (id: number) => demoteAdminToTeacher(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'teachers'] });
-    },
-  });
-
-  const nonAdmins: TeacherListResponse[] = nonAdminsRes?.data ?? [];
-  const admins: TeacherListResponse[] = adminsRes?.data ?? [];
-
-  const filtered = tab === 'admin' ? admins : nonAdmins;
-  const isLoading = tab === 'admin' ? loadingAdmins : loadingNonAdmins;
-
-  const counts: Record<Tab, number> = {
-    teacher: nonAdmins.length,
-    admin: admins.length,
-  };
-
-  function handleToggle(t: TeacherListResponse) {
+  function handleToggle(t: TeacherRow) {
     if (t.isAdmin) {
-      demote.mutate(t.teacherId!);
+      demote(t.id);
     } else {
-      promote.mutate(t.teacherId!);
+      promote(t.id);
     }
   }
 
@@ -124,7 +88,7 @@ export function TeacherPermissionModal({ onClose }: Props) {
             </li>
           ) : (
             filtered.map((t) => (
-              <li key={t.teacherId} className="flex items-center justify-between px-7 py-4 gap-4">
+              <li key={t.id} className="flex items-center justify-between px-7 py-4 gap-4">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-on-surface truncate">{t.name}</p>
                   <p className="text-xs text-on-surface-variant mt-0.5 truncate">{t.englishName}</p>
@@ -132,7 +96,7 @@ export function TeacherPermissionModal({ onClose }: Props) {
                 <button
                   type="button"
                   onClick={() => handleToggle(t)}
-                  disabled={promote.isPending || demote.isPending}
+                  disabled={isPending}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border shrink-0 transition-all disabled:opacity-50 ${
                     t.isAdmin
                       ? 'bg-surface-container border-outline-variant/40 text-on-surface-variant hover:border-error/40 hover:text-error'
