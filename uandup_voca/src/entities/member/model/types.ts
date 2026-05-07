@@ -131,23 +131,37 @@ export type RegisteredStudentRow = StudentIdentity & {
   grade: StudentGrade;
 };
 
-// ── Pending Approval Lists ──────────────────────────────────────────────────
+// ── Admin: Pending Approval ─────────────────────────────────────────────────
 
-/** 승인 대기 학생 row */
-export type PendingStudentRow = StudentIdentity & {
+export interface PendingStudent {
+  id: number;
+  name: string;
+  englishName: string;
   grade: StudentGrade;
   submittedAt: string;
-};
+}
 
-/** 승인 대기 선생님 row */
-export type PendingTeacherRow = StudentIdentity & {
+export interface PendingTeacher {
+  id: number;
+  name: string;
+  englishName: string;
   submittedAt: string;
-};
+}
 
-/** 승인 대기 학부모 row */
-export type PendingParentRow = StudentIdentity & {
-  phone: string;
-  childNameKo: string;
-  childGrade: string;
+export interface PendingParent {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  requestedChildName: string;
+  requestedChildGrade: number;
   submittedAt: string;
-};
+}
+
+// ── Admin: Teacher Permission ───────────────────────────────────────────────
+
+export interface TeacherRow {
+  id: number;
+  name: string;
+  englishName: string;
+  isAdmin: boolean;
+}

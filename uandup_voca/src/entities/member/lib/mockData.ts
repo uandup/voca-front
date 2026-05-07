@@ -24,12 +24,20 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     testConfig: { type: 'word-to-meaning', includeSynonyms: true },
     recentScore: { score: 87, total: 100 },
     memos: [
-      { id: 1, date: '2026.03.01', content: '단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중.' },
+      {
+        id: 1,
+        date: '2026.03.01',
+        content: '단어 암기 속도가 매우 빠름. 고급 어휘 위주로 학습 중.',
+      },
       { id: 2, date: '2026.04.01', content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.' },
       { id: 3, date: '2026.04.02', content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.' },
       { id: 4, date: '2026.04.03', content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.' },
       { id: 5, date: '2026.04.04', content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트.' },
-      { id: 6, date: '2026.04.05', content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트..가나다라마바.' },
+      {
+        id: 6,
+        date: '2026.04.05',
+        content: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트..가나다라마바.',
+      },
     ],
     latestMemoContent: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트..가나다라마바.',
     parentName: '김철수',
@@ -139,11 +147,46 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
 ];
 
 export const PENDING_STUDENTS_MOCK: PendingStudentRow[] = [
-  { id: 101, nameKo: '김지훈', nameFirstEn: 'Jihun', nameLastEn: 'Kim', grade: 10, submittedAt: '2026.04.20' },
-  { id: 102, nameKo: '박서연', nameFirstEn: 'Seoyeon', nameLastEn: 'Park', grade: 9, submittedAt: '2026.04.21' },
-  { id: 103, nameKo: '이준혁', nameFirstEn: 'Junhyuk', nameLastEn: 'Lee', grade: 11, submittedAt: '2026.04.22' },
-  { id: 104, nameKo: '최아영', nameFirstEn: 'Ayoung', nameLastEn: 'Choi', grade: 12, submittedAt: '2026.04.23' },
-  { id: 105, nameKo: '한도윤', nameFirstEn: 'Doyun', nameLastEn: 'Han', grade: 10, submittedAt: '2026.04.24' },
+  {
+    id: 101,
+    nameKo: '김지훈',
+    nameFirstEn: 'Jihun',
+    nameLastEn: 'Kim',
+    grade: 10,
+    submittedAt: '2026.04.20',
+  },
+  {
+    id: 102,
+    nameKo: '박서연',
+    nameFirstEn: 'Seoyeon',
+    nameLastEn: 'Park',
+    grade: 9,
+    submittedAt: '2026.04.21',
+  },
+  {
+    id: 103,
+    nameKo: '이준혁',
+    nameFirstEn: 'Junhyuk',
+    nameLastEn: 'Lee',
+    grade: 11,
+    submittedAt: '2026.04.22',
+  },
+  {
+    id: 104,
+    nameKo: '최아영',
+    nameFirstEn: 'Ayoung',
+    nameLastEn: 'Choi',
+    grade: 12,
+    submittedAt: '2026.04.23',
+  },
+  {
+    id: 105,
+    nameKo: '한도윤',
+    nameFirstEn: 'Doyun',
+    nameLastEn: 'Han',
+    grade: 10,
+    submittedAt: '2026.04.24',
+  },
 ];
 
 export const PENDING_PARENTS_MOCK: PendingParentRow[] = [
@@ -181,15 +224,49 @@ export const PENDING_PARENTS_MOCK: PendingParentRow[] = [
 
 export const PENDING_TEACHERS_MOCK: PendingTeacherRow[] = [
   { id: 301, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', submittedAt: '2026.04.18' },
-  { id: 302, nameKo: '윤대현', nameFirstEn: 'Daehyun', nameLastEn: 'Yoon', submittedAt: '2026.04.19' },
+  {
+    id: 302,
+    nameKo: '윤대현',
+    nameFirstEn: 'Daehyun',
+    nameLastEn: 'Yoon',
+    submittedAt: '2026.04.19',
+  },
 ];
 
 export const MOCK_UNASSIGNED_STUDENTS: UnassignedStudentListItem[] = [
-  { id: 1, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', grade: 10, clinics: ['MON 13:00~15:00', 'WED 18:00~20:00'] },
-  { id: 2, nameKo: '오민준', nameFirstEn: 'Minjun', nameLastEn: 'Oh', grade: 9, clinics: ['TUE 13:00~15:00'] },
+  {
+    id: 1,
+    nameKo: '강지수',
+    nameFirstEn: 'Jisu',
+    nameLastEn: 'Kang',
+    grade: 10,
+    clinics: ['MON 13:00~15:00', 'WED 18:00~20:00'],
+  },
+  {
+    id: 2,
+    nameKo: '오민준',
+    nameFirstEn: 'Minjun',
+    nameLastEn: 'Oh',
+    grade: 9,
+    clinics: ['TUE 13:00~15:00'],
+  },
   { id: 3, nameKo: '신예린', nameFirstEn: 'Yerin', nameLastEn: 'Shin', grade: 11, clinics: [] },
-  { id: 4, nameKo: '한도윤', nameFirstEn: 'Doyun', nameLastEn: 'Han', grade: 10, clinics: ['MON 13:00~15:00', 'THU 15:00~17:00', 'SAT 10:00~12:00'] },
-  { id: 5, nameKo: '이준혁', nameFirstEn: 'Junhyuk', nameLastEn: 'Lee', grade: 12, clinics: ['FRI 15:00~17:00'] },
+  {
+    id: 4,
+    nameKo: '한도윤',
+    nameFirstEn: 'Doyun',
+    nameLastEn: 'Han',
+    grade: 10,
+    clinics: ['MON 13:00~15:00', 'THU 15:00~17:00', 'SAT 10:00~12:00'],
+  },
+  {
+    id: 5,
+    nameKo: '이준혁',
+    nameFirstEn: 'Junhyuk',
+    nameLastEn: 'Lee',
+    grade: 12,
+    clinics: ['FRI 15:00~17:00'],
+  },
 ];
 
 export const REGISTERED_STUDENTS_MOCK: RegisteredStudentRow[] = [
@@ -211,11 +288,46 @@ export const TEACHER_MOCK: RegisteredTeacherRow[] = [
 ];
 
 export const PARENT_MOCK: RegisteredParentRow[] = [
-  { id: 1, nameKo: '김철수', nameFirstEn: 'Chulsoo', nameLastEn: 'Kim', phone: '010-1234-5678', matchedStudentId: 1 },
-  { id: 2, nameKo: '이상훈', nameFirstEn: 'Sanghun', nameLastEn: 'Lee', phone: '010-2345-6789', matchedStudentId: 2 },
-  { id: 3, nameKo: '박영미', nameFirstEn: 'Youngmi', nameLastEn: 'Park', phone: '010-3456-7890', matchedStudentId: 3 },
-  { id: 4, nameKo: '최영진', nameFirstEn: 'Youngjin', nameLastEn: 'Choi', phone: '010-4567-8901', matchedStudentId: 4 },
-  { id: 5, nameKo: '정미경', nameFirstEn: 'Mikyung', nameLastEn: 'Jung', phone: '010-5678-9012', matchedStudentId: 5 },
+  {
+    id: 1,
+    nameKo: '김철수',
+    nameFirstEn: 'Chulsoo',
+    nameLastEn: 'Kim',
+    phone: '010-1234-5678',
+    matchedStudentId: 1,
+  },
+  {
+    id: 2,
+    nameKo: '이상훈',
+    nameFirstEn: 'Sanghun',
+    nameLastEn: 'Lee',
+    phone: '010-2345-6789',
+    matchedStudentId: 2,
+  },
+  {
+    id: 3,
+    nameKo: '박영미',
+    nameFirstEn: 'Youngmi',
+    nameLastEn: 'Park',
+    phone: '010-3456-7890',
+    matchedStudentId: 3,
+  },
+  {
+    id: 4,
+    nameKo: '최영진',
+    nameFirstEn: 'Youngjin',
+    nameLastEn: 'Choi',
+    phone: '010-4567-8901',
+    matchedStudentId: 4,
+  },
+  {
+    id: 5,
+    nameKo: '정미경',
+    nameFirstEn: 'Mikyung',
+    nameLastEn: 'Jung',
+    phone: '010-5678-9012',
+    matchedStudentId: 5,
+  },
 ];
 
 export const MOCK_PENDING_APPROVALS: RegisteredStudentRow[] = [

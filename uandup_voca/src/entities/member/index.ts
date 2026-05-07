@@ -12,13 +12,20 @@ export type {
   StudentFormState,
   TeacherFormState,
   ParentFormState,
-  PendingStudentRow,
-  PendingTeacherRow,
-  PendingParentRow,
   RegisteredStudentRow,
   RegisteredTeacherRow,
   RegisteredParentRow,
+  PendingStudent,
+  PendingTeacher,
+  PendingParent,
+  TeacherRow,
 } from './model/types';
+export {
+  toPendingStudent,
+  toPendingTeacher,
+  toPendingParent,
+  toTeacherRow,
+} from './model/mapper';
 export {
   STUDENT_MOCK,
   PENDING_STUDENTS_MOCK,
