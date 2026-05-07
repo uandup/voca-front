@@ -1,71 +1,29 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { getClassrooms, createClassroom, updateClassroom, deleteClassroom } from '@/entities/class';
-import type { components } from '@/shared/api/schema.gen';
-
-type ClassroomSummary = components['schemas']['ClassroomSummary'];
+import { useClassManage } from '../model/useClassManage';
 
 interface Props {
   onClose: () => void;
 }
 
 export function ClassManageModal({ onClose }: Props) {
-  const queryClient = useQueryClient();
-  const [newName, setNewName] = useState('');
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState('');
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'classrooms'],
-    queryFn: getClassrooms,
-  });
-  const classes: ClassroomSummary[] = data?.data ?? [];
-
-  const addMutation = useMutation({
-    mutationFn: (name: string) => createClassroom({ name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'classrooms'] });
-      setNewName('');
-    },
-  });
-
-  const editMutation = useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) => updateClassroom(id, { name }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'classrooms'] });
-      setEditingId(null);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => deleteClassroom(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'classrooms'] });
-      setDeletingId(null);
-    },
-  });
-
-  function handleAdd() {
-    const trimmed = newName.trim();
-    if (!trimmed || classes.some((c) => c.className === trimmed)) return;
-    addMutation.mutate(trimmed);
-  }
-
-  function handleEditStart(item: ClassroomSummary) {
-    setEditingId(item.classId!);
-    setEditingName(item.className ?? '');
-  }
-
-  function handleEditSave(item: ClassroomSummary) {
-    const trimmed = editingName.trim();
-    if (!trimmed || (trimmed !== item.className && classes.some((c) => c.className === trimmed))) {
-      setEditingId(null);
-      return;
-    }
-    editMutation.mutate({ id: item.classId!, name: trimmed });
-  }
+  const {
+    classList,
+    isLoading,
+    newName,
+    setNewName,
+    editingId,
+    editingName,
+    setEditingName,
+    deletingId,
+    setDeletingId,
+    setEditingId,
+    isAddPending,
+    isDeletePending,
+    handleAdd,
+    handleEditStart,
+    handleEditSave,
+    handleDelete,
+  } = useClassManage();
 
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
@@ -73,7 +31,7 @@ export function ClassManageModal({ onClose }: Props) {
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <div>
             <h2 className="font-headline text-xl font-bold text-primary">Class Management</h2>
-            <p className="text-xs text-on-surface-variant mt-0.5">{classes.length} classes</p>
+            <p className="text-xs text-on-surface-variant mt-0.5">{classList.length} classes</p>
           </div>
           <button
             onClick={onClose}
@@ -95,7 +53,7 @@ export function ClassManageModal({ onClose }: Props) {
             <button
               type="button"
               onClick={handleAdd}
-              disabled={!newName.trim() || addMutation.isPending}
+              disabled={!newName.trim() || isAddPending}
               className="px-4 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold disabled:opacity-40 hover:opacity-90 transition-all"
             >
               Add
@@ -113,32 +71,28 @@ export function ClassManageModal({ onClose }: Props) {
                 progress_activity
               </span>
             </li>
-          ) : classes.length === 0 ? (
+          ) : classList.length === 0 ? (
             <li className="flex items-center justify-center h-full text-sm text-on-surface-variant">
               No classes yet
             </li>
           ) : (
-            classes.map((item) => (
-              <li key={item.classId} className="flex items-center gap-3 px-7 py-3.5 min-h-14">
-                {editingId === item.classId ? (
+            classList.map((item) => (
+              <li key={item.id} className="flex items-center gap-3 px-7 py-3.5 min-h-14">
+                {editingId === item.id ? (
+                  <input
+                    autoFocus
+                    className="flex-1 min-w-0 border border-primary/40 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    value={editingName}
+                    onChange={(e) => setEditingName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleEditSave(item.id, item.name);
+                      if (e.key === 'Escape') setEditingId(null);
+                    }}
+                    onBlur={() => handleEditSave(item.id, item.name)}
+                  />
+                ) : deletingId === item.id ? (
                   <>
-                    <input
-                      autoFocus
-                      className="flex-1 min-w-0 border border-primary/40 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      value={editingName}
-                      onChange={(e) => setEditingName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleEditSave(item);
-                        if (e.key === 'Escape') setEditingId(null);
-                      }}
-                      onBlur={() => handleEditSave(item)}
-                    />
-                  </>
-                ) : deletingId === item.classId ? (
-                  <>
-                    <p className="flex-1 text-sm text-error font-bold">
-                      Delete "{item.className}"?
-                    </p>
+                    <p className="flex-1 text-sm text-error font-bold">Delete "{item.name}"?</p>
                     <div className="flex gap-2 shrink-0">
                       <button
                         type="button"
@@ -149,8 +103,8 @@ export function ClassManageModal({ onClose }: Props) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => deleteMutation.mutate(item.classId!)}
-                        disabled={deleteMutation.isPending}
+                        onClick={() => handleDelete(item.id)}
+                        disabled={isDeletePending}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold bg-error text-white hover:opacity-90 transition-opacity disabled:opacity-50"
                       >
                         Delete
@@ -159,12 +113,12 @@ export function ClassManageModal({ onClose }: Props) {
                   </>
                 ) : (
                   <>
-                    <span className="flex-1 text-sm text-on-surface">{item.className}</span>
+                    <span className="flex-1 text-sm text-on-surface">{item.name}</span>
                     <div className="flex items-center gap-1 shrink-0">
                       <button
                         type="button"
                         onClick={() => {
-                          handleEditStart(item);
+                          handleEditStart(item.id, item.name);
                           setDeletingId(null);
                         }}
                         className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"
@@ -176,7 +130,7 @@ export function ClassManageModal({ onClose }: Props) {
                       <button
                         type="button"
                         onClick={() => {
-                          setDeletingId(item.classId!);
+                          setDeletingId(item.id);
                           setEditingId(null);
                         }}
                         className="p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/5 transition-colors"
