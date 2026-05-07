@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { useClassManage } from '../model/useClassManage';
 
@@ -6,24 +7,37 @@ interface Props {
 }
 
 export function ClassManageModal({ onClose }: Props) {
-  const {
-    classList,
-    isLoading,
-    newName,
-    setNewName,
-    editingId,
-    editingName,
-    setEditingName,
-    deletingId,
-    setDeletingId,
-    setEditingId,
-    isAddPending,
-    isDeletePending,
-    handleAdd,
-    handleEditStart,
-    handleEditSave,
-    handleDelete,
-  } = useClassManage();
+  const { classList, isLoading, isAddPending, isDeletePending, add, edit, remove } =
+    useClassManage();
+
+  const [newName, setNewName] = useState('');
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  function handleAdd() {
+    const trimmed = newName.trim();
+    if (!trimmed || classList.some((c) => c.name === trimmed)) return;
+    add(trimmed, { onSuccess: () => setNewName('') });
+  }
+
+  function handleEditStart(id: number, name: string) {
+    setEditingId(id);
+    setEditingName(name);
+  }
+
+  function handleEditSave(id: number, originalName: string) {
+    const trimmed = editingName.trim();
+    if (!trimmed || (trimmed !== originalName && classList.some((c) => c.name === trimmed))) {
+      setEditingId(null);
+      return;
+    }
+    edit({ id, name: trimmed }, { onSuccess: () => setEditingId(null) });
+  }
+
+  function handleDeleteConfirm(id: number) {
+    remove(id, { onSuccess: () => setDeletingId(null) });
+  }
 
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
@@ -103,7 +117,7 @@ export function ClassManageModal({ onClose }: Props) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDeleteConfirm(item.id)}
                         disabled={isDeletePending}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold bg-error text-white hover:opacity-90 transition-opacity disabled:opacity-50"
                       >
