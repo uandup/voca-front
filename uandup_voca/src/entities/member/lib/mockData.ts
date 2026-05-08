@@ -1,12 +1,7 @@
 import type {
   StudentManageTableRow,
-  PendingStudentRow,
-  PendingParentRow,
-  PendingTeacherRow,
   UnassignedStudentListItem,
   RegisteredStudentRow,
-  RegisteredTeacherRow,
-  RegisteredParentRow,
 } from '../model/types';
 
 export const STUDENT_MOCK: StudentManageTableRow[] = [
@@ -146,93 +141,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
   },
 ];
 
-export const PENDING_STUDENTS_MOCK: PendingStudentRow[] = [
-  {
-    id: 101,
-    nameKo: '김지훈',
-    nameFirstEn: 'Jihun',
-    nameLastEn: 'Kim',
-    grade: 10,
-    submittedAt: '2026.04.20',
-  },
-  {
-    id: 102,
-    nameKo: '박서연',
-    nameFirstEn: 'Seoyeon',
-    nameLastEn: 'Park',
-    grade: 9,
-    submittedAt: '2026.04.21',
-  },
-  {
-    id: 103,
-    nameKo: '이준혁',
-    nameFirstEn: 'Junhyuk',
-    nameLastEn: 'Lee',
-    grade: 11,
-    submittedAt: '2026.04.22',
-  },
-  {
-    id: 104,
-    nameKo: '최아영',
-    nameFirstEn: 'Ayoung',
-    nameLastEn: 'Choi',
-    grade: 12,
-    submittedAt: '2026.04.23',
-  },
-  {
-    id: 105,
-    nameKo: '한도윤',
-    nameFirstEn: 'Doyun',
-    nameLastEn: 'Han',
-    grade: 10,
-    submittedAt: '2026.04.24',
-  },
-];
-
-export const PENDING_PARENTS_MOCK: PendingParentRow[] = [
-  {
-    id: 201,
-    nameKo: '김영희',
-    nameFirstEn: 'Younghee',
-    nameLastEn: 'Kim',
-    phone: '010-1111-2222',
-    childNameKo: '김지훈',
-    childGrade: 'Grade 10',
-    submittedAt: '2026.04.20',
-  },
-  {
-    id: 202,
-    nameKo: '박철수',
-    nameFirstEn: 'Chulsoo',
-    nameLastEn: 'Park',
-    phone: '010-3333-4444',
-    childNameKo: '박서연',
-    childGrade: 'Grade 9',
-    submittedAt: '2026.04.21',
-  },
-  {
-    id: 203,
-    nameKo: '이미래',
-    nameFirstEn: 'Mirae',
-    nameLastEn: 'Lee',
-    phone: '010-5555-6666',
-    childNameKo: '이수민',
-    childGrade: 'Grade 11',
-    submittedAt: '2026.04.22',
-  },
-];
-
-export const PENDING_TEACHERS_MOCK: PendingTeacherRow[] = [
-  { id: 301, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', submittedAt: '2026.04.18' },
-  {
-    id: 302,
-    nameKo: '윤대현',
-    nameFirstEn: 'Daehyun',
-    nameLastEn: 'Yoon',
-    submittedAt: '2026.04.19',
-  },
-];
-
 export const MOCK_UNASSIGNED_STUDENTS: UnassignedStudentListItem[] = [
   {
     id: 1,
@@ -277,57 +185,6 @@ export const REGISTERED_STUDENTS_MOCK: RegisteredStudentRow[] = [
   { id: 5, nameKo: '정도현', nameFirstEn: 'Dohyun', nameLastEn: 'Jung', grade: 11 },
   { id: 6, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', grade: 10 },
   { id: 7, nameKo: '윤재혁', nameFirstEn: 'Jaehyuk', nameLastEn: 'Yoon', grade: 12 },
-];
-
-export const TEACHER_MOCK: RegisteredTeacherRow[] = [
-  { id: 1, nameKo: '김선생', nameFirstEn: 'Teacher', nameLastEn: 'Kim', isAdmin: true },
-  { id: 2, nameKo: '이선생', nameFirstEn: 'Teacher', nameLastEn: 'Lee', isAdmin: false },
-  { id: 3, nameKo: '박선생', nameFirstEn: 'Teacher', nameLastEn: 'Park', isAdmin: false },
-  { id: 4, nameKo: '최선생', nameFirstEn: 'Teacher', nameLastEn: 'Choi', isAdmin: false },
-  { id: 5, nameKo: '정선생', nameFirstEn: 'Teacher', nameLastEn: 'Jung', isAdmin: false },
-];
-
-export const PARENT_MOCK: RegisteredParentRow[] = [
-  {
-    id: 1,
-    nameKo: '김철수',
-    nameFirstEn: 'Chulsoo',
-    nameLastEn: 'Kim',
-    phone: '010-1234-5678',
-    matchedStudentId: 1,
-  },
-  {
-    id: 2,
-    nameKo: '이상훈',
-    nameFirstEn: 'Sanghun',
-    nameLastEn: 'Lee',
-    phone: '010-2345-6789',
-    matchedStudentId: 2,
-  },
-  {
-    id: 3,
-    nameKo: '박영미',
-    nameFirstEn: 'Youngmi',
-    nameLastEn: 'Park',
-    phone: '010-3456-7890',
-    matchedStudentId: 3,
-  },
-  {
-    id: 4,
-    nameKo: '최영진',
-    nameFirstEn: 'Youngjin',
-    nameLastEn: 'Choi',
-    phone: '010-4567-8901',
-    matchedStudentId: 4,
-  },
-  {
-    id: 5,
-    nameKo: '정미경',
-    nameFirstEn: 'Mikyung',
-    nameLastEn: 'Jung',
-    phone: '010-5678-9012',
-    matchedStudentId: 5,
-  },
 ];
 
 export const MOCK_PENDING_APPROVALS: RegisteredStudentRow[] = [

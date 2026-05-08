@@ -41,7 +41,10 @@ export function ClassManageModal({ onClose }: Props) {
 
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
-      <div className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div
+        className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        style={{ height: '500px' }}
+      >
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <div>
             <h2 className="font-headline text-xl font-bold text-primary">Class Management</h2>

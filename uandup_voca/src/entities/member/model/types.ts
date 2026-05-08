@@ -113,19 +113,6 @@ export interface ParentFormState {
   childGrade: StudentGrade;
 }
 
-// ── Admin: Registered Member Lists ─────────────────────────────────────────
-
-/** Admin ParentManageModal — 학부모 목록 row */
-export type RegisteredParentRow = StudentIdentity & {
-  phone: string;
-  matchedStudentId: number | null;
-};
-
-/** Admin TeacherManageModal / TeacherPermissionModal — 선생님 목록 row */
-export type RegisteredTeacherRow = StudentIdentity & {
-  isAdmin: boolean;
-};
-
 /** Admin PendingApprovalsModal StudentMatchPanel — 등록된 학생 목록 */
 export type RegisteredStudentRow = StudentIdentity & {
   grade: StudentGrade;
@@ -164,4 +151,27 @@ export interface TeacherRow {
   name: string;
   englishName: string;
   isAdmin: boolean;
+}
+
+// ── Admin: Teacher / Parent Manage ──────────────────────────────────────────
+
+export interface TeacherManageRow {
+  id: number;
+  name: string;
+  nameFirstEn: string;
+  nameLastEn: string;
+  isAdmin: boolean;
+}
+
+export interface ParentStudentSummary {
+  id: number;
+  name: string;
+  grade: number;
+}
+
+export interface ParentManageRow {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  students: ParentStudentSummary[];
 }

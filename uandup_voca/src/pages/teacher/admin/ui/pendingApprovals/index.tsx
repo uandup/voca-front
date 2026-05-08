@@ -25,7 +25,7 @@ export default function PendingApprovalsModal({ onClose }: Props) {
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div
         className="w-full max-w-lg bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-        style={{ height: '540px' }}
+        style={{ height: '500px' }}
       >
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <h2 className="font-headline text-xl font-bold text-primary">Pending Approvals</h2>

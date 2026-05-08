@@ -1,10 +1,18 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { PendingStudent, PendingTeacher, PendingParent, TeacherRow } from './types';
+import type {
+  PendingStudent,
+  PendingTeacher,
+  PendingParent,
+  TeacherRow,
+  TeacherManageRow,
+  ParentManageRow,
+} from './types';
 
 type PendingStudentResponse = components['schemas']['PendingStudentResponse'];
 type PendingTeacherResponse = components['schemas']['PendingTeacherResponse'];
 type PendingParentResponse = components['schemas']['PendingParentResponse'];
 type TeacherListResponse = components['schemas']['TeacherListResponse'];
+type ParentListResponse = components['schemas']['ParentListResponse'];
 
 export function toPendingStudent(r: PendingStudentResponse): PendingStudent {
   return {
@@ -42,5 +50,29 @@ export function toTeacherRow(r: TeacherListResponse): TeacherRow {
     name: r.name ?? '',
     englishName: r.englishName ?? '',
     isAdmin: r.isAdmin ?? false,
+  };
+}
+
+export function toTeacherManageRow(r: TeacherListResponse): TeacherManageRow {
+  const [nameFirstEn = '', nameLastEn = ''] = (r.englishName ?? '').split(' ');
+  return {
+    id: r.teacherId!,
+    name: r.name ?? '',
+    nameFirstEn,
+    nameLastEn,
+    isAdmin: r.isAdmin ?? false,
+  };
+}
+
+export function toParentManageRow(r: ParentListResponse): ParentManageRow {
+  return {
+    id: r.parentId!,
+    name: r.name ?? '',
+    phoneNumber: r.phoneNumber ?? '',
+    students: (r.students ?? []).map((s) => ({
+      id: s.studentId!,
+      name: s.name ?? '',
+      grade: s.grade ?? 0,
+    })),
   };
 }
