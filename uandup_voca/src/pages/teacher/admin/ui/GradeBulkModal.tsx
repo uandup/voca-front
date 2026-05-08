@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { promoteAllStudentsGrade, demoteAllStudentsGrade } from '@/entities/member';
+import { useGradeBulk } from '../model/useGradeBulk';
 
 interface Props {
   onClose: () => void;
@@ -9,28 +8,11 @@ interface Props {
 
 export function GradeBulkModal({ onClose }: Props) {
   const [delta, setDelta] = useState<-1 | 1 | null>(null);
-  const [result, setResult] = useState<{ updated: number; skipped: number } | null>(null);
-
-  const promote = useMutation({
-    mutationFn: promoteAllStudentsGrade,
-    onSuccess: (res) => {
-      setResult({ updated: res.data?.updated ?? 0, skipped: res.data?.skipped ?? 0 });
-    },
-  });
-  const demote = useMutation({
-    mutationFn: demoteAllStudentsGrade,
-    onSuccess: (res) => {
-      setResult({ updated: res.data?.updated ?? 0, skipped: res.data?.skipped ?? 0 });
-    },
-  });
-
-  const isPending = promote.isPending || demote.isPending;
+  const { result, isPending, apply } = useGradeBulk();
 
   function handleApply() {
     if (delta === null) return;
-    setResult(null);
-    if (delta === 1) promote.mutate();
-    else demote.mutate();
+    apply(delta);
   }
 
   return (
@@ -58,10 +40,7 @@ export function GradeBulkModal({ onClose }: Props) {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={() => {
-                setDelta(-1);
-                setResult(null);
-              }}
+              onClick={() => setDelta(-1)}
               className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                 delta === -1
                   ? 'bg-error text-white border-error'
@@ -72,10 +51,7 @@ export function GradeBulkModal({ onClose }: Props) {
             </button>
             <button
               type="button"
-              onClick={() => {
-                setDelta(1);
-                setResult(null);
-              }}
+              onClick={() => setDelta(1)}
               className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
                 delta === 1
                   ? 'bg-primary text-on-primary border-primary'
