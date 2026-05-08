@@ -6,6 +6,7 @@ import {
   demoteAdminToTeacher,
   toTeacherRow,
 } from '@/entities/member';
+import { getTokenPayload } from '@/shared/jwt';
 
 export function useTeacherPermission() {
   const queryClient = useQueryClient();
@@ -32,12 +33,15 @@ export function useTeacherPermission() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'teachers'] }),
   });
 
+  const currentUserId = Number(getTokenPayload()?.sub ?? -1);
+
   return {
     teachers: teachers ?? [],
     admins: admins ?? [],
     loadingTeachers,
     loadingAdmins,
     isPending: promote.isPending || demote.isPending,
+    currentUserId,
     promote: promote.mutate,
     demote: demote.mutate,
   };

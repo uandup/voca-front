@@ -11,8 +11,16 @@ type Tab = 'teacher' | 'admin';
 
 export function TeacherPermissionModal({ onClose }: Props) {
   const [tab, setTab] = useState<Tab>('teacher');
-  const { teachers, admins, loadingTeachers, loadingAdmins, isPending, promote, demote } =
-    useTeacherPermission();
+  const {
+    teachers,
+    admins,
+    loadingTeachers,
+    loadingAdmins,
+    isPending,
+    currentUserId,
+    promote,
+    demote,
+  } = useTeacherPermission();
 
   const filtered = tab === 'admin' ? admins : teachers;
   const isLoading = tab === 'admin' ? loadingAdmins : loadingTeachers;
@@ -93,21 +101,30 @@ export function TeacherPermissionModal({ onClose }: Props) {
                   <p className="text-sm font-bold text-on-surface truncate">{t.name}</p>
                   <p className="text-xs text-on-surface-variant mt-0.5 truncate">{t.englishName}</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleToggle(t)}
-                  disabled={isPending}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border shrink-0 transition-all disabled:opacity-50 ${
-                    t.isAdmin
-                      ? 'bg-surface-container border-outline-variant/40 text-on-surface-variant hover:border-error/40 hover:text-error'
-                      : 'bg-surface-container border-outline-variant/40 text-on-surface-variant hover:border-primary/40 hover:text-primary'
-                  }`}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-                    {t.isAdmin ? 'shield_lock' : 'shield'}
+                {t.id === currentUserId ? (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-black text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full border border-outline-variant/30 shrink-0">
+                    <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                      person
+                    </span>
+                    You
                   </span>
-                  {t.isAdmin ? 'Switch to Teacher' : 'Switch to Admin'}
-                </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleToggle(t)}
+                    disabled={isPending}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border shrink-0 transition-all disabled:opacity-50 ${
+                      t.isAdmin
+                        ? 'bg-surface-container border-outline-variant/40 text-on-surface-variant hover:border-error/40 hover:text-error'
+                        : 'bg-surface-container border-outline-variant/40 text-on-surface-variant hover:border-primary/40 hover:text-primary'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                      {t.isAdmin ? 'shield_lock' : 'shield'}
+                    </span>
+                    {t.isAdmin ? 'Switch to Teacher' : 'Switch to Admin'}
+                  </button>
+                )}
               </li>
             ))
           )}
