@@ -2,33 +2,19 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { StudentManageTableRow, ParentManageRow, StudentGrade } from '@/entities/member';
+import type { StudentDetail, StudentGrade } from '@/entities/member';
 import { getStudentDetail, toStudentDetail, GRADES } from '@/entities/member';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
+import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
-import type { Class } from '@/entities/class';
+import { useStudentManage } from '../../model/useStudentManage';
 import { ParentListPanel } from './ParentListPanel';
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
-  student: StudentManageTableRow;
+  studentId: number;
   onClose: () => void;
-  onSave: (
-    id: number,
-    body: {
-      name: string;
-      englishName: string;
-      grade: number;
-      assignmentCount: number;
-      examQuestionCount: number;
-      examSubType: 'WORD_TO_MEANING' | 'MEANING_TO_WORD';
-      synonymIncluded: boolean;
-      level: number;
-      parentIds: number[];
-      classroomIds: number[];
-    },
-  ) => void;
 }
 
 const TEST_TYPES: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -38,59 +24,42 @@ const TEST_TYPE_LABELS: Record<WordTestType, string> = {
   'word-to-meaning': 'Word to Meaning ( W to M )',
 };
 
-const SUBTYPE_TO_API: Record<WordTestType, 'WORD_TO_MEANING' | 'MEANING_TO_WORD'> = {
-  'meaning-to-word': 'MEANING_TO_WORD',
-  'word-to-meaning': 'WORD_TO_MEANING',
-};
-
-export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
+export function EditStudentModal({ studentId, onClose }: EditStudentModalProps) {
   const { data: detail } = useQuery({
-    queryKey: ['students', student.id, 'detail'],
-    queryFn: () => getStudentDetail(student.id),
+    queryKey: ['students', studentId, 'detail'],
+    queryFn: () => getStudentDetail(studentId),
     select: (res) => (res.data ? toStudentDetail(res.data) : null),
   });
 
-  const [nameKo, setNameKo] = useState(student.nameKo);
-  const [nameFirstEn, setNameFirstEn] = useState(student.nameFirstEn);
-  const [nameLastEn, setNameLastEn] = useState(student.nameLastEn);
-  const [grade, setGrade] = useState(student.grade);
-  const [level, setLevel] = useState(student.assignedLevel);
-  const [wordCount, setWordCount] = useState(String(student.assignedWordCount));
-  const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
-  const [testType, setTestType] = useState<WordTestType>(student.testConfig.type);
-  const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedClasses, setSelectedClasses] = useState<Class[]>([]);
-  const [selectedParents, setSelectedParents] = useState<ParentManageRow[]>([]);
+  if (!detail) return <></>;
+  return <EditStudentModalContent detail={detail} onClose={onClose} />;
+}
+
+interface EditStudentModalContentProps {
+  detail: StudentDetail;
+  onClose: () => void;
+}
+
+function EditStudentModalContent({ detail, onClose }: EditStudentModalContentProps) {
+  const { edit } = useStudentManage();
+  const [form, setForm] = useState<StudentDetail>(detail);
+  // NumberInput은 string 값이 필요하므로 별도 관리
+  const [assignmentCountStr, setAssignmentCountStr] = useState(String(detail.assignmentCount));
+  const [examQuestionCountStr, setExamQuestionCountStr] = useState(
+    String(detail.examQuestionCount),
+  );
   const [showParentList, setShowParentList] = useState(false);
   const [showClassList, setShowClassList] = useState(false);
 
-  // 상세 조회 완료 후 반/학부모 초기값 동기화 (최초 1회)
-  const [synced, setSynced] = useState(false);
-  if (detail && !synced) {
-    setSelectedClasses(detail.classrooms);
-    setSelectedParents(
-      detail.parents.map((p) => ({
-        id: p.id,
-        name: p.name,
-        phoneNumber: p.phoneNumber,
-        students: [],
-      })),
-    );
-    setSynced(true);
+  function update<K extends keyof StudentDetail>(key: K, value: StudentDetail[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
   }
 
   function handleSave() {
-    onSave(student.id, {
-      name: nameKo,
-      englishName: `${nameFirstEn} ${nameLastEn}`.trim(),
-      grade,
-      assignmentCount: Number(wordCount),
-      examQuestionCount: Number(testQuestionCount),
-      examSubType: SUBTYPE_TO_API[testType],
-      synonymIncluded: includeSynonyms,
-      level: Number(level),
-      parentIds: selectedParents.map((p) => p.id),
-      classroomIds: selectedClasses.map((c) => c.id),
+    edit({
+      ...form,
+      assignmentCount: Number(assignmentCountStr),
+      examQuestionCount: Number(examQuestionCountStr),
     });
     onClose();
   }
@@ -124,8 +93,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameKo}
-                  onChange={(e) => setNameKo(e.target.value)}
+                  value={form.nameKo}
+                  onChange={(e) => update('nameKo', e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -134,8 +103,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameLastEn}
-                  onChange={(e) => setNameLastEn(e.target.value)}
+                  value={form.nameLastEn}
+                  onChange={(e) => update('nameLastEn', e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -144,8 +113,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameFirstEn}
-                  onChange={(e) => setNameFirstEn(e.target.value)}
+                  value={form.nameFirstEn}
+                  onChange={(e) => update('nameFirstEn', e.target.value)}
                 />
               </div>
             </div>
@@ -159,8 +128,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={grade}
-                    onChange={(e) => setGrade(Number(e.target.value) as StudentGrade)}
+                    value={form.grade}
+                    onChange={(e) => update('grade', Number(e.target.value) as StudentGrade)}
                   >
                     {GRADES.map((g) => (
                       <option key={g} value={g}>
@@ -180,8 +149,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={level}
-                    onChange={(e) => setLevel(Number(e.target.value) as typeof level)}
+                    value={form.level}
+                    onChange={(e) => update('level', Number(e.target.value) as WordDifficultyLevel)}
                   >
                     {DIFFICULTY_LEVELS.map((l) => (
                       <option key={l} value={l}>
@@ -203,8 +172,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   Assigned QTY
                 </label>
                 <NumberInput
-                  value={wordCount}
-                  onChange={setWordCount}
+                  value={assignmentCountStr}
+                  onChange={setAssignmentCountStr}
                   min={1}
                   className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
@@ -214,8 +183,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   Test QTY
                 </label>
                 <NumberInput
-                  value={testQuestionCount}
-                  onChange={setTestQuestionCount}
+                  value={examQuestionCountStr}
+                  onChange={setExamQuestionCountStr}
                   min={1}
                   className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
@@ -231,8 +200,13 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative flex-1">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={testType}
-                    onChange={(e) => setTestType(e.target.value as WordTestType)}
+                    value={form.testConfig.type}
+                    onChange={(e) =>
+                      update('testConfig', {
+                        ...form.testConfig,
+                        type: e.target.value as WordTestType,
+                      })
+                    }
                   >
                     {TEST_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -246,9 +220,14 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIncludeSynonyms((v) => !v)}
+                  onClick={() =>
+                    update('testConfig', {
+                      ...form.testConfig,
+                      includeSynonyms: !form.testConfig.includeSynonyms,
+                    })
+                  }
                   className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
-                    includeSynonyms
+                    form.testConfig.includeSynonyms
                       ? 'bg-primary text-white border-primary'
                       : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
                   }`}
@@ -285,10 +264,15 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               </div>
 
               {/* 선택된 반 표시 */}
-              {selectedClasses.length > 0 ? (
+              {form.classrooms.length > 0 ? (
                 <ClassChips
-                  classes={selectedClasses}
-                  onRemove={(id) => setSelectedClasses((prev) => prev.filter((c) => c.id !== id))}
+                  classes={form.classrooms}
+                  onRemove={(id) =>
+                    update(
+                      'classrooms',
+                      form.classrooms.filter((c) => c.id !== id),
+                    )
+                  }
                 />
               ) : (
                 <p className="text-xs text-on-surface-variant/60 px-1">No class selected</p>
@@ -322,9 +306,9 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               </div>
 
               {/* 선택된 학부모 목록 */}
-              {selectedParents.length > 0 ? (
+              {form.parents.length > 0 ? (
                 <div className="flex flex-col gap-2">
-                  {selectedParents.map((parent) => (
+                  {form.parents.map((parent) => (
                     <div
                       key={parent.id}
                       className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3"
@@ -338,7 +322,10 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                       <button
                         type="button"
                         onClick={() =>
-                          setSelectedParents((prev) => prev.filter((p) => p.id !== parent.id))
+                          update(
+                            'parents',
+                            form.parents.filter((p) => p.id !== parent.id),
+                          )
                         }
                         className="p-1 text-on-surface-variant hover:text-error transition-colors"
                       >
@@ -372,16 +359,25 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
 
         {/* 반 리스트 패널 */}
         {showClassList && (
-          <ClassListPanel selectedClasses={selectedClasses} onChange={setSelectedClasses} />
+          <ClassListPanel
+            selectedClasses={form.classrooms}
+            onChange={(classes) => update('classrooms', classes)}
+          />
         )}
 
         {/* 학부모 리스트 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {showParentList && (
           <ParentListPanel
-            selectedIds={selectedParents.map((p) => p.id)}
+            selectedIds={form.parents.map((p) => p.id)}
             onSelect={(parent) => {
-              setSelectedParents((prev) =>
-                prev.some((p) => p.id === parent.id) ? prev : [...prev, parent],
+              update(
+                'parents',
+                form.parents.some((p) => p.id === parent.id)
+                  ? form.parents
+                  : [
+                      ...form.parents,
+                      { id: parent.id, name: parent.name, phoneNumber: parent.phoneNumber },
+                    ],
               );
               setShowParentList(false);
             }}

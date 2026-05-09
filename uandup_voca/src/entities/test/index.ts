@@ -1,3 +1,4 @@
+export { toExamSubType } from './api/mapper';
 export type {
   TestType,
   WordTestType,

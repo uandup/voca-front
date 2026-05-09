@@ -4,10 +4,9 @@ import {
   updateStudent,
   deleteStudent,
   toStudentManageTableRow,
+  toStudentUpdateRequest,
 } from '@/entities/member';
-import type { components } from '@/shared/api/schema.gen';
-
-type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
+import type { StudentDetail } from '@/entities/member';
 
 export function useStudentManage() {
   const queryClient = useQueryClient();
@@ -19,8 +18,7 @@ export function useStudentManage() {
   });
 
   const editMutation = useMutation({
-    mutationFn: ({ id, body }: { id: number; body: StudentUpdateRequest }) =>
-      updateStudent(id, body),
+    mutationFn: (detail: StudentDetail) => updateStudent(detail.id, toStudentUpdateRequest(detail)),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['students'] }),
   });
 

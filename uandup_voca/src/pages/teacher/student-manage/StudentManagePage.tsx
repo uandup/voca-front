@@ -12,7 +12,7 @@ import { MemoPopup } from './ui/modals/MemoPopup';
 import { StudentTable } from './ui/table/StudentTable';
 
 export default function StudentManagePage() {
-  const { students, edit, remove } = useStudentManage();
+  const { students, remove } = useStudentManage();
   const [search, setSearch] = useState('');
   const [gradeFilter, setGradeFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState<number | ''>('');
@@ -122,11 +122,7 @@ export default function StudentManagePage() {
       <StudentTable students={filtered} actions={rowActions} />
 
       {editingStudent && (
-        <EditStudentModal
-          student={editingStudent}
-          onClose={() => setEditingStudent(null)}
-          onSave={(id, body) => edit({ id, body })}
-        />
+        <EditStudentModal studentId={editingStudent.id} onClose={() => setEditingStudent(null)} />
       )}
 
       {deletingStudent && (

@@ -60,3 +60,4 @@ export {
 } from './api/teacherApi';
 export { getParents, updateParent, deleteParent } from './api/parentApi';
 export { getStudents, getStudentDetail, updateStudent, deleteStudent } from './api/studentApi';
+export { toStudentUpdateRequest } from './api/mapper';
