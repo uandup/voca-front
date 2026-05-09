@@ -19,7 +19,10 @@ export function useStudentManage() {
 
   const editMutation = useMutation({
     mutationFn: (detail: StudentDetail) => updateStudent(detail.id, toStudentUpdateRequest(detail)),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['students'] }),
+    onSuccess: (_, detail) => {
+      queryClient.invalidateQueries({ queryKey: ['students'] });
+      queryClient.invalidateQueries({ queryKey: ['students', detail.id, 'detail'] });
+    },
   });
 
   const deleteMutation = useMutation({

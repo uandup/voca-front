@@ -74,8 +74,25 @@ npm run preview   # 프로덕션 빌드 미리보기
 - `Word` (`src/entities/word/types.ts`) — word, partOfSpeech, koreanMeaning, difficulty(1–10), englishMeaning, synonyms, exampleSentence
 - 사용자 역할: `학생` | `학부모` | `선생님` | `관리자`
 
+### API 연동 규칙
+
+UI 컴포넌트는 백엔드 응답 타입(`schema.gen.ts`)을 직접 참조하지 않습니다. 반드시 아래 흐름을 따릅니다:
+
+```
+API response (schema.gen.ts)
+  → mapper (entities/<도메인>/model/mapper.ts)
+  → 클라이언트 타입 (entities/<도메인>/model/types.ts)
+  → UI 컴포넌트
+```
+
+- **클라이언트 타입**: `model/types.ts`에 정의. UI가 실제로 필요한 필드만 포함하며 백엔드 필드명에 종속되지 않습니다.
+- **mapper**: `model/mapper.ts`에 정의. `schema.gen.ts` 타입 → 클라이언트 타입 변환만 담당합니다.
+- **API 함수**: `api/*.ts`에서 HTTP 호출만 담당하고 raw response를 반환합니다. mapper는 호출부(custom hook)에서 `select` 옵션으로 적용합니다.
+- `index.ts` 배럴을 통해 클라이언트 타입과 mapper를 함께 re-export합니다.
+
 ### 반드시 지켜야 할 점
 
 - 항상 코드 품질을 높이는 방향으로 작업을 해야하며 이러한 과정에서 작성하는 코드에 대한 근거와 이유를 설명해 주어야 합니다.
 - 모든 화면은 영어 문구로 표시되어야 합니다.
-- lint, prettier 경고는 무시합니다.
+- lint, prettier, 포맷 경고는 무시합니다.
+- 주석을 제거하지 마세요.

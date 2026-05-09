@@ -29,6 +29,7 @@ export function EditStudentModal({ studentId, onClose }: EditStudentModalProps) 
     queryKey: ['students', studentId, 'detail'],
     queryFn: () => getStudentDetail(studentId),
     select: (res) => (res.data ? toStudentDetail(res.data) : null),
+    staleTime: Infinity,
   });
 
   if (!detail) return <></>;
@@ -56,12 +57,14 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
   }
 
   function handleSave() {
-    edit({
-      ...form,
-      assignmentCount: Number(assignmentCountStr),
-      examQuestionCount: Number(examQuestionCountStr),
-    });
-    onClose();
+    edit(
+      {
+        ...form,
+        assignmentCount: Number(assignmentCountStr),
+        examQuestionCount: Number(examQuestionCountStr),
+      },
+      { onSuccess: onClose },
+    );
   }
 
   return (
