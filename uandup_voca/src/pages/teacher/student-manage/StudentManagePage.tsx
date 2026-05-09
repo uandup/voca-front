@@ -8,7 +8,7 @@ import { getClassrooms, toClassListItem } from '@/entities/class';
 import { useStudentManage } from './model/useStudentManage';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
-import { MemoPopup } from './ui/modals/MemoPopup';
+import { MemoPopup } from '@/entities/memo';
 import { StudentTable } from './ui/table/StudentTable';
 
 export default function StudentManagePage() {

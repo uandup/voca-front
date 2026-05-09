@@ -1,53 +1,48 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { Memo } from '../model/types';
+import { useStudentMemo } from '@/pages/teacher/student-manage/model/useStudentMemo';
 
 interface MemoPopupProps {
+  studentId: number;
   studentName: string;
-  memos: Memo[];
   onClose: () => void;
-  onChange: (memos: Memo[]) => void;
 }
 
 function todayString(): string {
   const d = new Date();
-  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export function MemoPopup({ studentName, memos, onClose, onChange }: MemoPopupProps) {
+export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
+  const { memos, add, edit, remove } = useStudentMemo(studentId);
   const [newDate, setNewDate] = useState(todayString());
   const [newContent, setNewContent] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
 
-  const sorted = [...memos].sort((a, b) => b.date.localeCompare(a.date));
-
   function handleAdd() {
     if (!newContent.trim()) return;
-    const item: Memo = {
-      id: Date.now(),
-      date: newDate,
-      content: newContent.trim(),
-    };
-    onChange([...memos, item]);
+    add({ date: newDate, content: newContent.trim() });
     setNewContent('');
     setNewDate(todayString());
   }
 
-  function startEdit(item: Memo) {
+  function startEdit(item: { id: number; content: string }) {
     setEditingId(item.id);
     setEditContent(item.content);
   }
 
-  function handleEditSave(id: number) {
+  function handleEditSave(memoId: number) {
     if (!editContent.trim()) return;
-    onChange(memos.map((m) => (m.id === id ? { ...m, content: editContent.trim() } : m)));
+    const memo = memos.find((m) => m.id === memoId);
+    if (!memo) return;
+    edit({ memoId, date: memo.date, content: editContent.trim() });
     setEditingId(null);
   }
 
-  function handleDelete(id: number) {
-    onChange(memos.filter((m) => m.id !== id));
-    if (editingId === id) setEditingId(null);
+  function handleDelete(memoId: number) {
+    remove(memoId);
+    if (editingId === memoId) setEditingId(null);
   }
 
   return (
@@ -71,15 +66,15 @@ export function MemoPopup({ studentName, memos, onClose, onChange }: MemoPopupPr
 
         {/* Memo list */}
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-3">
-          {sorted.length === 0 && (
+          {memos.length === 0 && (
             <p className="text-sm text-on-surface-variant text-center py-8">메모가 없습니다.</p>
           )}
-          {sorted.map((memo) => (
+          {memos.map((memo) => (
             <div
               key={memo.id}
-              className="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-4 flex flex-col gap-2"
+              className="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-4 flex flex-col"
             >
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex items-start justify-between gap-2">
                 <span className="text-xs font-bold text-on-surface-variant">{memo.date}</span>
                 <div className="flex items-center gap-1">
                   {editingId === memo.id ? (
@@ -101,15 +96,19 @@ export function MemoPopup({ studentName, memos, onClose, onChange }: MemoPopupPr
                     <>
                       <button
                         onClick={() => startEdit(memo)}
-                        className="p-1 text-on-surface-variant hover:text-primary transition-colors"
+                        className="text-on-surface-variant hover:text-primary pr-2"
                       >
-                        <span className="material-symbols-outlined text-base">edit</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
+                          edit
+                        </span>
                       </button>
                       <button
                         onClick={() => handleDelete(memo.id)}
-                        className="p-1 text-on-surface-variant hover:text-error transition-colors"
+                        className="text-on-surface-variant hover:text-error"
                       >
-                        <span className="material-symbols-outlined text-base">delete</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>
+                          delete
+                        </span>
                       </button>
                     </>
                   )}
@@ -141,7 +140,7 @@ export function MemoPopup({ studentName, memos, onClose, onChange }: MemoPopupPr
               className="border border-outline-variant/30 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-32"
               value={newDate}
               onChange={(e) => setNewDate(e.target.value)}
-              placeholder="YYYY.MM.DD"
+              placeholder="YYYY-MM-DD"
             />
           </div>
           <div className="flex gap-2">

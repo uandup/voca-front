@@ -7,7 +7,7 @@ import { MOCK_CLINIC_SESSIONS, MOCK_SESSION_STUDENTS } from '@/entities/clinic';
 import type { ClinicStudentRow } from '@/entities/member';
 import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
-import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
+import { MemoPopup } from '@/entities/memo';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 type Day = (typeof DAYS)[number];
@@ -31,7 +31,7 @@ function getTimeGroup(timeSlot: string): TimeGroup {
 
 export default function ClinicsPage() {
   const [sessions] = useState(MOCK_CLINIC_SESSIONS);
-  const [sessionStudents, setSessionStudents] = useState(MOCK_SESSION_STUDENTS);
+  const sessionStudents = MOCK_SESSION_STUDENTS;
   const [selectedDay, setSelectedDay] = useState<Day>(todayDay);
   const [selectedSessionId, setSelectedSessionId] = useState<string>(MOCK_CLINIC_SESSIONS[0].id);
   const [memoStudent, setMemoStudent] = useState<ClinicStudentRow | null>(null);
@@ -59,18 +59,6 @@ export default function ClinicsPage() {
     setSelectedDay(DAYS[(idx + 1) % DAYS.length]);
   }
 
-  function handleMemoChange(studentId: number, newMemos: MemoItem[]) {
-    setSessionStudents((prev) => {
-      const updated = { ...prev };
-      for (const sid of Object.keys(updated)) {
-        updated[sid] = updated[sid].map((s) =>
-          s.id === studentId ? { ...s, memos: newMemos } : s,
-        );
-      }
-      return updated;
-    });
-    setMemoStudent((prev) => (prev?.id === studentId ? { ...prev, memos: newMemos } : prev));
-  }
 
   return (
     <main>
@@ -291,10 +279,9 @@ export default function ClinicsPage() {
       {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
       {memoStudent && (
         <MemoPopup
+          studentId={memoStudent.id}
           studentName={memoStudent.nameKo}
-          memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
-          onChange={(newMemos) => handleMemoChange(memoStudent.id, newMemos)}
         />
       )}
     </main>

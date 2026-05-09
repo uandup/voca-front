@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { MOCK_SESSION_STUDENTS } from '@/entities/clinic';
-import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
+import { MemoPopup } from '@/entities/memo';
 import type { WordDifficultyLevel } from '@/entities/word';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
@@ -20,7 +20,6 @@ export function ClinicDetailPage() {
     .flat()
     .find((s) => String(s.id) === studentId);
 
-  const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [mainTab, setMainTab] = useState<MainTab>('wordTest');
 
@@ -35,7 +34,7 @@ export function ClinicDetailPage() {
     );
   }
 
-  const latestMemo = [...memos].sort((a, b) => b.date.localeCompare(a.date))[0];
+  const latestMemo = [...(student.memos ?? [])].sort((a, b) => b.date.localeCompare(a.date))[0];
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -99,10 +98,9 @@ export function ClinicDetailPage() {
 
       {isMemoOpen && (
         <MemoPopup
+          studentId={student.id}
           studentName={student.nameKo}
-          memos={memos}
           onClose={() => setIsMemoOpen(false)}
-          onChange={(newMemos) => setMemos(newMemos)}
         />
       )}
     </div>
