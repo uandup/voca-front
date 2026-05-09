@@ -21,6 +21,7 @@ export function useVocabularyBank(searchParams: SearchParams, page: number) {
       totalElements: res.data?.totalElements ?? 0,
       totalPages: res.data?.totalPages ?? 0,
     }),
+    staleTime: Infinity,
   });
 
   return {
