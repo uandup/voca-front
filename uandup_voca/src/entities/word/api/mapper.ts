@@ -7,7 +7,7 @@ type WordUpdateRequest = components['schemas']['WordUpdateRequest'];
 function toWordRequestBody(data: Omit<TeacherWord, 'id'>): WordCreateRequest {
   return {
     word: data.word,
-    partsOfSpeech: [data.partOfSpeech],
+    partsOfSpeech: data.partsOfSpeech,
     koreanMeaning: data.korMeaning,
     englishMeaning: data.engMeaning || undefined,
     difficulty: data.difficulty,

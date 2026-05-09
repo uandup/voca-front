@@ -8,7 +8,7 @@ interface StudentWordCardProps extends Omit<WordCard, 'id'> {
 export function StudentWordCard({
   difficulty: difficulty,
   word,
-  partOfSpeech,
+  partsOfSpeech,
   korMeaning,
   engMeaning,
   synonyms,
@@ -30,7 +30,9 @@ export function StudentWordCard({
               Meaning
             </h4>
             <p className="text-primary font-bold text-lg">
-              <span className="text-on-tertiary-container tracking-wider mr-2">{partOfSpeech}</span>
+              <span className="text-on-tertiary-container tracking-wider mr-2">
+                {partsOfSpeech.join(' / ')}
+              </span>
               {korMeaning}
             </p>
             <p className="text-sm text-on-surface-variant mt-1">{engMeaning}</p>

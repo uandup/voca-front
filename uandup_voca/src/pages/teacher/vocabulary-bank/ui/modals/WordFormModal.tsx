@@ -22,7 +22,7 @@ const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
 const DEFAULT_FORM: WordFormData = {
   word: '',
-  partOfSpeech: 'N',
+  partsOfSpeech: [],
   korMeaning: '',
   difficulty: 1,
   engMeaning: '',
@@ -105,19 +105,31 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Part of Speech
               </label>
-              <div className="relative">
-                <select
-                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
-                  value={form.partOfSpeech}
-                  onChange={(e) => update('partOfSpeech', e.target.value as PartOfSpeech)}
-                >
-                  {PARTS_OF_SPEECH.map((pos) => (
-                    <option key={pos}>{pos}</option>
-                  ))}
-                </select>
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
-                  expand_more
-                </span>
+              <div className="flex flex-wrap gap-2 bg-surface-container-low rounded-xl p-3">
+                {PARTS_OF_SPEECH.map((pos) => {
+                  const selected = form.partsOfSpeech.includes(pos);
+                  return (
+                    <button
+                      key={pos}
+                      type="button"
+                      onClick={() =>
+                        update(
+                          'partsOfSpeech',
+                          selected
+                            ? form.partsOfSpeech.filter((p) => p !== pos)
+                            : [...form.partsOfSpeech, pos],
+                        )
+                      }
+                      className={`px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                        selected
+                          ? 'bg-primary text-white border-primary'
+                          : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
+                      }`}
+                    >
+                      {pos}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

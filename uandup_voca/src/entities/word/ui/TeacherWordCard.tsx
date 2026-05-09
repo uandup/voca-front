@@ -7,7 +7,7 @@ interface TeacherWordCardProps extends TeacherWord {
 
 export function TeacherWordCard({
   word,
-  partOfSpeech,
+  partsOfSpeech,
   korMeaning,
   difficulty,
   engMeaning,
@@ -53,7 +53,7 @@ export function TeacherWordCard({
               </h4>
               <p className="text-primary font-bold text-lg">
                 <span className="text-on-tertiary-container tracking-wider mr-2">
-                  {partOfSpeech}
+                  {partsOfSpeech.join(' / ')}
                 </span>
                 {korMeaning}
               </p>

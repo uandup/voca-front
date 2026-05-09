@@ -9,7 +9,7 @@ export interface WordCard {
   id: number;
   difficulty: WordDifficultyLevel;
   word: string;
-  partOfSpeech: PartOfSpeech;
+  partsOfSpeech: PartOfSpeech[];
   korMeaning: string;
   engMeaning: string;
   synonyms: string[];

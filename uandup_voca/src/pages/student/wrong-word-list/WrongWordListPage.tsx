@@ -17,7 +17,7 @@ export default function WrongWordListPage() {
             key={word.id}
             difficulty={word.difficulty}
             word={word.word}
-            partOfSpeech={word.partOfSpeech}
+            partsOfSpeech={word.partsOfSpeech}
             korMeaning={word.korMeaning}
             engMeaning={word.engMeaning}
             synonyms={word.synonyms}
