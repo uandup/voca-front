@@ -1,34 +1,33 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import {
-  TeacherWordCard,
-  WordFormModal,
-  DeleteWordModal,
-  MOCK_TEACHER_WORD_CARDS,
-  DIFFICULTY_LEVELS,
-} from '@/entities/word';
+import { TeacherWordCard, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TeacherWord } from '@/entities/word';
+import { useVocabularyBank } from './model/useVocabularyBank';
+import { WordFormModal } from './ui/modals/WordFormModal';
+import { DeleteWordModal } from './ui/modals/DeleteWordModal';
 
 export default function VocabularyBankPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState('');
-  const [editTarget, setEditTarget] = useState<TeacherWord | null>(null);
+  const [pendingKeyword, setPendingKeyword] = useState('');
+  const [pendingLevel, setPendingLevel] = useState<number | ''>('');
+  const [searchParams, setSearchParams] = useState({ keyword: '', level: '' as number | '' });
+  const [page, setPage] = useState(0);
+
+  const [editTarget, setEditTarget] = useState<TeacherWord | null | 'new'>(null);
   const [deleteTarget, setDeleteTarget] = useState<TeacherWord | null>(null);
 
-  function handleResetFilters() {
-    setSearchQuery('');
-    setSelectedLevel('');
+  const { words, totalElements, totalPages } = useVocabularyBank(searchParams, page);
+
+  function handleSearch() {
+    setSearchParams({ keyword: pendingKeyword, level: pendingLevel });
+    setPage(0);
   }
 
-  const filtered = MOCK_TEACHER_WORD_CARDS.filter((v) => {
-    const matchesSearch =
-      searchQuery === '' ||
-      v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.korMeaning.includes(searchQuery) ||
-      v.synonyms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesLevel = selectedLevel === '' || v.difficulty === Number(selectedLevel);
-    return matchesSearch && matchesLevel;
-  });
+  function handleReset() {
+    setPendingKeyword('');
+    setPendingLevel('');
+    setSearchParams({ keyword: '', level: '' });
+    setPage(0);
+  }
 
   return (
     <main>
@@ -36,11 +35,11 @@ export default function VocabularyBankPage() {
         <PageTitle title="Vocabulary Bank" />
         <div className="flex gap-3">
           <button
-            className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
-            onClick={() => setEditTarget({} as TeacherWord)}
+            className="bg-linear-to-r bg-primary text-white px-5 py-2.5 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
+            onClick={() => setEditTarget('new')}
           >
             <span className="material-symbols-outlined">add</span>
-            <span className="font-bold">Add New Word</span>
+            <span className="font-bold">Add</span>
           </button>
         </div>
       </header>
@@ -53,17 +52,17 @@ export default function VocabularyBankPage() {
             </span>
             <input
               className="w-full bg-surface-container-lowest border-none rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/40 text-on-surface"
-              placeholder="Search by word, meaning, or synonym..."
+              placeholder="Search by word..."
               type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={pendingKeyword}
+              onChange={(e) => setPendingKeyword(e.target.value)}
             />
           </div>
           <div className="flex gap-3 w-auto items-center">
             <select
               className="bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary/40 min-w-40"
-              value={selectedLevel}
-              onChange={(e) => setSelectedLevel(e.target.value)}
+              value={pendingLevel}
+              onChange={(e) => setPendingLevel(e.target.value === '' ? '' : Number(e.target.value))}
             >
               <option value="">Level: All</option>
               {DIFFICULTY_LEVELS.map((l) => (
@@ -73,8 +72,14 @@ export default function VocabularyBankPage() {
               ))}
             </select>
             <button
+              className="bg-primary text-white px-4 py-3 rounded-lg font-bold hover:bg-primary/90 active:scale-95 transition-all"
+              onClick={handleSearch}
+            >
+              Search
+            </button>
+            <button
               className="bg-surface-container-highest px-4 py-3 rounded-lg text-on-surface-variant font-bold hover:bg-primary/10 hover:text-primary active:scale-95 transition-all"
-              onClick={handleResetFilters}
+              onClick={handleReset}
             >
               Reset
             </button>
@@ -83,14 +88,14 @@ export default function VocabularyBankPage() {
       </section>
 
       <p className="text-4xl font-bold text-primary my-6 ml-2">
-        {filtered.length}{' '}
+        {totalElements}{' '}
         <span className="text-2xl font-bold text-primary/80">
-          {filtered.length === 1 ? 'word' : 'words'} found
+          {totalElements === 1 ? 'word' : 'words'} found
         </span>
       </p>
 
       <div className="flex flex-col gap-8">
-        {filtered.map((word) => (
+        {words.map((word) => (
           <TeacherWordCard
             key={word.id}
             {...word}
@@ -100,25 +105,42 @@ export default function VocabularyBankPage() {
         ))}
       </div>
 
-      {editTarget && (
+      {/* 페이지네이션 */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-10">
+          <button
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+            className="px-4 py-2 rounded-lg bg-surface-container-low text-on-surface font-bold disabled:opacity-40 hover:bg-surface-container transition-colors"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-on-surface-variant font-medium">
+            {page + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={page >= totalPages - 1}
+            className="px-4 py-2 rounded-lg bg-surface-container-low text-on-surface font-bold disabled:opacity-40 hover:bg-surface-container transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {editTarget !== null && (
         <WordFormModal
-          initialData={editTarget.id ? editTarget : undefined}
+          wordId={editTarget !== 'new' ? editTarget.id : undefined}
+          initialData={editTarget !== 'new' ? editTarget : undefined}
           onClose={() => setEditTarget(null)}
-          onSave={(data) => {
-            console.log(data);
-            setEditTarget(null);
-          }}
         />
       )}
 
       {deleteTarget && (
         <DeleteWordModal
+          wordId={deleteTarget.id}
           word={deleteTarget.word}
           onClose={() => setDeleteTarget(null)}
-          onDelete={() => {
-            console.log('delete', deleteTarget.word);
-            setDeleteTarget(null);
-          }}
         />
       )}
     </main>

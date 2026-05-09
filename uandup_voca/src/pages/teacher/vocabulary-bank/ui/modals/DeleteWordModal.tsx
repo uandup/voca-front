@@ -1,13 +1,24 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { deleteWord } from '@/entities/word';
 
 interface DeleteWordModalProps {
+  wordId: number;
   word: string;
-  pronunciation?: string;
   onClose: () => void;
-  onDelete: () => void;
 }
 
-export function DeleteWordModal({ word, onClose, onDelete }: DeleteWordModalProps) {
+export function DeleteWordModal({ wordId, word, onClose }: DeleteWordModalProps) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => deleteWord(wordId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['words'] });
+      onClose();
+    },
+  });
+
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
@@ -35,10 +46,11 @@ export function DeleteWordModal({ word, onClose, onDelete }: DeleteWordModalProp
 
         <div className="px-8 pb-8 flex flex-col gap-3">
           <button
-            onClick={onDelete}
-            className="w-full bg-error text-white px-6 py-4 rounded-2xl font-bold shadow-lg active:scale-[0.98] transition-all text-base font-headline"
+            onClick={() => mutation.mutate()}
+            disabled={mutation.isPending}
+            className="w-full bg-error text-white px-6 py-4 rounded-2xl font-bold shadow-lg active:scale-[0.98] transition-all text-base font-headline disabled:opacity-60"
           >
-            Delete Word
+            {mutation.isPending ? 'Deleting...' : 'Delete Word'}
           </button>
           <button
             onClick={onClose}

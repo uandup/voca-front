@@ -1,52 +1,73 @@
 import { useState } from 'react';
-import { DIFFICULTY_LEVELS } from '../model/types';
-import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '../model/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import {
+  DIFFICULTY_LEVELS,
+  createWord,
+  updateWord,
+  toWordCreateRequest,
+  toWordUpdateRequest,
+} from '@/entities/word';
+import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
 
 type WordFormData = Omit<TeacherWord, 'id'>;
 
 interface WordFormModalProps {
+  wordId?: number;
+  initialData?: WordFormData;
   onClose: () => void;
-  onSave: (data: WordFormData) => void;
-  initialData?: Partial<WordFormData>;
 }
 
 const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
-export function WordFormModal({ onClose, onSave, initialData }: WordFormModalProps) {
-  const [word, setWord] = useState(initialData?.word ?? '');
-  const [partOfSpeech, setPartOfSpeech] = useState<PartOfSpeech>(initialData?.partOfSpeech ?? 'N');
-  const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
-  const [difficulty, setDifficultyLevel] = useState<WordDifficultyLevel>(
-    initialData?.difficulty ?? 1,
-  );
-  const [engMeaning, setEnglishMeaning] = useState(initialData?.engMeaning ?? '');
-  const [synonyms, setSynonyms] = useState<string[]>(initialData?.synonyms ?? []);
+const DEFAULT_FORM: WordFormData = {
+  word: '',
+  partOfSpeech: 'N',
+  korMeaning: '',
+  difficulty: 1,
+  engMeaning: '',
+  synonyms: [],
+  sentence: '',
+};
+
+export function WordFormModal({ wordId, initialData, onClose }: WordFormModalProps) {
+  const queryClient = useQueryClient();
+
+  const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
   const [synonymInput, setSynonymInput] = useState('');
-  const [sentence, setExampleSentence] = useState(initialData?.sentence ?? '');
+
+  function update<K extends keyof WordFormData>(key: K, value: WordFormData[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  const mutation = useMutation({
+    mutationFn: (data: WordFormData) =>
+      wordId
+        ? updateWord(wordId, toWordUpdateRequest(data))
+        : createWord(toWordCreateRequest(data)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['words'] });
+      onClose();
+    },
+  });
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing && synonymInput.trim()) {
       e.preventDefault();
-      setSynonyms((prev) => [...prev, synonymInput.trim()]);
+      update('synonyms', [...form.synonyms, synonymInput.trim()]);
       setSynonymInput('');
     }
   }
 
   function removeSynonym(index: number) {
-    setSynonyms((prev) => prev.filter((_, i) => i !== index));
+    update(
+      'synonyms',
+      form.synonyms.filter((_, i) => i !== index),
+    );
   }
 
   function handleSave() {
-    onSave({
-      word,
-      partOfSpeech,
-      korMeaning,
-      difficulty: difficulty,
-      engMeaning,
-      synonyms,
-      sentence,
-    });
+    mutation.mutate(form);
   }
 
   return (
@@ -55,7 +76,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
         <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
             <h2 className="font-headline text-[32px] font-extrabold text-primary leading-tight">
-              {initialData ? 'Edit Word' : 'Add New Word'}
+              {wordId ? 'Edit Word' : 'Add New Word'}
             </h2>
           </div>
           <button
@@ -76,8 +97,8 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                 className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary text-lg placeholder:text-on-surface-variant/30"
                 placeholder="e.g. Ephemeral"
                 type="text"
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
+                value={form.word}
+                onChange={(e) => update('word', e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -87,8 +108,8 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               <div className="relative">
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
-                  value={partOfSpeech}
-                  onChange={(e) => setPartOfSpeech(e.target.value as PartOfSpeech)}
+                  value={form.partOfSpeech}
+                  onChange={(e) => update('partOfSpeech', e.target.value as PartOfSpeech)}
                 >
                   {PARTS_OF_SPEECH.map((pos) => (
                     <option key={pos}>{pos}</option>
@@ -110,8 +131,8 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                 className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
                 placeholder="e.g. 일시적인, 덧없는"
                 type="text"
-                value={korMeaning}
-                onChange={(e) => setKoreanMeaning(e.target.value)}
+                value={form.korMeaning}
+                onChange={(e) => update('korMeaning', e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -121,9 +142,9 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               <div className="relative">
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
-                  value={difficulty}
+                  value={form.difficulty}
                   onChange={(e) =>
-                    setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)
+                    update('difficulty', Number(e.target.value) as WordDifficultyLevel)
                   }
                 >
                   {DIFFICULTY_LEVELS.map((l) => (
@@ -147,8 +168,8 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Describe the nuanced definition..."
               rows={2}
-              value={engMeaning}
-              onChange={(e) => setEnglishMeaning(e.target.value)}
+              value={form.engMeaning}
+              onChange={(e) => update('engMeaning', e.target.value)}
             />
           </div>
 
@@ -157,7 +178,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               Synonyms
             </label>
             <div className="w-full bg-surface-container-low rounded-xl p-3 flex flex-wrap gap-2 items-center min-h-14">
-              {synonyms.map((syn, i) => (
+              {form.synonyms.map((syn, i) => (
                 <div
                   key={i}
                   className="pl-3 pr-2 py-1.5 bg-white text-primary rounded-lg text-[13px] font-semibold flex items-center gap-2 shadow-sm border border-black/5"
@@ -191,8 +212,8 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
               className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
-              value={sentence}
-              onChange={(e) => setExampleSentence(e.target.value)}
+              value={form.sentence}
+              onChange={(e) => update('sentence', e.target.value)}
             />
           </div>
 
@@ -207,9 +228,10 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
             <button
               type="button"
               onClick={handleSave}
-              className="px-10 py-4 bg-primary text-white text-[15px] font-bold rounded-xl shadow-[0px_8px_24px_rgba(0,27,95,0.2)] hover:bg-primary-container transition-all active:scale-95"
+              disabled={mutation.isPending}
+              className="px-10 py-4 bg-primary text-white text-[15px] font-bold rounded-xl shadow-[0px_8px_24px_rgba(0,27,95,0.2)] hover:bg-primary-container transition-all active:scale-95 disabled:opacity-60"
             >
-              Save Word
+              {mutation.isPending ? 'Saving...' : 'Save Word'}
             </button>
           </div>
         </div>
