@@ -15,16 +15,14 @@ function todayString(): string {
 
 export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
   const { memos, add, edit, remove } = useStudentMemo(studentId);
-  const [newDate, setNewDate] = useState(todayString());
   const [newContent, setNewContent] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
 
   function handleAdd() {
     if (!newContent.trim()) return;
-    add({ date: newDate, content: newContent.trim() });
+    add({ date: todayString(), content: newContent.trim() });
     setNewContent('');
-    setNewDate(todayString());
   }
 
   function startEdit(item: { id: number; content: string }) {
@@ -135,13 +133,7 @@ export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
             <span className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
               새 메모
             </span>
-            <input
-              type="text"
-              className="border border-outline-variant/30 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all w-32"
-              value={newDate}
-              onChange={(e) => setNewDate(e.target.value)}
-              placeholder="YYYY-MM-DD"
-            />
+            <span className="text-xs text-on-surface-variant">{todayString()}</span>
           </div>
           <div className="flex gap-2">
             <textarea
