@@ -35,10 +35,17 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
 
   const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
   const [synonymInput, setSynonymInput] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   function update<K extends keyof WordFormData>(key: K, value: WordFormData[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
+
+  const errors = {
+    word: form.word.trim() === '' ? 'Word is required.' : '',
+    korMeaning: form.korMeaning.trim() === '' ? 'Korean meaning is required.' : '',
+    partsOfSpeech: form.partsOfSpeech.length === 0 ? 'Select at least one part of speech.' : '',
+  };
 
   const mutation = useMutation({
     mutationFn: (data: WordFormData) =>
@@ -67,6 +74,8 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
   }
 
   function handleSave() {
+    setSubmitted(true);
+    if (errors.word || errors.korMeaning || errors.partsOfSpeech) return;
     mutation.mutate(form);
   }
 
@@ -100,6 +109,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                 value={form.word}
                 onChange={(e) => update('word', e.target.value)}
               />
+              {submitted && errors.word && <p className="text-xs text-error ml-1">{errors.word}</p>}
             </div>
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
@@ -131,6 +141,9 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                   );
                 })}
               </div>
+              {submitted && errors.partsOfSpeech && (
+                <p className="text-xs text-error ml-1">{errors.partsOfSpeech}</p>
+              )}
             </div>
           </div>
 
@@ -146,6 +159,9 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                 value={form.korMeaning}
                 onChange={(e) => update('korMeaning', e.target.value)}
               />
+              {submitted && errors.korMeaning && (
+                <p className="text-xs text-error ml-1">{errors.korMeaning}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
