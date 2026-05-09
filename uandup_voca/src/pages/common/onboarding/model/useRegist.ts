@@ -38,7 +38,7 @@ function buildProfileBody(
     return {
       role: 'STUDENT' as const,
       name: student.nameKo,
-      englishName: `${student.nameLastEn} ${student.nameFirstEn}`,
+      englishName: `${student.nameFirstEn} ${student.nameLastEn}`,
       grade: student.grade,
     };
   }
@@ -48,7 +48,7 @@ function buildProfileBody(
       name: teacher.nameKo,
       englishName:
         teacher.nameLastEn || teacher.nameFirstEn
-          ? `${teacher.nameLastEn} ${teacher.nameFirstEn}`.trim()
+          ? `${teacher.nameFirstEn} ${teacher.nameLastEn}`.trim()
           : undefined,
     };
   }

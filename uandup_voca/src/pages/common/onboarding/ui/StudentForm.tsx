@@ -20,9 +20,22 @@ export function StudentForm({ value, onChange }: Props) {
           </label>
           <input
             type="text"
-            placeholder="예) 김민수"
+            placeholder="예) 이은수"
             value={value.nameKo}
             onChange={(e) => set('nameKo', e.target.value)}
+            className={inputClass}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-on-surface">
+            First Name <span className="text-error">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="예) Eunsoo"
+            value={value.nameFirstEn}
+            onChange={(e) => set('nameFirstEn', e.target.value)}
             className={inputClass}
           />
         </div>
@@ -32,21 +45,9 @@ export function StudentForm({ value, onChange }: Props) {
           </label>
           <input
             type="text"
-            placeholder="예) Kim"
+            placeholder="예) Lee"
             value={value.nameLastEn}
             onChange={(e) => set('nameLastEn', e.target.value)}
-            className={inputClass}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-on-surface">
-            First Name <span className="text-error">*</span>
-          </label>
-          <input
-            type="text"
-            placeholder="예) Minsu"
-            value={value.nameFirstEn}
-            onChange={(e) => set('nameFirstEn', e.target.value)}
             className={inputClass}
           />
         </div>
