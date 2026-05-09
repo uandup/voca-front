@@ -273,7 +273,18 @@ export interface paths {
         };
         /**
          * 레벨 시험 목록 조회
-         * @description 학생의 레벨 시험 이력을 최신순으로 조회합니다. 취소된 시험은 제외되며, 응답에 level(난이도) 필드가 포함됩니다.
+         * @description 학생의 레벨 시험 이력을 최신순(examId 내림차순)으로 조회합니다.
+         *
+         *     **status 값:**
+         *     - `READY` — 생성됨 (오프라인 대기 또는 온라인 시작 전)
+         *     - `IN_PROGRESS` — 온라인 시험 진행 중 (학생 제출 대기)
+         *     - `SUBMITTED` — 학생 답안 제출 완료 (채점 대기)
+         *     - `PASSED` — 채점 완료·합격
+         *     - `FAILED` — 채점 완료·불합격
+         *
+         *     CANCELLED 상태 시험은 목록에서 제외됩니다.
+         *     correctCount·totalCount는 PASSED/FAILED일 때만 포함되며, 그 외에는 null입니다.
+         *     level 필드는 해당 시험의 출제 레벨(난이도)입니다.
          */
         get: operations["getLevelExamList"];
         put?: never;
@@ -282,6 +293,26 @@ export interface paths {
          * @description 지정한 레벨의 단어에서 assignmentCount개를 랜덤 배정하고, 그 중 questionCount개를 시험 문항으로 생성합니다. 선생님만 가능.
          */
         post: operations["createLevelExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/normal-study-sets/{studySetId}/exams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 시험 생성
+         * @description examType에 따라 단어/예문/복습1/복습2/복습3 시험을 생성합니다. ({examType : "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3"}) 문항 수·subType·동의어 포함 여부는 학생 프로필에서 가져옵니다. 복습 시험의 예정일은 요청일 기준으로 자동 계산됩니다 (REVIEW1: +1일, REVIEW2: +3일, REVIEW3: +4일).
+         */
+        post: operations["createExam"];
         delete?: never;
         options?: never;
         head?: never;
@@ -306,27 +337,6 @@ export interface paths {
          * @description 학생의 현재 커서(lastAssignedWordId) 다음 단어부터 학생 설정의 assignmentCount개만큼 (difficulty, orderIndex) 순서대로 배정합니다. 배정 후 커서는 이번 배치의 마지막 단어로 갱신됩니다. 시작 레벨 또는 배정 개수가 설정되지 않은 학생은 배정할 수 없습니다.
          */
         post: operations["assignWords"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/exams/{studySetId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 시험 생성
-         * @description examType에 따라 단어/예문/복습1/복습2/복습3 시험을 생성합니다. ({examType : "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3"}
-         *     ) 문항 수·subType·동의어 포함 여부는 학생 프로필에서 가져옵니다. 복습 시험의 예정일은 요청일 기준으로 자동 계산됩니다 (REVIEW1: +1일, REVIEW2: +3일, REVIEW3: +4일).
-         */
-        post: operations["createExam"];
         delete?: never;
         options?: never;
         head?: never;
@@ -512,7 +522,7 @@ export interface paths {
         head?: never;
         /**
          * 회원 승인
-         * @description 승인 대기 상태의 회원(학생/선생님)을 승인(ACTIVE)합니다. 선생님만 접근 가능합니다.
+         * @description 승인 대기 상태의 회원(학생/선생님/학부모)을 승인(ACTIVE)합니다. 관리자만 접근 가능합니다.
          */
         patch: operations["approveMember"];
         trace?: never;
@@ -532,7 +542,7 @@ export interface paths {
         head?: never;
         /**
          * 선생님 관리자 승격
-         * @description 대상 선생님의 isAdmin 플래그를 true로 변경하여 관리자 권한을 부여합니다. 승격 즉시 JwtAuthenticationFilter가 매 요청마다 DB에서 isAdmin을 확인하므로 재로그인 없이 다음 요청부터 ROLE_ADMIN 권한으로 관리자 전용 API 접근이 가능합니다. 이미 관리자인 선생님을 다시 승격해도 에러 없이 idempotent하게 동작합니다. 응답은 MemberResponse 형식(memberId, email, name, englishName, isAdmin, role, status, profileComplete 등)으로 승격 후 상태를 반환합니다. 관리자만 접근 가능합니다.
+         * @description 대상 선생님의 isAdmin 플래그를 true로 변경하여 관리자 권한을 부여합니다. 승격 즉시 JwtAuthenticationFilter가 매 요청마다 DB에서 isAdmin을 확인하므로 재로그인 없이 다음 요청부터 ROLE_ADMIN 권한으로 관리자 전용 API 접근이 가능합니다. 이미 관리자인 선생님을 다시 승격해도 에러 없이 idempotent하게 동작합니다. 관리자만 접근 가능합니다.
          */
         patch: operations["promoteTeacherToAdmin"];
         trace?: never;
@@ -552,7 +562,7 @@ export interface paths {
         head?: never;
         /**
          * 관리자 강등
-         * @description 관리자(isAdmin=true)인 선생님의 관리자 권한을 해제하여 일반 선생님(isAdmin=false)으로 되돌립니다. 강등 즉시 JwtAuthenticationFilter가 DB를 재확인하므로 대상이 가진 기존 토큰으로도 다음 요청부터 관리자 전용 API 접근이 차단됩니다. 비즈니스 규칙상 자기 자신은 강등할 수 없으며, 대상이 이미 일반 선생님(isAdmin=false)인 경우에도 INVALID_INPUT으로 거부합니다(중복 강등 방지). 응답은 MemberResponse(memberId, email, name, englishName, isAdmin=false, role=TEACHER, status 등) 형식으로 강등 후 상태를 반환합니다. 관리자만 접근 가능합니다.
+         * @description 관리자(isAdmin=true)인 선생님의 관리자 권한을 해제하여 일반 선생님(isAdmin=false)으로 되돌립니다. 강등 즉시 JwtAuthenticationFilter가 DB를 재확인하므로 대상이 가진 기존 토큰으로도 다음 요청부터 관리자 전용 API 접근이 차단됩니다. 비즈니스 규칙상 자기 자신은 강등할 수 없으며, 대상이 이미 일반 선생님(isAdmin=false)인 경우에도 INVALID_INPUT으로 거부합니다(중복 강등 방지). 관리자만 접근 가능합니다.
          */
         patch: operations["demoteAdminToTeacher"];
         trace?: never;
@@ -599,7 +609,7 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * 학생 배정 개수 단독 수정
+         * 학생 배정 개수 수정
          * @description 학생의 배정 개수(assignmentCount)만 변경합니다. 1 이상이어야 합니다. 선생님만 접근 가능합니다.
          */
         patch: operations["updateAssignmentCount"];
@@ -620,7 +630,7 @@ export interface paths {
         head?: never;
         /**
          * 전체 학생 학년 일괄 올리기
-         * @description 모든 학생의 학년을 +1 합니다. 학년이 설정되어 있지 않거나 이미 12학년인 학생은 건너뜁니다. updated(변경된 수)와 skipped(건너뛴 수)를 반환합니다. 선생님만 접근 가능합니다.
+         * @description 모든 학생의 학년을 +1 합니다. 학년이 설정되어 있지 않거나 이미 12학년인 학생은 건너뜁니다. updated(변경된 수)와 skipped(건너뛴 수)를 반환합니다. 관리자만 접근 가능합니다.
          */
         patch: operations["promoteAllStudentsGrade"];
         trace?: never;
@@ -640,7 +650,7 @@ export interface paths {
         head?: never;
         /**
          * 전체 학생 학년 일괄 내리기
-         * @description 모든 학생의 학년을 -1 합니다. 학년이 설정되어 있지 않거나 이미 1학년인 학생은 건너뜁니다. updated(변경된 수)와 skipped(건너뛴 수)를 반환합니다. 선생님만 접근 가능합니다.
+         * @description 모든 학생의 학년을 -1 합니다. 학년이 설정되어 있지 않거나 이미 1학년인 학생은 건너뜁니다. updated(변경된 수)와 skipped(건너뛴 수)를 반환합니다. 관리자만 접근 가능합니다.
          */
         patch: operations["demoteAllStudentsGrade"];
         trace?: never;
@@ -705,6 +715,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/study-sets/{studySetId}/words": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 배정 단어 목록 조회
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다.
+         */
+        get: operations["getAssignedWords"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/wrong-bank": {
         parameters: {
             query?: never;
@@ -730,7 +760,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/normal-study-sets/{studySetId}/words": {
+    "/api/v1/students/{studentId}/wrong-bank/count": {
         parameters: {
             query?: never;
             header?: never;
@@ -738,10 +768,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다.
+         * 활성 오답 단어 수 조회
+         * @description 학생의 활성 오답(isActive=true) 단어 개수를 반환합니다.
          */
-        get: operations["getAssignedWords"];
+        get: operations["getActiveWrongBankCount"];
         put?: never;
         post?: never;
         delete?: never;
@@ -818,7 +848,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 관리자가 아닌 선생님 목록 조회
+         * 일반 선생님 목록 조회
          * @description 관리자 화면(승격 대상 선택 등)에서 사용하는 API입니다. ACTIVE 상태이면서 아직 관리자가 아닌(isAdmin=false) 선생님 목록을 조회합니다. teacherId, name, englishName, email, isAdmin(항상 false), status(항상 ACTIVE), createdAt을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getAllTeachers"];
@@ -858,10 +888,30 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 학생 관리 - 학생 정보 리스트 조회
+         * 학생 정보 리스트 조회
          * @description 학생 관리 화면에서 사용하는 API입니다. ACTIVE 상태인 전체 학생의 studentId, name, englishName, grade, level(마지막 배정 단어 기반, 미배정 시 null), assignmentQty(배정 개수), testItemCount(시험 문항 수), subType(시험 세부 유형), includeSynonym, recentScore / recentScoreTotal(최근 시험 1건, 없으면 null), acr(누적 전체 정답률, 시험 없으면 null), memo 목록을 조회합니다. 선생님만 접근 가능합니다.
          */
         get: operations["getAllStudents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/students/{id}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 학습 개요 조회
+         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·학년·레벨·배정 개수·시험 설정·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. 선생님만 접근 가능합니다.
+         */
+        get: operations["getStudentOverview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -879,7 +929,7 @@ export interface paths {
         };
         /**
          * 승인 대기 선생님 목록 조회
-         * @description 승인 대기(PENDING_APPROVAL) 상태인 선생님 목록을 조회합니다. teacherId, email, name, englishName, isAdmin, createdAt(신청 시각)을 반환합니다. 선생님만 접근 가능합니다.
+         * @description 승인 대기(PENDING_APPROVAL) 상태인 선생님 목록을 조회합니다. teacherId, email, name, englishName, isAdmin, createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getPendingTeachers"];
         put?: never;
@@ -899,7 +949,7 @@ export interface paths {
         };
         /**
          * 승인 대기 학생 목록 조회
-         * @description 승인 대기(PENDING_APPROVAL) 상태인 학생 목록을 조회합니다. studentId, email, name, englishName, grade, createdAt(신청 시각)을 반환합니다. 선생님만 접근 가능합니다.
+         * @description 승인 대기(PENDING_APPROVAL) 상태인 학생 목록을 조회합니다. studentId, email, name, englishName, grade, createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getPendingStudents"];
         put?: never;
@@ -919,7 +969,7 @@ export interface paths {
         };
         /**
          * 승인 대기 학부모 목록 조회
-         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, englishName, phoneNumber, createdAt(신청 시각)을 반환합니다. 선생님만 접근 가능합니다.
+         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, englishName, phoneNumber, createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getPendingParents"];
         put?: never;
@@ -1292,6 +1342,10 @@ export interface components {
             /** Format: int32 */
             questionCount?: number;
         };
+        CreateExamRequest: {
+            /** @enum {string} */
+            examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+        };
         ApiResponseAssignWordsResponse: {
             /** Format: int32 */
             status?: number;
@@ -1319,10 +1373,6 @@ export interface components {
             difficulty?: number;
             synonyms?: string[];
             example?: string;
-        };
-        CreateExamRequest: {
-            /** @enum {string} */
-            examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
         };
         /** @description 온라인 시험 제출 요청 — 학생이 입력한 답안 */
         SubmitExamRequest: {
@@ -1599,6 +1649,12 @@ export interface components {
             /** Format: int64 */
             level10Count?: number;
         };
+        ApiResponseListAssignedWordResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["AssignedWordResponse"][];
+        };
         ApiResponseListWrongBankWordResponse: {
             /** Format: int32 */
             status?: number;
@@ -1644,6 +1700,13 @@ export interface components {
              * @description 마지막으로 틀린 시각 — 정렬 기준 (오름차순)
              */
             lastWrongAt?: string;
+        };
+        ApiResponseLong: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            /** Format: int64 */
+            data?: number;
         };
         ApiResponseListWrongBankExamListResponse: {
             /** Format: int32 */
@@ -1718,12 +1781,6 @@ export interface components {
             /** Format: int32 */
             totalCount?: number;
         };
-        ApiResponseListAssignedWordResponse: {
-            /** Format: int32 */
-            status?: number;
-            message?: string;
-            data?: components["schemas"]["AssignedWordResponse"][];
-        };
         ApiResponseStudySetExamTypeResponse: {
             /** Format: int32 */
             status?: number;
@@ -1739,7 +1796,7 @@ export interface components {
              */
             examId?: number;
             /**
-             * @description 시험 상태 (READY | COMPLETED)
+             * @description 시험 상태 (READY | ONLINE_STARTED | SUBMITTED | COMPLETED) — CANCELLED는 응답에서 제외
              * @example COMPLETED
              */
             status?: string;
@@ -1861,7 +1918,7 @@ export interface components {
              */
             examId?: number;
             /**
-             * @description 시험 상태 (READY | COMPLETED)
+             * @description 시험 상태 (READY | ONLINE_STARTED | SUBMITTED | COMPLETED) — CANCELLED는 응답에서 제외되어 필드 자체가 null로 노출됨
              * @example COMPLETED
              */
             status?: string;
@@ -2000,6 +2057,29 @@ export interface components {
             recentMemo?: components["schemas"]["MemoResponse"];
             classrooms?: components["schemas"]["ClassroomSummary"][];
         };
+        ApiResponseStudentOverviewResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["StudentOverviewResponse"];
+        };
+        StudentOverviewResponse: {
+            /** Format: int64 */
+            studentId?: number;
+            name?: string;
+            /** Format: int32 */
+            grade?: number;
+            /** Format: int32 */
+            level?: number;
+            /** Format: int32 */
+            assignmentCount?: number;
+            /** Format: int32 */
+            examQuestionCount?: number;
+            /** @enum {string} */
+            examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            synonymIncluded?: boolean;
+            latestMemo?: components["schemas"]["MemoResponse"];
+        };
         ApiResponseAssignmentCountResponse: {
             /** Format: int32 */
             status?: number;
@@ -2060,13 +2140,6 @@ export interface components {
             requestedChildGrade?: number;
             /** Format: date-time */
             createdAt?: string;
-        };
-        ApiResponseLong: {
-            /** Format: int32 */
-            status?: number;
-            message?: string;
-            /** Format: int64 */
-            data?: number;
         };
         ApiResponseListParentListResponse: {
             /** Format: int32 */
@@ -3156,7 +3229,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description 조회 성공 — 빈 배열 가능 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3165,7 +3238,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListLevelExamListResponse"];
                 };
             };
-            /** @description 학생을 찾을 수 없음 */
+            /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3223,6 +3296,54 @@ export interface operations {
                 };
             };
             /** @description 학생을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+        };
+    };
+    createExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학습 세트 ID
+                 * @example 1
+                 */
+                studySetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateExamRequest"];
+            };
+        };
+        responses: {
+            /** @description 생성 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description examType 미지원이거나 학생 시험 설정이 누락됨 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description 학습 세트 또는 학생을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3301,15 +3422,6 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseAssignWordsResponse"];
                 };
             };
-            /** @description 권한 없음 (선생님만 가능) */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAssignWordsResponse"];
-                };
-            };
             /** @description 학생을 찾을 수 없음 */
             404: {
                 headers: {
@@ -3317,54 +3429,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseAssignWordsResponse"];
-                };
-            };
-        };
-    };
-    createExam: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /**
-                 * @description 학습 세트 ID
-                 * @example 1
-                 */
-                studySetId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateExamRequest"];
-            };
-        };
-        responses: {
-            /** @description 생성 성공 */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
-                };
-            };
-            /** @description examType 미지원이거나 학생 시험 설정이 누락됨 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
-                };
-            };
-            /** @description 학습 세트 또는 학생을 찾을 수 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
                 };
             };
         };
@@ -4269,41 +4333,6 @@ export interface operations {
             };
         };
     };
-    getActiveWrongBankWords: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /**
-                 * @description 학생 ID
-                 * @example 1
-                 */
-                studentId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 — 빈 배열 가능 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
-                };
-            };
-            /** @description MEMBER_NOT_FOUND — 학생 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
-                };
-            };
-        };
-    };
     getAssignedWords: {
         parameters: {
             query?: never;
@@ -4344,6 +4373,76 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                };
+            };
+        };
+    };
+    getActiveWrongBankWords: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — 빈 배열 가능 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
+                };
+            };
+            /** @description MEMBER_NOT_FOUND — 학생 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
+                };
+            };
+        };
+    };
+    getActiveWrongBankCount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — count 반환 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+            /** @description MEMBER_NOT_FOUND — 학생 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLong"];
                 };
             };
         };
@@ -4544,6 +4643,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseListStudentListResponse"];
+                };
+            };
+        };
+    };
+    getStudentOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
+                };
+            };
+            /** @description 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
+                };
+            };
+            /** @description 회원을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
                 };
             };
         };

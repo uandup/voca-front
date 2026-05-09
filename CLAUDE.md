@@ -10,12 +10,12 @@
 voca-front/
 └── uandup_voca/      ← npm 프로젝트 루트
     ├── src/
-    │   ├── app/          ← 자동 생성 라우트 트리 (routeTree.gen.ts — 직접 수정 금지)
+    │   ├── app/          ← 자동 생성 라우트 트리 및 app 전역 파일 (routeTree.gen.ts — 직접 수정 금지)
     │   ├── routes/       ← TanStack Router 파일 기반 라우트
     │   ├── pages/        ← 페이지 컴포넌트 (라우트별 폴더)
     │   ├── features/     ← 독립 기능 슬라이스 (예: roster-manage)
     │   ├── entities/     ← 공유 도메인 타입 + UI (vocab, student)
-    │   └── shared/       ← 공통 UI (navBar, 모달, API 클라이언트)
+    │   └── shared/       ← 공통 파일 (navBar, 모달, API 클라이언트)
     └── stitch/           ← 정적 HTML 디자인 목업 (참고용, 사용자가 요구하는 것 아니면 확인 x)
 ```
 
@@ -86,8 +86,9 @@ API response (schema.gen.ts)
 ```
 
 - **클라이언트 타입**: `model/types.ts`에 정의. UI가 실제로 필요한 필드만 포함하며 백엔드 필드명에 종속되지 않습니다.
-- **mapper**: `model/mapper.ts`에 정의. `schema.gen.ts` 타입 → 클라이언트 타입 변환만 담당합니다.
-- **API 함수**: `api/*.ts`에서 HTTP 호출만 담당하고 raw response를 반환합니다. mapper는 호출부(custom hook)에서 `select` 옵션으로 적용합니다.
+- **model/mapper**: `model/mapper.ts`에 정의. `schema.gen.ts` 타입 → 클라이언트 타입 변환만 담당합니다.
+- **api/mapper**: `api/mapper.ts`에 정의. 클라이언트 타입 → `schema.gen.ts` 타입 변환만 담당합니다.
+- **API 함수**: `api/*.ts`에서 HTTP 호출만 담당합니다. `@/shared/api`의 `axiosInstance`와 `ApiResponse<T>` 타입을 사용하고, `.then((r) => r.data)`로 `Promise<ApiResponse<T>>`를 반환합니다. mapper는 호출부(custom hook)에서 `select` 옵션으로 적용합니다.
 - `index.ts` 배럴을 통해 클라이언트 타입과 mapper를 함께 re-export합니다.
 
 ### 반드시 지켜야 할 점
