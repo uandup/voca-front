@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
 
 interface Props {
@@ -69,7 +70,7 @@ export function QuickAssignmentCard({
                 disabled={!isEditing}
                 className={`w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 ${disabledCls}`}
               >
-                {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as DifficultyLevel[]).map((lv) => (
+                {DIFFICULTY_LEVELS.map((lv) => (
                   <option key={lv} value={lv}>
                     Level {lv}
                   </option>

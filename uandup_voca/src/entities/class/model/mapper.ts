@@ -1,9 +1,9 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { ClassListItem } from './types';
+import type { Class } from './types';
 
 type ClassroomSummary = components['schemas']['ClassroomSummary'];
 
-export function toClassListItem(r: ClassroomSummary): ClassListItem {
+export function toClassListItem(r: ClassroomSummary): Class {
   return {
     id: r.classId!,
     name: r.className ?? '',

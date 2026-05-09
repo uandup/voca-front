@@ -1,13 +1,14 @@
 import { useRef, useLayoutEffect, useState } from 'react';
+import type { Class } from '@/entities/class';
 
 interface ClassChipsProps {
-  classes: string[];
-  onRemove: (name: string) => void;
+  classes: Class[];
+  onRemove: (id: number) => void;
 }
 
 export function ClassChips({ classes, onRemove }: ClassChipsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const prevClassesRef = useRef<string[]>(classes);
+  const prevClassesRef = useRef<Class[]>(classes);
   // null = 아직 측정 전 (전체 렌더), number = 측정 완료
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
@@ -48,11 +49,11 @@ export function ClassChips({ classes, onRemove }: ClassChipsProps) {
       >
         {classes.map((c) => (
           <span
-            key={c}
+            key={c.id}
             data-chip
             className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
           >
-            {c}
+            {c.name}
             <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>
               close
             </span>
@@ -69,13 +70,13 @@ export function ClassChips({ classes, onRemove }: ClassChipsProps) {
     <div className="flex flex-wrap gap-1.5">
       {visible.map((c) => (
         <span
-          key={c}
+          key={c.id}
           className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full text-xs font-bold whitespace-nowrap shrink-0"
         >
-          {c}
+          {c.name}
           <button
             type="button"
-            onClick={() => onRemove(c)}
+            onClick={() => onRemove(c.id)}
             className="hover:text-error transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>

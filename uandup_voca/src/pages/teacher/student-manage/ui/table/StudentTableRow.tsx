@@ -77,15 +77,15 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
 
       {/* ACR */}
       <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-        <span className="font-headline font-bold text-sm text-primary">{student.accuracy}</span>
+        <span className="font-headline font-bold text-sm text-primary">
+          {student.accuracy ?? '—'}
+        </span>
       </td>
 
       {/* Memo */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <div className="flex items-center gap-1.5">
-          <p className="text-xs text-on-surface-variant truncate flex-1">
-            {latestMemo ?? '—'}
-          </p>
+          <p className="text-xs text-on-surface-variant truncate flex-1">{latestMemo ?? '—'}</p>
           <button
             onClick={() => actions.onMemo(student)}
             className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"

@@ -83,10 +83,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * 학생 상세 조회
+         * @description 학생 한 명의 이름·학년·레벨·배정설정·시험설정·반·학부모를 조회합니다. 선생님만 접근 가능합니다.
+         */
+        get: operations["getStudentDetail"];
         /**
          * 학생 정보 수정
-         * @description 선생님이 학생의 이름, 학년, 배정 설정을 수정합니다. 선생님만 접근 가능합니다.
+         * @description 학생의 이름·학년·레벨·배정설정·시험설정·반·학부모를 수정합니다. 선생님만 접근 가능합니다.
          */
         put: operations["updateStudent"];
         post?: never;
@@ -1152,7 +1156,7 @@ export interface components {
             /** Format: int32 */
             examQuestionCount?: number;
             /** @enum {string} */
-            examSubType?: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             synonymIncluded?: boolean;
         };
         StudentUpdateRequest: {
@@ -1165,10 +1169,48 @@ export interface components {
             /** Format: int32 */
             examQuestionCount?: number;
             /** @enum {string} */
-            examSubType?: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             synonymIncluded?: boolean;
             /** Format: int32 */
             level?: number;
+            parentIds?: number[];
+            classroomIds?: number[];
+        };
+        ApiResponseStudentDetailResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["StudentDetailResponse"];
+        };
+        ClassroomSummary: {
+            /** Format: int64 */
+            classId?: number;
+            className?: string;
+        };
+        ParentSummary: {
+            /** Format: int64 */
+            parentId?: number;
+            name?: string;
+            phoneNumber?: string;
+        };
+        StudentDetailResponse: {
+            /** Format: int64 */
+            studentId?: number;
+            name?: string;
+            englishName?: string;
+            /** Format: int32 */
+            grade?: number;
+            /** Format: int32 */
+            level?: number;
+            /** Format: int32 */
+            assignmentCount?: number;
+            /** Format: int32 */
+            examQuestionCount?: number;
+            /** @enum {string} */
+            examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            synonymIncluded?: boolean;
+            classrooms?: components["schemas"]["ClassroomSummary"][];
+            parents?: components["schemas"]["ParentSummary"][];
         };
         ParentUpdateRequest: {
             name: string;
@@ -1200,11 +1242,11 @@ export interface components {
         /** @description 오답 뱅크 시험 생성 요청 */
         CreateWrongBankExamRequest: {
             /**
-             * @description 시험 유형 — WORD_TO_MEANING(영어→한글) / ENGLISH_TO_WORD(영어→영어뜻) / KOREAN_TO_WORD(뜻→영어)
-             * @example KOREAN_TO_WORD
+             * @description 시험 유형 — WORD_TO_MEANING(영어→뜻) / MEANING_TO_WORD(뜻→영어)
+             * @example MEANING_TO_WORD
              * @enum {string}
              */
-            subType: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            subType: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             /**
              * @description 동의어 포함 여부
              * @example false
@@ -1243,7 +1285,7 @@ export interface components {
             /** Format: int32 */
             level: number;
             /** @enum {string} */
-            subType: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            subType: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             includeSynonym: boolean;
             /** Format: int32 */
             assignmentCount?: number;
@@ -1455,7 +1497,7 @@ export interface components {
             /** Format: int32 */
             examQuestionCount: number;
             /** @enum {string} */
-            examSubType: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            examSubType: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             synonymIncluded: boolean;
         };
         ApiResponseExamSettingsResponse: {
@@ -1468,7 +1510,7 @@ export interface components {
             /** Format: int32 */
             examQuestionCount?: number;
             /** @enum {string} */
-            examSubType?: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             synonymIncluded?: boolean;
         };
         UpdateAssignmentCountRequest: {
@@ -1707,8 +1749,8 @@ export interface components {
              */
             isPassed?: boolean;
             /**
-             * @description 시험 서브타입. WORD 시험에만 존재 (KOREAN_TO_WORD | ENGLISH_TO_WORD | WORD_TO_MEANING)
-             * @example KOREAN_TO_WORD
+             * @description 시험 서브타입. WORD 시험에만 존재 (WORD_TO_MEANING | MEANING_TO_WORD)
+             * @example MEANING_TO_WORD
              */
             subType?: string;
             /**
@@ -1933,11 +1975,6 @@ export interface components {
             message?: string;
             data?: components["schemas"]["StudentListResponse"][];
         };
-        ClassroomSummary: {
-            /** Format: int64 */
-            classId?: number;
-            className?: string;
-        };
         StudentListResponse: {
             /** Format: int64 */
             studentId?: number;
@@ -1952,7 +1989,7 @@ export interface components {
             /** Format: int32 */
             testItemCount?: number;
             /** @enum {string} */
-            subType?: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             includeSynonym?: boolean;
             /** Format: int32 */
             recentScore?: number;
@@ -2108,7 +2145,7 @@ export interface components {
             /** Format: int32 */
             testItemCount?: number;
             /** @enum {string} */
-            subType?: "KOREAN_TO_WORD" | "ENGLISH_TO_WORD" | "WORD_TO_MEANING";
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             includeSynonym?: boolean;
             recentMemo?: components["schemas"]["MemoResponse"];
             classrooms?: components["schemas"]["ClassroomSummary"][];
@@ -2418,6 +2455,50 @@ export interface operations {
             };
         };
     };
+    getStudentDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
+                };
+            };
+            /** @description 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
+                };
+            };
+            /** @description 회원을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
+                };
+            };
+        };
+    };
     updateStudent: {
         parameters: {
             query?: never;
@@ -2443,7 +2524,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
                 };
             };
             /** @description 유효성 검증 실패 */
@@ -2452,7 +2533,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
                 };
             };
             /** @description 권한 없음 */
@@ -2461,7 +2542,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
                 };
             };
             /** @description 회원을 찾을 수 없음 */
@@ -2470,7 +2551,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudentDetailResponse"];
                 };
             };
         };

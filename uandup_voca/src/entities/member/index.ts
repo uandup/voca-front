@@ -1,3 +1,4 @@
+export { GRADES } from './model/types';
 export type {
   MemberRole,
   MemberStatus,
@@ -8,6 +9,7 @@ export type {
   ClinicStudentRow,
   ClinicStudentProfileCard,
   StudentManageTableRow,
+  StudentDetail,
   UnassignedStudentListItem,
   StudentFormState,
   TeacherFormState,
@@ -28,6 +30,8 @@ export {
   toTeacherRow,
   toTeacherManageRow,
   toParentManageRow,
+  toStudentManageTableRow,
+  toStudentDetail,
 } from './model/mapper';
 export {
   STUDENT_MOCK,
@@ -55,3 +59,4 @@ export {
   demoteAdminToTeacher,
 } from './api/teacherApi';
 export { getParents, updateParent, deleteParent } from './api/parentApi';
+export { getStudents, getStudentDetail, updateStudent, deleteStudent } from './api/studentApi';

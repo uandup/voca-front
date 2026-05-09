@@ -1,32 +1,31 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import type { StudentManageTableRow } from '@/entities/member';
-import { STUDENT_MOCK as STUDENT_MANAGE_MOCK } from '@/entities/member';
+import { GRADES } from '@/entities/member';
+import { DIFFICULTY_LEVELS } from '@/entities/word';
+import { useQuery } from '@tanstack/react-query';
+import { getClassrooms, toClassListItem } from '@/entities/class';
+import { useStudentManage } from './model/useStudentManage';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
 import { MemoPopup } from './ui/modals/MemoPopup';
 import { StudentTable } from './ui/table/StudentTable';
 
 export default function StudentManagePage() {
+  const { students, edit, remove } = useStudentManage();
   const [search, setSearch] = useState('');
   const [gradeFilter, setGradeFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState<number | ''>('');
   const [classFilter, setClassFilter] = useState('');
-  const [students, setStudents] = useState<StudentManageTableRow[]>(STUDENT_MANAGE_MOCK);
   const [editingStudent, setEditingStudent] = useState<StudentManageTableRow | null>(null);
   const [deletingStudent, setDeletingStudent] = useState<StudentManageTableRow | null>(null);
   const [memoStudent, setMemoStudent] = useState<StudentManageTableRow | null>(null);
 
-  const grades = [...new Set(students.map((s) => s.grade))].sort((a, b) => a - b);
-  const allClasses = [...new Set(students.flatMap((s) => s.classes))].sort();
-
-  function handleSave(updated: StudentManageTableRow) {
-    setStudents((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
-  }
-
-  function handleDelete(id: number) {
-    setStudents((prev) => prev.filter((s) => s.id !== id));
-  }
+  const { data: allClasses = [] } = useQuery({
+    queryKey: ['admin', 'classrooms'],
+    queryFn: getClassrooms,
+    select: (res) => res.data?.map(toClassListItem) ?? [],
+  });
 
   const filtered = students.filter((s) => {
     const matchesSearch =
@@ -71,7 +70,7 @@ export default function StudentManagePage() {
           onChange={(e) => setGradeFilter(e.target.value)}
         >
           <option value="">Grade: All</option>
-          {grades.map((g) => (
+          {GRADES.map((g) => (
             <option key={g} value={g}>
               G{g}
             </option>
@@ -85,7 +84,7 @@ export default function StudentManagePage() {
           onChange={(e) => setLevelFilter(e.target.value === '' ? '' : Number(e.target.value))}
         >
           <option value="">Level: All</option>
-          {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
+          {DIFFICULTY_LEVELS.map((l) => (
             <option key={l} value={l}>
               Level {l}
             </option>
@@ -100,8 +99,8 @@ export default function StudentManagePage() {
         >
           <option value="">Class: All</option>
           {allClasses.map((c) => (
-            <option key={c} value={c}>
-              {c}
+            <option key={c.id} value={c.name}>
+              {c.name}
             </option>
           ))}
         </select>
@@ -126,7 +125,7 @@ export default function StudentManagePage() {
         <EditStudentModal
           student={editingStudent}
           onClose={() => setEditingStudent(null)}
-          onSave={handleSave}
+          onSave={(id, body) => edit({ id, body })}
         />
       )}
 
@@ -134,21 +133,15 @@ export default function StudentManagePage() {
         <DeleteConfirmModal
           student={deletingStudent}
           onClose={() => setDeletingStudent(null)}
-          onConfirm={handleDelete}
+          onConfirm={(id) => remove(id)}
         />
       )}
 
       {memoStudent && (
         <MemoPopup
+          studentId={memoStudent.id}
           studentName={memoStudent.nameKo}
-          memos={memoStudent.memos}
           onClose={() => setMemoStudent(null)}
-          onChange={(newMemos) => {
-            setStudents((prev) =>
-              prev.map((s) => (s.id === memoStudent.id ? { ...s, memos: newMemos } : s)),
-            );
-            setMemoStudent((prev) => (prev ? { ...prev, memos: newMemos } : null));
-          }}
         />
       )}
     </main>

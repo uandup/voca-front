@@ -35,7 +35,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
       },
     ],
     latestMemoContent: '줄바꿈 테스트. 줄바꿈 테스트. 줄바꿈 테스트..가나다라마바.',
-    parentName: '김철수',
   },
   {
     id: 2,
@@ -52,7 +51,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 92, total: 100 },
     memos: [{ id: 1, date: '2026.03.15', content: '재시험 예정. 혼동 어휘 정리가 필요함.' }],
     latestMemoContent: '재시험 예정. 혼동 어휘 정리가 필요함.',
-    parentName: '이상훈',
   },
   {
     id: 3,
@@ -69,7 +67,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 78, total: 100 },
     memos: [{ id: 1, date: '2026.02.20', content: '꾸준한 성적 향상 보임. 집중력이 좋음.' }],
     latestMemoContent: '꾸준한 성적 향상 보임. 집중력이 좋음.',
-    parentName: null,
   },
   {
     id: 4,
@@ -86,7 +83,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 95, total: 100 },
     memos: [{ id: 1, date: '2026.03.10', content: '학습 진도 빠름. 다음 단계 교재 준비 권장.' }],
     latestMemoContent: '학습 진도 빠름. 다음 단계 교재 준비 권장.',
-    parentName: '최영진',
   },
   {
     id: 5,
@@ -103,7 +99,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 83, total: 100 },
     memos: [],
     latestMemoContent: null,
-    parentName: null,
   },
   {
     id: 6,
@@ -120,7 +115,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 71, total: 100 },
     memos: [{ id: 1, date: '2026.03.20', content: '기초 어휘 보완 중.' }],
     latestMemoContent: '기초 어휘 보완 중.',
-    parentName: null,
   },
   {
     id: 7,
@@ -137,7 +131,6 @@ export const STUDENT_MOCK: StudentManageTableRow[] = [
     recentScore: { score: 89, total: 100 },
     memos: [{ id: 1, date: '2026.03.05', content: '심화 과정 진행 중.' }],
     latestMemoContent: '심화 과정 진행 중.',
-    parentName: '윤성호',
   },
 ];
 

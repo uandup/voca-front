@@ -1,22 +1,34 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentManageTableRow, ParentManageRow, StudentGrade } from '@/entities/member';
+import { getStudentDetail, toStudentDetail, GRADES } from '@/entities/member';
+import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
+import type { Class } from '@/entities/class';
 import { ParentListPanel } from './ParentListPanel';
-
-interface ParentEntry {
-  id: number;
-  nameKo: string;
-  phone: string;
-}
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
   student: StudentManageTableRow;
   onClose: () => void;
-  onSave: (updated: StudentManageTableRow) => void;
+  onSave: (
+    id: number,
+    body: {
+      name: string;
+      englishName: string;
+      grade: number;
+      assignmentCount: number;
+      examQuestionCount: number;
+      examSubType: 'WORD_TO_MEANING' | 'MEANING_TO_WORD';
+      synonymIncluded: boolean;
+      level: number;
+      parentIds: number[];
+      classroomIds: number[];
+    },
+  ) => void;
 }
 
 const TEST_TYPES: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -26,9 +38,18 @@ const TEST_TYPE_LABELS: Record<WordTestType, string> = {
   'word-to-meaning': 'Word to Meaning ( W to M )',
 };
 
-const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+const SUBTYPE_TO_API: Record<WordTestType, 'WORD_TO_MEANING' | 'MEANING_TO_WORD'> = {
+  'meaning-to-word': 'MEANING_TO_WORD',
+  'word-to-meaning': 'WORD_TO_MEANING',
+};
 
 export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
+  const { data: detail } = useQuery({
+    queryKey: ['students', student.id, 'detail'],
+    queryFn: () => getStudentDetail(student.id),
+    select: (res) => (res.data ? toStudentDetail(res.data) : null),
+  });
+
   const [nameKo, setNameKo] = useState(student.nameKo);
   const [nameFirstEn, setNameFirstEn] = useState(student.nameFirstEn);
   const [nameLastEn, setNameLastEn] = useState(student.nameLastEn);
@@ -38,24 +59,38 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
   const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
   const [testType, setTestType] = useState<WordTestType>(student.testConfig.type);
   const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedParent, setSelectedParent] = useState<ParentEntry | null>(null);
+  const [selectedClasses, setSelectedClasses] = useState<Class[]>([]);
+  const [selectedParents, setSelectedParents] = useState<ParentManageRow[]>([]);
   const [showParentList, setShowParentList] = useState(false);
-  const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
   const [showClassList, setShowClassList] = useState(false);
 
+  // 상세 조회 완료 후 반/학부모 초기값 동기화 (최초 1회)
+  const [synced, setSynced] = useState(false);
+  if (detail && !synced) {
+    setSelectedClasses(detail.classrooms);
+    setSelectedParents(
+      detail.parents.map((p) => ({
+        id: p.id,
+        name: p.name,
+        phoneNumber: p.phoneNumber,
+        students: [],
+      })),
+    );
+    setSynced(true);
+  }
+
   function handleSave() {
-    onSave({
-      ...student,
-      nameKo,
-      nameFirstEn,
-      nameLastEn,
+    onSave(student.id, {
+      name: nameKo,
+      englishName: `${nameFirstEn} ${nameLastEn}`.trim(),
       grade,
-      assignedLevel: level,
-      assignedWordCount: Number(wordCount),
-      testQuestionCount: Number(testQuestionCount),
-      testConfig: { type: testType, includeSynonyms },
-      parentName: selectedParent ? selectedParent.nameKo : null,
-      classes: selectedClasses,
+      assignmentCount: Number(wordCount),
+      examQuestionCount: Number(testQuestionCount),
+      examSubType: SUBTYPE_TO_API[testType],
+      synonymIncluded: includeSynonyms,
+      level: Number(level),
+      parentIds: selectedParents.map((p) => p.id),
+      classroomIds: selectedClasses.map((c) => c.id),
     });
     onClose();
   }
@@ -125,9 +160,9 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
                     value={grade}
-                    onChange={(e) => setGrade(Number(e.target.value))}
+                    onChange={(e) => setGrade(Number(e.target.value) as StudentGrade)}
                   >
-                    {[12, 11, 10, 9, 8, 7, 6, 5, 4].map((g) => (
+                    {GRADES.map((g) => (
                       <option key={g} value={g}>
                         G{g}
                       </option>
@@ -148,7 +183,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                     value={level}
                     onChange={(e) => setLevel(Number(e.target.value) as typeof level)}
                   >
-                    {ALL_LEVELS.map((l) => (
+                    {DIFFICULTY_LEVELS.map((l) => (
                       <option key={l} value={l}>
                         Level {l}
                       </option>
@@ -253,7 +288,7 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               {selectedClasses.length > 0 ? (
                 <ClassChips
                   classes={selectedClasses}
-                  onRemove={(c) => setSelectedClasses((prev) => prev.filter((x) => x !== c))}
+                  onRemove={(id) => setSelectedClasses((prev) => prev.filter((c) => c.id !== id))}
                 />
               ) : (
                 <p className="text-xs text-on-surface-variant/60 px-1">No class selected</p>
@@ -286,20 +321,31 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </button>
               </div>
 
-              {/* 선택된 학부모 표시 */}
-              {selectedParent ? (
-                <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
-                  <div>
-                    <p className="text-sm font-bold text-on-surface">{selectedParent.nameKo}</p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">{selectedParent.phone}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedParent(null)}
-                    className="p-1 text-on-surface-variant hover:text-error transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base">close</span>
-                  </button>
+              {/* 선택된 학부모 목록 */}
+              {selectedParents.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  {selectedParents.map((parent) => (
+                    <div
+                      key={parent.id}
+                      className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3"
+                    >
+                      <div>
+                        <p className="text-sm font-bold text-on-surface">{parent.name}</p>
+                        <p className="text-xs text-on-surface-variant mt-0.5">
+                          {parent.phoneNumber}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelectedParents((prev) => prev.filter((p) => p.id !== parent.id))
+                        }
+                        className="p-1 text-on-surface-variant hover:text-error transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-base">close</span>
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-xs text-on-surface-variant/60 px-1">No parent selected</p>
@@ -332,9 +378,11 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
         {/* 학부모 리스트 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {showParentList && (
           <ParentListPanel
-            selectedId={selectedParent?.id ?? null}
+            selectedIds={selectedParents.map((p) => p.id)}
             onSelect={(parent) => {
-              setSelectedParent(parent);
+              setSelectedParents((prev) =>
+                prev.some((p) => p.id === parent.id) ? prev : [...prev, parent],
+              );
               setShowParentList(false);
             }}
           />

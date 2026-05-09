@@ -9,5 +9,3 @@ export const selectStyle = {
   backgroundRepeat: 'no-repeat' as const,
   backgroundPosition: 'right 16px center',
 };
-
-export const GRADES = Array.from({ length: 12 }, (_, i) => i + 1);

@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { TeacherWordCard, WordFormModal, DeleteWordModal, MOCK_TEACHER_WORD_CARDS } from '@/entities/word';
+import {
+  TeacherWordCard,
+  WordFormModal,
+  DeleteWordModal,
+  MOCK_TEACHER_WORD_CARDS,
+  DIFFICULTY_LEVELS,
+} from '@/entities/word';
 import type { TeacherWordCardVM } from '@/entities/word';
 
 export default function VocabularyBankPage() {
@@ -60,7 +66,7 @@ export default function VocabularyBankPage() {
               onChange={(e) => setSelectedLevel(e.target.value)}
             >
               <option value="">Level: All</option>
-              {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
+              {DIFFICULTY_LEVELS.map((l) => (
                 <option key={l} value={l}>
                   Level {l}
                 </option>

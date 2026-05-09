@@ -6,7 +6,7 @@ export type WordTestType = Exclude<TestType, 'sentence'>;
 // ── Shared ──────────────────────────────────────────────────────────────────
 
 /** TestConfigBadges, StudentDashboardStats, ClinicStudentRow에서 공통 사용 */
-export interface TestConfigDisplay {
+export interface TestConfig {
   type: WordTestType;
   includeSynonyms: boolean;
 }

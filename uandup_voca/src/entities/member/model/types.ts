@@ -1,15 +1,15 @@
 import type { Memo } from '@/entities/memo/@x/member';
 import type { WordDifficultyLevel } from '@/entities/word/@x/member';
-import type { TestConfigDisplay } from '@/entities/test/@x/member';
+import type { TestConfig } from '@/entities/test/@x/member';
 
 // ── Domain Primitives ───────────────────────────────────────────────────────
 
 export type MemberRole = 'STUDENT' | 'TEACHER' | 'PARENT';
 export type MemberStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
-export type StudentGrade = number;
+export const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
+export type StudentGrade = (typeof GRADES)[number];
 
 // ── Shared Base ─────────────────────────────────────────────────────────────
-// teacher-facing 학생 뷰 전체에서 동일한 2-line bilingual name 패턴으로 렌더링됨
 
 interface StudentIdentity {
   id: number;
@@ -30,7 +30,7 @@ export interface StudentDashboardStats {
   assignedLevel: WordDifficultyLevel;
   assignedWordCount: number;
   accuracy: string | undefined;
-  testConfig: TestConfigDisplay;
+  testConfig: TestConfig;
 }
 
 /** Student Dashboard — TodoList 드로어 */
@@ -46,7 +46,7 @@ export type ClinicStudentRow = StudentIdentity & {
   assignedLevel: WordDifficultyLevel;
   assignedWordCount: number;
   testQuestionCount: number;
-  testConfig: TestConfigDisplay;
+  testConfig: TestConfig;
   latestMemoContent: string | null;
   memos: Memo[];
 };
@@ -71,13 +71,27 @@ export type StudentManageTableRow = StudentIdentity & {
   assignedLevel: WordDifficultyLevel;
   assignedWordCount: number;
   testQuestionCount: number;
-  testConfig: TestConfigDisplay;
+  testConfig: TestConfig;
   recentScore: { score: number; total: number } | null;
   accuracy: string | undefined;
   latestMemoContent: string | null;
-  memos: Memo[];
-  parentName: string | null;
+  memos: Memo[]; // ClinicsPage/ClinicDetailPage에서 사용 — clinics API 연동 시 제거 예정
 };
+
+/** EditStudentModal  */
+export interface StudentDetail {
+  id: number;
+  nameKo: string;
+  nameFirstEn: string;
+  nameLastEn: string;
+  grade: StudentGrade;
+  level: WordDifficultyLevel;
+  assignmentCount: number;
+  examQuestionCount: number;
+  testConfig: TestConfig;
+  classrooms: { id: number; name: string }[];
+  parents: { id: number; name: string; phoneNumber: string }[];
+}
 
 // ── Teacher: Dashboard ──────────────────────────────────────────────────────
 
@@ -166,7 +180,7 @@ export interface TeacherManageRow {
 export interface ParentStudentSummary {
   id: number;
   name: string;
-  grade: number;
+  grade: StudentGrade;
 }
 
 export interface ParentManageRow {

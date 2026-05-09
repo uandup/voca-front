@@ -1,5 +1,6 @@
-import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
-import type { StudentFormState } from '@/entities/member';
+import { inputClass, selectClass, selectStyle } from './formStyles';
+import type { StudentFormState, StudentGrade } from '@/entities/member';
+import { GRADES } from '@/entities/member';
 
 interface Props {
   value: StudentFormState;
@@ -57,7 +58,7 @@ export function StudentForm({ value, onChange }: Props) {
         </label>
         <select
           value={value.grade}
-          onChange={(e) => set('grade', Number(e.target.value))}
+          onChange={(e) => set('grade', Number(e.target.value) as StudentGrade)}
           className={selectClass}
           style={selectStyle}
         >

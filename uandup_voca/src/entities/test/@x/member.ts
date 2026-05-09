@@ -1,1 +1,1 @@
-export type { TestConfigDisplay } from '../model/types';
+export type { TestConfig, WordTestType } from '../model/types';

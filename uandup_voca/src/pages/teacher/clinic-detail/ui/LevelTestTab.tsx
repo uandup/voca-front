@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { LevelBlock } from '@/entities/word';
+import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 import type { WordDifficultyLevel } from '@/entities/word';
 import { MOCK_CLINIC_LEVEL_TEST_HISTORY } from '@/entities/test';
@@ -40,7 +40,7 @@ export function LevelTestTab() {
             Select Level
           </p>
           <div className="flex gap-4">
-            {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as WordDifficultyLevel[]).map((lv) => (
+            {DIFFICULTY_LEVELS.map((lv) => (
               <button
                 key={lv}
                 onClick={() => setConfig((prev) => ({ ...prev, selectedLevel: lv }))}

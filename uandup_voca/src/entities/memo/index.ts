@@ -1,2 +1,4 @@
 export type { Memo } from './model/types';
+export { toMemo } from './model/mapper';
+export { getMemos, createMemo, updateMemo, deleteMemo } from './api/memoApi';
 export { MemoPopup } from './ui/MemoPopup';

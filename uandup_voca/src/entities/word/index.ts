@@ -1,3 +1,4 @@
+export { DIFFICULTY_LEVELS } from './model/types';
 export type {
   PartOfSpeech,
   WordDifficultyLevel,

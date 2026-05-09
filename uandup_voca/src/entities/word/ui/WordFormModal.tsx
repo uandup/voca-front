@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DIFFICULTY_LEVELS } from '../model/types';
 import type { TeacherWordCardVM, PartOfSpeech, WordDifficultyLevel } from '../model/types';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
@@ -125,7 +126,7 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                   value={difficulty}
                   onChange={(e) => setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)}
                 >
-                  {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((l) => (
+                  {DIFFICULTY_LEVELS.map((l) => (
                     <option key={l} value={l}>
                       Level {l}
                     </option>
