@@ -1,42 +1,59 @@
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import {
-  AVAILABLE_STUDENTS_MOCK,
-  CURRENT_ROSTER_MOCK,
-  GRADE_OPTIONS,
-  type MemberStudent,
-} from '../mock/editMembersMockData';
+import { GRADES } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member';
+import { getClinicEditData, toClinicMemberStudent } from '@/entities/clinic';
+import type { ClinicMemberStudent } from '@/entities/clinic';
+import { useEditMembers } from '../model/useEditMembers';
 
 interface EditMembersModalProps {
+  dayOfWeek: string;
+  hour: number;
   onClose: () => void;
 }
 
-export function EditMembersModal({ onClose }: EditMembersModalProps) {
-  const [roster, setRoster] = useState<MemberStudent[]>(CURRENT_ROSTER_MOCK);
-  const [available, setAvailable] = useState<MemberStudent[]>(AVAILABLE_STUDENTS_MOCK);
-  const [search, setSearch] = useState('');
-  const [gradeFilter, setGradeFilter] = useState('');
+interface EditData {
+  allStudents: ClinicMemberStudent[];
+  clinicStudentIds: Set<number>;
+}
 
-  function removeFromRoster(student: MemberStudent) {
-    setRoster((prev) => prev.filter((s) => s.id !== student.id));
-    setAvailable((prev) => [...prev, student]);
-  }
-
-  function addToRoster(student: MemberStudent) {
-    setAvailable((prev) => prev.filter((s) => s.id !== student.id));
-    setRoster((prev) => [...prev, student]);
-  }
-
-  function handleResetFilters() {
-    setSearch('');
-    setGradeFilter('');
-  }
-
-  const filteredAvailable = available.filter((s) => {
-    const matchesSearch = s.name.toLowerCase().includes(search.toLowerCase());
-    const matchesGrade = gradeFilter ? s.grade === gradeFilter : true;
-    return matchesSearch && matchesGrade;
+export function EditMembersModal({ dayOfWeek, hour, onClose }: EditMembersModalProps) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['clinics', dayOfWeek, hour, 'edit'],
+    queryFn: () => getClinicEditData(dayOfWeek, hour),
+    select: (res): EditData => ({
+      allStudents: (res.data?.allStudents ?? []).map(toClinicMemberStudent),
+      clinicStudentIds: new Set(res.data?.clinicStudentIds ?? []),
+    }),
+    staleTime: Infinity,
   });
+
+  if (isLoading || !data) return <></>;
+
+  return (
+    <EditMembersModalContent data={data} dayOfWeek={dayOfWeek} hour={hour} onClose={onClose} />
+  );
+}
+
+interface EditMembersModalContentProps {
+  data: EditData;
+  dayOfWeek: string;
+  hour: number;
+  onClose: () => void;
+}
+
+function EditMembersModalContent({ data, dayOfWeek, hour, onClose }: EditMembersModalContentProps) {
+  const {
+    roster,
+    filteredAvailable,
+    search,
+    setSearch,
+    gradeFilter,
+    setGradeFilter,
+    addToRoster,
+    removeFromRoster,
+    saveMutation,
+  } = useEditMembers(data, dayOfWeek, hour, onClose);
 
   return (
     <ModalBackdrop onClose={onClose}>
@@ -59,10 +76,11 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
               Discard Changes
             </button>
             <button
-              onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-semibold shadow-md active:scale-95 transition-all"
+              onClick={() => saveMutation.mutate()}
+              disabled={saveMutation.isPending}
+              className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-semibold shadow-md active:scale-95 transition-all disabled:opacity-60"
             >
-              Save Roster
+              {saveMutation.isPending ? 'Saving...' : 'Save Roster'}
             </button>
           </div>
         </div>
@@ -84,7 +102,6 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                   {roster.length} Students
                 </span>
               </h3>
-              {/* 카드 5개 높이 고정 + 내부 스크롤 */}
               <div className="bg-surface-container-low rounded-xs overflow-hidden flex flex-col h-105">
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-outline-variant/40 [&::-webkit-scrollbar-track]:bg-transparent">
                   {roster.map((student) => (
@@ -94,9 +111,9 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                     >
                       <div>
                         <p className="font-bold text-on-surface text-sm font-headline">
-                          {student.name}
+                          {student.nameKo}
                         </p>
-                        <p className="text-xs text-on-surface-variant">Grade: {student.grade}</p>
+                        <p className="text-xs text-on-surface-variant">{student.englishName}</p>
                       </div>
                       <button
                         onClick={() => removeFromRoster(student)}
@@ -111,16 +128,15 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
             </div>
 
             {/* Center: swap icon */}
-            <div className="flex items-center justify-center h-105 ">
+            <div className="flex items-center justify-center h-105">
               <span className="material-symbols-outlined text-3xl text-primary/70">sync_alt</span>
             </div>
 
             {/* Right: Available Students */}
             <div className="flex flex-col gap-4">
               <h3 className="font-headline font-bold text-lg">Available Students</h3>
-              {/* 카드 5개 높이 고정 + 검색 sticky + 내부 스크롤 */}
               <div className="bg-surface-container-low rounded-xs overflow-hidden flex flex-col h-105">
-                {/* 검색/필터 — 고정 */}
+                {/* 검색/필터 */}
                 <div className="p-4 pb-2 bg-surface-container-low flex flex-col gap-2">
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">
@@ -139,12 +155,16 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                       <select
                         className="w-full pl-4 pr-10 py-2 bg-white border border-outline-variant/30 rounded-xs text-sm focus:ring-2 focus:ring-primary/20 appearance-none"
                         value={gradeFilter}
-                        onChange={(e) => setGradeFilter(e.target.value)}
+                        onChange={(e) =>
+                          setGradeFilter(
+                            e.target.value ? (Number(e.target.value) as StudentGrade) : '',
+                          )
+                        }
                       >
                         <option value="">Filter by Grade</option>
-                        {GRADE_OPTIONS.map((g) => (
+                        {GRADES.map((g) => (
                           <option key={g} value={g}>
-                            {g}
+                            G{g}
                           </option>
                         ))}
                       </select>
@@ -154,7 +174,10 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                     </div>
                     <button
                       className="bg-surface-container-highest px-4 py-2 rounded-xs text-on-surface-variant text-sm font-bold hover:bg-primary/10 hover:text-primary active:scale-95 transition-all"
-                      onClick={handleResetFilters}
+                      onClick={() => {
+                        setSearch('');
+                        setGradeFilter('');
+                      }}
                     >
                       Init
                     </button>
@@ -169,9 +192,9 @@ export function EditMembersModal({ onClose }: EditMembersModalProps) {
                     >
                       <div>
                         <p className="font-bold text-on-surface text-sm font-headline">
-                          {student.name}
+                          {student.nameKo}
                         </p>
-                        <p className="text-xs text-on-surface-variant">Grade: {student.grade}</p>
+                        <p className="text-xs text-on-surface-variant">{student.englishName}</p>
                       </div>
                       <button
                         onClick={() => addToRoster(student)}

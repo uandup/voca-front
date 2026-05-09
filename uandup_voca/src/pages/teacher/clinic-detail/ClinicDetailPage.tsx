@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { MOCK_SESSION_STUDENTS } from '@/entities/clinic';
 import { MemoPopup } from '@/entities/memo';
 import type { WordDifficultyLevel } from '@/entities/word';
+import type { ClinicStudentRow } from '@/entities/member';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
@@ -13,12 +13,11 @@ import { WrongWordBankTab } from './ui/WrongWordBankTab';
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
 export function ClinicDetailPage() {
-  const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
+  useParams({ from: '/teacher/clinics_/students/$studentId' });
   const navigate = useNavigate();
 
-  const student = Object.values(MOCK_SESSION_STUDENTS)
-    .flat()
-    .find((s) => String(s.id) === studentId);
+  // TODO: API 연동 전 임시 — clinic detail API 작업 시 교체 예정
+  const student = undefined as ClinicStudentRow | undefined;
 
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [mainTab, setMainTab] = useState<MainTab>('wordTest');

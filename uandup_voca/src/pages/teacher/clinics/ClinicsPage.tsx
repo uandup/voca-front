@@ -3,37 +3,19 @@ import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { LevelBlock } from '@/entities/word';
-import { MOCK_CLINIC_SESSIONS, MOCK_SESSION_STUDENTS } from '@/entities/clinic';
 import type { ClinicStudentRow } from '@/entities/member';
-import { EditMembersModal } from '@/features/roster-manage';
 import { TestConfigBadges } from '@/entities/test';
 import { MemoPopup } from '@/entities/memo';
-
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-type Day = (typeof DAYS)[number];
-
-const todayDay = DAYS[Math.max(0, new Date().getDay() - 1)];
-
-type TimeGroup = 'morning' | 'afternoon' | 'evening';
-
-const TIME_GROUPS: { key: TimeGroup; label: string; range: string }[] = [
-  { key: 'morning', label: 'Morning', range: '09 – 12' },
-  { key: 'afternoon', label: 'Afternoon', range: '13 – 17' },
-  { key: 'evening', label: 'Evening', range: '18 – 23' },
-];
-
-function getTimeGroup(timeSlot: string): TimeGroup {
-  const startHour = parseInt(timeSlot.split(':')[0], 10);
-  if (startHour < 12) return 'morning';
-  if (startHour < 17) return 'afternoon';
-  return 'evening';
-}
+import { DAYS, DAY_API_MAP, todayDay, TIME_GROUPS } from '@/entities/clinic';
+import type { Day, TimeGroup, ClinicHour } from '@/entities/clinic';
+import { useClinics } from './model/useClinics';
+import { EditMembersModal } from './ui/EditMembersModal';
 
 export default function ClinicsPage() {
-  const [sessions] = useState(MOCK_CLINIC_SESSIONS);
-  const sessionStudents = MOCK_SESSION_STUDENTS;
-  const [selectedDay, setSelectedDay] = useState<Day>(todayDay);
-  const [selectedSessionId, setSelectedSessionId] = useState<string>(MOCK_CLINIC_SESSIONS[0].id);
+  const [selectedSlot, setSelectedSlot] = useState<{ day: Day; hour: ClinicHour }>({
+    day: todayDay,
+    hour: 9,
+  });
   const [memoStudent, setMemoStudent] = useState<ClinicStudentRow | null>(null);
   const navigate = useNavigate();
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
@@ -43,22 +25,21 @@ export default function ClinicsPage() {
     evening: true,
   });
 
+  const { students } = useClinics(DAY_API_MAP[selectedSlot.day], selectedSlot.hour);
+
   function toggleGroup(group: TimeGroup) {
     setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }));
   }
 
-  const selectedStudents = sessionStudents[selectedSessionId] ?? [];
-
   function handlePrevDay() {
-    const idx = DAYS.indexOf(selectedDay);
-    setSelectedDay(DAYS[(idx - 1 + DAYS.length) % DAYS.length]);
+    const idx = DAYS.indexOf(selectedSlot.day);
+    setSelectedSlot((prev) => ({ ...prev, day: DAYS[(idx - 1 + DAYS.length) % DAYS.length] }));
   }
 
   function handleNextDay() {
-    const idx = DAYS.indexOf(selectedDay);
-    setSelectedDay(DAYS[(idx + 1) % DAYS.length]);
+    const idx = DAYS.indexOf(selectedSlot.day);
+    setSelectedSlot((prev) => ({ ...prev, day: DAYS[(idx + 1) % DAYS.length] }));
   }
-
 
   return (
     <main>
@@ -77,9 +58,9 @@ export default function ClinicsPage() {
             </button>
             <div className="flex items-center gap-1.5">
               <h3 className="text-sm font-black uppercase tracking-widest text-primary">
-                {selectedDay}
+                {selectedSlot.day}
               </h3>
-              {selectedDay === todayDay && (
+              {selectedSlot.day === todayDay && (
                 <span className="text-[10px] font-bold bg-primary text-white px-1.5 py-1 rounded-full leading-none">
                   TODAY
                 </span>
@@ -93,11 +74,9 @@ export default function ClinicsPage() {
             </button>
           </div>
 
-          {/* 세션 카드 목록 */}
+          {/* 슬롯 카드 목록 */}
           <div className="space-y-2">
             {TIME_GROUPS.map((group) => {
-              const groupSessions = sessions.filter((s) => getTimeGroup(s.timeSlot) === group.key);
-              if (groupSessions.length === 0) return null;
               const isOpen = expandedGroups[group.key];
               return (
                 <div
@@ -122,13 +101,14 @@ export default function ClinicsPage() {
                   </button>
                   {isOpen && (
                     <div className="bg-white">
-                      {groupSessions.map((session) => {
-                        const isSelected = session.id === selectedSessionId;
+                      {group.hours.map((hour) => {
+                        const isSelected =
+                          selectedSlot.day === selectedSlot.day && selectedSlot.hour === hour;
                         return (
                           <button
-                            key={session.id}
-                            onClick={() => setSelectedSessionId(session.id)}
-                            className={`w-full text-left px-4 py-3 flex justify-between items-center transition-all cursor-pointer border-l-4 ${
+                            key={hour}
+                            onClick={() => setSelectedSlot((prev) => ({ ...prev, hour }))}
+                            className={`w-full text-left px-4 py-3 flex items-center transition-all cursor-pointer border-l-4 ${
                               isSelected
                                 ? 'bg-primary-fixed border-primary'
                                 : 'border-transparent hover:bg-surface-container-low/50'
@@ -137,12 +117,8 @@ export default function ClinicsPage() {
                             <span
                               className={`text-sm font-bold transition-colors ${isSelected ? 'text-primary' : 'text-on-surface/80'}`}
                             >
-                              {session.timeSlot}
-                            </span>
-                            <span
-                              className={`text-xs font-black px-2 py-1 rounded ${isSelected ? 'text-primary bg-white/50' : 'text-on-surface-variant bg-surface-container-highest'}`}
-                            >
-                              {session.enrolled}
+                              {String(hour).padStart(2, '0')}:00 –{' '}
+                              {String(hour + 1).padStart(2, '0')}:00
                             </span>
                           </button>
                         );
@@ -204,7 +180,7 @@ export default function ClinicsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/20">
-                  {selectedStudents.map((student) => (
+                  {students.map((student) => (
                     <tr
                       key={student.id}
                       onClick={() =>
@@ -276,7 +252,13 @@ export default function ClinicsPage() {
         </div>
       </div>
 
-      {isEditMembersOpen && <EditMembersModal onClose={() => setIsEditMembersOpen(false)} />}
+      {isEditMembersOpen && (
+        <EditMembersModal
+          dayOfWeek={DAY_API_MAP[selectedSlot.day]}
+          hour={selectedSlot.hour}
+          onClose={() => setIsEditMembersOpen(false)}
+        />
+      )}
       {memoStudent && (
         <MemoPopup
           studentId={memoStudent.id}
