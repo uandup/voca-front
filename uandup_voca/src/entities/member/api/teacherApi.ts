@@ -30,9 +30,7 @@ export const updateTeacher = (
     .then((r) => r.data);
 
 export const deleteTeacher = (id: number): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .delete<ApiResponse<void>>(`/api/v1/members/teachers/${id}`)
-    .then((r) => r.data);
+  axiosInstance.delete<ApiResponse<void>>(`/api/v1/members/teachers/${id}`).then((r) => r.data);
 
 export const promoteTeacherToAdmin = (id: number): Promise<ApiResponse<MemberResponse>> =>
   axiosInstance

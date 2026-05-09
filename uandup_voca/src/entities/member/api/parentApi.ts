@@ -20,6 +20,4 @@ export const updateParent = (
     .then((r) => r.data);
 
 export const deleteParent = (id: number): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .delete<ApiResponse<void>>(`/api/v1/members/parents/${id}`)
-    .then((r) => r.data);
+  axiosInstance.delete<ApiResponse<void>>(`/api/v1/members/parents/${id}`).then((r) => r.data);

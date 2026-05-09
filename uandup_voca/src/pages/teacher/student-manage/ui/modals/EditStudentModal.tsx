@@ -99,22 +99,22 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Last Name (English)
-                </label>
-                <input
-                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={form.nameLastEn}
-                  onChange={(e) => update('nameLastEn', e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
                   First Name (English)
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   value={form.nameFirstEn}
                   onChange={(e) => update('nameFirstEn', e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Last Name (English)
+                </label>
+                <input
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  value={form.nameLastEn}
+                  onChange={(e) => update('nameLastEn', e.target.value)}
                 />
               </div>
             </div>
@@ -175,7 +175,7 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
                   value={assignmentCountStr}
                   onChange={setAssignmentCountStr}
                   min={1}
-                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -186,7 +186,7 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
                   value={examQuestionCountStr}
                   onChange={setExamQuestionCountStr}
                   min={1}
-                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
             </div>
