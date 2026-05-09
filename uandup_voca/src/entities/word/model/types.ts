@@ -16,33 +16,19 @@ export interface WordCard {
 }
 
 /** WrongWordListPage — StudentWordCard with wrongCount badge */
-export interface WrongWordCard {
-  id: number;
-  difficulty: WordDifficultyLevel;
-  word: string;
-  partOfSpeech: PartOfSpeech;
-  korMeaning: string;
-  engMeaning: string;
-  synonyms: string[];
+export interface WrongWord extends WordCard {
   wrongCount: number;
 }
 
 /** VocabularyBankPage (teacher) — TeacherWordCard with sentence footer */
-export interface TeacherWordCardVM {
-  id: number;
-  difficulty: WordDifficultyLevel;
-  word: string;
-  partOfSpeech: PartOfSpeech;
-  korMeaning: string;
-  engMeaning: string;
-  synonyms: string[];
+export interface TeacherWord extends WordCard {
   sentence: string;
 }
 
 // ── Test Pages ──────────────────────────────────────────────────────────────
 
 /** TestPage (word-to-meaning / meaning-to-word) — VocabAnswerRow */
-export interface VocabTestItem {
+export interface WordTestItem {
   id: number;
   word: string;
   korMeaning: string;

@@ -1,4 +1,4 @@
-import type { WordCard, WrongWordCard, TeacherWordCardVM } from '../model/types';
+import type { WordCard, WrongWord, TeacherWord } from '../model/types';
 
 export const MOCK_WORDS: WordCard[] = [
   {
@@ -16,7 +16,8 @@ export const MOCK_WORDS: WordCard[] = [
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     korMeaning: '병치, 나란히 놓기',
-    engMeaning: 'The fact of two things being seen or placed close together for contrasting effect.',
+    engMeaning:
+      'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
   },
   {
@@ -39,7 +40,7 @@ export const MOCK_WORDS: WordCard[] = [
   },
 ];
 
-export const MOCK_WRONG_WORDS: WrongWordCard[] = [
+export const MOCK_WRONG_WORDS: WrongWord[] = [
   {
     id: 1,
     difficulty: 3,
@@ -56,13 +57,14 @@ export const MOCK_WRONG_WORDS: WrongWordCard[] = [
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     korMeaning: '병치, 나란히 놓기',
-    engMeaning: 'The fact of two things being seen or placed close together for contrasting effect.',
+    engMeaning:
+      'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
     wrongCount: 3,
   },
 ];
 
-export const MOCK_TEACHER_WORD_CARDS: TeacherWordCardVM[] = [
+export const MOCK_TEACHER_WORD_CARDS: TeacherWord[] = [
   {
     id: 1,
     difficulty: 3,
@@ -79,7 +81,8 @@ export const MOCK_TEACHER_WORD_CARDS: TeacherWordCardVM[] = [
     word: 'Juxtaposition',
     partOfSpeech: 'N',
     korMeaning: '병치, 나란히 놓기',
-    engMeaning: 'The fact of two things being seen or placed close together for contrasting effect.',
+    engMeaning:
+      'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
     sentence: '',
   },

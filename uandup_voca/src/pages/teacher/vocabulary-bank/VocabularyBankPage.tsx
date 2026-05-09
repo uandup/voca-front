@@ -7,13 +7,13 @@ import {
   MOCK_TEACHER_WORD_CARDS,
   DIFFICULTY_LEVELS,
 } from '@/entities/word';
-import type { TeacherWordCardVM } from '@/entities/word';
+import type { TeacherWord } from '@/entities/word';
 
 export default function VocabularyBankPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
-  const [editTarget, setEditTarget] = useState<TeacherWordCardVM | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<TeacherWordCardVM | null>(null);
+  const [editTarget, setEditTarget] = useState<TeacherWord | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<TeacherWord | null>(null);
 
   function handleResetFilters() {
     setSearchQuery('');
@@ -37,7 +37,7 @@ export default function VocabularyBankPage() {
         <div className="flex gap-3">
           <button
             className="bg-linear-to-r from-primary to-primary-container text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
-            onClick={() => setEditTarget({} as TeacherWordCardVM)}
+            onClick={() => setEditTarget({} as TeacherWord)}
           >
             <span className="material-symbols-outlined">add</span>
             <span className="font-bold">Add New Word</span>

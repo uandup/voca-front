@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { DIFFICULTY_LEVELS } from '../model/types';
-import type { TeacherWordCardVM, PartOfSpeech, WordDifficultyLevel } from '../model/types';
+import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '../model/types';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 
-type WordFormData = Omit<TeacherWordCardVM, 'id'>;
+type WordFormData = Omit<TeacherWord, 'id'>;
 
 interface WordFormModalProps {
   onClose: () => void;
@@ -15,9 +15,7 @@ const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
 
 export function WordFormModal({ onClose, onSave, initialData }: WordFormModalProps) {
   const [word, setWord] = useState(initialData?.word ?? '');
-  const [partOfSpeech, setPartOfSpeech] = useState<PartOfSpeech>(
-    initialData?.partOfSpeech ?? 'N',
-  );
+  const [partOfSpeech, setPartOfSpeech] = useState<PartOfSpeech>(initialData?.partOfSpeech ?? 'N');
   const [korMeaning, setKoreanMeaning] = useState(initialData?.korMeaning ?? '');
   const [difficulty, setDifficultyLevel] = useState<WordDifficultyLevel>(
     initialData?.difficulty ?? 1,
@@ -124,7 +122,9 @@ export function WordFormModal({ onClose, onSave, initialData }: WordFormModalPro
                 <select
                   className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={difficulty}
-                  onChange={(e) => setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)}
+                  onChange={(e) =>
+                    setDifficultyLevel(Number(e.target.value) as WordDifficultyLevel)
+                  }
                 >
                   {DIFFICULTY_LEVELS.map((l) => (
                     <option key={l} value={l}>

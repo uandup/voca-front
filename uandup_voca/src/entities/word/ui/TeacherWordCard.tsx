@@ -1,6 +1,6 @@
-import type { TeacherWordCardVM } from '../model/types';
+import type { TeacherWord } from '../model/types';
 
-interface TeacherWordCardProps extends TeacherWordCardVM {
+interface TeacherWordCardProps extends TeacherWord {
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -9,7 +9,7 @@ export function TeacherWordCard({
   word,
   partOfSpeech,
   korMeaning,
-  difficulty: difficulty,
+  difficulty,
   engMeaning,
   synonyms,
   sentence,
