@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getParents, toParentManageRow, type ParentManageRow } from '@/entities/member';
+import { getParents, toParentManageRow, type ParentIdentity } from '@/entities/member';
 
 interface ParentListPanelProps {
   selectedIds: number[];
-  onSelect: (parent: ParentManageRow) => void;
+  onSelect: (parent: ParentIdentity) => void;
 }
 
 export function ParentListPanel({ selectedIds, onSelect }: ParentListPanelProps) {

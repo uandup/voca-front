@@ -22,6 +22,7 @@ export type {
   TeacherManageRow,
   ParentManageRow,
   ParentStudentSummary,
+  ParentIdentity,
 } from './model/types';
 export {
   toPendingStudent,

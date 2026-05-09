@@ -18,6 +18,12 @@ interface StudentIdentity {
   nameLastEn: string;
 }
 
+export interface ParentIdentity {
+  id: number;
+  name: string;
+  phoneNumber: string;
+}
+
 // ── Student Dashboard ───────────────────────────────────────────────────────
 
 /** Student Dashboard — "Welcome back, {nameFirstEn}" 헤더 */
@@ -90,7 +96,7 @@ export interface StudentDetail {
   examQuestionCount: number;
   testConfig: TestConfig;
   classrooms: { id: number; name: string }[];
-  parents: { id: number; name: string; phoneNumber: string }[];
+  parents: ParentIdentity[];
 }
 
 // ── Teacher: Dashboard ──────────────────────────────────────────────────────
@@ -149,10 +155,7 @@ export interface PendingTeacher {
   submittedAt: string;
 }
 
-export interface PendingParent {
-  id: number;
-  name: string;
-  phoneNumber: string;
+export interface PendingParent extends ParentIdentity {
   requestedChildName: string;
   requestedChildGrade: number;
   submittedAt: string;
@@ -183,9 +186,6 @@ export interface ParentStudentSummary {
   grade: StudentGrade;
 }
 
-export interface ParentManageRow {
-  id: number;
-  name: string;
-  phoneNumber: string;
+export interface ParentManageRow extends ParentIdentity {
   students: ParentStudentSummary[];
 }

@@ -18,15 +18,8 @@ export const createMemo = (
     .post<ApiResponse<MemoResponse>>(`/api/v1/students/${studentId}/memos`, body)
     .then((r) => r.data);
 
-export const updateMemo = (
-  memoId: number,
-  body: MemoRequest,
-): Promise<ApiResponse<MemoResponse>> =>
-  axiosInstance
-    .put<ApiResponse<MemoResponse>>(`/api/v1/memos/${memoId}`, body)
-    .then((r) => r.data);
+export const updateMemo = (memoId: number, body: MemoRequest): Promise<ApiResponse<MemoResponse>> =>
+  axiosInstance.put<ApiResponse<MemoResponse>>(`/api/v1/memos/${memoId}`, body).then((r) => r.data);
 
 export const deleteMemo = (memoId: number): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .delete<ApiResponse<void>>(`/api/v1/memos/${memoId}`)
-    .then((r) => r.data);
+  axiosInstance.delete<ApiResponse<void>>(`/api/v1/memos/${memoId}`).then((r) => r.data);
