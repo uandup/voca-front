@@ -1,14 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { GRADES } from '@/entities/member';
 import type { StudentGrade } from '@/entities/member';
-import { getClinicEditData, toClinicMemberStudent } from '@/entities/clinic';
-import type { ClinicMemberStudent } from '@/entities/clinic';
-import { useEditMembers } from '../model/useEditMembers';
+import type { ClinicMemberStudent, Day, ClinicHour } from '@/entities/clinic';
+import { useClinicMembersQuery, useClinicMembers } from '../model/useClinicMembers';
 
 interface EditMembersModalProps {
-  dayOfWeek: string;
-  hour: number;
+  day: Day;
+  hour: ClinicHour;
   onClose: () => void;
 }
 
@@ -17,32 +15,22 @@ interface EditData {
   clinicStudentIds: Set<number>;
 }
 
-export function EditMembersModal({ dayOfWeek, hour, onClose }: EditMembersModalProps) {
-  const { data, isLoading } = useQuery({
-    queryKey: ['clinics', dayOfWeek, hour, 'edit'],
-    queryFn: () => getClinicEditData(dayOfWeek, hour),
-    select: (res): EditData => ({
-      allStudents: (res.data?.allStudents ?? []).map(toClinicMemberStudent),
-      clinicStudentIds: new Set(res.data?.clinicStudentIds ?? []),
-    }),
-    staleTime: Infinity,
-  });
+export function EditMembersModal({ day, hour, onClose }: EditMembersModalProps) {
+  const { data, isLoading } = useClinicMembersQuery(day, hour);
 
   if (isLoading || !data) return <></>;
 
-  return (
-    <EditMembersModalContent data={data} dayOfWeek={dayOfWeek} hour={hour} onClose={onClose} />
-  );
+  return <EditMembersModalContent data={data} day={day} hour={hour} onClose={onClose} />;
 }
 
 interface EditMembersModalContentProps {
   data: EditData;
-  dayOfWeek: string;
-  hour: number;
+  day: Day;
+  hour: ClinicHour;
   onClose: () => void;
 }
 
-function EditMembersModalContent({ data, dayOfWeek, hour, onClose }: EditMembersModalContentProps) {
+function EditMembersModalContent({ data, day, hour, onClose }: EditMembersModalContentProps) {
   const {
     roster,
     filteredAvailable,
@@ -53,7 +41,7 @@ function EditMembersModalContent({ data, dayOfWeek, hour, onClose }: EditMembers
     addToRoster,
     removeFromRoster,
     saveMutation,
-  } = useEditMembers(data, dayOfWeek, hour, onClose);
+  } = useClinicMembers(data, day, hour, onClose);
 
   return (
     <ModalBackdrop onClose={onClose}>
