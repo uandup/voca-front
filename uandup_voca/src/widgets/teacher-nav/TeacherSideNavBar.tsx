@@ -1,4 +1,4 @@
-import { SideNavBar } from './SideNavBar';
+import { SideNavBar } from '@/shared/ui/SideNavBar';
 import { getTokenPayload } from '@/shared/jwt';
 
 const BASE_NAV_ITEMS = [
