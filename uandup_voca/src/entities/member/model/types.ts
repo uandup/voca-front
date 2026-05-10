@@ -54,19 +54,13 @@ export type ClinicStudentRow = StudentIdentity & {
   testQuestionCount: number;
   testConfig: TestConfig;
   latestMemoContent: string | null;
-  memos: Memo[];
 };
 
 /** ClinicDetailPage 상단 StudentInfoCard */
-export interface ClinicStudentProfileCard {
-  id: number;
-  nameKo: string;
-  nameFirstEn: string;
-  nameLastEn: string;
+export type ClinicStudentProfileCard = StudentIdentity & {
   grade: StudentGrade;
   latestMemo: { date: string; content: string } | null;
-  memos: Memo[];
-}
+};
 
 // ── Teacher: Student Manage Page ────────────────────────────────────────────
 

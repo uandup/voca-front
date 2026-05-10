@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { ClinicStudentRow, StudentGrade } from '@/entities/member';
+import type { ClinicStudentRow, StudentGrade } from '@/entities/member/@x/clinic';
 import type { WordDifficultyLevel } from '@/entities/word';
 
 type ClinicStudentListResponse = components['schemas']['ClinicStudentListResponse'];
@@ -47,6 +47,5 @@ export function toClinicStudentRow(res: ClinicStudentListResponse): ClinicStuden
       includeSynonyms: res.includeSynonym ?? false,
     },
     latestMemoContent: res.recentMemo?.content ?? null,
-    memos: [],
   };
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { MemoPopup } from '@/entities/memo';
+import { MemoPopup, type Memo } from '@/entities/memo';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { ClinicStudentRow } from '@/entities/member';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
@@ -33,7 +33,7 @@ export function ClinicDetailPage() {
     );
   }
 
-  const latestMemo = [...(student.memos ?? [])].sort((a, b) => b.date.localeCompare(a.date))[0];
+  const latestMemo = {} as Memo;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
