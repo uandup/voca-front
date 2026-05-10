@@ -1,5 +1,5 @@
 import { SideNavBar } from '@/shared/ui/SideNavBar';
-import { getTokenPayload } from '@/shared/jwt';
+import { isAdmin } from '@/entities/member';
 
 const BASE_NAV_ITEMS = [
   // { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },
@@ -15,8 +15,7 @@ const ADMIN_NAV_ITEM = {
 } as const;
 
 export function TeacherSideNavBar() {
-  const isAdmin = getTokenPayload()?.isAdmin ?? false;
-  const navItems = isAdmin ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM] : [...BASE_NAV_ITEMS];
+  const navItems = isAdmin() ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM] : [...BASE_NAV_ITEMS];
 
   return <SideNavBar navItems={navItems} />;
 }

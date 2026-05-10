@@ -62,3 +62,4 @@ export {
 export { getParents, updateParent, deleteParent } from './api/parentApi';
 export { getStudents, getStudentDetail, updateStudent, deleteStudent } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
+export { isAdmin } from './lib/utils';

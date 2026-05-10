@@ -1,7 +1,7 @@
 import { LevelBlock } from '@/entities/word';
 import type { StudentManageTableRow } from '@/entities/member';
+import { isAdmin } from '@/entities/member';
 import { TestConfigBadges } from '@/entities/test';
-import { getTokenPayload } from '@/shared/jwt';
 
 export interface RowActions {
   onEdit: (student: StudentManageTableRow) => void;
@@ -15,7 +15,7 @@ interface StudentTableRowProps {
 }
 
 export function StudentTableRow({ student, actions }: StudentTableRowProps) {
-  const isAdmin = getTokenPayload()?.isAdmin ?? false;
+  const admin = isAdmin();
   const latestMemo = student.latestMemoContent;
 
   return (
@@ -108,7 +108,7 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
             <span className="material-symbols-outlined text-sm">edit</span>
             Edit
           </button>
-          {isAdmin && (
+          {admin && (
             <button
               onClick={() => actions.onDelete(student)}
               className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
