@@ -3,15 +3,16 @@ import { PageTitle } from '@/shared/ui/PageTitle';
 import type { StudentManageTableRow } from '@/entities/member';
 import { GRADES } from '@/entities/member';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getClassrooms, toClassListItem } from '@/entities/class';
 import { useStudentManage } from './model/useStudentManage';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
-import { MemoPopup } from '@/entities/memo';
+import { MemoPopup } from '@/features/memo';
 import { StudentTable } from './ui/table/StudentTable';
 
 export default function StudentManagePage() {
+  const queryClient = useQueryClient();
   const { students, remove } = useStudentManage();
   const [search, setSearch] = useState('');
   const [gradeFilter, setGradeFilter] = useState('');
@@ -138,6 +139,7 @@ export default function StudentManagePage() {
           studentId={memoStudent.id}
           studentName={memoStudent.nameKo}
           onClose={() => setMemoStudent(null)}
+          onMutationSuccess={() => queryClient.invalidateQueries({ queryKey: ['students'] })}
         />
       )}
     </main>

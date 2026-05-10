@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { MemoPopup, type Memo } from '@/entities/memo';
+import type { Memo } from '@/entities/memo';
+import { MemoPopup } from '@/features/memo';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { ClinicStudentRow } from '@/entities/member';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';

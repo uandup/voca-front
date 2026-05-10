@@ -6,7 +6,7 @@ interface StudentWordCardProps extends Omit<WordCard, 'id'> {
 }
 
 export function StudentWordCard({
-  difficulty: difficulty,
+  difficulty,
   word,
   partsOfSpeech,
   korMeaning,
