@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { promoteAllStudentsGrade, demoteAllStudentsGrade } from '@/entities/member';
+import { promoteAllStudentsGrade, demoteAllStudentsGrade } from '@/entities/teacher';
 
 export interface GradeBulkResult {
   updated: number;

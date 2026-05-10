@@ -1,4 +1,6 @@
-import type { ReviewDeckHistoryRow, LevelTestHistoryRow } from '../model/types';
+type HistoryRowStatus = 'active' | 'passed' | 'fail' | 'grading';
+type ReviewDeckHistoryRow = { date: string; quantity: number; score: number | null; status: HistoryRowStatus };
+type LevelTestHistoryRow = { date: string; level: number; assignedQty: number; testQty: number; score: number | null; status: HistoryRowStatus };
 
 export const MOCK_REVIEW_DECK_HISTORY: ReviewDeckHistoryRow[] = [
   { date: '2026.05.10', quantity: 30, score: null, status: 'active' },

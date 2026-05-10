@@ -1,6 +1,6 @@
 import { LevelBlock } from '@/entities/word';
-import type { StudentManageTableRow } from '@/entities/member';
-import { isAdmin } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/student';
+import { isAdmin } from '@/entities/teacher';
 import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {

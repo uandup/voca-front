@@ -1,5 +1,5 @@
 import { SideNavBar } from '@/shared/ui/SideNavBar';
-import { isAdmin } from '@/entities/member';
+import { isAdmin } from '@/entities/teacher';
 
 const BASE_NAV_ITEMS = [
   // { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },

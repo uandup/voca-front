@@ -1,5 +1,5 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/student';
 
 interface DeleteConfirmModalProps {
   student: StudentManageTableRow;

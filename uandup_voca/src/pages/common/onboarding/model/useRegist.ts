@@ -1,12 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
 import { registerProfile } from '@/entities/auth';
-import type {
-  MemberRole,
-  StudentFormState,
-  TeacherFormState,
-  ParentFormState,
-} from '@/entities/member';
+import type { MemberRole } from '@/entities/member';
+import type { StudentFormState, TeacherFormState, ParentFormState } from './types';
 
 interface RegistParams {
   userType: MemberRole;

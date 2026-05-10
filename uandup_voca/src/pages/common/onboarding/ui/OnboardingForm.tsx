@@ -11,12 +11,8 @@ import {
 } from '../model/constants';
 import { isStudentValid, isTeacherValid, isParentValid } from '../lib/validate';
 import { useRegist } from '../model/useRegist';
-import type {
-  MemberRole,
-  StudentFormState,
-  TeacherFormState,
-  ParentFormState,
-} from '@/entities/member';
+import type { MemberRole } from '@/entities/member';
+import type { StudentFormState, TeacherFormState, ParentFormState } from '../model/types';
 
 export function OnboardingForm() {
   const [userType, setUserType] = useState<MemberRole>('STUDENT');

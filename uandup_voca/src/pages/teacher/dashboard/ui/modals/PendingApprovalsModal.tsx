@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { MOCK_PENDING_APPROVALS } from '@/entities/member';
+import { MOCK_PENDING_APPROVALS } from '@/entities/student';
 
 interface PendingApprovalsModalProps {
   onClose: () => void;

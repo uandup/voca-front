@@ -1,5 +1,5 @@
 import { inputClass } from './formStyles';
-import type { TeacherFormState } from '@/entities/member';
+import type { TeacherFormState } from '../model/types';
 
 interface Props {
   value: TeacherFormState;

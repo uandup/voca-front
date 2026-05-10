@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { getPendingCount } from '@/entities/member';
+import { getPendingCount } from '@/entities/teacher';
 import { ADMIN_CARDS, type AdminModalKey } from './model/constants';
 import PendingApprovalsModal from './ui/pendingApprovals';
 import { ClassManageModal } from './ui/ClassManageModal';

@@ -5,10 +5,8 @@ import {
   getPendingTeachers,
   approveMember,
   rejectMember,
-  toPendingStudent,
-  toPendingTeacher,
-  toPendingParent,
-} from '@/entities/member';
+} from '@/entities/teacher';
+import { toPendingStudent, toPendingTeacher, toPendingParent } from '../mapper';
 
 export function usePendingStudents() {
   const queryClient = useQueryClient();

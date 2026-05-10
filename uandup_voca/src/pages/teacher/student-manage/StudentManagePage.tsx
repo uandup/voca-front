@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/student';
 import { GRADES } from '@/entities/member';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import { useQuery, useQueryClient } from '@tanstack/react-query';

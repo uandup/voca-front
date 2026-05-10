@@ -1,5 +1,6 @@
 import type { WordTestItem, VocabReviewItem } from '@/entities/word';
-import type { WordTestAnswer } from '../model/types';
+
+type WordTestAnswer = { answer: string; synonym: string };
 
 export const MOCK_VOCAB_ITEMS: WordTestItem[] = [
   { id: 1, word: 'Ubiquitous', korMeaning: '어디에나 있는', engMeaning: 'present everywhere' },

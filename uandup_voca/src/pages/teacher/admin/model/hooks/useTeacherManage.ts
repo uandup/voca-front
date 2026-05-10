@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTeachers, updateTeacher, deleteTeacher, toTeacherManageRow } from '@/entities/member';
+import { getTeachers, updateTeacher, deleteTeacher, toTeacherManageRow } from '@/entities/teacher';
 
 export function useTeacherManage() {
   const queryClient = useQueryClient();

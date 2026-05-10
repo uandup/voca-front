@@ -74,19 +74,19 @@ export function MemoPopup({ studentId, studentName, onClose, onMutationSuccess }
               className="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-4 flex flex-col"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-xs font-bold text-on-surface-variant">{memo.date}</span>
+                <span className="text-xs font-bold text-on-surface-variant ">{memo.date}</span>
                 <div className="flex items-center gap-1">
                   {editingId === memo.id ? (
                     <>
                       <button
                         onClick={() => handleEditSave(memo.id)}
-                        className="px-2.5 py-1 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors"
+                        className="px-2.5 py-1 mb-1 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors"
                       >
                         저장
                       </button>
                       <button
                         onClick={() => setEditingId(null)}
-                        className="px-2.5 py-1 rounded-lg border border-outline-variant text-on-surface-variant text-xs font-bold hover:bg-surface-container transition-colors"
+                        className="px-2.5 py-1 mb-1 rounded-lg border border-outline-variant text-on-surface-variant text-xs font-bold hover:bg-surface-container transition-colors"
                       >
                         취소
                       </button>

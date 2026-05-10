@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getParents, toParentManageRow, type ParentIdentity } from '@/entities/member';
+import { getParents, toParentManageRow } from '@/entities/parent';
+import type { ParentIdentity } from '@/entities/parent';
 
 interface ParentListPanelProps {
   selectedIds: number[];

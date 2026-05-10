@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  getClinicEditData,
-  toClinicMemberStudent,
-  updateClinicStudents,
-  DAY_API_MAP,
-} from '@/entities/clinic';
-import type { ClinicMemberStudent, Day, ClinicHour } from '@/entities/clinic';
+import { getClinicEditData, updateClinicStudents, DAY_API_MAP } from '@/entities/clinic';
+import type { Day, ClinicHour } from '@/entities/clinic';
+import { toClinicMemberStudent } from '../mapper';
+import type { ClinicMemberStudent } from '../types';
 import type { StudentGrade } from '@/entities/member';
 
 interface EditData {

@@ -1,6 +1,7 @@
 import { inputClass, selectClass, selectStyle } from './formStyles';
-import type { ParentFormState, StudentGrade } from '@/entities/member';
+import type { ParentFormState } from '../model/types';
 import { GRADES } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member';
 
 interface Props {
   value: ParentFormState;

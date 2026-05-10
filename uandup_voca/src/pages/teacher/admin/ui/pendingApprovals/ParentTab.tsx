@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { usePendingParents } from '../../model/usePendingApprovals';
+import { usePendingParents } from '../../model/hooks/usePendingApprovals';
 import { EmptyState, ApproveRejectButtons } from './PendingListUI';
 import { StudentMatchPanel } from './StudentMatchPanel';
 

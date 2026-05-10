@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { TeacherRow } from '@/entities/member';
-import { useTeacherPermission } from '../model/useTeacherPermission';
+import type { TeacherRow } from '@/entities/teacher';
+import { useTeacherPermission } from '../model/hooks/useTeacherPermission';
 
 interface Props {
   onClose: () => void;

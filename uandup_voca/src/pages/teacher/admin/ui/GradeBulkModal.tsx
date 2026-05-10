@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useGradeBulk } from '../model/useGradeBulk';
+import { useGradeBulk } from '../model/hooks/useGradeBulk';
 
 interface Props {
   onClose: () => void;

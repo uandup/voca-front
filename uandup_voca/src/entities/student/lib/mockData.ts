@@ -1,8 +1,20 @@
-import type {
-  StudentManageTableRow,
-  UnassignedStudentListItem,
-  RegisteredStudentRow,
-} from '../model/types';
+import type { StudentManageTableRow } from '../model/types';
+
+type UnassignedStudentListItem = {
+  id: number;
+  nameKo: string;
+  nameFirstEn: string;
+  nameLastEn: string;
+  grade: number;
+  clinics: string[];
+};
+type RegisteredStudentRow = {
+  id: number;
+  nameKo: string;
+  nameFirstEn: string;
+  nameLastEn: string;
+  grade: number;
+};
 
 export const STUDENT_MOCK: StudentManageTableRow[] = [
   {
@@ -168,16 +180,6 @@ export const MOCK_UNASSIGNED_STUDENTS: UnassignedStudentListItem[] = [
     grade: 12,
     clinics: ['FRI 15:00~17:00'],
   },
-];
-
-export const REGISTERED_STUDENTS_MOCK: RegisteredStudentRow[] = [
-  { id: 1, nameKo: '김민수', nameFirstEn: 'Minsu', nameLastEn: 'Kim', grade: 11 },
-  { id: 2, nameKo: '이영희', nameFirstEn: 'Younghee', nameLastEn: 'Lee', grade: 9 },
-  { id: 3, nameKo: '박지민', nameFirstEn: 'Jimin', nameLastEn: 'Park', grade: 12 },
-  { id: 4, nameKo: '최수연', nameFirstEn: 'Suyeon', nameLastEn: 'Choi', grade: 10 },
-  { id: 5, nameKo: '정도현', nameFirstEn: 'Dohyun', nameLastEn: 'Jung', grade: 11 },
-  { id: 6, nameKo: '강지수', nameFirstEn: 'Jisu', nameLastEn: 'Kang', grade: 10 },
-  { id: 7, nameKo: '윤재혁', nameFirstEn: 'Jaehyuk', nameLastEn: 'Yoon', grade: 12 },
 ];
 
 export const MOCK_PENDING_APPROVALS: RegisteredStudentRow[] = [

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { PendingParent } from '@/entities/member';
+import type { PendingParent } from '../../model/types';
 
 interface Props {
   parent: PendingParent;

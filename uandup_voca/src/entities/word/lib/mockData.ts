@@ -1,4 +1,4 @@
-import type { WordCard, WrongWord, TeacherWord } from '../model/types';
+import type { WordCard, WrongWord } from '../model/types';
 
 export const MOCK_WORDS: WordCard[] = [
   {
@@ -61,49 +61,5 @@ export const MOCK_WRONG_WORDS: WrongWord[] = [
       'The fact of two things being seen or placed close together for contrasting effect.',
     synonyms: ['comparison', 'proximity', 'adjacency'],
     wrongCount: 3,
-  },
-];
-
-export const MOCK_TEACHER_WORD_CARDS: TeacherWord[] = [
-  {
-    id: 1,
-    difficulty: 3,
-    word: 'Ambiguity',
-    partsOfSpeech: ['N'],
-    korMeaning: '모호함, 다의성',
-    engMeaning: 'The quality of being open to more than one interpretation; inexactness.',
-    synonyms: ['vague', 'obscurity', 'uncertainty'],
-    sentence: '',
-  },
-  {
-    id: 2,
-    difficulty: 4,
-    word: 'Juxtaposition',
-    partsOfSpeech: ['N'],
-    korMeaning: '병치, 나란히 놓기',
-    engMeaning:
-      'The fact of two things being seen or placed close together for contrasting effect.',
-    synonyms: ['comparison', 'proximity', 'adjacency'],
-    sentence: '',
-  },
-  {
-    id: 3,
-    difficulty: 3,
-    word: 'Inherent',
-    partsOfSpeech: ['Adj'],
-    korMeaning: '내재하는, 본질적인',
-    engMeaning: 'Existing as a natural or permanent quality of something.',
-    synonyms: ['intrinsic', 'innate', 'essential'],
-    sentence: '',
-  },
-  {
-    id: 4,
-    difficulty: 5,
-    word: 'Pragmatic',
-    partsOfSpeech: ['Adj'],
-    korMeaning: '실용적인, 실제적인',
-    engMeaning: 'Dealing with things sensibly and realistically based on practical considerations.',
-    synonyms: ['practical', 'utilitarian', 'sensible'],
-    sentence: '',
   },
 ];

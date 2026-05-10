@@ -1,9 +1,5 @@
-import type {
-  MemberRole,
-  StudentFormState,
-  TeacherFormState,
-  ParentFormState,
-} from '@/entities/member';
+import type { MemberRole } from '@/entities/member';
+import type { StudentFormState, TeacherFormState, ParentFormState } from './types';
 
 export const EXAM_BADGES = [
   'MAP',

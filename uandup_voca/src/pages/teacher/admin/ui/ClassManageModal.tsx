@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useClassManage } from '../model/useClassManage';
+import { useClassManage } from '../model/hooks/useClassManage';
 
 interface Props {
   onClose: () => void;

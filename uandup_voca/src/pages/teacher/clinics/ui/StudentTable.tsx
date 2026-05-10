@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { LevelBlock } from '@/entities/word';
 import { TestConfigBadges } from '@/entities/test';
-import type { ClinicStudentRow } from '@/entities/member';
+import type { ClinicStudentRow } from '@/entities/clinic';
 
 interface Props {
   students: ClinicStudentRow[];

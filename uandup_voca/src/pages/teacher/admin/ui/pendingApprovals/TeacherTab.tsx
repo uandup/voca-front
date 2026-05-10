@@ -1,4 +1,4 @@
-import { usePendingTeachers } from '../../model/usePendingApprovals';
+import { usePendingTeachers } from '../../model/hooks/usePendingApprovals';
 import { PendingList, LoadingState, ApproveRejectButtons } from './PendingListUI';
 
 export function TeacherTab() {

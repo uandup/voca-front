@@ -2,14 +2,9 @@ export { toExamSubType } from './api/mapper';
 export type {
   TestType,
   WordTestType,
-  TestStepName,
   StepStatus,
   StepCardVM,
   TestBundleRow,
-  HistoryRowStatus,
-  LevelTestHistoryRow,
-  ReviewDeckHistoryRow,
-  WordTestAnswer,
   SentenceTestAnswer,
 } from './model/types';
 export { TestConfigBadges } from './ui/TestConfigBadges';

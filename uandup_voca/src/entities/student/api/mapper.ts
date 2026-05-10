@@ -1,6 +1,6 @@
 import type { components } from '@/shared/api/schema.gen';
 import type { StudentDetail } from '../model/types';
-import { toExamSubType } from '@/entities/test';
+import { toExamSubType } from '@/entities/test/@x/student';
 
 type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
 

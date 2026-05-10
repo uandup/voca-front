@@ -1,4 +1,4 @@
-import type { StudentFormState, TeacherFormState, ParentFormState } from '@/entities/member';
+import type { StudentFormState, TeacherFormState, ParentFormState } from '../model/types';
 
 export function isStudentValid(f: StudentFormState) {
   return !!(f.nameKo && f.nameLastEn && f.nameFirstEn && f.grade);

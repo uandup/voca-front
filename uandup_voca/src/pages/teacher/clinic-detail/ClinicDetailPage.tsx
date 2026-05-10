@@ -3,7 +3,7 @@ import { useParams, useNavigate } from '@tanstack/react-router';
 import type { Memo } from '@/entities/memo';
 import { MemoPopup } from '@/features/memo';
 import type { WordDifficultyLevel } from '@/entities/word';
-import type { ClinicStudentRow } from '@/entities/member';
+import type { ClinicStudentRow } from '@/entities/clinic';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import type { ParentManageRow } from '@/entities/member';
-import { useParentManage } from '../model/useParentManage';
+import type { ParentManageRow } from '@/entities/parent';
+import { useParentManage } from '../model/hooks/useParentManage';
 
 interface Props {
   onClose: () => void;

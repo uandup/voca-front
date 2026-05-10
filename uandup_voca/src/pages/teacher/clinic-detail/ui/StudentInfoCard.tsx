@@ -1,9 +1,9 @@
-import type { Memo as MemoItem } from '@/entities/memo';
-import type { ClinicStudentRow } from '@/entities/member';
+import type { Memo } from '@/entities/memo';
+import type { ClinicStudentRow } from '@/entities/clinic';
 
 interface Props {
   student: ClinicStudentRow;
-  latestMemo: MemoItem | undefined;
+  latestMemo: Memo | undefined;
   onMemoClick: () => void;
 }
 

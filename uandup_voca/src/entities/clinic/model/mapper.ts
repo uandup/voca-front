@@ -1,31 +1,10 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { ClinicStudentRow, StudentGrade } from '@/entities/member/@x/clinic';
-import type { WordDifficultyLevel } from '@/entities/word';
+import type { StudentGrade } from '@/entities/member';
+import type { WordDifficultyLevel } from '@/entities/word/@x/clinic';
+import { toWordTestType } from '@/entities/test/@x/clinic';
+import type { ClinicStudentRow } from './types';
 
 type ClinicStudentListResponse = components['schemas']['ClinicStudentListResponse'];
-type ClinicStudentEditItem = components['schemas']['ClinicStudentEditItem'];
-
-export interface ClinicMemberStudent {
-  id: number;
-  nameKo: string;
-  englishName: string;
-  grade: StudentGrade | null;
-}
-
-export function toClinicMemberStudent(item: ClinicStudentEditItem): ClinicMemberStudent {
-  return {
-    id: item.studentId ?? 0,
-    nameKo: item.name ?? '',
-    englishName: item.englishName ?? '',
-    grade: null,
-  };
-}
-
-function toTestType(
-  subType: ClinicStudentListResponse['subType'],
-): 'word-to-meaning' | 'meaning-to-word' {
-  return subType === 'WORD_TO_MEANING' ? 'word-to-meaning' : 'meaning-to-word';
-}
 
 export function toClinicStudentRow(res: ClinicStudentListResponse): ClinicStudentRow {
   const englishName = res.englishName ?? '';
@@ -43,7 +22,7 @@ export function toClinicStudentRow(res: ClinicStudentListResponse): ClinicStuden
     assignedWordCount: res.assignmentQty ?? 0,
     testQuestionCount: res.testItemCount ?? 0,
     testConfig: {
-      type: toTestType(res.subType),
+      type: toWordTestType(res.subType),
       includeSynonyms: res.includeSynonym ?? false,
     },
     latestMemoContent: res.recentMemo?.content ?? null,

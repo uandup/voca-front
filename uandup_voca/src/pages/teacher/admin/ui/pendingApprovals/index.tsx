@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { usePendingCounts } from '../../model/usePendingApprovals';
+import { usePendingCounts } from '../../model/hooks/usePendingApprovals';
 import { StudentTab } from './StudentTab';
 import { ParentTab } from './ParentTab';
 import { TeacherTab } from './TeacherTab';

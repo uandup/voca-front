@@ -1,8 +1,9 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { GRADES } from '@/entities/member';
 import type { StudentGrade } from '@/entities/member';
-import type { ClinicMemberStudent, Day, ClinicHour } from '@/entities/clinic';
-import { useClinicMembersQuery, useClinicMembers } from '../model/useClinicMembers';
+import type { Day, ClinicHour } from '@/entities/clinic';
+import type { ClinicMemberStudent } from '../model/types';
+import { useClinicMembersQuery, useClinicMembers } from '../model/hooks/useClinicMembers';
 
 interface EditMembersModalProps {
   day: Day;

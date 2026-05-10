@@ -5,8 +5,8 @@ import {
   deleteStudent,
   toStudentManageTableRow,
   toStudentUpdateRequest,
-} from '@/entities/member';
-import type { StudentDetail } from '@/entities/member';
+} from '@/entities/student';
+import type { StudentDetail } from '@/entities/student';
 
 export function useStudentManage() {
   const queryClient = useQueryClient();

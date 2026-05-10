@@ -49,11 +49,3 @@ export interface VocabReviewItem {
   engMeaning: string;
   synonymAnswer: string;
 }
-
-/** TestReviewPage (sentence mode) — SentenceReviewRow */
-export interface SentenceReviewItem {
-  id: number;
-  sentence: string;
-  answerWord: string;
-  studentWord: string;
-}

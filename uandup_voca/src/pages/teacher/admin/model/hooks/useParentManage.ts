@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getParents, updateParent, deleteParent, toParentManageRow } from '@/entities/member';
+import { getParents, updateParent, deleteParent, toParentManageRow } from '@/entities/parent';
 
 export function useParentManage() {
   const queryClient = useQueryClient();

@@ -5,7 +5,7 @@ import {
   promoteTeacherToAdmin,
   demoteAdminToTeacher,
   toTeacherRow,
-} from '@/entities/member';
+} from '@/entities/teacher';
 import { getTokenPayload } from '@/shared/jwt';
 
 export function useTeacherPermission() {
