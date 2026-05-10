@@ -30,5 +30,5 @@ export const updateClinicStudents = (
   body: UpdateClinicStudentsRequest,
 ): Promise<ApiResponse<void>> =>
   axiosInstance
-    .put<ApiResponse<void>>(`/api/v1/clinics/${dayOfWeek}/${hour}/students/edit`, body)
+    .put<ApiResponse<void>>(`/api/v1/clinics/${dayOfWeek}/${hour}/students`, body)
     .then((r) => r.data);
