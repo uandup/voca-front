@@ -49,3 +49,46 @@ export interface TestBundleRow {
 export interface SentenceTestAnswer {
   answer: string;
 }
+
+// ── Exam Detail (Clinic Detail WordTestTab) ──────────────────────────────────
+
+export type ExamType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3';
+
+export interface ExamItem {
+  examItemId: number;
+  itemOrder: number;
+  word: string;
+  koreanMeaning: string;
+  englishMeaning: string;
+  synonyms: string[];
+  example: string;
+  isCorrect: boolean | null;
+  userAnswer: string | null;
+}
+
+export interface ExamDetail {
+  examId: number;
+  studySetId: number;
+  subType: WordTestType | null;
+  includeSynonym: boolean;
+  status: string;
+  isPassed: boolean | null;
+  items: ExamItem[];
+}
+
+export interface ExamAttempt {
+  examId: number;
+  createdAt: string;
+  completedAt: string | null;
+  correctCount: number | null;
+  totalCount: number | null;
+}
+
+export interface StepExamHistory {
+  studySetId: number;
+  examType: ExamType;
+  currentExamId: number | null;
+  currentStatus: string | null;
+  isPassed: boolean | null;
+  failedAttempts: ExamAttempt[];
+}

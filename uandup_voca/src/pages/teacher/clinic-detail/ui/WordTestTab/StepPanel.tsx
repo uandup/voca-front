@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import type { StepCardVM, TestType } from '@/entities/test';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { StepCardVM, TestType, ExamType, ExamItem } from '@/entities/test';
+import type { WordTestItem, VocabReviewItem } from '@/entities/word';
+import type { ESRow } from '@/widgets/test-offline';
+import {
+  createExam,
+  startOnlineExam,
+  cancelExam,
+  recordOnlineResults,
+  recordOfflineResults,
+} from '@/entities/test';
+import { updateExamSettings } from '@/entities/student';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import {
@@ -10,15 +21,19 @@ import {
   SentenceGradingModal,
   SentenceResultModal,
 } from '@/widgets/test-offline';
-import { MOCK_VOCAB_REVIEW_ITEMS, MOCK_ES_ROWS } from '@/entities/test';
+import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
+import { useExamDetail } from '../../model/hooks/useExamDetail';
 
 interface StepPanelProps {
   step: StepCardVM;
+  studySetId: number;
+  studentId: number;
+  examType: ExamType;
 }
 
 type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
 
-interface TestConfig {
+interface LocalTestConfig {
   testQty: number;
   testType: TestType;
   includeSynonyms: boolean;
@@ -27,14 +42,48 @@ interface TestConfig {
 function inferPhase(step: StepCardVM): PanelPhase {
   if (step.status === 'passed') return 'passed';
   if (step.status === 'fail') return 'fail';
-  if (step.status === 'active') return 'created';
+  if (step.status === 'active' || step.status === 'grading') return 'created';
   return 'pending';
 }
 
-export default function StepPanel({ step }: StepPanelProps) {
-  const phase = inferPhase(step);
+function toWordTestItems(items: ExamItem[]): WordTestItem[] {
+  return items.map((item) => ({
+    id: item.examItemId,
+    word: item.word,
+    korMeaning: item.koreanMeaning,
+    engMeaning: item.englishMeaning,
+  }));
+}
 
-  const [config, setConfig] = useState<TestConfig>({
+function toVocabReviewItems(items: ExamItem[]): VocabReviewItem[] {
+  return items.map((item) => ({
+    id: item.examItemId,
+    word: item.word,
+    korMeaning: item.koreanMeaning,
+    engMeaning: item.englishMeaning,
+    synonymAnswer: item.synonyms[0] ?? '',
+  }));
+}
+
+function toESRows(items: ExamItem[]): ESRow[] {
+  return items.map((item, i) => ({
+    no: String(i + 1),
+    sentence: item.example,
+    answer: item.koreanMeaning,
+  }));
+}
+
+export default function StepPanel({ step, studySetId, studentId, examType }: StepPanelProps) {
+  const phase = inferPhase(step);
+  const queryClient = useQueryClient();
+
+  const { data: examHistory } = useStudySetDetail(studySetId, examType, true);
+  const currentExamId = examHistory?.currentExamId ?? null;
+
+  const [modalExamId, setModalExamId] = useState<number | null>(null);
+  const { data: examDetail } = useExamDetail(modalExamId);
+
+  const [config, setConfig] = useState<LocalTestConfig>({
     testQty: 30,
     testType: 'meaning-to-word',
     includeSynonyms: true,
@@ -44,6 +93,72 @@ export default function StepPanel({ step }: StepPanelProps) {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showGradingModal, setShowGradingModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
+
+  const invalidateSets = () =>
+    queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'study-sets'] });
+
+  const createMutation = useMutation({
+    mutationFn: () => createExam(studySetId, { examType }),
+    onSuccess: () => {
+      setShowSuccessModal(true);
+      invalidateSets();
+    },
+  });
+
+  const startOnlineMutation = useMutation({
+    mutationFn: () => startOnlineExam(currentExamId!),
+    onSuccess: invalidateSets,
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: () => cancelExam(currentExamId!),
+    onSuccess: invalidateSets,
+  });
+
+  const gradeOnlineMutation = useMutation({
+    mutationFn: (payload: Parameters<typeof recordOnlineResults>[1]) =>
+      recordOnlineResults(currentExamId!, payload),
+    onSuccess: () => {
+      setShowGradingModal(false);
+      invalidateSets();
+    },
+  });
+
+  const gradeOfflineMutation = useMutation({
+    mutationFn: (payload: Parameters<typeof recordOfflineResults>[1]) =>
+      recordOfflineResults(currentExamId!, payload),
+    onSuccess: () => {
+      setShowGradingModal(false);
+      invalidateSets();
+    },
+  });
+
+  const updateSettingsMutation = useMutation({
+    mutationFn: () =>
+      updateExamSettings(studentId, {
+        examQuestionCount: config.testQty,
+        examSubType: config.testType === 'word-to-meaning' ? 'WORD_TO_MEANING' : 'MEANING_TO_WORD',
+        synonymIncluded: config.includeSynonyms,
+      }),
+    onSuccess: () => {
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'overview'] });
+    },
+  });
+
+  const wordTestRows = examDetail ? toWordTestItems(examDetail.items) : [];
+  const vocabReviewRows = examDetail ? toVocabReviewItems(examDetail.items) : [];
+  const esRows = examDetail ? toESRows(examDetail.items) : [];
+  const wrongIndices = examDetail
+    ? examDetail.items.map((item, i) => (item.isCorrect === false ? i : -1)).filter((i) => i !== -1)
+    : [];
+
+  function handleOpenModal(type: 'print' | 'grading' | 'result') {
+    setModalExamId(currentExamId);
+    if (type === 'print') setShowPrintModal(true);
+    if (type === 'grading') setShowGradingModal(true);
+    if (type === 'result') setShowResultModal(true);
+  }
 
   return (
     <>
@@ -56,12 +171,12 @@ export default function StepPanel({ step }: StepPanelProps) {
       )}
 
       {showPrintModal && step.name === 'Sentence' ? (
-        <SentenceModal onClose={() => setShowPrintModal(false)} rows={MOCK_ES_ROWS} />
+        <SentenceModal onClose={() => setShowPrintModal(false)} rows={esRows} />
       ) : (
         showPrintModal && (
           <WordTestModal
             onClose={() => setShowPrintModal(false)}
-            rows={MOCK_VOCAB_REVIEW_ITEMS}
+            rows={wordTestRows}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -71,15 +186,15 @@ export default function StepPanel({ step }: StepPanelProps) {
       {showGradingModal && step.name === 'Sentence' ? (
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
-          onGrade={() => console.warn('Grade submitted')}
-          rows={MOCK_ES_ROWS}
+          onGrade={() => gradeOnlineMutation.mutate({ results: [], isPassed: false })}
+          rows={esRows}
         />
       ) : (
         showGradingModal && (
           <WordGradingModal
             onClose={() => setShowGradingModal(false)}
-            onGrade={() => console.warn('Grade submitted')}
-            rows={MOCK_VOCAB_REVIEW_ITEMS}
+            onGrade={() => gradeOfflineMutation.mutate({ results: [], isPassed: false })}
+            rows={vocabReviewRows}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
           />
@@ -89,17 +204,17 @@ export default function StepPanel({ step }: StepPanelProps) {
       {showResultModal && step.name === 'Sentence' ? (
         <SentenceResultModal
           onClose={() => setShowResultModal(false)}
-          rows={MOCK_ES_ROWS}
-          wrongIndices={[1, 4, 7]}
+          rows={esRows}
+          wrongIndices={wrongIndices}
         />
       ) : (
         showResultModal && (
           <WordResultModal
             onClose={() => setShowResultModal(false)}
-            rows={MOCK_VOCAB_REVIEW_ITEMS}
+            rows={vocabReviewRows}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
-            wrongIndices={[1, 4, 7]}
+            wrongIndices={wrongIndices}
           />
         )
       )}
@@ -109,30 +224,46 @@ export default function StepPanel({ step }: StepPanelProps) {
           config={config}
           isEditing={isEditing}
           showEditButton={phase === 'pending'}
-          onToggleEdit={() => setIsEditing((v) => !v)}
+          onToggleEdit={() => {
+            if (isEditing) {
+              updateSettingsMutation.mutate();
+            } else {
+              setIsEditing(true);
+            }
+          }}
           onChange={(patch) => setConfig((prev) => ({ ...prev, ...patch }))}
         />
 
         {phase === 'pending' && (
-          <PendingPanel isEditing={isEditing} onGenerate={() => setShowSuccessModal(true)} />
+          <PendingPanel
+            isEditing={isEditing}
+            isPending={createMutation.isPending}
+            onGenerate={() => createMutation.mutate()}
+          />
         )}
         {phase === 'created' && (
           <CreatedPanel
             step={step}
-            onOpenPrint={() => setShowPrintModal(true)}
-            onGradeOnline={() => console.warn('Online grading')}
-            onGradeOffline={() => setShowGradingModal(true)}
+            isStartPending={startOnlineMutation.isPending}
+            isCancelPending={cancelMutation.isPending}
+            onOpenPrint={() => handleOpenModal('print')}
+            onGradeOnline={() => handleOpenModal('grading')}
+            onGradeOffline={() => handleOpenModal('grading')}
+            onStartOnline={() => startOnlineMutation.mutate()}
+            onCancel={() => cancelMutation.mutate()}
           />
         )}
         {phase === 'fail' && (
           <FailPanel
             step={step}
-            onOpenGrading={() => setShowGradingModal(true)}
-            onOpenResult={() => setShowResultModal(true)}
+            isRetakePending={createMutation.isPending}
+            onRetake={() => createMutation.mutate()}
+            onOpenGrading={() => handleOpenModal('grading')}
+            onOpenResult={() => handleOpenModal('result')}
           />
         )}
         {phase === 'passed' && (
-          <PassedPanel step={step} onOpenResult={() => setShowResultModal(true)} />
+          <PassedPanel step={step} onOpenResult={() => handleOpenModal('result')} />
         )}
       </div>
     </>
@@ -142,11 +273,11 @@ export default function StepPanel({ step }: StepPanelProps) {
 // ── TestConfigSection ──────────────────────────────────────────────────────
 
 interface TestConfigSectionProps {
-  config: TestConfig;
+  config: LocalTestConfig;
   isEditing: boolean;
   showEditButton: boolean;
   onToggleEdit: () => void;
-  onChange: (patch: Partial<TestConfig>) => void;
+  onChange: (patch: Partial<LocalTestConfig>) => void;
 }
 
 const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -237,15 +368,23 @@ function TestConfigSection({
 
 // ── Phase panels ───────────────────────────────────────────────────────────
 
-function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerate: () => void }) {
+function PendingPanel({
+  isEditing,
+  isPending,
+  onGenerate,
+}: {
+  isEditing: boolean;
+  isPending: boolean;
+  onGenerate: () => void;
+}) {
   return (
     <div className="flex items-center gap-3">
       <button
-        disabled={isEditing}
+        disabled={isEditing || isPending}
         onClick={onGenerate}
         className="px-5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        Generate Test
+        {isPending ? 'Generating...' : 'Generate Test'}
       </button>
       {isEditing && (
         <p className="text-xs text-error">Please apply the configuration before generating.</p>
@@ -256,14 +395,22 @@ function PendingPanel({ isEditing, onGenerate }: { isEditing: boolean; onGenerat
 
 function CreatedPanel({
   step,
+  isStartPending,
+  isCancelPending,
   onOpenPrint,
   onGradeOnline,
   onGradeOffline,
+  onStartOnline,
+  onCancel,
 }: {
   step: StepCardVM;
+  isStartPending: boolean;
+  isCancelPending: boolean;
   onOpenPrint: () => void;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
+  onStartOnline: () => void;
+  onCancel: () => void;
 }) {
   return (
     <>
@@ -288,8 +435,12 @@ function CreatedPanel({
 
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
-          <button className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20">
-            Start Online Test
+          <button
+            onClick={onStartOnline}
+            disabled={isStartPending}
+            className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-60"
+          >
+            {isStartPending ? 'Starting...' : 'Start Online Test'}
           </button>
           <button
             onClick={onOpenPrint}
@@ -320,8 +471,12 @@ function CreatedPanel({
           >
             Grade Offline
           </button>
-          <button className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors">
-            Cancel Test
+          <button
+            onClick={onCancel}
+            disabled={isCancelPending}
+            className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-60"
+          >
+            {isCancelPending ? 'Cancelling...' : 'Cancel Test'}
           </button>
         </div>
       </div>
@@ -331,15 +486,17 @@ function CreatedPanel({
 
 function FailPanel({
   step,
+  isRetakePending,
+  onRetake,
   onOpenGrading,
   onOpenResult,
 }: {
   step: StepCardVM;
+  isRetakePending: boolean;
+  onRetake: () => void;
   onOpenGrading: () => void;
   onOpenResult: () => void;
 }) {
-  const [isAwaitingGrading, setIsAwaitingGrading] = useState(false);
-
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
@@ -364,39 +521,17 @@ function FailPanel({
             ) : (
               <span className="text-error font-semibold">- / {step.maxScore ?? 'N'}</span>
             )}
-            {isAwaitingGrading && (
-              <>
-                <span className="text-on-surface-variant">→</span>
-                <span className="text-on-surface-variant font-semibold">
-                  - / {step.maxScore ?? 'N'}
-                </span>
-              </>
-            )}
           </span>
         </div>
       </div>
 
-      {/* DEV ONLY */}
-      <div className="flex items-center gap-3 text-xs text-on-surface-variant">
-        {([false, true] as const).map((v) => (
-          <label key={String(v)} className="flex items-center gap-1 cursor-pointer">
-            <input
-              type="radio"
-              checked={isAwaitingGrading === v}
-              onChange={() => setIsAwaitingGrading(v)}
-              className="accent-primary"
-            />
-            {v ? 'awaiting-grading' : 'fail'}
-          </label>
-        ))}
-      </div>
-
       <div className="flex items-center gap-2">
         <button
-          disabled={isAwaitingGrading}
+          onClick={onRetake}
+          disabled={isRetakePending}
           className="px-4 py-2 rounded-xl bg-error text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-error/20 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isAwaitingGrading ? 'Awaiting Grading' : 'Retake Test'}
+          {isRetakePending ? 'Creating...' : 'Retake Test'}
         </button>
         <button
           onClick={onOpenResult}
@@ -404,16 +539,14 @@ function FailPanel({
         >
           View Results
         </button>
-        {isAwaitingGrading && (
-          <div className="ml-auto">
-            <button
-              onClick={onOpenGrading}
-              className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
-            >
-              Grade
-            </button>
-          </div>
-        )}
+        <div className="ml-auto">
+          <button
+            onClick={onOpenGrading}
+            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+          >
+            Grade
+          </button>
+        </div>
       </div>
     </>
   );

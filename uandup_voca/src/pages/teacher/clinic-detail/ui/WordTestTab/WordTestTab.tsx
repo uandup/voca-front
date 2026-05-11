@@ -1,11 +1,22 @@
 import CycleRow from './CycleRow';
-import { MOCK_CLINIC_CYCLES } from '@/entities/test';
+import { toTestBundleRow } from '@/entities/student';
+import type { StudySetRow } from '@/entities/student';
 
-export default function WordTestTab() {
+interface Props {
+  studySets: StudySetRow[];
+  studentId: number;
+}
+
+export default function WordTestTab({ studySets, studentId }: Props) {
   return (
     <div className="flex flex-col gap-4">
-      {MOCK_CLINIC_CYCLES.map((cycle) => (
-        <CycleRow key={cycle.id} {...cycle} />
+      {studySets.map((set) => (
+        <CycleRow
+          key={set.studySetId}
+          studySetId={set.studySetId}
+          studentId={studentId}
+          {...toTestBundleRow(set)}
+        />
       ))}
     </div>
   );

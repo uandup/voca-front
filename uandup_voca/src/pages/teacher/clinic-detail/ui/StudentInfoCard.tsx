@@ -1,8 +1,8 @@
 import type { Memo } from '@/entities/memo';
-import type { ClinicStudentRow } from '@/entities/clinic';
+import type { StudentOverview } from '@/entities/student';
 
 interface Props {
-  student: ClinicStudentRow;
+  student: StudentOverview;
   latestMemo: Memo | undefined;
   onMemoClick: () => void;
 }
@@ -16,9 +16,7 @@ export function StudentInfoCard({ student, latestMemo, onMemoClick }: Props) {
           {student.nameKo}
         </h2>
         <span className="text-3xl font-headline font-extrabold text-primary">
-          ({student.nameFirstEn} {student.nameLastEn}
-          <span className="mx-2">·</span>
-          {student.grade})
+          (G{student.grade})
         </span>
         <button
           onClick={onMemoClick}

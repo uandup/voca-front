@@ -1,61 +1,58 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import type { Memo } from '@/entities/memo';
+import { useQueryClient } from '@tanstack/react-query';
 import { MemoPopup } from '@/features/memo';
-import type { WordDifficultyLevel } from '@/entities/word';
-import type { ClinicStudentRow } from '@/entities/clinic';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
+import { useStudentOverview } from './model/hooks/useStudentOverview';
+import { useStudySetList } from './model/hooks/useStudySetList';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
 export function ClinicDetailPage() {
-  useParams({ from: '/teacher/clinics_/students/$studentId' });
+  const { studentId: studentIdParam } = useParams({
+    from: '/teacher/clinics_/students/$studentId',
+  });
+  const studentId = Number(studentIdParam);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  // TODO: API 연동 전 임시 — clinic detail API 작업 시 교체 예정
-  const student = undefined as ClinicStudentRow | undefined;
+  const { data: student, isLoading: overviewLoading } = useStudentOverview(studentId);
+  const { data: studySets = [], isLoading: setsLoading } = useStudySetList(studentId);
 
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   const [mainTab, setMainTab] = useState<MainTab>('wordTest');
 
-  const [assignTargetLevel, setAssignTargetLevel] = useState<WordDifficultyLevel>(4);
-  const [assignQty, setAssignQty] = useState(50);
-
-  if (!student) {
+  if (overviewLoading || setsLoading || !student) {
     return (
       <main className="p-8">
-        <p className="text-on-surface-variant">학생 정보를 찾을 수 없습니다.</p>
+        <p className="text-on-surface-variant">Loading...</p>
       </main>
     );
   }
-
-  const latestMemo = {} as Memo;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
-        title={`${student.nameKo} (${student.nameFirstEn} ${student.nameLastEn})`}
+        title={`${student.nameKo}`}
       />
 
       {/* Top Section: Student Info & Quick Assignment */}
       <div className="grid grid-cols-12 gap-6 items-stretch">
         <StudentInfoCard
           student={student}
-          latestMemo={latestMemo}
+          latestMemo={student.latestMemo ?? undefined}
           onMemoClick={() => setIsMemoOpen(true)}
         />
         <QuickAssignmentCard
-          targetLevel={assignTargetLevel}
-          qty={assignQty}
-          onTargetLevelChange={setAssignTargetLevel}
-          onQtyChange={setAssignQty}
-          onAssign={() => {}}
+          studentId={studentId}
+          initialLevel={student.assignedLevel}
+          initialQty={student.assignmentCount}
         />
       </div>
 
@@ -89,7 +86,7 @@ export function ClinicDetailPage() {
           </div>
         </div>
 
-        {mainTab === 'wordTest' && <WordTestTab />}
+        {mainTab === 'wordTest' && <WordTestTab studySets={studySets} studentId={studentId} />}
 
         {mainTab === 'reviewDeck' && <WrongWordBankTab />}
 
@@ -101,6 +98,9 @@ export function ClinicDetailPage() {
           studentId={student.id}
           studentName={student.nameKo}
           onClose={() => setIsMemoOpen(false)}
+          onMutationSuccess={() =>
+            queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'overview'] })
+          }
         />
       )}
     </div>

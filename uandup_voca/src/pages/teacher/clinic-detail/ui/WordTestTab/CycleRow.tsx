@@ -1,12 +1,21 @@
 import { Fragment, useState } from 'react';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
-import type { TestBundleRow, StepCardVM } from '@/entities/test';
+import type { TestBundleRow, StepCardVM, ExamType } from '@/entities/test';
 
-export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBundleRow) {
+const STEP_EXAM_TYPES: ExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
+
+interface Props extends TestBundleRow {
+  studySetId: number;
+  studentId: number;
+}
+
+export default function CycleRow({ assignedLevel, wordCount, steps, studySetId, studentId }: Props) {
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
-  const selectedStep: StepCardVM | null = steps.find((s) => s.name === selectedName) ?? null;
+  const selectedIdx = steps.findIndex((s) => s.name === selectedName);
+  const selectedStep: StepCardVM | null = selectedIdx !== -1 ? steps[selectedIdx] : null;
+  const selectedExamType: ExamType | null = selectedIdx !== -1 ? STEP_EXAM_TYPES[selectedIdx] : null;
 
   function handleStepClick(name: string) {
     setSelectedName((prev) => (prev === name ? null : name));
@@ -26,7 +35,7 @@ export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBu
             <span className="text-sm font-bold text-on-surface">{wordCount}</span>
           </div>
           <a
-            href={`/teacher/word-list/${id}`}
+            href={`/teacher/word-list/${studySetId}`}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline/30 text-xs font-semibold text-success hover:bg-slate-50 transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
@@ -56,7 +65,14 @@ export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBu
         ))}
       </div>
 
-      {selectedStep && <StepPanel step={selectedStep} />}
+      {selectedStep && selectedExamType && (
+        <StepPanel
+          step={selectedStep}
+          studySetId={studySetId}
+          studentId={studentId}
+          examType={selectedExamType}
+        />
+      )}
     </div>
   );
 }

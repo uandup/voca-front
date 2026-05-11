@@ -61,7 +61,7 @@ export function UploadExcelResultModal({
               {result.attempted}
             </div>
           </div>
-          <div className="px-6 py-8 text-center bg-primary/[0.02]">
+          <div className="px-6 py-8 text-center bg-primary/2">
             <div className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.15em] mb-2 opacity-70">
               Successful
             </div>
@@ -69,7 +69,7 @@ export function UploadExcelResultModal({
               {result.successful}
             </div>
           </div>
-          <div className="px-6 py-8 text-center bg-error-container/[0.05]">
+          <div className="px-6 py-8 text-center bg-error-container/5">
             <div className="text-[10px] font-bold text-error uppercase tracking-[0.15em] mb-2">
               Failed
             </div>

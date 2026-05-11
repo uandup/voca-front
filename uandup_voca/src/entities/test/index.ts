@@ -6,7 +6,22 @@ export type {
   StepCardVM,
   TestBundleRow,
   SentenceTestAnswer,
+  ExamType,
+  ExamItem,
+  ExamDetail,
+  ExamAttempt,
+  StepExamHistory,
 } from './model/types';
+export { toWordTestType, toExamDetail, toStepExamHistory } from './model/mapper';
+export {
+  getExamsByType,
+  getExamDetail,
+  createExam,
+  startOnlineExam,
+  cancelExam,
+  recordOnlineResults,
+  recordOfflineResults,
+} from './api/testApi';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export {
   MOCK_VOCAB_LIST,
