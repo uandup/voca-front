@@ -111,7 +111,7 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
             disabled={assign.isPending}
             className="w-full bg-primary text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity mt-auto pt-5 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {assign.isPending ? 'Assigning...' : 'Assign New Words'}
+            Assign New Words
           </button>
         </>
       )}

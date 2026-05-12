@@ -10,12 +10,19 @@ interface Props extends TestBundleRow {
   studentId: number;
 }
 
-export default function CycleRow({ assignedLevel, wordCount, steps, studySetId, studentId }: Props) {
+export default function CycleRow({
+  assignedLevel,
+  wordCount,
+  steps,
+  studySetId,
+  studentId,
+}: Props) {
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
   const selectedIdx = steps.findIndex((s) => s.name === selectedName);
   const selectedStep: StepCardVM | null = selectedIdx !== -1 ? steps[selectedIdx] : null;
-  const selectedExamType: ExamType | null = selectedIdx !== -1 ? STEP_EXAM_TYPES[selectedIdx] : null;
+  const selectedExamType: ExamType | null =
+    selectedIdx !== -1 ? STEP_EXAM_TYPES[selectedIdx] : null;
 
   function handleStepClick(name: string) {
     setSelectedName((prev) => (prev === name ? null : name));

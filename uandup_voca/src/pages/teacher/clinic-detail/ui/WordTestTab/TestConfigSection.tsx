@@ -1,0 +1,105 @@
+import type { TestType } from '@/entities/test';
+import { NumberInput } from '@/shared/ui/NumberInput';
+
+// StepPanel 상단의 시험 설정(타입/문항 수/동의어 포함) 편집 영역.
+// 모든 phase에서 표시되며 'pending' phase에서만 Edit/Apply 버튼이 노출된다.
+
+export interface LocalTestConfig {
+  testQty: number;
+  testType: TestType;
+  includeSynonyms: boolean;
+}
+
+interface Props {
+  config: LocalTestConfig;
+  isEditing: boolean;
+  showEditButton: boolean;
+  onToggleEdit: () => void;
+  onChange: (patch: Partial<LocalTestConfig>) => void;
+}
+
+const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
+
+export function TestConfigSection({
+  config,
+  isEditing,
+  showEditButton,
+  onToggleEdit,
+  onChange,
+}: Props) {
+  const inputClass = `w-full text-xs border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed transition-colors ${
+    isEditing
+      ? 'border-primary/30 bg-white text-on-surface'
+      : 'border-slate-200 bg-slate-100 text-slate-500'
+  }`;
+
+  return (
+    <div className="flex flex-col gap-3 pb-4 border-b border-gray-200">
+      <p className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
+        Test Configuration
+      </p>
+
+      <div className="flex items-end gap-3">
+        <div className="grid grid-cols-3 gap-4 flex-1">
+          <div>
+            <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
+              Test Type
+            </label>
+            <select
+              value={config.testType}
+              onChange={(e) => onChange({ testType: e.target.value as TestType })}
+              disabled={!isEditing}
+              className={inputClass}
+            >
+              {TEST_TYPE_OPTIONS.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
+              Quantity
+            </label>
+            <NumberInput
+              value={String(config.testQty)}
+              onChange={(v) => onChange({ testQty: Number(v) })}
+              min={1}
+              disabled={!isEditing}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
+              Include Synonyms
+            </label>
+            <label
+              className={`relative inline-flex items-center mt-1 ${isEditing ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+            >
+              <input
+                type="checkbox"
+                checked={config.includeSynonyms}
+                onChange={(e) => onChange({ includeSynonyms: e.target.checked })}
+                disabled={!isEditing}
+                className="sr-only peer"
+              />
+              <div className="w-8 h-5 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
+            </label>
+          </div>
+        </div>
+
+        <div className="w-14.5 shrink-0">
+          {showEditButton && (
+            <button
+              onClick={onToggleEdit}
+              className="w-full px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+            >
+              {isEditing ? 'Apply' : 'Edit'}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
