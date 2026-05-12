@@ -78,7 +78,7 @@ export function GradeBulkModal({ onClose }: Props) {
             disabled={delta === null || isPending}
             className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-bold shadow-sm disabled:opacity-40 hover:opacity-90 active:scale-95 transition-all"
           >
-            {isPending ? 'Applying...' : 'Apply'}
+            Apply
           </button>
         </div>
       </div>

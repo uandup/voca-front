@@ -81,7 +81,7 @@ export function StudentTable({ students, onMemoClick, onEditMembersClick }: Prop
                   </td>
                   <td className="px-4 py-4 text-center border-r border-outline-variant/20">
                     <span className="px-2 py-1 bg-surface-container-highest text-primary font-bold text-xs rounded-full">
-                      {student.grade}
+                      G{student.grade}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-center border-r border-outline-variant/20">
