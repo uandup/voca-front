@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { getPendingCount } from '@/entities/teacher';
+import { getPendingCount, adminKeys } from '@/entities/teacher';
 import { ADMIN_CARDS, type AdminModalKey } from './model/constants';
 import PendingApprovalsModal from './ui/pendingApprovals';
 import { ClassManageModal } from './ui/ClassManageModal';
@@ -14,7 +14,7 @@ export default function AdminPage() {
   const [modal, setModal] = useState<AdminModalKey | null>(null);
 
   const { data: pendingCountRes } = useQuery({
-    queryKey: ['admin', 'pending-count'],
+    queryKey: adminKeys.pendingCount(),
     queryFn: getPendingCount,
     refetchInterval: 30_000,
   });

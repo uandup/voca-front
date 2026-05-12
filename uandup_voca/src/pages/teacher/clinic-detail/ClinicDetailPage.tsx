@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { useQueryClient } from '@tanstack/react-query';
 import { MemoPopup } from '@/features/memo';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
@@ -19,7 +18,6 @@ export function ClinicDetailPage() {
   });
   const studentId = Number(studentIdParam);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { data: student, isLoading: overviewLoading } = useStudentOverview(studentId);
   const { data: studySets = [], isLoading: setsLoading } = useStudySetList(studentId);
@@ -98,9 +96,6 @@ export function ClinicDetailPage() {
           studentId={student.id}
           studentName={student.nameKo}
           onClose={() => setIsMemoOpen(false)}
-          onMutationSuccess={() =>
-            queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'overview'] })
-          }
         />
       )}
     </div>

@@ -5,6 +5,7 @@ import {
   getPendingTeachers,
   approveMember,
   rejectMember,
+  adminKeys,
 } from '@/entities/teacher';
 import { toPendingStudent, toPendingTeacher, toPendingParent } from '../mapper';
 
@@ -12,18 +13,18 @@ export function usePendingStudents() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'pending', 'students'],
+    queryKey: adminKeys.pendingStudents(),
     queryFn: getPendingStudents,
     select: (res) => res.data?.map(toPendingStudent) ?? [],
   });
 
   const approve = useMutation({
     mutationFn: (id: number) => approveMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
   const reject = useMutation({
     mutationFn: (id: number) => rejectMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
 
   return {
@@ -38,18 +39,18 @@ export function usePendingParents() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'pending', 'parents'],
+    queryKey: adminKeys.pendingParents(),
     queryFn: getPendingParents,
     select: (res) => res.data?.map(toPendingParent) ?? [],
   });
 
   const approve = useMutation({
     mutationFn: (id: number) => approveMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
   const reject = useMutation({
     mutationFn: (id: number) => rejectMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
 
   return {
@@ -64,18 +65,18 @@ export function usePendingTeachers() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'pending', 'teachers'],
+    queryKey: adminKeys.pendingTeachers(),
     queryFn: getPendingTeachers,
     select: (res) => res.data?.map(toPendingTeacher) ?? [],
   });
 
   const approve = useMutation({
     mutationFn: (id: number) => approveMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
   const reject = useMutation({
     mutationFn: (id: number) => rejectMember(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'pending'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminKeys.pending() }),
   });
 
   return {
@@ -88,17 +89,17 @@ export function usePendingTeachers() {
 
 export function usePendingCounts() {
   const { data: students } = useQuery({
-    queryKey: ['admin', 'pending', 'students'],
+    queryKey: adminKeys.pendingStudents(),
     queryFn: getPendingStudents,
     select: (res) => res.data?.length ?? 0,
   });
   const { data: parents } = useQuery({
-    queryKey: ['admin', 'pending', 'parents'],
+    queryKey: adminKeys.pendingParents(),
     queryFn: getPendingParents,
     select: (res) => res.data?.length ?? 0,
   });
   const { data: teachers } = useQuery({
-    queryKey: ['admin', 'pending', 'teachers'],
+    queryKey: adminKeys.pendingTeachers(),
     queryFn: getPendingTeachers,
     select: (res) => res.data?.length ?? 0,
   });

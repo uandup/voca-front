@@ -1,19 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getMemos, createMemo, updateMemo, deleteMemo, toMemo } from '@/entities/memo';
+import {
+  getMemos,
+  createMemo,
+  updateMemo,
+  deleteMemo,
+  toMemo,
+  memoKeys,
+  invalidateMemoCascade,
+} from '@/entities/memo';
 
-export function useMemoActions(studentId: number, onMutationSuccess?: () => void) {
+export function useMemoActions(studentId: number) {
   const queryClient = useQueryClient();
-  const queryKey = ['students', studentId, 'memos'];
 
   const { data: memos, isLoading } = useQuery({
-    queryKey,
+    queryKey: memoKeys.byStudent(studentId),
     queryFn: () => getMemos(studentId),
     select: (res) => res.data?.map(toMemo) ?? [],
   });
 
   function handleSuccess() {
-    queryClient.invalidateQueries({ queryKey });
-    onMutationSuccess?.();
+    invalidateMemoCascade(queryClient, studentId);
   }
 
   const addMutation = useMutation({

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getParents, toParentManageRow } from '@/entities/parent';
+import { getParents, toParentManageRow, parentKeys } from '@/entities/parent';
 import type { ParentIdentity } from '@/entities/parent';
 
 interface ParentListPanelProps {
@@ -12,7 +12,7 @@ export function ParentListPanel({ selectedIds, onSelect }: ParentListPanelProps)
   const [search, setSearch] = useState('');
 
   const { data: parents } = useQuery({
-    queryKey: ['admin', 'manage', 'parents'],
+    queryKey: parentKeys.list(),
     queryFn: getParents,
     select: (res) => res.data?.map(toParentManageRow) ?? [],
   });

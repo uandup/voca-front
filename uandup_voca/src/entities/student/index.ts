@@ -24,3 +24,5 @@ export {
   updateExamSettings,
 } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
+export { studentKeys } from './api/queryKeys';
+export { invalidateStudentCascade } from './api/invalidate';

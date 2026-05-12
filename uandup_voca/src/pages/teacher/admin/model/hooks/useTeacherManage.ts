@@ -1,11 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTeachers, updateTeacher, deleteTeacher, toTeacherManageRow } from '@/entities/teacher';
+import {
+  getTeachers,
+  updateTeacher,
+  deleteTeacher,
+  toTeacherManageRow,
+  teacherKeys,
+} from '@/entities/teacher';
 
 export function useTeacherManage() {
   const queryClient = useQueryClient();
 
   const { data: teachers, isLoading } = useQuery({
-    queryKey: ['admin', 'manage', 'teachers'],
+    queryKey: teacherKeys.list(),
     queryFn: getTeachers,
     select: (res) => res.data?.map(toTeacherManageRow) ?? [],
   });
@@ -22,12 +28,12 @@ export function useTeacherManage() {
       nameFirstEn: string;
       nameLastEn: string;
     }) => updateTeacher(id, { name, englishName: `${nameFirstEn} ${nameLastEn}`.trim() }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'manage', 'teachers'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: teacherKeys.list() }),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteTeacher(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin', 'manage', 'teachers'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: teacherKeys.list() }),
   });
 
   return {

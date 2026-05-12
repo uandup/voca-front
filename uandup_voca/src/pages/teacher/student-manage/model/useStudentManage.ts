@@ -5,6 +5,8 @@ import {
   deleteStudent,
   toStudentManageTableRow,
   toStudentUpdateRequest,
+  studentKeys,
+  invalidateStudentCascade,
 } from '@/entities/student';
 import type { StudentDetail } from '@/entities/student';
 
@@ -12,22 +14,19 @@ export function useStudentManage() {
   const queryClient = useQueryClient();
 
   const { data: students, isLoading } = useQuery({
-    queryKey: ['students'],
+    queryKey: studentKeys.lists(),
     queryFn: getStudents,
     select: (res) => res.data?.map(toStudentManageTableRow) ?? [],
   });
 
   const editMutation = useMutation({
     mutationFn: (detail: StudentDetail) => updateStudent(detail.id, toStudentUpdateRequest(detail)),
-    onSuccess: (_, detail) => {
-      queryClient.invalidateQueries({ queryKey: ['students'] });
-      queryClient.invalidateQueries({ queryKey: ['students', detail.id, 'detail'] });
-    },
+    onSuccess: () => invalidateStudentCascade(queryClient),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => deleteStudent(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['students'] }),
+    onSuccess: () => invalidateStudentCascade(queryClient),
   });
 
   return {

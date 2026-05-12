@@ -20,3 +20,4 @@ export {
   demoteAllStudentsGrade,
 } from './api/adminApi';
 export { isAdmin } from './lib/utils';
+export { teacherKeys, adminKeys } from './api/queryKeys';

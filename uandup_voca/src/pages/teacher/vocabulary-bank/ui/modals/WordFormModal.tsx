@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import {
-  DIFFICULTY_LEVELS,
-  createWord,
-  updateWord,
-  toWordCreateRequest,
-  toWordUpdateRequest,
-} from '@/entities/word';
+import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
+import { useWordActions } from '../../model/hooks/useWordActions';
 
 type WordFormData = Omit<TeacherWord, 'id'>;
 
@@ -31,7 +25,8 @@ const DEFAULT_FORM: WordFormData = {
 };
 
 export function WordFormModal({ wordId, initialData, onClose }: WordFormModalProps) {
-  const queryClient = useQueryClient();
+  const { create, update: updateAction } = useWordActions();
+  const mutation = wordId ? updateAction : create;
 
   const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
   const [synonymInput, setSynonymInput] = useState('');
@@ -47,16 +42,13 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
     partsOfSpeech: form.partsOfSpeech.length === 0 ? 'Select at least one part of speech.' : '',
   };
 
-  const mutation = useMutation({
-    mutationFn: (data: WordFormData) =>
-      wordId
-        ? updateWord(wordId, toWordUpdateRequest(data))
-        : createWord(toWordCreateRequest(data)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['words'] });
-      onClose();
-    },
-  });
+  function submit() {
+    if (wordId) {
+      updateAction.mutate({ id: wordId, data: form }, { onSuccess: onClose });
+    } else {
+      create.mutate(form, { onSuccess: onClose });
+    }
+  }
 
   function handleSynonymKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing && synonymInput.trim()) {
@@ -76,7 +68,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
   function handleSave() {
     setSubmitted(true);
     if (errors.word || errors.korMeaning || errors.partsOfSpeech) return;
-    mutation.mutate(form);
+    submit();
   }
 
   return (

@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getClinicEditData, updateClinicStudents, DAY_API_MAP } from '@/entities/clinic';
+import {
+  getClinicEditData,
+  updateClinicStudents,
+  DAY_API_MAP,
+  clinicKeys,
+} from '@/entities/clinic';
 import type { Day, ClinicHour } from '@/entities/clinic';
 import { toClinicMemberStudent } from '../mapper';
 import type { ClinicMemberStudent } from '../types';
@@ -14,13 +19,12 @@ interface EditData {
 export function useClinicMembersQuery(day: Day, hour: ClinicHour) {
   const dayOfWeek = DAY_API_MAP[day];
   return useQuery({
-    queryKey: ['clinics', day, hour, 'edit'],
+    queryKey: clinicKeys.edit(day, hour),
     queryFn: () => getClinicEditData(dayOfWeek, hour),
     select: (res): EditData => ({
       allStudents: (res.data?.allStudents ?? []).map(toClinicMemberStudent),
       clinicStudentIds: new Set(res.data?.clinicStudentIds ?? []),
     }),
-    staleTime: Infinity,
   });
 }
 
@@ -41,7 +45,7 @@ export function useClinicMembers(data: EditData, day: Day, hour: ClinicHour, onC
     mutationFn: () =>
       updateClinicStudents(dayOfWeek, hour, { studentIds: roster.map((s) => s.id) }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clinics', day, hour] });
+      queryClient.invalidateQueries({ queryKey: clinicKeys.list(day, hour) });
       onClose();
     },
   });

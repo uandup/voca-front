@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import type { StudentDetail } from '@/entities/student';
-import { getStudentDetail, toStudentDetail } from '@/entities/student';
+import { getStudentDetail, toStudentDetail, studentKeys } from '@/entities/student';
 import { GRADES } from '@/entities/member';
 import type { StudentGrade } from '@/entities/member';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
@@ -28,10 +28,9 @@ const TEST_TYPE_LABELS: Record<WordTestType, string> = {
 
 export function EditStudentModal({ studentId, onClose }: EditStudentModalProps) {
   const { data: detail } = useQuery({
-    queryKey: ['students', studentId, 'detail'],
+    queryKey: studentKeys.detail(studentId),
     queryFn: () => getStudentDetail(studentId),
     select: (res) => (res.data ? toStudentDetail(res.data) : null),
-    staleTime: Infinity,
   });
 
   if (!detail) return <></>;

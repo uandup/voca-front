@@ -6,7 +6,6 @@ interface MemoPopupProps {
   studentId: number;
   studentName: string;
   onClose: () => void;
-  onMutationSuccess?: () => void;
 }
 
 function todayString(): string {
@@ -14,8 +13,8 @@ function todayString(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export function MemoPopup({ studentId, studentName, onClose, onMutationSuccess }: MemoPopupProps) {
-  const { memos, add, edit, remove } = useMemoActions(studentId, onMutationSuccess);
+export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
+  const { memos, add, edit, remove } = useMemoActions(studentId);
   const [newContent, setNewContent] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');

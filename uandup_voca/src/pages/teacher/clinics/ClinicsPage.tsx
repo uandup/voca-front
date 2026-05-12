@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { MemoPopup } from '@/features/memo';
 import { todayDay } from '@/entities/clinic';
@@ -23,7 +22,6 @@ export default function ClinicsPage() {
   const [memoStudent, setMemoStudent] = useState<ClinicStudentRow | null>(null);
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
 
-  const queryClient = useQueryClient();
   const { students } = useClinics(selectedSlot.day, selectedSlot.hour);
 
   function handlePrevDay() {
@@ -76,7 +74,6 @@ export default function ClinicsPage() {
           studentId={memoStudent.id}
           studentName={memoStudent.nameKo}
           onClose={() => setMemoStudent(null)}
-          onMutationSuccess={() => queryClient.invalidateQueries({ queryKey: ['clinics'] })}
         />
       )}
     </main>

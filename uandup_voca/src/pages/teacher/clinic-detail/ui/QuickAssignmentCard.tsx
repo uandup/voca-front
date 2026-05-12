@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
-import { assignWords, updateAssignmentCount } from '@/entities/student';
+import { useAssignmentActions } from '../model/hooks/useAssignmentActions';
 
 interface Props {
   studentId: number;
@@ -14,7 +13,7 @@ const disabledCls =
   'disabled:bg-slate-100 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed';
 
 export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Props) {
-  const queryClient = useQueryClient();
+  const { assign, updateCount } = useAssignmentActions(studentId);
 
   const [targetLevel, setTargetLevel] = useState<DifficultyLevel>(initialLevel);
   const [qty, setQty] = useState<number>(initialQty);
@@ -22,34 +21,20 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
   const [showApplyWarning, setShowApplyWarning] = useState(false);
   const [isAssigned, setIsAssigned] = useState(false);
 
-  const assignMutation = useMutation({
-    mutationFn: () => assignWords(studentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'study-sets'] });
-      setIsAssigned(true);
-    },
-  });
-
-  const updateCountMutation = useMutation({
-    mutationFn: (count: number) => updateAssignmentCount(studentId, { assignmentCount: count }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'overview'] });
-      queryClient.invalidateQueries({ queryKey: ['clinics'] });
-    },
-  });
-
   function handleAssign() {
     if (isEditing) {
       setShowApplyWarning(true);
       return;
     }
-    assignMutation.mutate();
+    assign.mutate(undefined, {
+      onSuccess: () => setIsAssigned(true),
+    });
   }
 
   function handleApply() {
     setIsEditing(false);
     setShowApplyWarning(false);
-    updateCountMutation.mutate(qty);
+    updateCount.mutate(qty);
   }
 
   return (
@@ -123,10 +108,10 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
 
           <button
             onClick={handleAssign}
-            disabled={assignMutation.isPending}
+            disabled={assign.isPending}
             className="w-full bg-primary text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity mt-auto pt-5 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {assignMutation.isPending ? 'Assigning...' : 'Assign New Words'}
+            {assign.isPending ? 'Assigning...' : 'Assign New Words'}
           </button>
         </>
       )}

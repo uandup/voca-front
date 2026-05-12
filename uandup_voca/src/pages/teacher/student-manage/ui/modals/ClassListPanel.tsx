@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getClassrooms, toClassListItem } from '@/entities/class';
+import { getClassrooms, toClassListItem, classKeys } from '@/entities/class';
 import type { Class } from '@/entities/class';
 
 interface ClassListPanelProps {
@@ -9,7 +9,7 @@ interface ClassListPanelProps {
 
 export function ClassListPanel({ selectedClasses, onChange }: ClassListPanelProps) {
   const { data: classList } = useQuery({
-    queryKey: ['admin', 'classrooms'],
+    queryKey: classKeys.list(),
     queryFn: getClassrooms,
     select: (res) => res.data?.map(toClassListItem) ?? [],
   });

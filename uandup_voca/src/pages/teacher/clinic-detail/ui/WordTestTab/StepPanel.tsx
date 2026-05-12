@@ -1,16 +1,7 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { StepCardVM, TestType, ExamType, ExamItem } from '@/entities/test';
 import type { WordTestItem, VocabReviewItem } from '@/entities/word';
 import type { ESRow } from '@/widgets/test-offline';
-import {
-  createExam,
-  startOnlineExam,
-  cancelExam,
-  recordOnlineResults,
-  recordOfflineResults,
-} from '@/entities/test';
-import { updateExamSettings } from '@/entities/student';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import {
@@ -23,6 +14,7 @@ import {
 } from '@/widgets/test-offline';
 import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
 import { useExamDetail } from '../../model/hooks/useExamDetail';
+import { useExamActions } from '../../model/hooks/useExamActions';
 
 interface StepPanelProps {
   step: StepCardVM;
@@ -75,7 +67,6 @@ function toESRows(items: ExamItem[]): ESRow[] {
 
 export default function StepPanel({ step, studySetId, studentId, examType }: StepPanelProps) {
   const phase = inferPhase(step);
-  const queryClient = useQueryClient();
 
   const { data: examHistory } = useStudySetDetail(studySetId, examType, true);
   const currentExamId = examHistory?.currentExamId ?? null;
@@ -94,57 +85,40 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
   const [showGradingModal, setShowGradingModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
 
-  const invalidateSets = () =>
-    queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'study-sets'] });
+  const { create, startOnline, cancel, gradeOnline, gradeOffline, updateSettings } = useExamActions(
+    { studySetId, studentId, examType, currentExamId },
+  );
 
-  const createMutation = useMutation({
-    mutationFn: () => createExam(studySetId, { examType }),
-    onSuccess: () => {
-      setShowSuccessModal(true);
-      invalidateSets();
-    },
-  });
+  function handleCreate() {
+    create.mutate(undefined, {
+      onSuccess: () => setShowSuccessModal(true),
+    });
+  }
 
-  const startOnlineMutation = useMutation({
-    mutationFn: () => startOnlineExam(currentExamId!),
-    onSuccess: invalidateSets,
-  });
+  function handleGradeOnline() {
+    gradeOnline.mutate(
+      { results: [], isPassed: false },
+      { onSuccess: () => setShowGradingModal(false) },
+    );
+  }
 
-  const cancelMutation = useMutation({
-    mutationFn: () => cancelExam(currentExamId!),
-    onSuccess: invalidateSets,
-  });
+  function handleGradeOffline() {
+    gradeOffline.mutate(
+      { results: [], isPassed: false },
+      { onSuccess: () => setShowGradingModal(false) },
+    );
+  }
 
-  const gradeOnlineMutation = useMutation({
-    mutationFn: (payload: Parameters<typeof recordOnlineResults>[1]) =>
-      recordOnlineResults(currentExamId!, payload),
-    onSuccess: () => {
-      setShowGradingModal(false);
-      invalidateSets();
-    },
-  });
-
-  const gradeOfflineMutation = useMutation({
-    mutationFn: (payload: Parameters<typeof recordOfflineResults>[1]) =>
-      recordOfflineResults(currentExamId!, payload),
-    onSuccess: () => {
-      setShowGradingModal(false);
-      invalidateSets();
-    },
-  });
-
-  const updateSettingsMutation = useMutation({
-    mutationFn: () =>
-      updateExamSettings(studentId, {
+  function handleApplySettings() {
+    updateSettings.mutate(
+      {
         examQuestionCount: config.testQty,
         examSubType: config.testType === 'word-to-meaning' ? 'WORD_TO_MEANING' : 'MEANING_TO_WORD',
         synonymIncluded: config.includeSynonyms,
-      }),
-    onSuccess: () => {
-      setIsEditing(false);
-      queryClient.invalidateQueries({ queryKey: ['clinic-detail', studentId, 'overview'] });
-    },
-  });
+      },
+      { onSuccess: () => setIsEditing(false) },
+    );
+  }
 
   const wordTestRows = examDetail ? toWordTestItems(examDetail.items) : [];
   const vocabReviewRows = examDetail ? toVocabReviewItems(examDetail.items) : [];
@@ -186,14 +160,14 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
       {showGradingModal && step.name === 'Sentence' ? (
         <SentenceGradingModal
           onClose={() => setShowGradingModal(false)}
-          onGrade={() => gradeOnlineMutation.mutate({ results: [], isPassed: false })}
+          onGrade={handleGradeOnline}
           rows={esRows}
         />
       ) : (
         showGradingModal && (
           <WordGradingModal
             onClose={() => setShowGradingModal(false)}
-            onGrade={() => gradeOfflineMutation.mutate({ results: [], isPassed: false })}
+            onGrade={handleGradeOffline}
             rows={vocabReviewRows}
             testType={config.testType}
             includeSynonyms={config.includeSynonyms}
@@ -226,7 +200,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           showEditButton={phase === 'pending'}
           onToggleEdit={() => {
             if (isEditing) {
-              updateSettingsMutation.mutate();
+              handleApplySettings();
             } else {
               setIsEditing(true);
             }
@@ -237,27 +211,27 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         {phase === 'pending' && (
           <PendingPanel
             isEditing={isEditing}
-            isPending={createMutation.isPending}
-            onGenerate={() => createMutation.mutate()}
+            isPending={create.isPending}
+            onGenerate={() => handleCreate()}
           />
         )}
         {phase === 'created' && (
           <CreatedPanel
             step={step}
-            isStartPending={startOnlineMutation.isPending}
-            isCancelPending={cancelMutation.isPending}
+            isStartPending={startOnline.isPending}
+            isCancelPending={cancel.isPending}
             onOpenPrint={() => handleOpenModal('print')}
             onGradeOnline={() => handleOpenModal('grading')}
             onGradeOffline={() => handleOpenModal('grading')}
-            onStartOnline={() => startOnlineMutation.mutate()}
-            onCancel={() => cancelMutation.mutate()}
+            onStartOnline={() => startOnline.mutate()}
+            onCancel={() => cancel.mutate()}
           />
         )}
         {phase === 'fail' && (
           <FailPanel
             step={step}
-            isRetakePending={createMutation.isPending}
-            onRetake={() => createMutation.mutate()}
+            isRetakePending={create.isPending}
+            onRetake={() => handleCreate()}
             onOpenGrading={() => handleOpenModal('grading')}
             onOpenResult={() => handleOpenModal('result')}
           />

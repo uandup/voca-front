@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getStudentOverview, toStudentOverview } from '@/entities/student';
+import { getStudentOverview, toStudentOverview, studentKeys } from '@/entities/student';
 
 export function useStudentOverview(studentId: number) {
   return useQuery({
-    queryKey: ['clinic-detail', studentId, 'overview'],
+    queryKey: studentKeys.overview(studentId),
     queryFn: () => getStudentOverview(studentId),
     select: (res) => toStudentOverview(res.data!),
-    staleTime: Infinity,
   });
 }

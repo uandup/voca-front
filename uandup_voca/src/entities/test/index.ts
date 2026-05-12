@@ -22,6 +22,7 @@ export {
   recordOnlineResults,
   recordOfflineResults,
 } from './api/testApi';
+export { testKeys } from './api/queryKeys';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export {
   MOCK_VOCAB_LIST,
