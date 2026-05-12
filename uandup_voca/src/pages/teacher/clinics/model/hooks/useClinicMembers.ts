@@ -45,7 +45,7 @@ export function useClinicMembers(data: EditData, day: Day, hour: ClinicHour, onC
     mutationFn: () =>
       updateClinicStudents(dayOfWeek, hour, { studentIds: roster.map((s) => s.id) }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: clinicKeys.list(day, hour) });
+      queryClient.invalidateQueries({ queryKey: clinicKeys.all });
       onClose();
     },
   });

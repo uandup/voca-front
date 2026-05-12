@@ -69,7 +69,7 @@ function EditMembersModalContent({ data, day, hour, onClose }: EditMembersModalC
               disabled={saveMutation.isPending}
               className="px-5 py-2 rounded-xl bg-primary text-on-primary text-sm font-semibold shadow-md active:scale-95 transition-all disabled:opacity-60"
             >
-              {saveMutation.isPending ? 'Saving...' : 'Save Roster'}
+              Save Roster
             </button>
           </div>
         </div>
