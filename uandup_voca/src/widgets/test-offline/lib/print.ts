@@ -1,9 +1,18 @@
+// 메인 문서의 스타일을 그대로 가져와 인쇄용 HTML에 주입한다.
+// Vite dev: <style> 태그로 inline 주입됨 / Vite build: <link rel="stylesheet">로 hashed CSS 파일 참조.
+// 두 경우 모두 cover하기 위해 head 안의 link/style을 모두 복제한다.
+function collectAppStyles(): string {
+  return Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style'))
+    .map((node) => node.outerHTML)
+    .join('\n');
+}
+
 function buildPrintHtml(sheetHtml: string, title = 'VOCAB TEST'): string {
   return `<!DOCTYPE html>
 <html>
   <head>
     <title>${title}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    ${collectAppStyles()}
     <style>
       @page { size: A4; margin: 10mm 10mm; }
       body { margin: 0; padding: 0; background: white; }
@@ -34,6 +43,23 @@ function buildPrintHtml(sheetHtml: string, title = 'VOCAB TEST'): string {
 </html>`;
 }
 
+// iframe 안의 모든 <link rel="stylesheet">가 로드 완료될 때까지 기다린다.
+// build 모드에서 CSS가 비동기 로드되므로 print()가 스타일 적용 전 발화하는 race를 방지.
+async function waitForStylesheets(doc: Document): Promise<void> {
+  const links = Array.from(doc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'));
+  if (links.length === 0) return;
+  await Promise.all(
+    links.map(
+      (link) =>
+        new Promise<void>((resolve) => {
+          if ((link.sheet as CSSStyleSheet | null) !== null) return resolve();
+          link.addEventListener('load', () => resolve(), { once: true });
+          link.addEventListener('error', () => resolve(), { once: true });
+        }),
+    ),
+  );
+}
+
 function triggerPrint(html: string): void {
   const iframe = document.createElement('iframe');
   iframe.style.cssText =
@@ -41,7 +67,9 @@ function triggerPrint(html: string): void {
   iframe.srcdoc = html;
   document.body.appendChild(iframe);
 
-  iframe.onload = () => {
+  iframe.onload = async () => {
+    const doc = iframe.contentDocument;
+    if (doc) await waitForStylesheets(doc);
     iframe.contentWindow?.focus();
     iframe.contentWindow?.print();
     setTimeout(() => document.body.removeChild(iframe), 1000);
