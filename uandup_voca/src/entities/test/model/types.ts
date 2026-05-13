@@ -64,6 +64,7 @@ export interface ExamItem {
   example: string;
   isCorrect: boolean | null;
   userAnswer: string | null;
+  synonymUserAnswers: string[];
 }
 
 export interface ExamDetail {

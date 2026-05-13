@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
-import type { StepCardVM, WordTestType } from '@/entities/test';
+import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
 import { useExamDetail } from '../../../model/hooks/useExamDetail';
 import { TestPrintModal } from '../modals/TestPrintModal';
 import { TestGradingModal } from '../modals/TestGradingModal';
@@ -22,6 +22,9 @@ import { TestGradingModal } from '../modals/TestGradingModal';
 interface Props {
   step: StepCardVM;
   currentExamId: number | null;
+  studentId: number;
+  studySetId: number;
+  examType: ExamType;
   testType: WordTestType;
   includeSynonyms: boolean;
   startOnline: UseMutationResult<unknown, Error, void>;
@@ -32,6 +35,9 @@ interface Props {
 export function CreatedPanel({
   step,
   currentExamId,
+  studentId,
+  studySetId,
+  examType,
   testType,
   includeSynonyms,
   startOnline,
@@ -70,7 +76,8 @@ export function CreatedPanel({
     navigate({
       to: '/teacher/exams/$examId/grade-online',
       params: { examId: String(currentExamId) },
-      search: { returnTo: currentReturnTo() },
+      // studentId/studySetId/examType는 채점 후 정확한 invalidation을 위해 함께 전달한다.
+      search: { returnTo: currentReturnTo(), studentId, studySetId, examType },
     });
   }
 

@@ -45,7 +45,6 @@ function MeaningCell({
 function WordSheet({
   id,
   pageRows,
-  page,
   showWord,
   showKor,
   showEng,
@@ -55,7 +54,6 @@ function WordSheet({
 }: {
   id: string;
   pageRows: TestWord[];
-  page: number;
   showWord: boolean;
   showKor: boolean;
   showEng: boolean;
@@ -133,13 +131,13 @@ function WordSheet({
             </tr>
           </thead>
           <tbody style={{ height: '100%' }}>
-            {pageRows.map(({ word, korMeaning, engMeaning, synonyms }, idx) => (
+            {pageRows.map(({ id, word, korMeaning, engMeaning, synonyms }, idx) => (
               <tr key={idx} style={{ height: `${ROW_HEIGHT_MM}mm` }}>
                 <td
                   className="text-center text-sm font-bold"
                   style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                 >
-                  {String((page - 1) * PAGE_SIZE + idx + 1).padStart(2, '0')}
+                  {String(id).padStart(2, '0')}
                 </td>
                 <td
                   className="text-xs"
@@ -222,7 +220,6 @@ export function WordTestModal({
         <WordSheet
           id={`wms-preview-sheet-${page}`}
           pageRows={pageRowsAt(page)}
-          page={page}
           showWord={previewShowWord}
           showKor={previewShowKor}
           showEng={previewShowEng}
@@ -237,7 +234,6 @@ export function WordTestModal({
           key={id}
           id={id}
           pageRows={pageRowsAt(i + 1)}
-          page={i + 1}
           showWord={printShowWord}
           showKor={printShowKor}
           showEng={printShowEng}

@@ -85,6 +85,9 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         <CreatedPanel
           step={step}
           currentExamId={currentExamId}
+          studentId={studentId}
+          studySetId={studySetId}
+          examType={examType}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
           startOnline={startOnline}

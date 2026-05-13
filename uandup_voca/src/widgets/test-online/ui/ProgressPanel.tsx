@@ -34,9 +34,6 @@ export function ProgressPanel({
               {Math.round((completedCount / totalItems) * 100)}%
             </span>
           )}
-          {isReview && wrongIds && (
-            <span className="text-xs font-bold text-error">{wrongIds.size} wrong</span>
-          )}
         </div>
 
         <div className="grid grid-cols-5 gap-1.5">

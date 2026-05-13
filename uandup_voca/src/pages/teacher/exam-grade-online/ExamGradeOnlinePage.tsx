@@ -1,67 +1,69 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
-import {
-  MOCK_VOCAB_REVIEW_ITEMS,
-  MOCK_SENTENCE_ITEMS,
-  ITEMS_PER_PAGE,
-  MOCK_ANSWERS_WTM,
-  MOCK_SENTENCE_ANSWERS,
-  type WordTestType,
-} from '@/entities/test';
+import { ITEMS_PER_PAGE, type ExamType, type WordTestType } from '@/entities/test';
 import {
   TestPagination,
   ProgressPanel,
   VocabReviewTable,
   SentenceReviewTable,
 } from '@/widgets/test-online';
+import type { Answer } from '@/widgets/test-online';
+import { useExamDetail } from '@/pages/teacher/clinic-detail/model/hooks/useExamDetail';
+import {
+  toVocabReviewItems,
+  toSentenceTestItems,
+  toSentenceAnswers,
+} from '@/pages/teacher/clinic-detail/model/mapper';
+import { useRecordOnlineResults } from './model/hooks/useRecordOnlineResults';
 
 // 선생님이 학생 답안을 온라인 채점하는 페이지.
-// grading mode에서 오답 체크 → Grade(저장) 또는 Edit(재채점) 흐름을 가진다.
-// 데이터는 이번 범위에선 mock 사용. 추후 examId로 실제 답안 페칭 + recordOnlineResults mutation 연동 예정.
+// COMPLETED 상태로 진입 시 'result' 모드 — 채점 결과 표시. Edit 클릭으로 grading 재진입.
+// 그 외 상태(ONLINE_STARTED/SUBMITTED 등)로 진입 시 'grading' 모드 — 오답 체크 → Save.
+// examType === 'EXAMPLE'은 문장 시험, 그 외는 단어 시험.
 
 type ReviewMode = 'grading' | 'result';
 
 export default function ExamGradeOnlinePage() {
-  const { examId } = useParams({ from: '/teacher_/exams/$examId/grade-online' });
-  const { returnTo } = useSearch({ from: '/teacher_/exams/$examId/grade-online' });
+  const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/grade-online' });
+  const search = useSearch({ from: '/teacher_/exams/$examId/grade-online' });
   const router = useRouter();
 
-  void examId;
+  const examId = Number(examIdParam);
+  const { data: examDetail, isLoading } = useExamDetail(examId);
 
-  // returnTo가 있으면 replace로 history의 grade-online 엔트리를 덮어써, 앞으로가기로 재진입할 수 없게 한다.
-  function handleExit() {
-    if (returnTo) {
-      router.history.replace(returnTo);
-    } else {
-      router.history.back();
-    }
-  }
+  const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
+  const isSentence = examType === 'EXAMPLE';
 
-  // mock: word-to-meaning 단어 시험 가정. 추후 examType에 따라 분기.
-  const testType: WordTestType = 'word-to-meaning';
-  const isSentence = false;
+  const recordResults = useRecordOnlineResults({
+    examId,
+    studentId: search.studentId ?? 0,
+    studySetId: search.studySetId ?? 0,
+    examType,
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [wrongIds, setWrongIds] = useState<Set<number>>(new Set());
   const [mode, setMode] = useState<ReviewMode>('grading');
   const [isEditing, setIsEditing] = useState(false);
+  // 합격 여부는 선생님이 명시적으로 선택. 채점 완료된 시험으로 재진입 시 기존 값으로 초기화.
+  const [outcome, setOutcome] = useState<'pass' | 'fail'>('pass');
 
-  const vocabItems = MOCK_VOCAB_REVIEW_ITEMS;
-  const sentenceItems = MOCK_SENTENCE_ITEMS;
-  const totalItems = isSentence ? sentenceItems.length : vocabItems.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  const vocabPageItems = vocabItems.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
-  const sentencePageItems = sentenceItems.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
-
-  const allIds = isSentence ? sentenceItems.map((i) => i.id) : vocabItems.map((i) => i.id);
-  const checkedIds = useMemo(() => new Set<number>(allIds), [isSentence]); // eslint-disable-line react-hooks/exhaustive-deps
+  // examDetail 로드 시 초기 상태 동기화 — 이미 채점된 시험이면 result 모드 + 기존 오답/합격 표시.
+  // wrongIds는 itemOrder를 키로 추적한다(row id와 일치). 채점 mutation을 보낼 땐 examItemId로 다시 매핑.
+  useEffect(() => {
+    if (!examDetail) return;
+    if (examDetail.status === 'COMPLETED') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setMode('result');
+      setWrongIds(
+        new Set(examDetail.items.filter((i) => i.isCorrect === false).map((i) => i.itemOrder)),
+      );
+      setOutcome(examDetail.isPassed === true ? 'pass' : 'fail');
+    } else {
+      setMode('grading');
+      setWrongIds(new Set());
+    }
+  }, [examDetail]);
 
   const handleToggleWrong = useCallback((id: number) => {
     setWrongIds((prev) => {
@@ -72,12 +74,93 @@ export default function ExamGradeOnlinePage() {
     });
   }, []);
 
+  function handleExit() {
+    if (search.returnTo) {
+      router.history.replace(search.returnTo);
+    } else {
+      router.history.back();
+    }
+  }
+
+  function handleSaveResults() {
+    if (!examDetail) return;
+    // wrongIds는 itemOrder 기준 — examItemId로 매핑해 API 페이로드를 만든다.
+    const results = examDetail.items.map((item) => ({
+      examItemId: item.examItemId,
+      isCorrect: !wrongIds.has(item.itemOrder),
+      userAnswer: item.userAnswer ?? '',
+    }));
+    recordResults.mutate(
+      { results, isPassed: outcome === 'pass' },
+      {
+        onSuccess: () => {
+          setMode('result');
+          setIsEditing(false);
+        },
+      },
+    );
+  }
+
+  // VocabReviewRow가 사용하는 answers map — row.id(itemOrder)로 lookup하므로 itemOrder를 키로 한다.
+  const vocabAnswers: Record<number, Answer> = useMemo(() => {
+    if (!examDetail) return {};
+    return Object.fromEntries(
+      examDetail.items.map((item) => [
+        item.itemOrder,
+        {
+          answer: item.userAnswer ?? '',
+          synonym: item.synonymUserAnswers.join(', '),
+        },
+      ]),
+    );
+  }, [examDetail]);
+
+  if (isLoading || !examDetail) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col">
+        <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center">
+          <button
+            onClick={handleExit}
+            className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+              logout
+            </span>
+            Exit
+          </button>
+        </header>
+        <div className="flex-1 flex items-center justify-center text-on-surface-variant">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
+  const testType: WordTestType = examDetail.subType ?? 'word-to-meaning';
+  const showSynonym = examDetail.includeSynonym;
+
+  const vocabItems = !isSentence ? toVocabReviewItems(examDetail.items) : [];
+  const sentenceItems = isSentence ? toSentenceTestItems(examDetail.items) : [];
+  const sentenceAnswers = isSentence ? toSentenceAnswers(examDetail.items) : {};
+
+  const totalItems = isSentence ? sentenceItems.length : vocabItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const vocabPageItems = vocabItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+  const sentencePageItems = sentenceItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
+  const allIds = isSentence ? sentenceItems.map((i) => i.id) : vocabItems.map((i) => i.id);
+  const checkedIds = new Set<number>(allIds);
   const correctCount = totalItems - wrongIds.size;
   const hideCheckbox = mode === 'result';
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
-      {/* grading-specific 헤더 — Exit + correct/wrong count + Grade/Save/Edit */}
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
         <div className="w-24">
           <button
@@ -93,9 +176,17 @@ export default function ExamGradeOnlinePage() {
 
         <div className="flex items-center gap-2">
           {mode === 'result' ? (
-            <span className="text-sm font-bold text-on-surface">
-              {correctCount} / {totalItems} correct
-            </span>
+            <>
+              <span className="text-sm font-bold text-on-surface">
+                {correctCount} / {totalItems} correct
+              </span>
+              <span className="text-on-surface-variant/30">·</span>
+              <span
+                className={`text-sm font-bold ${outcome === 'pass' ? 'text-success' : 'text-error'}`}
+              >
+                {outcome === 'pass' ? 'Passed' : 'Failed'}
+              </span>
+            </>
           ) : (
             <>
               <span className="text-sm font-semibold text-on-surface">
@@ -107,29 +198,51 @@ export default function ExamGradeOnlinePage() {
           )}
         </div>
 
-        <div className="w-24 flex justify-end">
-          {mode === 'grading' && !isEditing ? (
+        <div className="flex justify-end items-center gap-3">
+          {mode === 'grading' && (
+            // Pass/Fail segmented toggle — isPassed로 mutation에 전달된다.
+            <div
+              role="radiogroup"
+              aria-label="Outcome"
+              className="flex items-center rounded-lg border border-outline-variant/30 overflow-hidden"
+            >
+              <button
+                role="radio"
+                aria-checked={outcome === 'pass'}
+                onClick={() => setOutcome('pass')}
+                className={`px-3 py-1.5 text-xs font-bold transition-colors ${
+                  outcome === 'pass'
+                    ? 'bg-success text-white'
+                    : 'bg-white text-on-surface-variant hover:bg-slate-50'
+                }`}
+              >
+                Pass
+              </button>
+              <button
+                role="radio"
+                aria-checked={outcome === 'fail'}
+                onClick={() => setOutcome('fail')}
+                className={`px-3 py-1.5 text-xs font-bold transition-colors border-l border-outline-variant/30 ${
+                  outcome === 'fail'
+                    ? 'bg-error text-white'
+                    : 'bg-white text-on-surface-variant hover:bg-slate-50'
+                }`}
+              >
+                Fail
+              </button>
+            </div>
+          )}
+
+          {mode === 'grading' ? (
             <button
-              onClick={() => setMode('result')}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+              onClick={handleSaveResults}
+              disabled={recordResults.isPending}
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                grade
+                {isEditing ? 'save' : 'grade'}
               </span>
-              Grade
-            </button>
-          ) : mode === 'grading' && isEditing ? (
-            <button
-              onClick={() => {
-                setMode('result');
-                setIsEditing(false);
-              }}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                save
-              </span>
-              Save
+              {recordResults.isPending ? 'Saving...' : isEditing ? 'Save' : 'Grade'}
             </button>
           ) : (
             <button
@@ -153,7 +266,7 @@ export default function ExamGradeOnlinePage() {
           {isSentence ? (
             <SentenceReviewTable
               items={sentencePageItems}
-              answers={MOCK_SENTENCE_ANSWERS}
+              answers={sentenceAnswers}
               wrongIds={wrongIds}
               readOnly={mode === 'result'}
               hideCheckbox={hideCheckbox}
@@ -163,8 +276,8 @@ export default function ExamGradeOnlinePage() {
             <VocabReviewTable
               items={vocabPageItems}
               testType={testType}
-              showSynonym
-              answers={MOCK_ANSWERS_WTM}
+              showSynonym={showSynonym}
+              answers={vocabAnswers}
               wrongIds={wrongIds}
               readOnly={mode === 'result'}
               hideCheckbox={hideCheckbox}

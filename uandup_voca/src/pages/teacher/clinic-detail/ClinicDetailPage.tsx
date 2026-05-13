@@ -62,7 +62,7 @@ export function ClinicDetailPage() {
             {(
               [
                 { key: 'wordTest', label: 'Word Test' },
-                { key: 'reviewDeck', label: 'Review Deck Bank' },
+                { key: 'reviewDeck', label: 'Review Deck' },
                 { key: 'levelTest', label: 'Level Test' },
               ] as { key: MainTab; label: string }[]
             ).map((tab) => (

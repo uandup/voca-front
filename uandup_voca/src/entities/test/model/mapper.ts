@@ -29,6 +29,7 @@ function toExamItem(item: ExamItemDetail): ExamItem {
     example: item.example ?? '',
     isCorrect: item.isCorrect ?? null,
     userAnswer: item.userAnswer ?? null,
+    synonymUserAnswers: item.synonymUserAnswers ?? [],
   };
 }
 
@@ -40,7 +41,8 @@ export function toExamDetail(r: ExamDetailResponse): ExamDetail {
     includeSynonym: r.includeSynonym ?? false,
     status: r.status ?? '',
     isPassed: r.isPassed ?? null,
-    items: (r.items ?? []).map(toExamItem),
+    // itemOrder 오름차순으로 정렬해 화면 표시 순서를 보장한다.
+    items: (r.items ?? []).map(toExamItem).sort((a, b) => a.itemOrder - b.itemOrder),
   };
 }
 
