@@ -8,5 +8,7 @@ export { SentenceAnswerTable } from './ui/SentenceAnswerTable';
 export { SentenceAnswerRow } from './ui/SentenceAnswerRow';
 export { VocabReviewTable } from './ui/VocabReviewTable';
 export { VocabReviewRow } from './ui/VocabReviewRow';
+export { VocabPreviewTable } from './ui/VocabPreviewTable';
+export { VocabPreviewRow } from './ui/VocabPreviewRow';
 export { SentenceReviewTable } from './ui/SentenceReviewTable';
 export { SentenceReviewRow } from './ui/SentenceReviewRow';
