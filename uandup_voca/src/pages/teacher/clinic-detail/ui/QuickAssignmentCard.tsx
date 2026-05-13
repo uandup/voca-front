@@ -38,6 +38,13 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
     updateCount.mutate(qty);
   }
 
+  function handleCancelEdit() {
+    setTargetLevel(initialLevel);
+    setQty(initialQty);
+    setIsEditing(false);
+    setShowApplyWarning(false);
+  }
+
   return (
     <div className="col-span-4 bg-white border border-outline/20 rounded-2xl p-7 flex flex-col">
       <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pb-3">
@@ -91,11 +98,25 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
               />
             </div>
 
-            {/* Edit / Apply 버튼 — 1/5 */}
-            <div className="flex-1">
+            {/* Edit / Apply (+ Cancel) 버튼 */}
+            <div className="flex gap-1.5 shrink-0">
+              {isEditing && (
+                <button
+                  onClick={handleCancelEdit}
+                  className="px-3 py-3 rounded-lg border border-outline/30 text-on-surface-variant hover:bg-slate-50 transition-colors flex items-center justify-center"
+                  aria-label="Cancel"
+                >
+                  <span
+                    className="material-symbols-outlined leading-none"
+                    style={{ fontSize: '14px' }}
+                  >
+                    close
+                  </span>
+                </button>
+              )}
               <button
                 onClick={isEditing ? handleApply : () => setIsEditing(true)}
-                className="w-full py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+                className="w-16 py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
               >
                 {isEditing ? 'Apply' : 'Edit'}
               </button>

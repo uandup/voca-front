@@ -57,6 +57,11 @@ export function TestConfigSection({
     );
   }
 
+  function handleCancelEdit() {
+    setConfig(initialConfig);
+    changeEditing(false);
+  }
+
   const inputClass = `w-full text-xs border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed transition-colors ${
     isEditing
       ? 'border-primary/30 bg-white text-on-surface'
@@ -118,11 +123,22 @@ export function TestConfigSection({
           </div>
         </div>
 
-        <div className="w-14.5 shrink-0">
+        <div className="shrink-0 flex gap-2">
+          {showEditButton && isEditing && (
+            <button
+              onClick={handleCancelEdit}
+              className="px-1.5 py-1.5 rounded-lg border border-outline/30 text-on-surface-variant hover:bg-slate-50 transition-colors flex items-center justify-center"
+              aria-label="Cancel"
+            >
+              <span className="material-symbols-outlined leading-none" style={{ fontSize: '14px' }}>
+                close
+              </span>
+            </button>
+          )}
           {showEditButton && (
             <button
               onClick={handleToggleEdit}
-              className="w-full px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+              className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
             >
               {isEditing ? 'Apply' : 'Edit'}
             </button>
