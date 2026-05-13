@@ -9,7 +9,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Word',
         status: 'pending',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: 100,
         retakeCount: 0,
@@ -17,7 +17,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Sentence',
         status: 'active',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: 100,
         retakeCount: 0,
@@ -25,7 +25,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 1',
         status: 'grading',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: 100,
         retakeCount: 0,
@@ -33,7 +33,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 2',
         status: 'passed',
-        gradedAt: '23.10.23',
+        createdAt: '23.10.23',
         lastScore: 98,
         maxScore: 100,
         retakeCount: 0,
@@ -41,7 +41,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 3',
         status: 'fail',
-        gradedAt: '23.10.24',
+        createdAt: '23.10.24',
         lastScore: 62,
         maxScore: 100,
         retakeCount: 0,
@@ -56,7 +56,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Word',
         status: 'fail',
-        gradedAt: null,
+        createdAt: null,
         lastScore: 62,
         maxScore: 100,
         retakeCount: 0,
@@ -64,7 +64,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Sentence',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -72,7 +72,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 1',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -80,7 +80,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 2',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -88,7 +88,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 3',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -103,7 +103,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Word',
         status: 'passed',
-        gradedAt: '23.09.10',
+        createdAt: '23.09.10',
         lastScore: 95,
         maxScore: 100,
         retakeCount: 0,
@@ -111,7 +111,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Sentence',
         status: 'passed',
-        gradedAt: '23.09.11',
+        createdAt: '23.09.11',
         lastScore: 88,
         maxScore: 100,
         retakeCount: 1,
@@ -119,7 +119,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 1',
         status: 'passed',
-        gradedAt: '23.09.12',
+        createdAt: '23.09.12',
         lastScore: 92,
         maxScore: 100,
         retakeCount: 2,
@@ -127,7 +127,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 2',
         status: 'passed',
-        gradedAt: '23.09.13',
+        createdAt: '23.09.13',
         lastScore: 96,
         maxScore: 100,
         retakeCount: 0,
@@ -135,7 +135,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 3',
         status: 'passed',
-        gradedAt: '23.09.14',
+        createdAt: '23.09.14',
         lastScore: 100,
         maxScore: 100,
         retakeCount: 0,
@@ -153,7 +153,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Word',
         status: 'pending',
-        gradedAt: '23.10.24',
+        createdAt: '23.10.24',
         lastScore: null,
         maxScore: 30,
         retakeCount: 0,
@@ -161,7 +161,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Sentence',
         status: 'active',
-        gradedAt: '23.10.24',
+        createdAt: '23.10.24',
         lastScore: null,
         maxScore: 30,
         retakeCount: 0,
@@ -169,7 +169,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 1',
         status: 'passed',
-        gradedAt: '23.10.23',
+        createdAt: '23.10.23',
         lastScore: 98,
         maxScore: 100,
         retakeCount: 0,
@@ -177,7 +177,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 2',
         status: 'fail',
-        gradedAt: '23.10.24',
+        createdAt: '23.10.24',
         lastScore: 62,
         maxScore: 100,
         retakeCount: 0,
@@ -185,7 +185,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 3',
         status: 'passed',
-        gradedAt: '23.10.25',
+        createdAt: '23.10.25',
         lastScore: 88,
         maxScore: 100,
         retakeCount: 2,
@@ -200,7 +200,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Word',
         status: 'fail',
-        gradedAt: '23.10.24',
+        createdAt: '23.10.24',
         lastScore: 62,
         maxScore: 100,
         retakeCount: 0,
@@ -208,7 +208,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Sentence',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -216,7 +216,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 1',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -224,7 +224,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 2',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,
@@ -232,7 +232,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
       {
         name: 'Review 3',
         status: 'locked',
-        gradedAt: null,
+        createdAt: null,
         lastScore: null,
         maxScore: null,
         retakeCount: 0,

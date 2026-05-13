@@ -13,22 +13,16 @@ interface Props {
   onOpenResult: () => void;
 }
 
-export function FailPanel({
-  step,
-  isRetakePending,
-  onRetake,
-  onOpenGrading,
-  onOpenResult,
-}: Props) {
+export function FailPanel({ step, isRetakePending, onRetake, onOpenGrading, onOpenResult }: Props) {
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
-        {step.gradedAt && (
+        {step.createdAt && (
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.gradedAt}</span>
+            <span>Created At : {step.createdAt}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5">

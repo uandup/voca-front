@@ -14,7 +14,14 @@ const containerClass: Record<StepStatus, string> = {
 };
 
 export default function StepCard({ step }: StepCardProps) {
-  const { status, name, lastScore, maxScore: totalScore, gradedAt: gradedDate, retakeCount } = step;
+  const {
+    status,
+    name,
+    lastScore,
+    maxScore: totalScore,
+    createdAt: gradedDate,
+    retakeCount,
+  } = step;
 
   return (
     <div

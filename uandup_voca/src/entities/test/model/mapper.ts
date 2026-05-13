@@ -1,5 +1,12 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { WordTestType, ExamDetail, ExamItem, StepExamHistory, ExamType, ExamAttempt } from './types';
+import type {
+  WordTestType,
+  ExamDetail,
+  ExamItem,
+  StepExamHistory,
+  ExamType,
+  ExamAttempt,
+} from './types';
 
 type StudySetExamTypeResponse = components['schemas']['StudySetExamTypeResponse'];
 type ExamDetailResponse = components['schemas']['ExamDetailResponse'];

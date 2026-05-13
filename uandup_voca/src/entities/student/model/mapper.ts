@@ -83,7 +83,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
     return {
       name: 'Word',
       status: 'locked',
-      gradedAt: null,
+      createdAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -93,13 +93,13 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
     return {
       name: 'Word',
       status: 'pending',
-      gradedAt: null,
+      createdAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
     };
   }
-  const { status, isPassed, completedAt, correctCount, totalCount } = exam;
+  const { status, isPassed, createdAt, correctCount, totalCount } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -111,7 +111,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
   return {
     name: 'Word',
     status: stepStatus,
-    gradedAt: completedAt ?? null,
+    createdAt: createdAt ?? null,
     lastScore: correctCount ?? null,
     maxScore: totalCount ?? null,
     retakeCount: 0,

@@ -27,7 +27,7 @@ export type StepStatus =
 export interface StepCardVM {
   name: TestStepName;
   status: StepStatus;
-  gradedAt: string | null;
+  createdAt: string | null;
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;
