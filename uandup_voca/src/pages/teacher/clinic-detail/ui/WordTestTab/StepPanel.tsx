@@ -70,11 +70,10 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
   }
 
   if (!student) return null;
-  // 'pending'이 아닌 phase는 examHistory 로드를 기다린다 — 시험 생성 시점의 설정으로 폼을 초기화하기 위함.
-  if (phase !== 'pending' && !examHistory) return null;
 
   // 시험이 이미 생성되었으면 시험에 캡처된 설정을, 그렇지 않으면 학생의 현재 설정을 사용.
-  // SENTENCE/REVIEW 시험엔 subType/includeSynonym이 없으므로 student 값으로 fallback.
+  // examHistory 로드 전(transition 중)에도 student 값으로 fallback하여 panel 자체가 사라지지 않게 한다.
+  // examHistory 도착 후엔 configKey가 바뀌면서 TestConfigSection이 re-mount되어 exam-captured 값으로 갱신된다.
   const initialConfig =
     examHistory && phase !== 'pending'
       ? {
@@ -88,8 +87,12 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           includeSynonyms: student.includeSynonyms,
         };
 
-  // 시험이 새로 생성되거나 phase가 전환되면 TestConfigSection을 re-mount하여 새 initialConfig 적용.
-  const configKey = examHistory?.currentExamId ?? 'pending';
+  // re-mount 트리거 키 — phase/시험 전환 시 새 initialConfig 반영.
+  //   pending           → 'pending'   (학생 설정 기반)
+  //   transition 중      → 'loading'  (examHistory 도착 전, 학생 설정 fallback)
+  //   examHistory 도착  → currentExamId (exam-captured 값)
+  const configKey =
+    phase === 'pending' ? 'pending' : !examHistory ? 'loading' : (examHistory.currentExamId ?? 'no-current');
 
   return (
     <>

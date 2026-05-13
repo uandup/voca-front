@@ -15,15 +15,13 @@ export const getExamsByType = (
   examType: CreateExamRequest['examType'],
 ): Promise<ApiResponse<StudySetExamTypeResponse>> =>
   axiosInstance
-    .get<ApiResponse<StudySetExamTypeResponse>>(
-      `/api/v1/normal-study-sets/${studySetId}/exams/${examType}`,
-    )
+    .get<
+      ApiResponse<StudySetExamTypeResponse>
+    >(`/api/v1/normal-study-sets/${studySetId}/exams/${examType}`)
     .then((r) => r.data);
 
 export const getExamDetail = (examId: number): Promise<ApiResponse<ExamDetailResponse>> =>
-  axiosInstance
-    .get<ApiResponse<ExamDetailResponse>>(`/api/v1/exams/${examId}`)
-    .then((r) => r.data);
+  axiosInstance.get<ApiResponse<ExamDetailResponse>>(`/api/v1/exams/${examId}`).then((r) => r.data);
 
 export const createExam = (
   studySetId: number,
@@ -34,14 +32,10 @@ export const createExam = (
     .then((r) => r.data);
 
 export const startOnlineExam = (examId: number): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .post<ApiResponse<void>>(`/api/v1/exams/${examId}/start-online`)
-    .then((r) => r.data);
+  axiosInstance.post<ApiResponse<void>>(`/api/v1/exams/${examId}/start-online`).then((r) => r.data);
 
 export const cancelExam = (examId: number): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .post<ApiResponse<void>>(`/api/v1/exams/${examId}/cancel`)
-    .then((r) => r.data);
+  axiosInstance.post<ApiResponse<void>>(`/api/v1/exams/${examId}/cancel`).then((r) => r.data);
 
 export const recordOnlineResults = (
   examId: number,
