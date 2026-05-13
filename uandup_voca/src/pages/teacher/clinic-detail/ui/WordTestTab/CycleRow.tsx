@@ -1,4 +1,5 @@
 import { Fragment, useState } from 'react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
 import { AssignedWordsModal } from './AssignedWordsModal';
@@ -18,7 +19,12 @@ export default function CycleRow({
   studySetId,
   studentId,
 }: Props) {
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  // URL의 openSet/openStep을 단일 진실로 사용한다.
+  // Preview/Grade Online 페이지 이동 후 돌아와도 같은 step이 다시 열리도록 한다.
+  const search = useSearch({ from: '/teacher/clinics_/students/$studentId' });
+  const navigate = useNavigate();
+  const selectedName = search.openSet === studySetId ? (search.openStep ?? null) : null;
+
   const [isWordsModalOpen, setIsWordsModalOpen] = useState(false);
 
   const selectedIdx = steps.findIndex((s) => s.name === selectedName);
@@ -27,7 +33,15 @@ export default function CycleRow({
     selectedIdx !== -1 ? STEP_EXAM_TYPES[selectedIdx] : null;
 
   function handleStepClick(name: string) {
-    setSelectedName((prev) => (prev === name ? null : name));
+    const next = selectedName === name ? null : name;
+    navigate({
+      to: '.',
+      search: {
+        openSet: next ? studySetId : undefined,
+        openStep: next ?? undefined,
+      },
+      replace: true,
+    });
   }
 
   return (
