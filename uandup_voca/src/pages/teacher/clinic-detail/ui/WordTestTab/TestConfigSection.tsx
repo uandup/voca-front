@@ -1,32 +1,62 @@
-import type { TestType } from '@/entities/test';
+import { useState } from 'react';
+import type { WordTestType } from '@/entities/test';
 import { NumberInput } from '@/shared/ui/NumberInput';
+import { useUpdateExamSettings } from '../../model/hooks/useUpdateExamSettings';
 
 // StepPanel 상단의 시험 설정(타입/문항 수/동의어 포함) 편집 영역.
 // 모든 phase에서 표시되며 'pending' phase에서만 Edit/Apply 버튼이 노출된다.
+// 편집 중인 로컬 폼 상태와 updateExamSettings mutation을 자체 소유한다.
 
-export interface LocalTestConfig {
+export interface ExamConfig {
   testQty: number;
-  testType: TestType;
+  testType: WordTestType;
   includeSynonyms: boolean;
 }
 
 interface Props {
-  config: LocalTestConfig;
-  isEditing: boolean;
+  studentId: number;
+  initialConfig: ExamConfig;
   showEditButton: boolean;
-  onToggleEdit: () => void;
-  onChange: (patch: Partial<LocalTestConfig>) => void;
+  // 편집 모드 전환을 상위에 알린다 — Generate Test 같은 다른 액션을 잠그는 용도.
+  onEditingChange?: (editing: boolean) => void;
 }
 
-const TEST_TYPE_OPTIONS: TestType[] = ['meaning-to-word', 'word-to-meaning'];
+const TEST_TYPE_OPTIONS: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
 
 export function TestConfigSection({
-  config,
-  isEditing,
+  studentId,
+  initialConfig,
   showEditButton,
-  onToggleEdit,
-  onChange,
+  onEditingChange,
 }: Props) {
+  const [config, setConfig] = useState<ExamConfig>(initialConfig);
+  const [isEditing, setIsEditing] = useState(false);
+  const { mutate: updateSettings } = useUpdateExamSettings(studentId);
+
+  function changeEditing(editing: boolean) {
+    setIsEditing(editing);
+    onEditingChange?.(editing);
+  }
+
+  function handleChange(patch: Partial<ExamConfig>) {
+    setConfig((prev) => ({ ...prev, ...patch }));
+  }
+
+  function handleToggleEdit() {
+    if (!isEditing) {
+      changeEditing(true);
+      return;
+    }
+    updateSettings(
+      {
+        examQuestionCount: config.testQty,
+        examSubType: config.testType === 'word-to-meaning' ? 'WORD_TO_MEANING' : 'MEANING_TO_WORD',
+        synonymIncluded: config.includeSynonyms,
+      },
+      { onSuccess: () => changeEditing(false) },
+    );
+  }
+
   const inputClass = `w-full text-xs border rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed transition-colors ${
     isEditing
       ? 'border-primary/30 bg-white text-on-surface'
@@ -47,7 +77,7 @@ export function TestConfigSection({
             </label>
             <select
               value={config.testType}
-              onChange={(e) => onChange({ testType: e.target.value as TestType })}
+              onChange={(e) => handleChange({ testType: e.target.value as WordTestType })}
               disabled={!isEditing}
               className={inputClass}
             >
@@ -63,7 +93,7 @@ export function TestConfigSection({
             </label>
             <NumberInput
               value={String(config.testQty)}
-              onChange={(v) => onChange({ testQty: Number(v) })}
+              onChange={(v) => handleChange({ testQty: Number(v) })}
               min={1}
               disabled={!isEditing}
               className={inputClass}
@@ -80,7 +110,7 @@ export function TestConfigSection({
               <input
                 type="checkbox"
                 checked={config.includeSynonyms}
-                onChange={(e) => onChange({ includeSynonyms: e.target.checked })}
+                onChange={(e) => handleChange({ includeSynonyms: e.target.checked })}
                 disabled={!isEditing}
                 className="sr-only peer"
               />
@@ -92,7 +122,7 @@ export function TestConfigSection({
         <div className="w-14.5 shrink-0">
           {showEditButton && (
             <button
-              onClick={onToggleEdit}
+              onClick={handleToggleEdit}
               className="w-full px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
             >
               {isEditing ? 'Apply' : 'Edit'}

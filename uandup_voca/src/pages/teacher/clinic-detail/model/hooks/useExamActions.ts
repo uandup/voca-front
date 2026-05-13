@@ -7,11 +7,7 @@ import {
   recordOfflineResults,
 } from '@/entities/test';
 import type { ExamType } from '@/entities/test';
-import {
-  updateExamSettings,
-  studentKeys,
-  invalidateStudentCascade,
-} from '@/entities/student';
+import { studentKeys } from '@/entities/student';
 
 interface UseExamActionsParams {
   studySetId: number;
@@ -58,11 +54,5 @@ export function useExamActions({
     onSuccess: invalidateSets,
   });
 
-  const updateSettings = useMutation({
-    mutationFn: (body: Parameters<typeof updateExamSettings>[1]) =>
-      updateExamSettings(studentId, body),
-    onSuccess: () => invalidateStudentCascade(queryClient),
-  });
-
-  return { create, startOnline, cancel, gradeOnline, gradeOffline, updateSettings };
+  return { create, startOnline, cancel, gradeOnline, gradeOffline };
 }

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { StepCardVM, ExamType } from '@/entities/test';
+import { useStudentOverview } from '../../model/hooks/useStudentOverview';
 import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
 import { useExamDetail } from '../../model/hooks/useExamDetail';
 import { useExamActions } from '../../model/hooks/useExamActions';
 import { inferPhase } from '../../model/mapper';
-import { TestConfigSection, type LocalTestConfig } from './TestConfigSection';
+import { TestConfigSection } from './TestConfigSection';
 import { StepModals } from './StepModals';
 import { PendingPanel } from './panels/PendingPanel';
 import { CreatedPanel } from './panels/CreatedPanel';
@@ -21,26 +22,25 @@ interface StepPanelProps {
 export default function StepPanel({ step, studySetId, studentId, examType }: StepPanelProps) {
   const phase = inferPhase(step);
 
-  const { data: examHistory } = useStudySetDetail(studySetId, examType, true);
+  const { data: student } = useStudentOverview(studentId);
+  const { data: examHistory } = useStudySetDetail(studySetId, examType, phase !== 'pending');
   const currentExamId = examHistory?.currentExamId ?? null;
 
   const [modalExamId, setModalExamId] = useState<number | null>(null);
   const { data: examDetail } = useExamDetail(modalExamId);
 
-  const [config, setConfig] = useState<LocalTestConfig>({
-    testQty: 30,
-    testType: 'meaning-to-word',
-    includeSynonyms: true,
-  });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isConfigEditing, setIsConfigEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showGradingModal, setShowGradingModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
 
-  const { create, startOnline, cancel, gradeOnline, gradeOffline, updateSettings } = useExamActions(
-    { studySetId, studentId, examType, currentExamId },
-  );
+  const { create, startOnline, cancel, gradeOnline, gradeOffline } = useExamActions({
+    studySetId,
+    studentId,
+    examType,
+    currentExamId,
+  });
 
   function handleCreate() {
     create.mutate(undefined, {
@@ -62,17 +62,6 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
     );
   }
 
-  function handleApplySettings() {
-    updateSettings.mutate(
-      {
-        examQuestionCount: config.testQty,
-        examSubType: config.testType === 'word-to-meaning' ? 'WORD_TO_MEANING' : 'MEANING_TO_WORD',
-        synonymIncluded: config.includeSynonyms,
-      },
-      { onSuccess: () => setIsEditing(false) },
-    );
-  }
-
   function handleOpenModal(type: 'print' | 'grading' | 'result') {
     setModalExamId(currentExamId);
     if (type === 'print') setShowPrintModal(true);
@@ -80,12 +69,15 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
     if (type === 'result') setShowResultModal(true);
   }
 
+  if (!student) return null;
+
   return (
     <>
       <StepModals
         step={step}
         examDetail={examDetail}
-        config={config}
+        testType={student.testType}
+        includeSynonyms={student.includeSynonyms}
         show={{
           success: showSuccessModal,
           print: showPrintModal,
@@ -104,22 +96,19 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
 
       <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
         <TestConfigSection
-          config={config}
-          isEditing={isEditing}
-          showEditButton={phase === 'pending'}
-          onToggleEdit={() => {
-            if (isEditing) {
-              handleApplySettings();
-            } else {
-              setIsEditing(true);
-            }
+          studentId={studentId}
+          initialConfig={{
+            testQty: student.testQuestionCount,
+            testType: student.testType,
+            includeSynonyms: student.includeSynonyms,
           }}
-          onChange={(patch) => setConfig((prev) => ({ ...prev, ...patch }))}
+          showEditButton={phase === 'pending'}
+          onEditingChange={setIsConfigEditing}
         />
 
         {phase === 'pending' && (
           <PendingPanel
-            isEditing={isEditing}
+            isEditing={isConfigEditing}
             isPending={create.isPending}
             onGenerate={() => handleCreate()}
           />

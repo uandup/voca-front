@@ -1,4 +1,4 @@
-import type { StepCardVM, ExamDetail } from '@/entities/test';
+import type { StepCardVM, ExamDetail, WordTestType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import {
   WordTestModal,
@@ -9,7 +9,6 @@ import {
   SentenceResultModal,
 } from '@/widgets/test-offline';
 import { isSentenceStep, toWordTestItems, toVocabReviewItems, toESRows } from '../../model/mapper';
-import type { LocalTestConfig } from './TestConfigSection';
 
 // StepPanel이 띄우는 4종 모달(Success / Print / Grading / Result)을 한 곳에서 관리한다.
 // step.name이 'Sentence'인지에 따라 Sentence/Word variant를 자동 선택한다.
@@ -18,7 +17,8 @@ import type { LocalTestConfig } from './TestConfigSection';
 interface Props {
   step: StepCardVM;
   examDetail: ExamDetail | undefined;
-  config: LocalTestConfig;
+  testType: WordTestType;
+  includeSynonyms: boolean;
   show: {
     success: boolean;
     print: boolean;
@@ -38,7 +38,8 @@ interface Props {
 export function StepModals({
   step,
   examDetail,
-  config,
+  testType,
+  includeSynonyms,
   show,
   onClose,
   onGradeOnline,
@@ -71,8 +72,8 @@ export function StepModals({
           <WordTestModal
             onClose={onClose.print}
             rows={wordTestRows}
-            testType={config.testType}
-            includeSynonyms={config.includeSynonyms}
+            testType={testType}
+            includeSynonyms={includeSynonyms}
           />
         ))}
 
@@ -84,8 +85,8 @@ export function StepModals({
             onClose={onClose.grading}
             onGrade={onGradeOffline}
             rows={vocabReviewRows}
-            testType={config.testType}
-            includeSynonyms={config.includeSynonyms}
+            testType={testType}
+            includeSynonyms={includeSynonyms}
           />
         ))}
 
@@ -96,8 +97,8 @@ export function StepModals({
           <WordResultModal
             onClose={onClose.result}
             rows={vocabReviewRows}
-            testType={config.testType}
-            includeSynonyms={config.includeSynonyms}
+            testType={testType}
+            includeSynonyms={includeSynonyms}
             wrongIndices={wrongIndices}
           />
         ))}
