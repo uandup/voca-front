@@ -2,7 +2,12 @@ import type { WordTestItem, VocabReviewItem } from '@/entities/word';
 
 type WordTestAnswer = { answer: string; synonym: string };
 
-export const MOCK_VOCAB_ITEMS: WordTestItem[] = [
+// 기존 mock 엔트리에 synonyms 필드를 일괄로 채워주는 헬퍼.
+function withSynonyms<T extends Omit<WordTestItem, 'synonyms'>>(items: T[]): WordTestItem[] {
+  return items.map((item) => ({ ...item, synonyms: [] }));
+}
+
+export const MOCK_VOCAB_ITEMS: WordTestItem[] = withSynonyms([
   { id: 1, word: 'Ubiquitous', korMeaning: '어디에나 있는', engMeaning: 'present everywhere' },
   { id: 2, word: 'Ephemeral', korMeaning: '수명이 짧은', engMeaning: 'lasting for a short time' },
   {
@@ -239,7 +244,7 @@ export const MOCK_VOCAB_ITEMS: WordTestItem[] = [
     engMeaning: 'excessively talkative, especially on trivial matters',
   },
   { id: 50, word: 'Laconic', korMeaning: '간결한', engMeaning: 'using very few words' },
-];
+]);
 
 // answer key — synonym은 정답 확인용이라 WordTestAnswer에 그대로 유지
 export const MOCK_ANSWERS_WTM: Record<number, WordTestAnswer> = {
@@ -348,7 +353,7 @@ export const MOCK_ANSWERS_MTW: Record<number, WordTestAnswer> = {
   50: { answer: 'Laconic', synonym: 'brief' },
 };
 
-export const MOCK_VOCAB_LIST: WordTestItem[] = [
+export const MOCK_VOCAB_LIST: WordTestItem[] = withSynonyms([
   {
     id: 1,
     word: 'abandon',
@@ -430,7 +435,7 @@ export const MOCK_VOCAB_LIST: WordTestItem[] = [
   { id: 48, word: 'depict', korMeaning: '묘사하다', engMeaning: 'to represent in a picture' },
   { id: 49, word: 'derive', korMeaning: '유래하다', engMeaning: 'to obtain from a source' },
   { id: 50, word: 'determine', korMeaning: '결정하다', engMeaning: 'to cause something to occur' },
-];
+]);
 
 export const MOCK_VOCAB_REVIEW_ITEMS: VocabReviewItem[] = MOCK_VOCAB_ITEMS.map((item) => ({
   ...item,

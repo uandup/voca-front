@@ -33,6 +33,7 @@ export interface WordTestItem {
   word: string;
   korMeaning: string;
   engMeaning: string;
+  synonyms: string[];
 }
 
 /** TestPage (sentence mode) — SentenceAnswerRow */

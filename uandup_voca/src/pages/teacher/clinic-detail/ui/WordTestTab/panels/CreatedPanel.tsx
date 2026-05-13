@@ -89,9 +89,9 @@ export function CreatedPanel({
           <button
             onClick={onCancel}
             disabled={isCancelPending}
-            className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors disabled:opacity-60"
+            className="px-4 py-2 rounded-xl border border-primary/30  text-xs font-bold text-white bg-error hover:bg-error/90 transition-colors"
           >
-            {isCancelPending ? 'Cancelling...' : 'Cancel Test'}
+            Cancel Test
           </button>
         </div>
       </div>

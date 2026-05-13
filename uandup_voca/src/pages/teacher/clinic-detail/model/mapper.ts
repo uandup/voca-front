@@ -21,6 +21,7 @@ export function toWordTestItems(items: ExamItem[]): WordTestItem[] {
     word: item.word,
     korMeaning: item.koreanMeaning,
     engMeaning: item.englishMeaning,
+    synonyms: item.synonyms,
   }));
 }
 
