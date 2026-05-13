@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
+import { NumberInput } from '@/shared/ui/NumberInput';
 import { useAssignmentActions } from '../model/hooks/useAssignmentActions';
 
 interface Props {
@@ -82,10 +83,9 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
               <label className="text-[11px] font-semibold text-on-surface-variant mb-1.5 block">
                 Qty
               </label>
-              <input
-                type="number"
-                value={qty}
-                onChange={(e) => setQty(Number(e.target.value))}
+              <NumberInput
+                value={String(qty)}
+                onChange={(v) => setQty(Number(v))}
                 disabled={!isEditing}
                 className={`w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 ${disabledCls}`}
               />

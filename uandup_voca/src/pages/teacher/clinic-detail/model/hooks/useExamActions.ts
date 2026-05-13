@@ -53,9 +53,8 @@ export function useExamActions({
     // create.onSuccess의 invalidateStep으로 fresh fetch가 일어난다.
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: studentKeys.studySets(studentId) });
-      queryClient.setQueryData<ExamHistoryCache>(
-        testKeys.history(studySetId, examType),
-        (old) => (old ? { ...old, data: { ...old.data, current: undefined } } : old),
+      queryClient.setQueryData<ExamHistoryCache>(testKeys.history(studySetId, examType), (old) =>
+        old ? { ...old, data: { ...old.data, current: undefined } } : old,
       );
     },
   });

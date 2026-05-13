@@ -76,8 +76,6 @@ export function WrongWordBankTab() {
                 <NumberInput
                   value={config.qty}
                   onChange={(v) => setConfig((prev) => ({ ...prev, qty: v }))}
-                  min={1}
-                  max={totalCount}
                   disabled={!isEditing}
                   className={inputClass}
                 />

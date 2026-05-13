@@ -84,7 +84,6 @@ export function LevelTestTab() {
                 <NumberInput
                   value={config.qty}
                   onChange={(v) => setConfig((prev) => ({ ...prev, qty: v }))}
-                  min={1}
                   disabled={!isEditing}
                   className={inputClass}
                 />

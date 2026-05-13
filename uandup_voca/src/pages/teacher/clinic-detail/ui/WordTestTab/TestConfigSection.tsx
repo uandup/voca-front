@@ -94,7 +94,6 @@ export function TestConfigSection({
             <NumberInput
               value={String(config.testQty)}
               onChange={(v) => handleChange({ testQty: Number(v) })}
-              min={1}
               disabled={!isEditing}
               className={inputClass}
             />
