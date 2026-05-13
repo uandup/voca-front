@@ -1,8 +1,9 @@
 import type { TeacherWord } from '../model/types';
 
 interface TeacherWordCardProps extends TeacherWord {
-  onEdit: () => void;
-  onDelete: () => void;
+  // 두 핸들러 모두 optional — 미제공 시 카드는 read-only로 동작 (버튼 숨김).
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export function TeacherWordCard({
@@ -16,24 +17,32 @@ export function TeacherWordCard({
   onEdit,
   onDelete,
 }: TeacherWordCardProps) {
+  const showActions = onEdit || onDelete;
+
   return (
     <article className="bg-surface-container-lowest rounded-xl overflow-hidden border shadow-sm border-outline-variant/60 relative group">
-      <div className="absolute top-6 right-6 flex gap-2 z-10">
-        <button
-          onClick={onEdit}
-          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
-        >
-          <span className="material-symbols-outlined text-[18px]">edit</span>
-          Edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
-        >
-          <span className="material-symbols-outlined text-[18px]">delete</span>
-          Delete
-        </button>
-      </div>
+      {showActions && (
+        <div className="absolute top-6 right-6 flex gap-2 z-10">
+          {onEdit && (
+            <button
+              onClick={onEdit}
+              className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
+            >
+              <span className="material-symbols-outlined text-[18px]">edit</span>
+              Edit
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
+            >
+              <span className="material-symbols-outlined text-[18px]">delete</span>
+              Delete
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="p-8">
         <div className="flex flex-col lg:flex-row gap-12">

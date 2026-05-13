@@ -1,7 +1,11 @@
 import type { components } from '@/shared/api/schema.gen';
 import type { StudentGrade } from '@/entities/member';
 import { toWordTestType } from '@/entities/test/@x/student';
-import type { WordDifficultyLevel } from '@/entities/word/@x/student';
+import {
+  toTeacherWord,
+  type WordDifficultyLevel,
+  type TeacherWord,
+} from '@/entities/word/@x/student';
 import type {
   StudentManageTableRow,
   StudentDetail,
@@ -17,6 +21,20 @@ type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
 type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'];
 type ExamSummaryDto = components['schemas']['ExamSummaryDto'];
+type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
+
+export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
+  return toTeacherWord({
+    id: res.wordId,
+    word: res.word,
+    partsOfSpeech: res.partsOfSpeech,
+    koreanMeaning: res.koreanMeaning,
+    englishMeaning: res.englishMeaning,
+    difficulty: res.difficulty,
+    synonyms: res.synonyms,
+    example: res.example,
+  });
+}
 
 export function toStudentManageTableRow(r: StudentListResponse): StudentManageTableRow {
   const [nameFirstEn = '', nameLastEn = ''] = (r.englishName ?? '').split(' ');
@@ -62,10 +80,24 @@ function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | nu
 
 function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
   if (isLocked) {
-    return { name: 'Word', status: 'locked', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 };
+    return {
+      name: 'Word',
+      status: 'locked',
+      gradedAt: null,
+      lastScore: null,
+      maxScore: null,
+      retakeCount: 0,
+    };
   }
   if (!exam) {
-    return { name: 'Word', status: 'pending', gradedAt: null, lastScore: null, maxScore: null, retakeCount: 0 };
+    return {
+      name: 'Word',
+      status: 'pending',
+      gradedAt: null,
+      lastScore: null,
+      maxScore: null,
+      retakeCount: 0,
+    };
   }
   const { status, isPassed, completedAt, correctCount, totalCount } = exam;
   let stepStatus: StepCardVM['status'];
@@ -97,7 +129,11 @@ export function toStudentOverview(r: StudentOverviewResponse): StudentOverview {
     testType: toWordTestType(r.examSubType),
     includeSynonyms: r.synonymIncluded ?? false,
     latestMemo: r.latestMemo
-      ? { id: r.latestMemo.memoId!, date: r.latestMemo.date ?? '', content: r.latestMemo.content ?? '' }
+      ? {
+          id: r.latestMemo.memoId!,
+          date: r.latestMemo.date ?? '',
+          content: r.latestMemo.content ?? '',
+        }
       : null,
   };
 }

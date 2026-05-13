@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
+import { AssignedWordsModal } from './AssignedWordsModal';
 import type { TestBundleRow, StepCardVM, ExamType } from '@/entities/test';
 
 const STEP_EXAM_TYPES: ExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
@@ -18,6 +19,7 @@ export default function CycleRow({
   studentId,
 }: Props) {
   const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [isWordsModalOpen, setIsWordsModalOpen] = useState(false);
 
   const selectedIdx = steps.findIndex((s) => s.name === selectedName);
   const selectedStep: StepCardVM | null = selectedIdx !== -1 ? steps[selectedIdx] : null;
@@ -41,15 +43,15 @@ export default function CycleRow({
             <span className="text-sm text-on-surface-variant">Words</span>
             <span className="text-sm font-bold text-on-surface">{wordCount}</span>
           </div>
-          <a
-            href={`/teacher/word-list/${studySetId}`}
+          <button
+            onClick={() => setIsWordsModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline/30 text-xs font-semibold text-success hover:bg-slate-50 transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
               menu_book
             </span>
             View Words
-          </a>
+          </button>
         </div>
       </div>
 
@@ -78,6 +80,15 @@ export default function CycleRow({
           studySetId={studySetId}
           studentId={studentId}
           examType={selectedExamType}
+        />
+      )}
+
+      {isWordsModalOpen && (
+        <AssignedWordsModal
+          studySetId={studySetId}
+          level={assignedLevel}
+          wordCount={wordCount}
+          onClose={() => setIsWordsModalOpen(false)}
         />
       )}
     </div>

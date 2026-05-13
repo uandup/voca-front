@@ -9,7 +9,14 @@ export type {
   ExamSummary,
   ExamStatus,
 } from './model/types';
-export { toStudentManageTableRow, toStudentDetail, toStudentOverview, toStudySetRow, toTestBundleRow } from './model/mapper';
+export {
+  toStudentManageTableRow,
+  toStudentDetail,
+  toStudentOverview,
+  toStudySetRow,
+  toTestBundleRow,
+  toAssignedTeacherWord,
+} from './model/mapper';
 export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';
 export {
   getStudents,
