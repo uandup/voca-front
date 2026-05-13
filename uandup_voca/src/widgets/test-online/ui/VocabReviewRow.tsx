@@ -1,5 +1,5 @@
 import type { WordTestType } from '@/entities/test';
-import type { Answer } from '../../test/ui/VocabAnswerRow';
+import type { Answer } from './VocabAnswerRow';
 
 interface VocabReviewRowProps {
   id: number;

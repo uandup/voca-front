@@ -1,6 +1,6 @@
 import type { WordTestType } from '@/entities/test';
 import type { VocabReviewItem } from '@/entities/word';
-import type { Answer } from '../../test/ui/VocabAnswerRow';
+import type { Answer } from './VocabAnswerRow';
 import { VocabReviewRow } from './VocabReviewRow';
 
 interface VocabReviewTableProps {

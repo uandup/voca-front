@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType } from '@/entities/test';
 import { useExamDetail } from '../../../model/hooks/useExamDetail';
-import { isSentenceStep } from '../../../model/mapper';
 import { TestPrintModal } from '../modals/TestPrintModal';
 import { TestGradingModal } from '../modals/TestGradingModal';
 
@@ -10,8 +10,14 @@ import { TestGradingModal } from '../modals/TestGradingModal';
 // inferPhase가 'created'를 반환하는 경우 — 구체적으로 step.status가
 //   - 'active'   (서버 상태 READY)                  : 시험 생성 직후, 응시 전
 //   - 'grading'  (서버 상태 ONLINE_STARTED | SUBMITTED) : 응시/제출 완료, 채점 대기
-// 주된 액션: Start Online Test, Preview/Print, Grade Online/Offline, Cancel.
-// 소유 모달: TestPrintModal (Preview/Print), TestGradingModal (Grade Online/Offline).
+// 주된 액션:
+//   - Preview        → /teacher/exams/:examId/preview 라우트 이동 (online 전용, read-only)
+//   - Print(아이콘)   → TestPrintModal (offline 전용, 빈칸 인쇄)
+//   - Start Online   → startOnlineExam mutation
+//   - Grade Online   → /teacher/exams/:examId/grade-online 라우트 이동 (online 전용)
+//   - Grade Offline  → TestGradingModal (offline 전용, 종이 채점)
+//   - Cancel         → cancelExam mutation
+// 소유 모달: TestPrintModal (Print), TestGradingModal (Grade Offline).
 
 interface Props {
   step: StepCardVM;
@@ -20,7 +26,6 @@ interface Props {
   includeSynonyms: boolean;
   startOnline: UseMutationResult<unknown, Error, void>;
   cancel: UseMutationResult<unknown, Error, void>;
-  onGradeOnline: () => void;
   onGradeOffline: () => void;
 }
 
@@ -31,23 +36,37 @@ export function CreatedPanel({
   includeSynonyms,
   startOnline,
   cancel,
-  onGradeOnline,
   onGradeOffline,
 }: Props) {
+  const navigate = useNavigate();
   const [showPrint, setShowPrint] = useState(false);
   const [showGrading, setShowGrading] = useState(false);
 
-  // 모달이 열려있을 때만 fetch — PendingPanel에서는 아예 호출되지 않는다.
+  // Print/Grade Offline 모달이 열려있을 때만 examDetail fetch.
   const { data: examDetail } = useExamDetail(showPrint || showGrading ? currentExamId : null);
 
-  function handleGradeOnline() {
-    onGradeOnline();
-    setShowGrading(false);
-  }
   function handleGradeOffline() {
     onGradeOffline();
     setShowGrading(false);
   }
+
+  function goPreview() {
+    if (currentExamId === null) return;
+    navigate({
+      to: '/teacher/exams/$examId/preview',
+      params: { examId: String(currentExamId) },
+    });
+  }
+
+  function goGradeOnline() {
+    if (currentExamId === null) return;
+    navigate({
+      to: '/teacher/exams/$examId/grade-online',
+      params: { examId: String(currentExamId) },
+    });
+  }
+
+  const navDisabled = currentExamId === null;
 
   return (
     <>
@@ -80,8 +99,9 @@ export function CreatedPanel({
             {startOnline.isPending ? 'Starting...' : 'Start Online Test'}
           </button>
           <button
-            onClick={() => setShowPrint(true)}
-            className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center gap-1.5"
+            onClick={goPreview}
+            disabled={navDisabled}
+            className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Preview
           </button>
@@ -97,8 +117,9 @@ export function CreatedPanel({
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={() => setShowGrading(true)}
-            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+            onClick={goGradeOnline}
+            disabled={navDisabled}
+            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Grade Online
           </button>
@@ -135,7 +156,7 @@ export function CreatedPanel({
           testType={testType}
           includeSynonyms={includeSynonyms}
           onClose={() => setShowGrading(false)}
-          onGrade={isSentenceStep(step) ? handleGradeOnline : handleGradeOffline}
+          onGrade={handleGradeOffline}
         />
       )}
     </>

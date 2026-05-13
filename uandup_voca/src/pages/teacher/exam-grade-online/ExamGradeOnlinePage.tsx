@@ -1,30 +1,41 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useRouter, useParams } from '@tanstack/react-router';
 import {
   MOCK_VOCAB_REVIEW_ITEMS,
   MOCK_SENTENCE_ITEMS,
   ITEMS_PER_PAGE,
   MOCK_ANSWERS_WTM,
-  MOCK_ANSWERS_MTW,
   MOCK_SENTENCE_ANSWERS,
-  type TestType,
   type WordTestType,
 } from '@/entities/test';
-import { TestPagination } from '../test/ui/TestPagination';
-import { ProgressPanel } from '../test/ui/ProgressPanel';
-import { VocabReviewTable } from './ui/VocabReviewTable';
-import { SentenceReviewTable } from './ui/SentenceReviewTable';
-import { ReviewDevToolbar } from './ui/ReviewDevToolbar';
+import {
+  TestPagination,
+  ProgressPanel,
+  VocabReviewTable,
+  SentenceReviewTable,
+} from '@/widgets/test-online';
 
-export default function TestReviewPage() {
-  const [testType, setTestType] = useState<TestType>('word-to-meaning');
-  const [showSynonym, setShowSynonym] = useState(true);
+// 선생님이 학생 답안을 온라인 채점하는 페이지.
+// grading mode에서 오답 체크 → Grade(저장) 또는 Edit(재채점) 흐름을 가진다.
+// 데이터는 이번 범위에선 mock 사용. 추후 examId로 실제 답안 페칭 + recordOnlineResults mutation 연동 예정.
+
+type ReviewMode = 'grading' | 'result';
+
+export default function ExamGradeOnlinePage() {
+  const { examId } = useParams({ from: '/teacher_/exams/$examId/grade-online' });
+  const router = useRouter();
+
+  void examId;
+
+  // mock: word-to-meaning 단어 시험 가정. 추후 examType에 따라 분기.
+  const testType: WordTestType = 'word-to-meaning';
+  const isSentence = false;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [wrongIds, setWrongIds] = useState<Set<number>>(new Set());
-  const [mode, setMode] = useState<'grading' | 'result'>('grading');
+  const [mode, setMode] = useState<ReviewMode>('grading');
   const [isEditing, setIsEditing] = useState(false);
-  const [isStudent, setIsStudent] = useState(false);
 
-  const isSentence = testType === 'sentence';
   const vocabItems = MOCK_VOCAB_REVIEW_ITEMS;
   const sentenceItems = MOCK_SENTENCE_ITEMS;
   const totalItems = isSentence ? sentenceItems.length : vocabItems.length;
@@ -39,40 +50,28 @@ export default function TestReviewPage() {
     currentPage * ITEMS_PER_PAGE,
   );
 
-  const mockVocabAnswers = testType === 'word-to-meaning' ? MOCK_ANSWERS_WTM : MOCK_ANSWERS_MTW;
-
-  const allIds = isSentence ? sentenceItems.map((item) => item.id) : vocabItems.map((item) => item.id);
-  const checkedIds = useMemo(() => new Set<number>(allIds), [isSentence]);
+  const allIds = isSentence ? sentenceItems.map((i) => i.id) : vocabItems.map((i) => i.id);
+  const checkedIds = useMemo(() => new Set<number>(allIds), [isSentence]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleToggleWrong = useCallback((id: number) => {
     setWrongIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }, []);
-
-  const handleTestTypeChange = (type: TestType) => {
-    setTestType(type);
-    setCurrentPage(1);
-    setWrongIds(new Set());
-  };
 
   const correctCount = totalItems - wrongIds.size;
   const hideCheckbox = mode === 'result';
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
-      {/* Header */}
+      {/* grading-specific 헤더 — Exit + correct/wrong count + Grade/Save/Edit */}
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
-        {/* Left: always Exit */}
         <div className="w-24">
           <button
-            onClick={() => setMode('result')}
+            onClick={() => router.history.back()}
             className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
@@ -82,7 +81,6 @@ export default function TestReviewPage() {
           </button>
         </div>
 
-        {/* Center */}
         <div className="flex items-center gap-2">
           {mode === 'result' ? (
             <span className="text-sm font-bold text-on-surface">
@@ -99,7 +97,6 @@ export default function TestReviewPage() {
           )}
         </div>
 
-        {/* Right */}
         <div className="w-24 flex justify-end">
           {mode === 'grading' && !isEditing ? (
             <button
@@ -124,7 +121,7 @@ export default function TestReviewPage() {
               </span>
               Save
             </button>
-          ) : mode === 'result' && !isStudent ? (
+          ) : (
             <button
               onClick={() => {
                 setMode('grading');
@@ -137,7 +134,7 @@ export default function TestReviewPage() {
               </span>
               Edit
             </button>
-          ) : null}
+          )}
         </div>
       </header>
 
@@ -155,9 +152,9 @@ export default function TestReviewPage() {
           ) : (
             <VocabReviewTable
               items={vocabPageItems}
-              testType={testType as WordTestType}
-              showSynonym={showSynonym}
-              answers={mockVocabAnswers}
+              testType={testType}
+              showSynonym
+              answers={MOCK_ANSWERS_WTM}
               wrongIds={wrongIds}
               readOnly={mode === 'result'}
               hideCheckbox={hideCheckbox}
@@ -182,17 +179,6 @@ export default function TestReviewPage() {
           onQuestionClick={setCurrentPage}
         />
       </div>
-
-      <ReviewDevToolbar
-        testType={testType}
-        showSynonym={showSynonym}
-        mode={mode}
-        isStudent={isStudent}
-        onTestTypeChange={handleTestTypeChange}
-        onShowSynonymChange={setShowSynonym}
-        onModeChange={setMode}
-        onIsStudentChange={setIsStudent}
-      />
     </div>
   );
 }

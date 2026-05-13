@@ -89,7 +89,6 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           includeSynonyms={initialConfig.includeSynonyms}
           startOnline={startOnline}
           cancel={cancel}
-          onGradeOnline={handleGradeOnline}
           onGradeOffline={handleGradeOffline}
         />
       )}

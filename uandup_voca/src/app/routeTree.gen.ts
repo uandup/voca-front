@@ -28,10 +28,10 @@ import { Route as StudentLevelWordListRouteImport } from './../routes/student/le
 import { Route as StudentLevelTestRouteImport } from './../routes/student/level-test'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
-import { Route as CommonTestReviewRouteImport } from './../routes/common/test-review'
-import { Route as CommonTestRouteImport } from './../routes/common/test'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
+import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
+import { Route as TeacherExamsExamIdGradeOnlineRouteImport } from './../routes/teacher_.exams.$examId.grade-online'
 import { Route as TeacherClinicsStudentsStudentIdRouteImport } from './../routes/teacher/clinics_.students.$studentId'
 import { Route as StudentWordTestIdWordsRouteImport } from './../routes/student/word-test/$id/words'
 
@@ -130,16 +130,6 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
   path: '/oauth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CommonTestReviewRoute = CommonTestReviewRouteImport.update({
-  id: '/test-review',
-  path: '/test-review',
-  getParentRoute: () => CommonRoute,
-} as any)
-const CommonTestRoute = CommonTestRouteImport.update({
-  id: '/test',
-  path: '/test',
-  getParentRoute: () => CommonRoute,
-} as any)
 const StudentReviewDeckIndexRoute = StudentReviewDeckIndexRouteImport.update({
   id: '/review-deck/',
   path: '/review-deck/',
@@ -150,6 +140,18 @@ const StudentReviewDeckWordsRoute = StudentReviewDeckWordsRouteImport.update({
   path: '/review-deck/words',
   getParentRoute: () => StudentRoute,
 } as any)
+const TeacherExamsExamIdPreviewRoute =
+  TeacherExamsExamIdPreviewRouteImport.update({
+    id: '/teacher_/exams/$examId/preview',
+    path: '/teacher/exams/$examId/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TeacherExamsExamIdGradeOnlineRoute =
+  TeacherExamsExamIdGradeOnlineRouteImport.update({
+    id: '/teacher_/exams/$examId/grade-online',
+    path: '/teacher/exams/$examId/grade-online',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const TeacherClinicsStudentsStudentIdRoute =
   TeacherClinicsStudentsStudentIdRouteImport.update({
     id: '/clinics_/students/$studentId',
@@ -164,13 +166,11 @@ const StudentWordTestIdWordsRoute = StudentWordTestIdWordsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/common': typeof CommonRouteWithChildren
+  '/common': typeof CommonRoute
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
-  '/common/test': typeof CommonTestRoute
-  '/common/test-review': typeof CommonTestReviewRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
@@ -188,14 +188,14 @@ export interface FileRoutesByFullPath {
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher/exams/$examId/grade-online': typeof TeacherExamsExamIdGradeOnlineRoute
+  '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/common': typeof CommonRouteWithChildren
+  '/common': typeof CommonRoute
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
-  '/common/test': typeof CommonTestRoute
-  '/common/test-review': typeof CommonTestReviewRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
@@ -213,17 +213,17 @@ export interface FileRoutesByTo {
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher/exams/$examId/grade-online': typeof TeacherExamsExamIdGradeOnlineRoute
+  '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/common': typeof CommonRouteWithChildren
+  '/common': typeof CommonRoute
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
-  '/common/test': typeof CommonTestRoute
-  '/common/test-review': typeof CommonTestReviewRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/level-test': typeof StudentLevelTestRoute
@@ -241,6 +241,8 @@ export interface FileRoutesById {
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/teacher/clinics_/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher_/exams/$examId/grade-online': typeof TeacherExamsExamIdGradeOnlineRoute
+  '/teacher_/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -251,8 +253,6 @@ export interface FileRouteTypes {
     | '/pending'
     | '/student'
     | '/teacher'
-    | '/common/test'
-    | '/common/test-review'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
@@ -270,14 +270,14 @@ export interface FileRouteTypes {
     | '/student/review-deck/'
     | '/student/word-test/$id/words'
     | '/teacher/clinics/students/$studentId'
+    | '/teacher/exams/$examId/grade-online'
+    | '/teacher/exams/$examId/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/common'
     | '/onboarding'
     | '/pending'
-    | '/common/test'
-    | '/common/test-review'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
@@ -295,6 +295,8 @@ export interface FileRouteTypes {
     | '/student/review-deck'
     | '/student/word-test/$id/words'
     | '/teacher/clinics/students/$studentId'
+    | '/teacher/exams/$examId/grade-online'
+    | '/teacher/exams/$examId/preview'
   id:
     | '__root__'
     | '/'
@@ -303,8 +305,6 @@ export interface FileRouteTypes {
     | '/pending'
     | '/student'
     | '/teacher'
-    | '/common/test'
-    | '/common/test-review'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/level-test'
@@ -322,16 +322,20 @@ export interface FileRouteTypes {
     | '/student/review-deck/'
     | '/student/word-test/$id/words'
     | '/teacher/clinics_/students/$studentId'
+    | '/teacher_/exams/$examId/grade-online'
+    | '/teacher_/exams/$examId/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CommonRoute: typeof CommonRouteWithChildren
+  CommonRoute: typeof CommonRoute
   OnboardingRoute: typeof OnboardingRoute
   PendingRoute: typeof PendingRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
   OauthCallbackRoute: typeof OauthCallbackRoute
+  TeacherExamsExamIdGradeOnlineRoute: typeof TeacherExamsExamIdGradeOnlineRoute
+  TeacherExamsExamIdPreviewRoute: typeof TeacherExamsExamIdPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -469,20 +473,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/common/test-review': {
-      id: '/common/test-review'
-      path: '/test-review'
-      fullPath: '/common/test-review'
-      preLoaderRoute: typeof CommonTestReviewRouteImport
-      parentRoute: typeof CommonRoute
-    }
-    '/common/test': {
-      id: '/common/test'
-      path: '/test'
-      fullPath: '/common/test'
-      preLoaderRoute: typeof CommonTestRouteImport
-      parentRoute: typeof CommonRoute
-    }
     '/student/review-deck/': {
       id: '/student/review-deck/'
       path: '/review-deck'
@@ -496,6 +486,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/review-deck/words'
       preLoaderRoute: typeof StudentReviewDeckWordsRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/teacher_/exams/$examId/preview': {
+      id: '/teacher_/exams/$examId/preview'
+      path: '/teacher/exams/$examId/preview'
+      fullPath: '/teacher/exams/$examId/preview'
+      preLoaderRoute: typeof TeacherExamsExamIdPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher_/exams/$examId/grade-online': {
+      id: '/teacher_/exams/$examId/grade-online'
+      path: '/teacher/exams/$examId/grade-online'
+      fullPath: '/teacher/exams/$examId/grade-online'
+      preLoaderRoute: typeof TeacherExamsExamIdGradeOnlineRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/teacher/clinics_/students/$studentId': {
       id: '/teacher/clinics_/students/$studentId'
@@ -513,19 +517,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface CommonRouteChildren {
-  CommonTestRoute: typeof CommonTestRoute
-  CommonTestReviewRoute: typeof CommonTestReviewRoute
-}
-
-const CommonRouteChildren: CommonRouteChildren = {
-  CommonTestRoute: CommonTestRoute,
-  CommonTestReviewRoute: CommonTestReviewRoute,
-}
-
-const CommonRouteWithChildren =
-  CommonRoute._addFileChildren(CommonRouteChildren)
 
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
@@ -579,12 +570,14 @@ const TeacherRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CommonRoute: CommonRouteWithChildren,
+  CommonRoute: CommonRoute,
   OnboardingRoute: OnboardingRoute,
   PendingRoute: PendingRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
   OauthCallbackRoute: OauthCallbackRoute,
+  TeacherExamsExamIdGradeOnlineRoute: TeacherExamsExamIdGradeOnlineRoute,
+  TeacherExamsExamIdPreviewRoute: TeacherExamsExamIdPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
