@@ -116,24 +116,7 @@ export default function ExamGradeOnlinePage() {
   }, [examDetail]);
 
   if (isLoading || !examDetail) {
-    return (
-      <div className="min-h-screen bg-surface flex flex-col">
-        <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center">
-          <button
-            onClick={handleExit}
-            className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium"
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-              logout
-            </span>
-            Exit
-          </button>
-        </header>
-        <div className="flex-1 flex items-center justify-center text-on-surface-variant">
-          Loading...
-        </div>
-      </div>
-    );
+    return <></>;
   }
 
   const testType: WordTestType = examDetail.subType ?? 'word-to-meaning';
@@ -210,7 +193,7 @@ export default function ExamGradeOnlinePage() {
                 role="radio"
                 aria-checked={outcome === 'pass'}
                 onClick={() => setOutcome('pass')}
-                className={`px-3 py-1.5 text-xs font-bold transition-colors ${
+                className={`px-3 py-2 text-sm font-bold transition-colors ${
                   outcome === 'pass'
                     ? 'bg-success text-white'
                     : 'bg-white text-on-surface-variant hover:bg-slate-50'
@@ -222,7 +205,7 @@ export default function ExamGradeOnlinePage() {
                 role="radio"
                 aria-checked={outcome === 'fail'}
                 onClick={() => setOutcome('fail')}
-                className={`px-3 py-1.5 text-xs font-bold transition-colors border-l border-outline-variant/30 ${
+                className={`px-3.5 py-2 text-sm font-bold transition-colors border-l border-outline-variant/30 ${
                   outcome === 'fail'
                     ? 'bg-error text-white'
                     : 'bg-white text-on-surface-variant hover:bg-slate-50'
@@ -237,12 +220,12 @@ export default function ExamGradeOnlinePage() {
             <button
               onClick={handleSaveResults}
               disabled={recordResults.isPending}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                 {isEditing ? 'save' : 'grade'}
               </span>
-              {recordResults.isPending ? 'Saving...' : isEditing ? 'Save' : 'Grade'}
+              {isEditing ? 'Save' : 'Grade'}
             </button>
           ) : (
             <button

@@ -4,7 +4,8 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
 import { useExamDetail } from '../../../model/hooks/useExamDetail';
 import { TestPrintModal } from '../modals/TestPrintModal';
-import { TestGradingModal } from '../modals/TestGradingModal';
+// 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
+// import { TestGradingModal } from '../modals/TestGradingModal';
 
 // 시험이 생성되었고 아직 채점이 완료되지 않은 단계에서 렌더링된다.
 // inferPhase가 'created'를 반환하는 경우 — 구체적으로 step.status가
@@ -29,6 +30,7 @@ interface Props {
   includeSynonyms: boolean;
   startOnline: UseMutationResult<unknown, Error, void>;
   cancel: UseMutationResult<unknown, Error, void>;
+  // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 prop은 보존.
   onGradeOffline: () => void;
 }
 
@@ -42,19 +44,19 @@ export function CreatedPanel({
   includeSynonyms,
   startOnline,
   cancel,
-  onGradeOffline,
+  onGradeOffline: _onGradeOffline,
 }: Props) {
   const navigate = useNavigate();
   const [showPrint, setShowPrint] = useState(false);
-  const [showGrading, setShowGrading] = useState(false);
+  // const [showGrading, setShowGrading] = useState(false);  // 통합 후 미사용
 
-  // Print/Grade Offline 모달이 열려있을 때만 examDetail fetch.
-  const { data: examDetail } = useExamDetail(showPrint || showGrading ? currentExamId : null);
+  // Print 모달이 열려있을 때만 examDetail fetch.
+  const { data: examDetail } = useExamDetail(showPrint ? currentExamId : null);
 
-  function handleGradeOffline() {
-    onGradeOffline();
-    setShowGrading(false);
-  }
+  // function handleGradeOffline() {
+  //   _onGradeOffline();
+  //   setShowGrading(false);
+  // }
 
   // Exit에서 history.replace로 돌아갈 수 있도록 현재 클리닉 URL을 함께 넘긴다.
   // openSet/openStep search 파라미터도 함께 직렬화되어 펼침 상태가 그대로 복원된다.
@@ -134,20 +136,24 @@ export function CreatedPanel({
           <button
             onClick={goGradeOnline}
             disabled={navDisabled}
-            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Grade Online
+            Grade
           </button>
+          {/* Grade Online/Offline 통합: 항상 online 양식(grade-online 페이지)을 사용한다.
+              아래 Grade Offline 버튼과 TestGradingModal 흐름은 향후 재도입 가능성을 위해 주석으로 보존. */}
+          {/*
           <button
             onClick={() => setShowGrading(true)}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
             Grade Offline
           </button>
+          */}
           <button
             onClick={() => cancel.mutate()}
             disabled={cancel.isPending}
-            className="px-4 py-2 rounded-xl border border-primary/30  text-xs font-bold text-white bg-error hover:bg-error/90 transition-colors"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-error hover:bg-error/90 transition-colors"
           >
             Cancel Test
           </button>
@@ -164,6 +170,7 @@ export function CreatedPanel({
         />
       )}
 
+      {/*
       {showGrading && (
         <TestGradingModal
           step={step}
@@ -174,6 +181,7 @@ export function CreatedPanel({
           onGrade={handleGradeOffline}
         />
       )}
+      */}
     </>
   );
 }

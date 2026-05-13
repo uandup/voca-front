@@ -1,23 +1,29 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
-import type { StepCardVM, WordTestType } from '@/entities/test';
+import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
 import { useExamDetail } from '../../../model/hooks/useExamDetail';
-import { isSentenceStep } from '../../../model/mapper';
-import { TestGradingModal } from '../modals/TestGradingModal';
+// 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
+// import { isSentenceStep } from '../../../model/mapper';
+// import { TestGradingModal } from '../modals/TestGradingModal';
 import { TestResultModal } from '../modals/TestResultModal';
 
 // 채점이 완료되었으나 통과하지 못한 단계에서 렌더링된다.
 // inferPhase가 'fail'을 반환하는 경우 — step.status === 'fail'
 // (서버 상태 COMPLETED + isPassed=false).
-// 주된 액션: Retake Test (createExam 재호출), View Results, Grade(재채점).
-// 소유 모달: TestGradingModal (재채점), TestResultModal (결과 확인).
+// 주된 액션: Retake Test (createExam 재호출), View Results, Grade(재채점 — grade-online 페이지로 이동).
+// 소유 모달: TestResultModal (결과 확인). TestGradingModal은 grade-online 페이지로 통합되어 미사용.
 
 interface Props {
   step: StepCardVM;
   currentExamId: number | null;
+  studentId: number;
+  studySetId: number;
+  examType: ExamType;
   testType: WordTestType;
   includeSynonyms: boolean;
   create: UseMutationResult<unknown, Error, void>;
+  // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 props는 보존.
   onGradeOnline: () => void;
   onGradeOffline: () => void;
 }
@@ -25,24 +31,39 @@ interface Props {
 export function FailPanel({
   step,
   currentExamId,
+  studentId,
+  studySetId,
+  examType,
   testType,
   includeSynonyms,
   create,
-  onGradeOnline,
-  onGradeOffline,
+  onGradeOnline: _onGradeOnline,
+  onGradeOffline: _onGradeOffline,
 }: Props) {
-  const [showGrading, setShowGrading] = useState(false);
+  const navigate = useNavigate();
+  // const [showGrading, setShowGrading] = useState(false);  // 통합 후 미사용
   const [showResult, setShowResult] = useState(false);
 
-  const { data: examDetail } = useExamDetail(showGrading || showResult ? currentExamId : null);
+  const { data: examDetail } = useExamDetail(showResult ? currentExamId : null);
 
-  function handleGradeOnline() {
-    onGradeOnline();
-    setShowGrading(false);
-  }
-  function handleGradeOffline() {
-    onGradeOffline();
-    setShowGrading(false);
+  // function handleGradeOnline() {
+  //   _onGradeOnline();
+  //   setShowGrading(false);
+  // }
+  // function handleGradeOffline() {
+  //   _onGradeOffline();
+  //   setShowGrading(false);
+  // }
+
+  // 통합: Grade는 grade-online 페이지로 이동(online 양식).
+  function goGradeOnline() {
+    if (currentExamId === null) return;
+    const returnTo = window.location.pathname + window.location.search;
+    navigate({
+      to: '/teacher/exams/$examId/grade-online',
+      params: { examId: String(currentExamId) },
+      search: { returnTo, studentId, studySetId, examType },
+    });
   }
 
   return (
@@ -89,14 +110,25 @@ export function FailPanel({
         </button>
         <div className="ml-auto">
           <button
+            onClick={goGradeOnline}
+            disabled={currentExamId === null}
+            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Grade
+          </button>
+          {/* 통합 이전 modal 기반 채점 — 보존용 주석. */}
+          {/*
+          <button
             onClick={() => setShowGrading(true)}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
             Grade
           </button>
+          */}
         </div>
       </div>
 
+      {/*
       {showGrading && (
         <TestGradingModal
           step={step}
@@ -107,6 +139,7 @@ export function FailPanel({
           onGrade={isSentenceStep(step) ? handleGradeOnline : handleGradeOffline}
         />
       )}
+      */}
 
       {showResult && (
         <TestResultModal
