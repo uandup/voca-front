@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter, useParams } from '@tanstack/react-router';
+import { useRouter, useParams, useSearch } from '@tanstack/react-router';
 import { MOCK_VOCAB_REVIEW_ITEMS, ITEMS_PER_PAGE } from '@/entities/test';
 import { TestHeader, TestPagination, VocabPreviewTable } from '@/widgets/test-online';
 
@@ -10,7 +10,18 @@ import { TestHeader, TestPagination, VocabPreviewTable } from '@/widgets/test-on
 
 export default function ExamPreviewPage() {
   const { examId } = useParams({ from: '/teacher_/exams/$examId/preview' });
+  const { returnTo } = useSearch({ from: '/teacher_/exams/$examId/preview' });
   const router = useRouter();
+
+  // returnTo가 있으면 replace로 history의 preview 엔트리를 덮어써, 앞으로가기로 재진입할 수 없게 한다.
+  // 직접 URL 진입(returnTo 없음) 시엔 일반적인 back으로 대체.
+  function handleExit() {
+    if (returnTo) {
+      router.history.replace(returnTo);
+    } else {
+      router.history.back();
+    }
+  }
 
   // examId는 향후 실제 API 연동 시 사용 — 현재는 mock 데이터.
   void examId;
@@ -23,7 +34,7 @@ export default function ExamPreviewPage() {
 
   return (
     <div className="min-h-screen bg-surface flex flex-col">
-      <TestHeader onExit={() => router.history.back()} />
+      <TestHeader onExit={handleExit} />
 
       <div className="flex flex-1 justify-center px-6 py-6">
         <div className="w-240 flex flex-col gap-4">

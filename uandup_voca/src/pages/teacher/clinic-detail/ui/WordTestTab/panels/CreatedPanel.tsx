@@ -50,11 +50,18 @@ export function CreatedPanel({
     setShowGrading(false);
   }
 
+  // Exit에서 history.replace로 돌아갈 수 있도록 현재 클리닉 URL을 함께 넘긴다.
+  // openSet/openStep search 파라미터도 함께 직렬화되어 펼침 상태가 그대로 복원된다.
+  function currentReturnTo() {
+    return window.location.pathname + window.location.search;
+  }
+
   function goPreview() {
     if (currentExamId === null) return;
     navigate({
       to: '/teacher/exams/$examId/preview',
       params: { examId: String(currentExamId) },
+      search: { returnTo: currentReturnTo() },
     });
   }
 
@@ -63,6 +70,7 @@ export function CreatedPanel({
     navigate({
       to: '/teacher/exams/$examId/grade-online',
       params: { examId: String(currentExamId) },
+      search: { returnTo: currentReturnTo() },
     });
   }
 

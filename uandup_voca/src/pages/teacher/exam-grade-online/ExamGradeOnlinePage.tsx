@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useRouter, useParams } from '@tanstack/react-router';
+import { useRouter, useParams, useSearch } from '@tanstack/react-router';
 import {
   MOCK_VOCAB_REVIEW_ITEMS,
   MOCK_SENTENCE_ITEMS,
@@ -23,9 +23,19 @@ type ReviewMode = 'grading' | 'result';
 
 export default function ExamGradeOnlinePage() {
   const { examId } = useParams({ from: '/teacher_/exams/$examId/grade-online' });
+  const { returnTo } = useSearch({ from: '/teacher_/exams/$examId/grade-online' });
   const router = useRouter();
 
   void examId;
+
+  // returnTo가 있으면 replace로 history의 grade-online 엔트리를 덮어써, 앞으로가기로 재진입할 수 없게 한다.
+  function handleExit() {
+    if (returnTo) {
+      router.history.replace(returnTo);
+    } else {
+      router.history.back();
+    }
+  }
 
   // mock: word-to-meaning 단어 시험 가정. 추후 examType에 따라 분기.
   const testType: WordTestType = 'word-to-meaning';
@@ -71,7 +81,7 @@ export default function ExamGradeOnlinePage() {
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
         <div className="w-24">
           <button
-            onClick={() => router.history.back()}
+            onClick={handleExit}
             className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
