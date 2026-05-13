@@ -1,32 +1,54 @@
-import type { StepCardVM } from '@/entities/test';
+import { useState } from 'react';
+import type { UseMutationResult } from '@tanstack/react-query';
+import type { StepCardVM, WordTestType } from '@/entities/test';
+import { useExamDetail } from '../../../model/hooks/useExamDetail';
+import { isSentenceStep } from '../../../model/mapper';
+import { TestPrintModal } from '../modals/TestPrintModal';
+import { TestGradingModal } from '../modals/TestGradingModal';
 
 // 시험이 생성되었고 아직 채점이 완료되지 않은 단계에서 렌더링된다.
 // inferPhase가 'created'를 반환하는 경우 — 구체적으로 step.status가
 //   - 'active'   (서버 상태 READY)                  : 시험 생성 직후, 응시 전
 //   - 'grading'  (서버 상태 ONLINE_STARTED | SUBMITTED) : 응시/제출 완료, 채점 대기
 // 주된 액션: Start Online Test, Preview/Print, Grade Online/Offline, Cancel.
+// 소유 모달: TestPrintModal (Preview/Print), TestGradingModal (Grade Online/Offline).
 
 interface Props {
   step: StepCardVM;
-  isStartPending: boolean;
-  isCancelPending: boolean;
-  onOpenPrint: () => void;
+  currentExamId: number | null;
+  testType: WordTestType;
+  includeSynonyms: boolean;
+  startOnline: UseMutationResult<unknown, Error, void>;
+  cancel: UseMutationResult<unknown, Error, void>;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
-  onStartOnline: () => void;
-  onCancel: () => void;
 }
 
 export function CreatedPanel({
   step,
-  isStartPending,
-  isCancelPending,
-  onOpenPrint,
+  currentExamId,
+  testType,
+  includeSynonyms,
+  startOnline,
+  cancel,
   onGradeOnline,
   onGradeOffline,
-  onStartOnline,
-  onCancel,
 }: Props) {
+  const [showPrint, setShowPrint] = useState(false);
+  const [showGrading, setShowGrading] = useState(false);
+
+  // 모달이 열려있을 때만 fetch — PendingPanel에서는 아예 호출되지 않는다.
+  const { data: examDetail } = useExamDetail(showPrint || showGrading ? currentExamId : null);
+
+  function handleGradeOnline() {
+    onGradeOnline();
+    setShowGrading(false);
+  }
+  function handleGradeOffline() {
+    onGradeOffline();
+    setShowGrading(false);
+  }
+
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
@@ -51,20 +73,20 @@ export function CreatedPanel({
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <button
-            onClick={onStartOnline}
-            disabled={isStartPending}
+            onClick={() => startOnline.mutate()}
+            disabled={startOnline.isPending}
             className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-60"
           >
-            {isStartPending ? 'Starting...' : 'Start Online Test'}
+            {startOnline.isPending ? 'Starting...' : 'Start Online Test'}
           </button>
           <button
-            onClick={onOpenPrint}
+            onClick={() => setShowPrint(true)}
             className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center gap-1.5"
           >
             Preview
           </button>
           <button
-            onClick={onOpenPrint}
+            onClick={() => setShowPrint(true)}
             className="p-2 rounded-xl border border-outline/30 text-on-surface-variant hover:bg-slate-100 transition-colors flex items-center"
             title="Print"
           >
@@ -75,26 +97,47 @@ export function CreatedPanel({
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={onGradeOnline}
+            onClick={() => setShowGrading(true)}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
             Grade Online
           </button>
           <button
-            onClick={onGradeOffline}
+            onClick={() => setShowGrading(true)}
             className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
           >
             Grade Offline
           </button>
           <button
-            onClick={onCancel}
-            disabled={isCancelPending}
+            onClick={() => cancel.mutate()}
+            disabled={cancel.isPending}
             className="px-4 py-2 rounded-xl border border-primary/30  text-xs font-bold text-white bg-error hover:bg-error/90 transition-colors"
           >
             Cancel Test
           </button>
         </div>
       </div>
+
+      {showPrint && (
+        <TestPrintModal
+          step={step}
+          examDetail={examDetail}
+          testType={testType}
+          includeSynonyms={includeSynonyms}
+          onClose={() => setShowPrint(false)}
+        />
+      )}
+
+      {showGrading && (
+        <TestGradingModal
+          step={step}
+          examDetail={examDetail}
+          testType={testType}
+          includeSynonyms={includeSynonyms}
+          onClose={() => setShowGrading(false)}
+          onGrade={isSentenceStep(step) ? handleGradeOnline : handleGradeOffline}
+        />
+      )}
     </>
   );
 }

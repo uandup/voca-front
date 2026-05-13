@@ -1,16 +1,26 @@
-import type { StepCardVM } from '@/entities/test';
+import { useState } from 'react';
+import type { StepCardVM, WordTestType } from '@/entities/test';
+import { useExamDetail } from '../../../model/hooks/useExamDetail';
+import { TestResultModal } from '../modals/TestResultModal';
 
 // 채점이 완료되어 통과한 단계에서 렌더링된다.
 // inferPhase가 'passed'를 반환하는 경우 — step.status === 'passed'
 // (서버 상태 COMPLETED + isPassed=true).
 // 주된 액션: View Results (읽기 전용).
+// 소유 모달: TestResultModal.
 
 interface Props {
   step: StepCardVM;
-  onOpenResult: () => void;
+  currentExamId: number | null;
+  testType: WordTestType;
+  includeSynonyms: boolean;
 }
 
-export function PassedPanel({ step, onOpenResult }: Props) {
+export function PassedPanel({ step, currentExamId, testType, includeSynonyms }: Props) {
+  const [showResult, setShowResult] = useState(false);
+
+  const { data: examDetail } = useExamDetail(showResult ? currentExamId : null);
+
   return (
     <>
       <div className="flex items-center gap-6 border-b border-gray-200 pb-4 text-sm text-on-surface-variant">
@@ -41,12 +51,22 @@ export function PassedPanel({ step, onOpenResult }: Props) {
 
       <div className="flex items-center gap-2">
         <button
-          onClick={onOpenResult}
+          onClick={() => setShowResult(true)}
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
         >
           View Results
         </button>
       </div>
+
+      {showResult && (
+        <TestResultModal
+          step={step}
+          examDetail={examDetail}
+          testType={testType}
+          includeSynonyms={includeSynonyms}
+          onClose={() => setShowResult(false)}
+        />
+      )}
     </>
   );
 }
