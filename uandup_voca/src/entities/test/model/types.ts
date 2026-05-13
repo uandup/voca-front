@@ -91,4 +91,9 @@ export interface StepExamHistory {
   currentStatus: string | null;
   isPassed: boolean | null;
   failedAttempts: ExamAttempt[];
+  // 시험 생성 시점에 캡처된 설정 — 학생의 현재 설정과 별개로 시험에 고정된다.
+  // 시험이 없거나(pending) 해당 필드가 없는 시험 타입(SENTENCE/REVIEW)에서는 null.
+  currentQuestionCount: number | null;
+  currentSubType: WordTestType | null;
+  currentIncludeSynonym: boolean | null;
 }

@@ -70,6 +70,26 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
   }
 
   if (!student) return null;
+  // 'pending'이 아닌 phase는 examHistory 로드를 기다린다 — 시험 생성 시점의 설정으로 폼을 초기화하기 위함.
+  if (phase !== 'pending' && !examHistory) return null;
+
+  // 시험이 이미 생성되었으면 시험에 캡처된 설정을, 그렇지 않으면 학생의 현재 설정을 사용.
+  // SENTENCE/REVIEW 시험엔 subType/includeSynonym이 없으므로 student 값으로 fallback.
+  const initialConfig =
+    examHistory && phase !== 'pending'
+      ? {
+          testQty: examHistory.currentQuestionCount ?? student.testQuestionCount,
+          testType: examHistory.currentSubType ?? student.testType,
+          includeSynonyms: examHistory.currentIncludeSynonym ?? student.includeSynonyms,
+        }
+      : {
+          testQty: student.testQuestionCount,
+          testType: student.testType,
+          includeSynonyms: student.includeSynonyms,
+        };
+
+  // 시험이 새로 생성되거나 phase가 전환되면 TestConfigSection을 re-mount하여 새 initialConfig 적용.
+  const configKey = examHistory?.currentExamId ?? 'pending';
 
   return (
     <>
@@ -96,12 +116,9 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
 
       <div className="bg-slate-50 border border-outline/20 rounded-2xl p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-top-2 duration-200">
         <TestConfigSection
+          key={configKey}
           studentId={studentId}
-          initialConfig={{
-            testQty: student.testQuestionCount,
-            testType: student.testType,
-            includeSynonyms: student.includeSynonyms,
-          }}
+          initialConfig={initialConfig}
           showEditButton={phase === 'pending'}
           onEditingChange={setIsConfigEditing}
         />

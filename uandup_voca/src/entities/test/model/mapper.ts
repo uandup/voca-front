@@ -59,5 +59,8 @@ export function toStepExamHistory(r: StudySetExamTypeResponse): StepExamHistory 
     currentStatus: r.current?.status ?? null,
     isPassed: r.current?.isPassed ?? null,
     failedAttempts: attempts,
+    currentQuestionCount: r.current?.questionCount ?? null,
+    currentSubType: r.current?.subType ? toWordTestType(r.current.subType) : null,
+    currentIncludeSynonym: r.current?.includeSynonym ?? null,
   };
 }
