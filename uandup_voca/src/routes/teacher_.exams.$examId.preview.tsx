@@ -9,6 +9,7 @@ const EXAM_TYPES: readonly ExamType[] = [
   'REVIEW2',
   'REVIEW3',
   'REVIEW_DECK',
+  'LEVEL_TEST',
 ];
 
 function isExamType(v: unknown): v is ExamType {

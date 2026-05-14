@@ -99,7 +99,7 @@ export function ClinicDetailPage() {
 
         {mainTab === 'reviewDeck' && <WrongWordBankTab studentId={studentId} />}
 
-        {mainTab === 'levelTest' && <LevelTestTab />}
+        {mainTab === 'levelTest' && <LevelTestTab studentId={studentId} />}
       </div>
 
       {isMemoOpen && (
