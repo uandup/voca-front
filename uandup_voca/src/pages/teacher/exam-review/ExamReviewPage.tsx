@@ -16,16 +16,16 @@ import {
 } from '@/pages/teacher/clinic-detail/model/mapper';
 import { useRecordOnlineResults } from './model/hooks/useRecordOnlineResults';
 
-// 선생님이 학생 답안을 온라인 채점하는 페이지.
+// 선생님이 학생의 시험을 채점하거나 채점 결과를 확인하는 페이지(grading + result 통합).
 // COMPLETED 상태로 진입 시 'result' 모드 — 채점 결과 표시. Edit 클릭으로 grading 재진입.
 // 그 외 상태(ONLINE_STARTED/SUBMITTED 등)로 진입 시 'grading' 모드 — 오답 체크 → Save.
 // examType === 'EXAMPLE'은 문장 시험, 그 외는 단어 시험.
 
 type ReviewMode = 'grading' | 'result';
 
-export default function ExamGradeOnlinePage() {
-  const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/grade-online' });
-  const search = useSearch({ from: '/teacher_/exams/$examId/grade-online' });
+export default function ExamReviewPage() {
+  const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/review' });
+  const search = useSearch({ from: '/teacher_/exams/$examId/review' });
   const router = useRouter();
 
   const examId = Number(examIdParam);

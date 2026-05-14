@@ -15,7 +15,7 @@ import { TestPrintModal } from '../modals/TestPrintModal';
 //   - Preview        → /teacher/exams/:examId/preview 라우트 이동 (online 전용, read-only)
 //   - Print(아이콘)   → TestPrintModal (offline 전용, 빈칸 인쇄)
 //   - Start Online   → startOnlineExam mutation
-//   - Grade Online   → /teacher/exams/:examId/grade-online 라우트 이동 (online 전용)
+//   - Grade         → /teacher/exams/:examId/review 라우트 이동 (채점/결과 통합 페이지)
 //   - Grade Offline  → TestGradingModal (offline 전용, 종이 채점)
 //   - Cancel         → cancelExam mutation
 // 소유 모달: TestPrintModal (Print), TestGradingModal (Grade Offline).
@@ -73,10 +73,10 @@ export function CreatedPanel({
     });
   }
 
-  function goGradeOnline() {
+  function goReview() {
     if (currentExamId === null) return;
     navigate({
-      to: '/teacher/exams/$examId/grade-online',
+      to: '/teacher/exams/$examId/review',
       params: { examId: String(currentExamId) },
       // studentId/studySetId/examType는 채점 후 정확한 invalidation을 위해 함께 전달한다.
       search: { returnTo: currentReturnTo(), studentId, studySetId, examType },
@@ -134,13 +134,13 @@ export function CreatedPanel({
         </div>
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={goGradeOnline}
+            onClick={goReview}
             disabled={navDisabled}
             className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Grade
           </button>
-          {/* Grade Online/Offline 통합: 항상 online 양식(grade-online 페이지)을 사용한다.
+          {/* Grade Online/Offline 통합: 항상 online 양식(/review 페이지)을 사용한다.
               아래 Grade Offline 버튼과 TestGradingModal 흐름은 향후 재도입 가능성을 위해 주석으로 보존. */}
           {/*
           <button

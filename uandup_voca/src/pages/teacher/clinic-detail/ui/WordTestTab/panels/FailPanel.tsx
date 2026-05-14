@@ -1,18 +1,18 @@
-import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
-import { useExamDetail } from '../../../model/hooks/useExamDetail';
-// 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
+// 통합 후 미사용 — modal 기반 채점/결과 흐름 복귀 시 다시 활성화.
+// import { useState } from 'react';
+// import { useExamDetail } from '../../../model/hooks/useExamDetail';
 // import { isSentenceStep } from '../../../model/mapper';
 // import { TestGradingModal } from '../modals/TestGradingModal';
-import { TestResultModal } from '../modals/TestResultModal';
+// import { TestResultModal } from '../modals/TestResultModal';
 
 // 채점이 완료되었으나 통과하지 못한 단계에서 렌더링된다.
 // inferPhase가 'fail'을 반환하는 경우 — step.status === 'fail'
 // (서버 상태 COMPLETED + isPassed=false).
-// 주된 액션: Retake Test (createExam 재호출), View Results, Grade(재채점 — grade-online 페이지로 이동).
-// 소유 모달: TestResultModal (결과 확인). TestGradingModal은 grade-online 페이지로 통합되어 미사용.
+// 주된 액션: Retake Test (createExam 재호출), View Results, Grade — 모두 /review 페이지로 이동.
+// modal 기반 TestGradingModal/TestResultModal은 /review 페이지로 통합되어 미사용.
 
 interface Props {
   step: StepCardVM;
@@ -20,10 +20,10 @@ interface Props {
   studentId: number;
   studySetId: number;
   examType: ExamType;
+  // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 props는 보존.
   testType: WordTestType;
   includeSynonyms: boolean;
   create: UseMutationResult<unknown, Error, void>;
-  // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 props는 보존.
   onGradeOnline: () => void;
   onGradeOffline: () => void;
 }
@@ -34,17 +34,16 @@ export function FailPanel({
   studentId,
   studySetId,
   examType,
-  testType,
-  includeSynonyms,
+  testType: _testType,
+  includeSynonyms: _includeSynonyms,
   create,
   onGradeOnline: _onGradeOnline,
   onGradeOffline: _onGradeOffline,
 }: Props) {
   const navigate = useNavigate();
   // const [showGrading, setShowGrading] = useState(false);  // 통합 후 미사용
-  const [showResult, setShowResult] = useState(false);
-
-  const { data: examDetail } = useExamDetail(showResult ? currentExamId : null);
+  // const [showResult, setShowResult] = useState(false);    // 통합 후 미사용
+  // const { data: examDetail } = useExamDetail(showResult ? currentExamId : null);
 
   // function handleGradeOnline() {
   //   _onGradeOnline();
@@ -55,12 +54,13 @@ export function FailPanel({
   //   setShowGrading(false);
   // }
 
-  // 통합: Grade는 grade-online 페이지로 이동(online 양식).
-  function goGradeOnline() {
+  // 통합: Grade와 View Results 모두 /review 페이지로 이동(online 양식).
+  // 페이지가 examDetail.status === 'COMPLETED'이면 자동으로 result 모드로 진입한다.
+  function goReview() {
     if (currentExamId === null) return;
     const returnTo = window.location.pathname + window.location.search;
     navigate({
-      to: '/teacher/exams/$examId/grade-online',
+      to: '/teacher/exams/$examId/review',
       params: { examId: String(currentExamId) },
       search: { returnTo, studentId, studySetId, examType },
     });
@@ -103,14 +103,24 @@ export function FailPanel({
           {create.isPending ? 'Creating...' : 'Retake Test'}
         </button>
         <button
+          onClick={goReview}
+          disabled={currentExamId === null}
+          className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          View Results
+        </button>
+        {/* 통합 이전 modal 기반 결과 화면 — 보존용 주석. */}
+        {/*
+        <button
           onClick={() => setShowResult(true)}
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors"
         >
           View Results
         </button>
+        */}
         <div className="ml-auto">
           <button
-            onClick={goGradeOnline}
+            onClick={goReview}
             disabled={currentExamId === null}
             className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
@@ -141,6 +151,7 @@ export function FailPanel({
       )}
       */}
 
+      {/*
       {showResult && (
         <TestResultModal
           step={step}
@@ -150,6 +161,7 @@ export function FailPanel({
           onClose={() => setShowResult(false)}
         />
       )}
+      */}
     </>
   );
 }
