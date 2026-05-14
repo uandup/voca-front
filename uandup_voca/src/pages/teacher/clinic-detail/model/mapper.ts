@@ -1,6 +1,7 @@
 import type { StepCardVM, ExamItem, SentenceTestAnswer } from '@/entities/test';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word';
 import type { ESRow } from '@/widgets/test-offline';
+import type { SentencePreviewItem } from '@/widgets/test-online';
 
 export type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
 
@@ -57,4 +58,12 @@ export function toSentenceAnswers(items: ExamItem[]): Record<number, SentenceTes
   return Object.fromEntries(
     items.map((item) => [item.itemOrder, { answer: item.userAnswer ?? '' }]),
   );
+}
+
+export function toSentencePreviewItems(items: ExamItem[]): SentencePreviewItem[] {
+  return items.map((item) => ({
+    id: item.itemOrder,
+    sentence: item.example,
+    answer: item.word,
+  }));
 }

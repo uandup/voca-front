@@ -69,7 +69,8 @@ export function CreatedPanel({
     navigate({
       to: '/teacher/exams/$examId/preview',
       params: { examId: String(currentExamId) },
-      search: { returnTo: currentReturnTo() },
+      // examType은 vocab/sentence preview 분기에 사용된다.
+      search: { returnTo: currentReturnTo(), examType },
     });
   }
 
