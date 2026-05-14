@@ -233,7 +233,7 @@ export default function ExamReviewPage() {
                 setMode('grading');
                 setIsEditing(true);
               }}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+              className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                 edit

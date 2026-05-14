@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { StepCardVM, ExamType } from '@/entities/test';
+import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { useStudentOverview } from '../../model/hooks/useStudentOverview';
 import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
 import { useExamActions } from '../../model/hooks/useExamActions';
@@ -25,6 +26,10 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
   const currentExamId = examHistory?.currentExamId ?? null;
 
   const [isConfigEditing, setIsConfigEditing] = useState(false);
+  // SuccessModal state는 PendingPanel이 아니라 StepPanel이 소유한다.
+  // create 성공 직후 invalidate → step.status 변경 → phase 전환으로 PendingPanel이 언마운트되면서
+  // 모달이 깜빡이고 사라지는 문제를 방지하기 위함. StepPanel은 phase와 무관하게 마운트가 유지된다.
+  const [showCreateSuccess, setShowCreateSuccess] = useState(false);
 
   const { create, startOnline, cancel, gradeOnline, gradeOffline } = useExamActions({
     studySetId,
@@ -80,7 +85,13 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         onEditingChange={setIsConfigEditing}
       />
 
-      {phase === 'pending' && <PendingPanel isEditing={isConfigEditing} create={create} />}
+      {phase === 'pending' && (
+        <PendingPanel
+          isEditing={isConfigEditing}
+          create={create}
+          onCreateSuccess={() => setShowCreateSuccess(true)}
+        />
+      )}
       {phase === 'created' && (
         <CreatedPanel
           step={step}
@@ -118,6 +129,14 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           examType={examType}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
+        />
+      )}
+
+      {showCreateSuccess && (
+        <SuccessModal
+          message="Test Generated!"
+          description="The test has been successfully created."
+          onClose={() => setShowCreateSuccess(false)}
         />
       )}
     </div>
