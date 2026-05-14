@@ -99,6 +99,8 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           studentId={studentId}
           studySetId={studySetId}
           examType={examType}
+          currentQuestionCount={examHistory?.currentQuestionCount ?? null}
+          failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
           startOnline={startOnline}
@@ -113,6 +115,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           studentId={studentId}
           studySetId={studySetId}
           examType={examType}
+          failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
           create={create}
@@ -127,6 +130,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           studentId={studentId}
           studySetId={studySetId}
           examType={examType}
+          failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
         />

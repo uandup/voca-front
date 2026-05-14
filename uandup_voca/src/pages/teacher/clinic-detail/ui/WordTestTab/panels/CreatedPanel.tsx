@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
-import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
+import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
 import { useExamDetail } from '../../../model/hooks/useExamDetail';
 import { TestPrintModal } from '../modals/TestPrintModal';
 // 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
@@ -26,6 +26,10 @@ interface Props {
   studentId: number;
   studySetId: number;
   examType: ExamType;
+  // 현재 시험은 아직 채점 전이라 점수가 없으므로 questionCount로 분모만 표시한다.
+  currentQuestionCount: number | null;
+  // 이전 실패 시도들의 점수 history.
+  failedAttempts: ExamAttempt[];
   testType: WordTestType;
   includeSynonyms: boolean;
   startOnline: UseMutationResult<unknown, Error, void>;
@@ -40,6 +44,8 @@ export function CreatedPanel({
   studentId,
   studySetId,
   examType,
+  currentQuestionCount,
+  failedAttempts,
   testType,
   includeSynonyms,
   startOnline,
@@ -97,12 +103,44 @@ export function CreatedPanel({
             <span>Created At : {step.createdAt}</span>
           </div>
         )}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
             check_circle
           </span>
-          <span>
-            Score : {step.lastScore ?? '-'} / {step.maxScore ?? 'N'}
+          <span className="flex items-center gap-1.5 flex-wrap">
+            Score :{' '}
+            {/* 이전 실패 시도들(빨강) + 현재 시험(채점 전이라 - / questionCount). */}
+            {[
+              ...failedAttempts.map((a) => ({
+                key: String(a.examId),
+                score: a.correctCount as number | null,
+                max: a.totalCount as number | null,
+                isPassed: false as const,
+                pending: false,
+              })),
+              {
+                key: 'current',
+                score: null as number | null,
+                max: currentQuestionCount,
+                isPassed: false as const,
+                pending: true,
+              },
+            ].map((entry, i, arr) => (
+              <span key={entry.key} className="flex items-center">
+                <span
+                  className={
+                    entry.pending
+                      ? 'text-on-surface-variant'
+                      : entry.isPassed
+                        ? 'text-success font-semibold'
+                        : 'text-error font-semibold'
+                  }
+                >
+                  {entry.score ?? '-'} / {entry.max ?? 'N'}
+                </span>
+                {i < arr.length - 1 && <span className="text-on-surface-variant/40 ml-1">,</span>}
+              </span>
+            ))}
           </span>
         </div>
       </div>

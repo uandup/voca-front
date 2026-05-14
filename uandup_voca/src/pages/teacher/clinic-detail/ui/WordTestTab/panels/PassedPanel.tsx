@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import type { StepCardVM, WordTestType, ExamType } from '@/entities/test';
+import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
 // 통합 후 미사용 — modal 기반 결과 화면 복귀 시 다시 활성화.
 // import { useState } from 'react';
 // import { useExamDetail } from '../../../model/hooks/useExamDetail';
@@ -17,6 +17,8 @@ interface Props {
   studentId: number;
   studySetId: number;
   examType: ExamType;
+  // 통과 전까지의 실패한 시도들. 점수 history 표시에 사용.
+  failedAttempts: ExamAttempt[];
   // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 props는 보존.
   testType: WordTestType;
   includeSynonyms: boolean;
@@ -28,6 +30,7 @@ export function PassedPanel({
   studentId,
   studySetId,
   examType,
+  failedAttempts,
   testType: _testType,
   includeSynonyms: _includeSynonyms,
 }: Props) {
@@ -57,19 +60,37 @@ export function PassedPanel({
             <span>Created At : {step.createdAt}</span>
           </div>
         )}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
             check_circle
           </span>
-          <span className="flex items-center gap-1.5">
-            Score :{' '}
-            {step.lastScore !== null ? (
-              <span className="font-semibold text-success">
-                {step.lastScore} / {step.maxScore ?? 'N'}
+          <span className="flex items-center gap-1.5 flex-wrap">
+            Score : {/* 이전 실패 시도들(빨강) + 현재 통과 시험(초록). */}
+            {[
+              ...failedAttempts.map((a) => ({
+                key: String(a.examId),
+                score: a.correctCount,
+                max: a.totalCount,
+                isPassed: false,
+              })),
+              {
+                key: 'current',
+                score: step.lastScore,
+                max: step.maxScore,
+                isPassed: true,
+              },
+            ].map((entry, i, arr) => (
+              <span key={entry.key} className="flex items-center">
+                <span
+                  className={
+                    entry.isPassed ? 'text-success font-semibold' : 'text-error font-semibold'
+                  }
+                >
+                  {entry.score ?? '-'} / {entry.max ?? 'N'}
+                </span>
+                {i < arr.length - 1 && <span className="text-on-surface-variant">,</span>}
               </span>
-            ) : (
-              <span>- / {step.maxScore ?? 'N'}</span>
-            )}
+            ))}
           </span>
         </div>
       </div>
