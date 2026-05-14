@@ -52,7 +52,14 @@ export interface SentenceTestAnswer {
 
 // ── Exam Detail (Clinic Detail WordTestTab) ──────────────────────────────────
 
-export type ExamType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3';
+// 'REVIEW_DECK'는 study-set 단계가 아닌 학생-단위 오답 뱅크 시험 (서버 enum 명칭은 WRONG_BANK).
+// preview/review 라우트가 examType만으로 invalidation 분기를 일관되게 처리할 수 있게 같은 enum에 둔다.
+// 이 값이 서버 CreateExamRequest.examType으로 전송되는 일은 없다 — review-deck은 자체 endpoint를 사용.
+export type ExamType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3' | 'REVIEW_DECK';
+
+// study-set 기반 단계 시험만 다룰 때 쓰는 좁힌 타입 — createExam/getExamsByType 같이
+// 서버 enum과 직접 매핑되는 경로에서 사용. 서버 enum엔 REVIEW_DECK이 없다.
+export type StudySetExamType = Exclude<ExamType, 'REVIEW_DECK'>;
 
 export interface ExamItem {
   examItemId: number;

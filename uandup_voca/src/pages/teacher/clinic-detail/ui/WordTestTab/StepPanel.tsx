@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { StepCardVM, ExamType } from '@/entities/test';
+import type { StepCardVM, StudySetExamType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
 import { useStudentOverview } from '../../model/hooks/useStudentOverview';
 import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
@@ -15,7 +15,7 @@ interface StepPanelProps {
   step: StepCardVM;
   studySetId: number;
   studentId: number;
-  examType: ExamType;
+  examType: StudySetExamType;
 }
 
 export default function StepPanel({ step, studySetId, studentId, examType }: StepPanelProps) {

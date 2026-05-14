@@ -3,9 +3,9 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import StepCard from './StepCard';
 import StepPanel from './StepPanel';
 import { AssignedWordsModal } from './AssignedWordsModal';
-import type { TestBundleRow, StepCardVM, ExamType } from '@/entities/test';
+import type { TestBundleRow, StepCardVM, StudySetExamType } from '@/entities/test';
 
-const STEP_EXAM_TYPES: ExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
+const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
 
 interface Props extends TestBundleRow {
   studySetId: number;
@@ -29,7 +29,7 @@ export default function CycleRow({
 
   const selectedIdx = steps.findIndex((s) => s.name === selectedName);
   const selectedStep: StepCardVM | null = selectedIdx !== -1 ? steps[selectedIdx] : null;
-  const selectedExamType: ExamType | null =
+  const selectedExamType: StudySetExamType | null =
     selectedIdx !== -1 ? STEP_EXAM_TYPES[selectedIdx] : null;
 
   function handleStepClick(name: string) {

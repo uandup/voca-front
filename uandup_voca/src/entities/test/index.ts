@@ -7,6 +7,7 @@ export type {
   TestBundleRow,
   SentenceTestAnswer,
   ExamType,
+  StudySetExamType,
   ExamItem,
   ExamDetail,
   ExamAttempt,

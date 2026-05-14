@@ -99,8 +99,25 @@ export default function VocabularyBankPage() {
           <TeacherWordCard
             key={word.id}
             {...word}
-            onEdit={() => setEditTarget(word)}
-            onDelete={() => setDeleteTarget(word)}
+            extraInfo={
+              // 카드 자체가 relative이므로 우상단 absolute 배치를 그대로 유지한다.
+              <div className="absolute top-6 right-6 flex gap-2 z-10">
+                <button
+                  onClick={() => setEditTarget(word)}
+                  className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
+                >
+                  <span className="material-symbols-outlined text-[18px]">edit</span>
+                  Edit
+                </button>
+                <button
+                  onClick={() => setDeleteTarget(word)}
+                  className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
+                >
+                  <span className="material-symbols-outlined text-[18px]">delete</span>
+                  Delete
+                </button>
+              </div>
+            }
           />
         ))}
       </div>

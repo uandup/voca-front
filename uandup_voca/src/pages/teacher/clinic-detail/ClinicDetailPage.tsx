@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from '@tanstack/react-router';
+import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { MemoPopup } from '@/features/memo';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
@@ -23,7 +23,18 @@ export function ClinicDetailPage() {
   const { data: studySets = [], isLoading: setsLoading } = useStudySetList(studentId);
 
   const [isMemoOpen, setIsMemoOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<MainTab>('wordTest');
+
+  // mainTab은 URL search param으로 영속화 — preview/review 페이지 이동 후 Exit으로 돌아올 때
+  // 직전 탭이 복원되도록 한다(returnTo가 현재 URL을 통째로 캡처하므로 자연스럽게 살아남는다).
+  const { tab } = useSearch({ from: '/teacher/clinics_/students/$studentId' });
+  const mainTab: MainTab = tab ?? 'wordTest';
+  const setMainTab = (next: MainTab) => {
+    navigate({
+      to: '.',
+      // 탭 전환 시 다른 탭의 펼침 상태(openSet/openStep)는 의미가 없으므로 함께 비운다.
+      search: { tab: next === 'wordTest' ? undefined : next },
+    });
+  };
 
   if (overviewLoading || setsLoading || !student) {
     return (
@@ -86,7 +97,7 @@ export function ClinicDetailPage() {
 
         {mainTab === 'wordTest' && <WordTestTab studySets={studySets} studentId={studentId} />}
 
-        {mainTab === 'reviewDeck' && <WrongWordBankTab />}
+        {mainTab === 'reviewDeck' && <WrongWordBankTab studentId={studentId} />}
 
         {mainTab === 'levelTest' && <LevelTestTab />}
       </div>

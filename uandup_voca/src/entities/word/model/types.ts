@@ -15,11 +15,6 @@ export interface WordCard {
   synonyms: string[];
 }
 
-/** WrongWordListPage — StudentWordCard with wrongCount badge */
-export interface WrongWord extends WordCard {
-  wrongCount: number;
-}
-
 /** VocabularyBankPage (teacher) — TeacherWordCard with sentence footer */
 export interface TeacherWord extends WordCard {
   sentence: string;

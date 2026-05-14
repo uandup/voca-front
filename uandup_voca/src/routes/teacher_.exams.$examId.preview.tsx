@@ -2,7 +2,14 @@ import { createFileRoute } from '@tanstack/react-router';
 import ExamPreviewPage from '@/pages/teacher/exam-preview/ExamPreviewPage';
 import type { ExamType } from '@/entities/test';
 
-const EXAM_TYPES: readonly ExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
+const EXAM_TYPES: readonly ExamType[] = [
+  'WORD',
+  'EXAMPLE',
+  'REVIEW1',
+  'REVIEW2',
+  'REVIEW3',
+  'REVIEW_DECK',
+];
 
 function isExamType(v: unknown): v is ExamType {
   return typeof v === 'string' && (EXAM_TYPES as readonly string[]).includes(v);

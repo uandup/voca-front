@@ -7,7 +7,7 @@ import {
   recordOfflineResults,
   testKeys,
 } from '@/entities/test';
-import type { ExamType } from '@/entities/test';
+import type { StudySetExamType } from '@/entities/test';
 import { studentKeys } from '@/entities/student';
 import type { ApiResponse } from '@/shared/api';
 import type { components } from '@/shared/api/schema.gen';
@@ -17,7 +17,8 @@ type ExamHistoryCache = ApiResponse<components['schemas']['StudySetExamTypeRespo
 interface UseExamActionsParams {
   studySetId: number;
   studentId: number;
-  examType: ExamType;
+  // study-set 단계 시험 전용 훅 — REVIEW_DECK은 features/review-deck-exam에서 따로 처리.
+  examType: StudySetExamType;
   currentExamId: number | null;
 }
 
