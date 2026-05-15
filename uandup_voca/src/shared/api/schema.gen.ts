@@ -328,7 +328,7 @@ export interface paths {
         };
         /**
          * 배정 이력 및 시험 현황 조회
-         * @description 학생의 전체 배정 이력을 최신순으로 조회합니다. 각 배정 항목에는 단어·예문·복습1~3 시험의 상태와 점수가 포함됩니다.
+         * @description 학생의 전체 배정 이력을 최신순으로 조회합니다. 각 배정 항목에는 단어·예문·복습1~3 시험의 상태와 점수, 그리고 levels(레벨별 단어 개수 배열 — 레벨 경계를 넘으면 여러 항목이 들어감)가 포함됩니다.
          */
         get: operations["getStudySetExamList"];
         put?: never;
@@ -591,7 +591,7 @@ export interface paths {
         patch: operations["updateExamSettings"];
         trace?: never;
     };
-    "/api/v1/members/students/{id}/assignment-count": {
+    "/api/v1/members/students/{id}/assignment-settings": {
         parameters: {
             query?: never;
             header?: never;
@@ -609,8 +609,8 @@ export interface paths {
         options?: never;
         head?: never;
         /**
-         * 학생 배정 개수 수정
-         * @description 학생의 배정 개수(assignmentCount)만 변경합니다. 1 이상이어야 합니다. 선생님만 접근 가능합니다.
+         * 학생 배정 설정 수정
+         * @description 학생의 배정 개수(assignmentCount)를 변경합니다. 0 이상이어야 합니다. level을 함께 보내면 해당 레벨의 첫 단어로 커서가 이동하며, null이면 레벨은 유지됩니다. 선생님만 접근 가능합니다.
          */
         patch: operations["updateAssignmentCount"];
         trace?: never;
@@ -909,9 +909,29 @@ export interface paths {
         };
         /**
          * 학생 학습 개요 조회
-         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·학년·레벨·배정 개수·시험 설정·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. 선생님만 접근 가능합니다.
+         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·영어 이름·학년·레벨·배정 개수·시험 설정·alreadyAssigned(진행 중 NORMAL 배정 존재 여부)·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. 선생님만 접근 가능합니다.
          */
         get: operations["getStudentOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/members/students/unassigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 미배정 학생 리스트 조회
+         * @description 단어를 한 번도 배정받지 못한(lastAssignedWordId == null) ACTIVE 학생만 조회합니다. studentId, name, englishName, grade, assignmentCount, examQuestionCount, subType, synonymIncluded, clinics(소속 클리닉 슬롯 dayOfWeek/hour 리스트)를 이름 ASC 순으로 반환합니다. 선생님만 접근 가능합니다.
+         */
+        get: operations["getUnassignedStudents"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1566,6 +1586,8 @@ export interface components {
         UpdateAssignmentCountRequest: {
             /** Format: int32 */
             assignmentCount: number;
+            /** Format: int32 */
+            level?: number;
         };
         ApiResponseBulkGradeResponse: {
             /** Format: int32 */
@@ -1737,6 +1759,11 @@ export interface components {
              */
             wordCount?: number;
             /**
+             * Format: int32
+             * @description 시험 문항 수
+             */
+            questionCount?: number;
+            /**
              * @description 시험 상태 — READY / IN_PROGRESS / SUBMITTED / PASSED / FAILED
              * @enum {string}
              */
@@ -1775,6 +1802,8 @@ export interface components {
             level?: number;
             /** Format: int32 */
             wordCount?: number;
+            /** Format: int32 */
+            questionCount?: number;
             status?: string;
             /** Format: int32 */
             correctCount?: number;
@@ -1965,6 +1994,21 @@ export interface components {
             /** @description 복습3 시험 */
             review3?: components["schemas"]["ExamSummaryDto"];
         };
+        /** @description 레벨별 단어 개수 */
+        LevelCount: {
+            /**
+             * Format: int32
+             * @description 레벨(난이도)
+             * @example 3
+             */
+            level?: number;
+            /**
+             * Format: int64
+             * @description 해당 레벨 단어 수
+             * @example 7
+             */
+            count?: number;
+        };
         /** @description 배정 단어 및 시험 현황 */
         StudySetExamListResponse: {
             /**
@@ -1973,12 +2017,8 @@ export interface components {
              * @example 1
              */
             studySetId?: number;
-            /**
-             * Format: int32
-             * @description 배정 단어 레벨(난이도)
-             * @example 3
-             */
-            level?: number;
+            /** @description 배정 단어 레벨별 개수 (오름차순). 레벨 경계를 넘어 배정되면 여러 항목이 들어감 */
+            levels?: components["schemas"]["LevelCount"][];
             /**
              * Format: int32
              * @description 배정 단어 수
@@ -2067,6 +2107,7 @@ export interface components {
             /** Format: int64 */
             studentId?: number;
             name?: string;
+            englishName?: string;
             /** Format: int32 */
             grade?: number;
             /** Format: int32 */
@@ -2078,6 +2119,7 @@ export interface components {
             /** @enum {string} */
             examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             synonymIncluded?: boolean;
+            alreadyAssigned?: boolean;
             latestMemo?: components["schemas"]["MemoResponse"];
         };
         ApiResponseAssignmentCountResponse: {
@@ -2089,6 +2131,34 @@ export interface components {
         AssignmentCountResponse: {
             /** Format: int32 */
             assignmentCount?: number;
+        };
+        ApiResponseListUnassignedStudentResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["UnassignedStudentResponse"][];
+        };
+        ClinicSlot: {
+            /** @enum {string} */
+            dayOfWeek?: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+            /** Format: int32 */
+            hour?: number;
+        };
+        UnassignedStudentResponse: {
+            /** Format: int64 */
+            studentId?: number;
+            name?: string;
+            englishName?: string;
+            /** Format: int32 */
+            grade?: number;
+            /** Format: int32 */
+            assignmentCount?: number;
+            /** Format: int32 */
+            examQuestionCount?: number;
+            /** @enum {string} */
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            synonymIncluded?: boolean;
+            clinics?: components["schemas"]["ClinicSlot"][];
         };
         ApiResponseListPendingTeacherResponse: {
             /** Format: int32 */
@@ -4687,6 +4757,35 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
+                };
+            };
+        };
+    };
+    getUnassignedStudents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUnassignedStudentResponse"];
+                };
+            };
+            /** @description 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUnassignedStudentResponse"];
                 };
             };
         };
