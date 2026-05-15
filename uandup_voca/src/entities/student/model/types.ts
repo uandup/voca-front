@@ -49,12 +49,16 @@ export type StudentManageTableRow = StudentIdentity & {
 export interface StudentOverview {
   id: number;
   nameKo: string;
+  // 서버에서 전체 영문 이름(예: "Lee Eunsoo") 그대로 내려옴 — 표시 측에서 그대로 노출.
+  englishName: string;
   grade: StudentGrade;
   assignedLevel: WordDifficultyLevel;
   assignmentCount: number;
   testQuestionCount: number;
   testType: WordTestType;
   includeSynonyms: boolean;
+  // 진행 중인 NORMAL 배정 존재 여부 — true면 신규 배정 불가, "Already assigned" 상태로 표시.
+  alreadyAssigned: boolean;
   latestMemo: Memo | null;
 }
 
@@ -70,9 +74,16 @@ export interface ExamSummary {
   totalCount: number | null;
 }
 
+// 한 study-set이 레벨 경계를 넘어 배정될 수 있어 레벨별 단어 수를 배열로 노출한다.
+// 길이 > 1이면 "레벨 등업"이 일어난 배정.
+export interface LevelCount {
+  level: WordDifficultyLevel;
+  count: number;
+}
+
 export interface StudySetRow {
   studySetId: number;
-  level: WordDifficultyLevel;
+  levels: LevelCount[];
   wordCount: number;
   assignedDate: string;
   word: ExamSummary | null;

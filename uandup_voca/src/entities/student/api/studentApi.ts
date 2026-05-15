@@ -64,7 +64,7 @@ export const updateAssignmentCount = (
 ): Promise<ApiResponse<AssignmentCountResponse>> =>
   axiosInstance
     .patch<ApiResponse<AssignmentCountResponse>>(
-      `/api/v1/members/students/${studentId}/assignment-count`,
+      `/api/v1/members/students/${studentId}/assignment-settings`,
       body,
     )
     .then((r) => r.data);

@@ -103,6 +103,8 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
+          studentName={student.nameKo}
+          studentEnglishName={student.englishName}
           startOnline={startOnline}
           cancel={cancel}
           onGradeOffline={handleGradeOffline}

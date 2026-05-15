@@ -17,16 +17,17 @@ export function QuickAssignmentCard({ studentId }: Props) {
   // invalidate가 일어나면 즉시 새 값이 반영되도록 prop drilling 대신 직접 구독한다 —
   // 학생 수정 모달에서 변경한 배정 수/레벨이 캐시 갱신과 동시에 여기에 비치도록.
   const { data: student } = useStudentOverview(studentId);
-  const { assign, updateCount } = useAssignmentActions(studentId);
+  const { assign, updateSettings } = useAssignmentActions(studentId);
 
   // 편집 중에만 사용되는 임시 값. null이면 view 모드(서버 값 그대로 표시).
   const [draft, setDraft] = useState<{ level: DifficultyLevel; qty: number } | null>(null);
   const [showApplyWarning, setShowApplyWarning] = useState(false);
-  const [isAssigned, setIsAssigned] = useState(false);
+
+  // 진행 중인 NORMAL 배정 존재 여부는 서버가 진실의 원천 — assign 성공 시 invalidate로 자연 갱신.
+  const isAssigned = student?.alreadyAssigned ?? false;
 
   const isEditing = draft !== null;
-  // student가 잠깐 비어있는 첫 렌더에 대비한 fallback. 부모 ClinicDetailPage가
-  // student 로딩을 게이트하지만 캐시 race를 방어적으로 처리.
+  // student가 잠깐 비어있는 첫 렌더에 대비한 fallback.
   const displayLevel = draft?.level ?? student?.assignedLevel ?? 1;
   const displayQty = draft?.qty ?? student?.assignmentCount ?? 0;
 
@@ -44,7 +45,10 @@ export function QuickAssignmentCard({ studentId }: Props) {
     if (!draft) return;
     setShowApplyWarning(false);
     // 성공 시 draft를 비워 view 모드로 — 서버 값이 다시 진실의 원천이 된다.
-    updateCount.mutate(draft.qty, { onSuccess: () => setDraft(null) });
+    updateSettings.mutate(
+      { assignmentCount: draft.qty, level: draft.level },
+      { onSuccess: () => setDraft(null) },
+    );
   }
 
   function handleAssign() {
@@ -52,9 +56,7 @@ export function QuickAssignmentCard({ studentId }: Props) {
       setShowApplyWarning(true);
       return;
     }
-    assign.mutate(undefined, {
-      onSuccess: () => setIsAssigned(true),
-    });
+    assign.mutate();
   }
 
   return (
@@ -105,9 +107,7 @@ export function QuickAssignmentCard({ studentId }: Props) {
               </label>
               <NumberInput
                 value={String(displayQty)}
-                onChange={(v) =>
-                  setDraft((prev) => (prev ? { ...prev, qty: Number(v) } : prev))
-                }
+                onChange={(v) => setDraft((prev) => (prev ? { ...prev, qty: Number(v) } : prev))}
                 disabled={!isEditing}
                 className={`w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 ${disabledCls}`}
               />
@@ -131,7 +131,8 @@ export function QuickAssignmentCard({ studentId }: Props) {
               )}
               <button
                 onClick={isEditing ? applyEdit : startEditing}
-                className="w-16 py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+                disabled={updateSettings.isPending}
+                className="w-16 py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isEditing ? 'Apply' : 'Edit'}
               </button>

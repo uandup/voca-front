@@ -11,14 +11,31 @@ interface Props {
   examDetail: ExamDetail | undefined;
   testType: WordTestType;
   includeSynonyms: boolean;
+  studentName: string;
+  studentEnglishName: string;
   onClose: () => void;
 }
 
-export function TestPrintModal({ step, examDetail, testType, includeSynonyms, onClose }: Props) {
+export function TestPrintModal({
+  step,
+  examDetail,
+  testType,
+  includeSynonyms,
+  studentName,
+  studentEnglishName,
+  onClose,
+}: Props) {
   const items = examDetail?.items ?? [];
 
   if (isSentenceStep(step)) {
-    return <SentenceModal onClose={onClose} rows={toESRows(items)} />;
+    return (
+      <SentenceModal
+        onClose={onClose}
+        rows={toESRows(items)}
+        studentName={studentName}
+        studentEnglishName={studentEnglishName}
+      />
+    );
   }
   return (
     <WordTestModal
@@ -26,6 +43,8 @@ export function TestPrintModal({ step, examDetail, testType, includeSynonyms, on
       rows={toWordTestItems(items)}
       testType={testType}
       includeSynonyms={includeSynonyms}
+      studentName={studentName}
+      studentEnglishName={studentEnglishName}
     />
   );
 }

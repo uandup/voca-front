@@ -11,6 +11,7 @@ import type {
   StudentDetail,
   StudentOverview,
   StudySetRow,
+  LevelCount,
   ExamSummary,
   ExamStatus,
 } from './types';
@@ -20,6 +21,7 @@ type StudentListResponse = components['schemas']['StudentListResponse'];
 type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
 type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'];
+type LevelCountDto = components['schemas']['LevelCount'];
 type ExamSummaryDto = components['schemas']['ExamSummaryDto'];
 type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
 
@@ -122,12 +124,14 @@ export function toStudentOverview(r: StudentOverviewResponse): StudentOverview {
   return {
     id: r.studentId!,
     nameKo: r.name ?? '',
+    englishName: r.englishName ?? '',
     grade: (r.grade ?? 1) as StudentOverview['grade'],
     assignedLevel: (r.level ?? 1) as WordDifficultyLevel,
     assignmentCount: r.assignmentCount ?? 0,
     testQuestionCount: r.examQuestionCount ?? 0,
     testType: toWordTestType(r.examSubType),
     includeSynonyms: r.synonymIncluded ?? false,
+    alreadyAssigned: r.alreadyAssigned ?? false,
     latestMemo: r.latestMemo
       ? {
           id: r.latestMemo.memoId!,
@@ -138,10 +142,17 @@ export function toStudentOverview(r: StudentOverviewResponse): StudentOverview {
   };
 }
 
+function toLevelCount(dto: LevelCountDto): LevelCount {
+  return {
+    level: (dto.level ?? 1) as WordDifficultyLevel,
+    count: dto.count ?? 0,
+  };
+}
+
 export function toStudySetRow(r: StudySetExamListResponse): StudySetRow {
   return {
     studySetId: r.studySetId!,
-    level: (r.level ?? 1) as WordDifficultyLevel,
+    levels: (r.levels ?? []).map(toLevelCount),
     wordCount: r.wordCount ?? 0,
     assignedDate: r.assignedDate ?? '',
     word: toExamSummary(r.exams?.word),
@@ -166,7 +177,7 @@ export function toTestBundleRow(row: StudySetRow): TestBundleRow {
   });
   return {
     id: String(row.studySetId),
-    assignedLevel: row.level,
+    levels: row.levels,
     wordCount: row.wordCount,
     steps,
   };

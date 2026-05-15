@@ -5,6 +5,7 @@ export type {
   StepStatus,
   StepCardVM,
   TestBundleRow,
+  BundleLevelCount,
   SentenceTestAnswer,
   ExamType,
   StudySetExamType,

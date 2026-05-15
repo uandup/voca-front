@@ -13,11 +13,9 @@ export function StudentInfoCard({ student, latestMemo, onMemoClick }: Props) {
       {/* Name row */}
       <div className="flex items-center gap-3">
         <h2 className="text-3xl font-headline font-extrabold text-primary tracking-tight">
-          {student.nameKo}
+          {student.nameKo} · G{student.grade}
         </h2>
-        <span className="text-3xl font-headline font-extrabold text-primary">
-          (G{student.grade})
-        </span>
+        <span className="text-3xl font-headline font-extrabold text-primary"></span>
         <button
           onClick={onMemoClick}
           className="ml-auto p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors"

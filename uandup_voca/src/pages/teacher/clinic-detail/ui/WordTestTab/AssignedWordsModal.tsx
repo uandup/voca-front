@@ -1,5 +1,7 @@
+import { Fragment } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { TeacherWordCard } from '@/entities/word';
+import type { BundleLevelCount } from '@/entities/test';
 import { useAssignedWords } from '../../model/hooks/useAssignedWords';
 
 // 한 사이클(study-set)에 배정된 단어들을 read-only로 확인하는 모달.
@@ -7,26 +9,54 @@ import { useAssignedWords } from '../../model/hooks/useAssignedWords';
 
 interface Props {
   studySetId: number;
-  level: number;
+  levels: BundleLevelCount[];
   wordCount: number;
   onClose: () => void;
 }
 
-export function AssignedWordsModal({ studySetId, level, wordCount, onClose }: Props) {
+export function AssignedWordsModal({ studySetId, levels, wordCount, onClose }: Props) {
   const { data: words, isLoading } = useAssignedWords(studySetId, true);
 
   return (
     <ModalBackdrop onClose={onClose}>
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
-        <div className="px-8 py-5 border-b border-outline-variant/30 flex justify-between items-center bg-white shrink-0">
+        <div className="px-8 pt-5 pb-2.5 border-b border-outline-variant/30 flex justify-between items-center bg-white shrink-0">
           <div>
             <h2 className="text-xl font-extrabold font-headline tracking-tight text-primary">
               Assigned Words
             </h2>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              Level {level} · {wordCount} words
-            </p>
+            {/* CycleRow와 동일한 패턴 — "Words {N} ( Level1 · X | Level2 · Y LEVEL UP )" */}
+            <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-on-surface-variant">Words</span>
+                <span className="text-xs font-bold text-on-surface">{wordCount}</span>
+              </div>
+              (
+              <div className="flex items-center gap-1.5">
+                {levels.length === 0 ? (
+                  <>
+                    <span className="text-xs text-on-surface-variant">Level</span>
+                    <span className="text-xs font-medium text-on-surface">-</span>
+                  </>
+                ) : (
+                  <span className="text-xs font-medium text-on-surface flex items-center gap-1.5">
+                    {levels.map((lc, i) => (
+                      <Fragment key={lc.level}>
+                        {i > 0 && <span className="text-on-surface-variant/40">|</span>}
+                        <span>
+                          Level {lc.level}
+                          <span className="text-on-surface-variant font-medium ml-1">
+                            · {lc.count}
+                          </span>
+                        </span>
+                      </Fragment>
+                    ))}
+                  </span>
+                )}
+                )
+              </div>
+            </div>
           </div>
           <button
             onClick={onClose}

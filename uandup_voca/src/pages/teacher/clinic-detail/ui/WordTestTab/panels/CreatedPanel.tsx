@@ -32,6 +32,9 @@ interface Props {
   failedAttempts: ExamAttempt[];
   testType: WordTestType;
   includeSynonyms: boolean;
+  // Print 모달 헤더에 표시할 학생 이름 — 인쇄 시 채점자가 한글/영문 모두 식별 가능하도록.
+  studentName: string;
+  studentEnglishName: string;
   startOnline: UseMutationResult<unknown, Error, void>;
   cancel: UseMutationResult<unknown, Error, void>;
   // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 prop은 보존.
@@ -48,6 +51,8 @@ export function CreatedPanel({
   failedAttempts,
   testType,
   includeSynonyms,
+  studentName,
+  studentEnglishName,
   startOnline,
   cancel,
   onGradeOffline: _onGradeOffline,
@@ -205,6 +210,8 @@ export function CreatedPanel({
           examDetail={examDetail}
           testType={testType}
           includeSynonyms={includeSynonyms}
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
           onClose={() => setShowPrint(false)}
         />
       )}

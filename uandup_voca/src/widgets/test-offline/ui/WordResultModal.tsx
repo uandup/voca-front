@@ -14,6 +14,7 @@ interface WordResultModalProps {
   includeSynonyms?: boolean;
   wrongIndices: number[];
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
 }
 
@@ -27,6 +28,7 @@ function ResultSheet({
   checkedWrong,
   onToggle,
   studentName,
+  studentEnglishName,
   score,
   hidden,
 }: {
@@ -39,6 +41,7 @@ function ResultSheet({
   checkedWrong: Set<number>;
   onToggle: (globalIdx: number) => void;
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
   hidden?: boolean;
 }) {
@@ -53,7 +56,7 @@ function ResultSheet({
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
-      <PrintSheetHeader name={studentName} score={score} />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} score={score} />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -183,6 +186,7 @@ export function WordResultModal({
   includeSynonyms = false,
   wrongIndices,
   studentName,
+  studentEnglishName,
   score,
 }: WordResultModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
@@ -214,6 +218,7 @@ export function WordResultModal({
     checkedWrong,
     onToggle: handleToggle,
     studentName,
+    studentEnglishName,
     score,
   });
 

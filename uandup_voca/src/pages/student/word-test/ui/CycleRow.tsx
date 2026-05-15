@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import StepCard from './StepCard';
 import type { TestBundleRow } from '@/entities/test';
 
-export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBundleRow) {
+export default function CycleRow({ id, levels, wordCount, steps }: TestBundleRow) {
   const navigate = useNavigate();
 
   return (
@@ -12,7 +12,16 @@ export default function CycleRow({ id, assignedLevel, wordCount, steps }: TestBu
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span className="text-sm text-on-surface-variant">Level</span>
-            <span className="text-sm font-bold text-on-surface">{assignedLevel}</span>
+            <span className="text-sm font-bold text-on-surface flex items-center gap-1">
+              {levels.length === 0
+                ? '-'
+                : levels.map((lc, i) => (
+                    <Fragment key={lc.level}>
+                      {i > 0 && <span className="text-on-surface-variant/40">→</span>}
+                      <span>{lc.level}</span>
+                    </Fragment>
+                  ))}
+            </span>
           </div>
           <div className="w-px h-3.5 bg-outline/20" />
           <div className="flex items-center gap-1.5">

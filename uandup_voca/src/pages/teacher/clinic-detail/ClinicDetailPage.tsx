@@ -48,7 +48,7 @@ export function ClinicDetailPage() {
     <div className="max-w-7xl mx-auto space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
-        title={`${student.nameKo}`}
+        title={student.englishName ? `${student.nameKo} (${student.englishName})` : student.nameKo}
       />
 
       {/* Top Section: Student Info & Quick Assignment */}

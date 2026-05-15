@@ -6,6 +6,7 @@ export type {
   StudentDetail,
   StudentOverview,
   StudySetRow,
+  LevelCount,
   ExamSummary,
   ExamStatus,
 } from './model/types';

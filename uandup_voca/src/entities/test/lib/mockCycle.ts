@@ -3,7 +3,7 @@ import type { TestBundleRow } from '../model/types';
 export const MOCK_CYCLES: TestBundleRow[] = [
   {
     id: '1',
-    assignedLevel: 7,
+    levels: [{ level: 7, count: 50 }],
     wordCount: 50,
     steps: [
       {
@@ -50,7 +50,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
   },
   {
     id: '2',
-    assignedLevel: 3,
+    levels: [{ level: 3, count: 47 }],
     wordCount: 47,
     steps: [
       {
@@ -97,7 +97,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
   },
   {
     id: '3',
-    assignedLevel: 5,
+    levels: [{ level: 5, count: 30 }],
     wordCount: 30,
     steps: [
       {
@@ -147,7 +147,7 @@ export const MOCK_CYCLES: TestBundleRow[] = [
 export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
   {
     id: 'c1',
-    assignedLevel: 7,
+    levels: [{ level: 7, count: 50 }],
     wordCount: 50,
     steps: [
       {
@@ -194,7 +194,7 @@ export const MOCK_CLINIC_CYCLES: TestBundleRow[] = [
   },
   {
     id: 'c2',
-    assignedLevel: 3,
+    levels: [{ level: 3, count: 47 }],
     wordCount: 47,
     steps: [
       {

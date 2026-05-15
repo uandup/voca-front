@@ -35,10 +35,16 @@ export interface StepCardVM {
 
 // ── Test Bundle Row ─────────────────────────────────────────────────────────
 
+// 한 study-set의 레벨 경계 횡단 배정을 표현 — 길이 > 1이면 "레벨 등업".
+export interface BundleLevelCount {
+  level: number;
+  count: number;
+}
+
 /** WordTestPage CycleRow / ClinicDetailPage WordTestTab row */
 export interface TestBundleRow {
   id: string;
-  assignedLevel: number;
+  levels: BundleLevelCount[];
   wordCount: number;
   steps: StepCardVM[];
 }

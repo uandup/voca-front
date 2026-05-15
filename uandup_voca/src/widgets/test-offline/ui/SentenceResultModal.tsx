@@ -12,6 +12,7 @@ interface SentenceResultModalProps {
   rows: ESRow[];
   wrongIndices: number[];
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
 }
 
@@ -24,6 +25,7 @@ function SentenceResultSheet({
   checkedWrong,
   onToggle,
   studentName,
+  studentEnglishName,
   score,
   hidden,
 }: {
@@ -35,6 +37,7 @@ function SentenceResultSheet({
   checkedWrong: Set<number>;
   onToggle: (globalIdx: number) => void;
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
   hidden?: boolean;
 }) {
@@ -49,7 +52,7 @@ function SentenceResultSheet({
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
-      <PrintSheetHeader name={studentName} score={score} />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} score={score} />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -168,6 +171,7 @@ export function SentenceResultModal({
   rows,
   wrongIndices,
   studentName,
+  studentEnglishName,
   score,
 }: SentenceResultModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
@@ -198,6 +202,7 @@ export function SentenceResultModal({
     checkedWrong,
     onToggle: handleToggle,
     studentName,
+    studentEnglishName,
     score,
   });
 

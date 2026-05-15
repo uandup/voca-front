@@ -14,6 +14,8 @@ interface TestWMSPrintModalProps {
   rows: TestWord[];
   testType?: TestType;
   includeSynonyms?: boolean;
+  studentName?: string;
+  studentEnglishName?: string;
 }
 
 function MeaningCell({
@@ -50,6 +52,8 @@ function WordSheet({
   showEng,
   showSynonym,
   fillSynonym,
+  studentName,
+  studentEnglishName,
   hidden,
 }: {
   id: string;
@@ -60,6 +64,8 @@ function WordSheet({
   showSynonym: boolean;
   // 컬럼이 표시될 때 값을 채울지 여부 — preview는 true, print는 false (학생이 채움).
   fillSynonym: boolean;
+  studentName?: string;
+  studentEnglishName?: string;
   hidden?: boolean;
 }) {
   return (
@@ -80,7 +86,7 @@ function WordSheet({
           : {}),
       }}
     >
-      <PrintSheetHeader />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -173,6 +179,8 @@ export function WordTestModal({
   rows,
   testType = 'meaning-to-word',
   includeSynonyms = false,
+  studentName,
+  studentEnglishName,
 }: TestWMSPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
@@ -225,6 +233,8 @@ export function WordTestModal({
           showEng={previewShowEng}
           showSynonym={showSynonym}
           fillSynonym
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
         />
       </div>
 
@@ -239,6 +249,8 @@ export function WordTestModal({
           showEng={printShowEng}
           showSynonym={showSynonym}
           fillSynonym={false}
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
           hidden
         />
       ))}
