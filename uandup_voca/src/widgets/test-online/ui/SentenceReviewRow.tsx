@@ -15,7 +15,7 @@ function renderSentenceWithReview(
   answerWord: string,
   isWrong: boolean,
 ) {
-  const parts = sentence.split('___');
+  const parts = sentence.split('_____');
   const isEmpty = studentWord.trim() === '';
 
   return (

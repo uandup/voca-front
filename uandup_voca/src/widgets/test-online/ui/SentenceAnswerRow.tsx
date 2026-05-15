@@ -14,7 +14,7 @@ function focusSentenceInput(id: number) {
 
 function renderSentence(sentence: string, inputValue: string, props: SentenceAnswerRowProps) {
   const { id, onAnswerChange, isLast } = props;
-  const parts = sentence.split('___');
+  const parts = sentence.split('_____');
 
   return (
     <span className="text-sm text-on-surface leading-relaxed">
