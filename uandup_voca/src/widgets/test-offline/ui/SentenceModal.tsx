@@ -78,7 +78,7 @@ function SentenceSheet({
           </thead>
           <tbody>
             {pageRows.map(({ no: rowNo, sentence }) => {
-              const parts = sentence.split('___');
+              const parts = sentence.split('_____');
               return (
                 <tr key={rowNo} style={{ height: `${ROW_HEIGHT_MM}mm` }}>
                   <td

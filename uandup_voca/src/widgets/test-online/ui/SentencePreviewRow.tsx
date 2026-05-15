@@ -8,7 +8,7 @@ interface SentencePreviewRowProps {
 }
 
 export function SentencePreviewRow({ id, sentence, answer }: SentencePreviewRowProps) {
-  const parts = sentence.split('___');
+  const parts = sentence.split('_____');
 
   return (
     <div className="flex items-center gap-4 px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-low/40">

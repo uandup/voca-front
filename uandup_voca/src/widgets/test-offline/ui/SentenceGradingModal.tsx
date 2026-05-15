@@ -78,7 +78,7 @@ function SentenceGradingSheet({
           </thead>
           <tbody>
             {pageRows.map(({ no: rowNo, sentence, answer }, idx) => {
-              const parts = sentence.split('___');
+              const parts = sentence.split('_____');
               return (
                 <tr
                   key={rowNo}
