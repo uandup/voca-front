@@ -7,6 +7,7 @@ import type { WordTestType } from '@/entities/test/@x/level-test';
 export type LevelTestExamStatus = 'READY' | 'IN_PROGRESS' | 'SUBMITTED' | 'PASSED' | 'FAILED';
 
 // 테이블 한 행 — useLevelTestExamList가 반환.
+// wordCount는 배정된 총 단어 수, questionCount는 시험에 출제될 문항 수.
 // correctCount/totalCount는 PASSED·FAILED일 때만 채워진다.
 export interface LevelTestExamRow {
   examId: number;
@@ -14,6 +15,7 @@ export interface LevelTestExamRow {
   createdAt: string;
   level: WordDifficultyLevel;
   wordCount: number;
+  questionCount: number;
   status: LevelTestExamStatus;
   correctCount: number | null;
   totalCount: number | null;

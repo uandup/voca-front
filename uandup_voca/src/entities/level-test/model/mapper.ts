@@ -26,6 +26,7 @@ export function toLevelTestExamRow(r: LevelExamListResponse): LevelTestExamRow {
     createdAt: r.createdAt ?? '',
     level: (r.level ?? 1) as WordDifficultyLevel,
     wordCount: r.wordCount ?? 0,
+    questionCount: r.questionCount ?? 0,
     status: toLevelTestExamStatus(r.status),
     correctCount: r.correctCount ?? null,
     totalCount: r.totalCount ?? null,

@@ -24,16 +24,18 @@ import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashbo
 import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
-import { Route as StudentLevelWordListRouteImport } from './../routes/student/level-word-list'
-import { Route as StudentLevelTestRouteImport } from './../routes/student/level-test'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
+import { Route as StudentLevelTestIndexRouteImport } from './../routes/student/level-test/index'
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
 import { Route as TeacherClinicsStudentsStudentIdRouteImport } from './../routes/teacher/clinics_.students.$studentId'
+import { Route as StudentExamsExamIdTakeRouteImport } from './../routes/student_.exams.$examId.take'
 import { Route as StudentWordTestIdWordsRouteImport } from './../routes/student/word-test/$id/words'
+import { Route as StudentReviewDeckStudySetIdWordsRouteImport } from './../routes/student/review-deck/$studySetId/words'
+import { Route as StudentLevelTestStudySetIdWordsRouteImport } from './../routes/student/level-test/$studySetId/words'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -110,16 +112,6 @@ const StudentWordTestRoute = StudentWordTestRouteImport.update({
   path: '/word-test',
   getParentRoute: () => StudentRoute,
 } as any)
-const StudentLevelWordListRoute = StudentLevelWordListRouteImport.update({
-  id: '/level-word-list',
-  path: '/level-word-list',
-  getParentRoute: () => StudentRoute,
-} as any)
-const StudentLevelTestRoute = StudentLevelTestRouteImport.update({
-  id: '/level-test',
-  path: '/level-test',
-  getParentRoute: () => StudentRoute,
-} as any)
 const StudentDashboardRoute = StudentDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -133,6 +125,11 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
 const StudentReviewDeckIndexRoute = StudentReviewDeckIndexRouteImport.update({
   id: '/review-deck/',
   path: '/review-deck/',
+  getParentRoute: () => StudentRoute,
+} as any)
+const StudentLevelTestIndexRoute = StudentLevelTestIndexRouteImport.update({
+  id: '/level-test/',
+  path: '/level-test/',
   getParentRoute: () => StudentRoute,
 } as any)
 const StudentReviewDeckWordsRoute = StudentReviewDeckWordsRouteImport.update({
@@ -158,11 +155,28 @@ const TeacherClinicsStudentsStudentIdRoute =
     path: '/clinics/students/$studentId',
     getParentRoute: () => TeacherRoute,
   } as any)
+const StudentExamsExamIdTakeRoute = StudentExamsExamIdTakeRouteImport.update({
+  id: '/student_/exams/$examId/take',
+  path: '/student/exams/$examId/take',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentWordTestIdWordsRoute = StudentWordTestIdWordsRouteImport.update({
   id: '/word-test/$id/words',
   path: '/word-test/$id/words',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentReviewDeckStudySetIdWordsRoute =
+  StudentReviewDeckStudySetIdWordsRouteImport.update({
+    id: '/review-deck/$studySetId/words',
+    path: '/review-deck/$studySetId/words',
+    getParentRoute: () => StudentRoute,
+  } as any)
+const StudentLevelTestStudySetIdWordsRoute =
+  StudentLevelTestStudySetIdWordsRouteImport.update({
+    id: '/level-test/$studySetId/words',
+    path: '/level-test/$studySetId/words',
+    getParentRoute: () => StudentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -173,8 +187,6 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
-  '/student/level-test': typeof StudentLevelTestRoute
-  '/student/level-word-list': typeof StudentLevelWordListRoute
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
@@ -185,8 +197,12 @@ export interface FileRoutesByFullPath {
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
+  '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
+  '/student/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
@@ -198,8 +214,6 @@ export interface FileRoutesByTo {
   '/pending': typeof PendingRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
-  '/student/level-test': typeof StudentLevelTestRoute
-  '/student/level-word-list': typeof StudentLevelWordListRoute
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
@@ -210,8 +224,12 @@ export interface FileRoutesByTo {
   '/student': typeof StudentIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student/level-test': typeof StudentLevelTestIndexRoute
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
+  '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
+  '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
+  '/student/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
@@ -226,8 +244,6 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
-  '/student/level-test': typeof StudentLevelTestRoute
-  '/student/level-word-list': typeof StudentLevelWordListRoute
   '/student/word-test_': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
@@ -238,8 +254,12 @@ export interface FileRoutesById {
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
+  '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
+  '/student_/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics_/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
   '/teacher_/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher_/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
@@ -255,8 +275,6 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/oauth/callback'
     | '/student/dashboard'
-    | '/student/level-test'
-    | '/student/level-word-list'
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
@@ -267,8 +285,12 @@ export interface FileRouteTypes {
     | '/student/'
     | '/teacher/'
     | '/student/review-deck/words'
+    | '/student/level-test/'
     | '/student/review-deck/'
+    | '/student/level-test/$studySetId/words'
+    | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
+    | '/student/exams/$examId/take'
     | '/teacher/clinics/students/$studentId'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
@@ -280,8 +302,6 @@ export interface FileRouteTypes {
     | '/pending'
     | '/oauth/callback'
     | '/student/dashboard'
-    | '/student/level-test'
-    | '/student/level-word-list'
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
@@ -292,8 +312,12 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/student/review-deck/words'
+    | '/student/level-test'
     | '/student/review-deck'
+    | '/student/level-test/$studySetId/words'
+    | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
+    | '/student/exams/$examId/take'
     | '/teacher/clinics/students/$studentId'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
@@ -307,8 +331,6 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/oauth/callback'
     | '/student/dashboard'
-    | '/student/level-test'
-    | '/student/level-word-list'
     | '/student/word-test_'
     | '/teacher/admin'
     | '/teacher/clinics'
@@ -319,8 +341,12 @@ export interface FileRouteTypes {
     | '/student/'
     | '/teacher/'
     | '/student/review-deck/words'
+    | '/student/level-test/'
     | '/student/review-deck/'
+    | '/student/level-test/$studySetId/words'
+    | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
+    | '/student_/exams/$examId/take'
     | '/teacher/clinics_/students/$studentId'
     | '/teacher_/exams/$examId/preview'
     | '/teacher_/exams/$examId/review'
@@ -334,6 +360,7 @@ export interface RootRouteChildren {
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
   OauthCallbackRoute: typeof OauthCallbackRoute
+  StudentExamsExamIdTakeRoute: typeof StudentExamsExamIdTakeRoute
   TeacherExamsExamIdPreviewRoute: typeof TeacherExamsExamIdPreviewRoute
   TeacherExamsExamIdReviewRoute: typeof TeacherExamsExamIdReviewRoute
 }
@@ -445,20 +472,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentWordTestRouteImport
       parentRoute: typeof StudentRoute
     }
-    '/student/level-word-list': {
-      id: '/student/level-word-list'
-      path: '/level-word-list'
-      fullPath: '/student/level-word-list'
-      preLoaderRoute: typeof StudentLevelWordListRouteImport
-      parentRoute: typeof StudentRoute
-    }
-    '/student/level-test': {
-      id: '/student/level-test'
-      path: '/level-test'
-      fullPath: '/student/level-test'
-      preLoaderRoute: typeof StudentLevelTestRouteImport
-      parentRoute: typeof StudentRoute
-    }
     '/student/dashboard': {
       id: '/student/dashboard'
       path: '/dashboard'
@@ -478,6 +491,13 @@ declare module '@tanstack/react-router' {
       path: '/review-deck'
       fullPath: '/student/review-deck/'
       preLoaderRoute: typeof StudentReviewDeckIndexRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/level-test/': {
+      id: '/student/level-test/'
+      path: '/level-test'
+      fullPath: '/student/level-test/'
+      preLoaderRoute: typeof StudentLevelTestIndexRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/review-deck/words': {
@@ -508,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherClinicsStudentsStudentIdRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/student_/exams/$examId/take': {
+      id: '/student_/exams/$examId/take'
+      path: '/student/exams/$examId/take'
+      fullPath: '/student/exams/$examId/take'
+      preLoaderRoute: typeof StudentExamsExamIdTakeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/student/word-test/$id/words': {
       id: '/student/word-test/$id/words'
       path: '/word-test/$id/words'
@@ -515,28 +542,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentWordTestIdWordsRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/review-deck/$studySetId/words': {
+      id: '/student/review-deck/$studySetId/words'
+      path: '/review-deck/$studySetId/words'
+      fullPath: '/student/review-deck/$studySetId/words'
+      preLoaderRoute: typeof StudentReviewDeckStudySetIdWordsRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/level-test/$studySetId/words': {
+      id: '/student/level-test/$studySetId/words'
+      path: '/level-test/$studySetId/words'
+      fullPath: '/student/level-test/$studySetId/words'
+      preLoaderRoute: typeof StudentLevelTestStudySetIdWordsRouteImport
+      parentRoute: typeof StudentRoute
+    }
   }
 }
 
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
-  StudentLevelTestRoute: typeof StudentLevelTestRoute
-  StudentLevelWordListRoute: typeof StudentLevelWordListRoute
   StudentWordTestRoute: typeof StudentWordTestRoute
   StudentIndexRoute: typeof StudentIndexRoute
   StudentReviewDeckWordsRoute: typeof StudentReviewDeckWordsRoute
+  StudentLevelTestIndexRoute: typeof StudentLevelTestIndexRoute
   StudentReviewDeckIndexRoute: typeof StudentReviewDeckIndexRoute
+  StudentLevelTestStudySetIdWordsRoute: typeof StudentLevelTestStudySetIdWordsRoute
+  StudentReviewDeckStudySetIdWordsRoute: typeof StudentReviewDeckStudySetIdWordsRoute
   StudentWordTestIdWordsRoute: typeof StudentWordTestIdWordsRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
-  StudentLevelTestRoute: StudentLevelTestRoute,
-  StudentLevelWordListRoute: StudentLevelWordListRoute,
   StudentWordTestRoute: StudentWordTestRoute,
   StudentIndexRoute: StudentIndexRoute,
   StudentReviewDeckWordsRoute: StudentReviewDeckWordsRoute,
+  StudentLevelTestIndexRoute: StudentLevelTestIndexRoute,
   StudentReviewDeckIndexRoute: StudentReviewDeckIndexRoute,
+  StudentLevelTestStudySetIdWordsRoute: StudentLevelTestStudySetIdWordsRoute,
+  StudentReviewDeckStudySetIdWordsRoute: StudentReviewDeckStudySetIdWordsRoute,
   StudentWordTestIdWordsRoute: StudentWordTestIdWordsRoute,
 }
 
@@ -576,6 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
   OauthCallbackRoute: OauthCallbackRoute,
+  StudentExamsExamIdTakeRoute: StudentExamsExamIdTakeRoute,
   TeacherExamsExamIdPreviewRoute: TeacherExamsExamIdPreviewRoute,
   TeacherExamsExamIdReviewRoute: TeacherExamsExamIdReviewRoute,
 }

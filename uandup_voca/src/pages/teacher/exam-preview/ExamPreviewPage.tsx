@@ -7,7 +7,7 @@ import {
   VocabPreviewTable,
   SentencePreviewTable,
 } from '@/widgets/test-online';
-import { useExamDetail } from '@/pages/teacher/clinic-detail/model/hooks/useExamDetail';
+import { useExamDetail } from '@/features/exam';
 import {
   toVocabReviewItems,
   toSentencePreviewItems,

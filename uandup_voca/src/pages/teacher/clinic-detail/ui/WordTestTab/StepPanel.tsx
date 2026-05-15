@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { StepCardVM, StudySetExamType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
-import { useStudentOverview } from '../../model/hooks/useStudentOverview';
+import { useStudentOverview } from '@/features/student';
 import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
 import { useExamActions } from '../../model/hooks/useExamActions';
 import { inferPhase } from '../../model/mapper';
@@ -100,6 +100,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           studySetId={studySetId}
           examType={examType}
           currentQuestionCount={examHistory?.currentQuestionCount ?? null}
+          currentStatus={examHistory?.currentStatus ?? null}
           failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}

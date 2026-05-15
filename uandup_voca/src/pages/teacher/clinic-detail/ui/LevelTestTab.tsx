@@ -8,7 +8,7 @@ import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
 import type { LevelTestExamRow, LevelTestExamStatus } from '@/entities/level-test';
 import { useLevelTestExamList, useLevelTestExamActions } from '@/features/level-test-exam';
-import { useStudentOverview } from '../model/hooks/useStudentOverview';
+import { useStudentOverview } from '@/features/student';
 
 interface Props {
   studentId: number;

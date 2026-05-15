@@ -2,6 +2,9 @@ import type { StepCardVM, StepStatus } from '@/entities/test';
 
 interface StepCardProps {
   step: StepCardVM;
+  // status별 단일 액션 버튼(active=Start Online Test, passed/fail=View Results)에서 호출.
+  // examId가 없는 단계(locked/pending)는 호출되지 않는다.
+  onAction?: () => void;
 }
 
 const containerClass: Record<StepStatus, string> = {
@@ -13,7 +16,7 @@ const containerClass: Record<StepStatus, string> = {
   pending: 'border border-primary/30 bg-primary/5',
 };
 
-export default function StepCard({ step }: StepCardProps) {
+export default function StepCard({ step, onAction }: StepCardProps) {
   const {
     status,
     name,
@@ -64,7 +67,10 @@ export default function StepCard({ step }: StepCardProps) {
           </button>
         )}
         {status === 'active' && (
-          <button className="w-full py-2.5 rounded-xl bg-primary text-white text-md hover:opacity-90 transition-opacity font-medium">
+          <button
+            onClick={onAction}
+            className="w-full py-2.5 rounded-xl bg-primary text-white text-md hover:opacity-90 transition-opacity font-medium"
+          >
             Start Online Test
           </button>
         )}
@@ -77,7 +83,10 @@ export default function StepCard({ step }: StepCardProps) {
           </button>
         )}
         {status === 'passed' && (
-          <button className="w-full py-2.5 rounded-xl border border-outline/30 text-md  text-on-surface-variant hover:bg-slate-100 transition-colors font-medium">
+          <button
+            onClick={onAction}
+            className="w-full py-2.5 rounded-xl border border-outline/30 text-md  text-on-surface-variant hover:bg-slate-100 transition-colors font-medium"
+          >
             View Results
           </button>
         )}
@@ -89,7 +98,10 @@ export default function StepCard({ step }: StepCardProps) {
             >
               Pending Re-Test
             </button>
-            <button className="w-full py-1.5 rounded-xl border border-outline/30 text-xs font-semibold text-on-surface-variant hover:bg-slate-100 transition-colors">
+            <button
+              onClick={onAction}
+              className="w-full py-1.5 rounded-xl border border-outline/30 text-xs font-semibold text-on-surface-variant hover:bg-slate-100 transition-colors"
+            >
               View Results
             </button>
           </>

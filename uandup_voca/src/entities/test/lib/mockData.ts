@@ -11,7 +11,5 @@ export {
   MOCK_ES_ROWS,
   MOCK_ES_TEMPLATE,
 } from './mockSentence';
-export { MOCK_CYCLES, MOCK_CLINIC_CYCLES } from './mockCycle';
-export { MOCK_REVIEW_DECK_HISTORY, MOCK_STUDENT_LEVEL_TEST_HISTORY } from './mockHistory';
 
 export const ITEMS_PER_PAGE = 10;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
-import { useExamDetail } from '../../../model/hooks/useExamDetail';
+import { useExamDetail } from '@/features/exam';
 import { TestPrintModal } from '../modals/TestPrintModal';
 // 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
 // import { TestGradingModal } from '../modals/TestGradingModal';
@@ -28,6 +28,9 @@ interface Props {
   examType: ExamType;
   // 현재 시험은 아직 채점 전이라 점수가 없으므로 questionCount로 분모만 표시한다.
   currentQuestionCount: number | null;
+  // 서버 원본 status — StepCardVM이 ONLINE_STARTED/SUBMITTED를 모두 'grading'으로 흡수하므로
+  // start-online 가능 여부 같이 세부 분기에 필요한 정보는 이 raw status로 받는다.
+  currentStatus: string | null;
   // 이전 실패 시도들의 점수 history.
   failedAttempts: ExamAttempt[];
   testType: WordTestType;
@@ -48,6 +51,7 @@ export function CreatedPanel({
   studySetId,
   examType,
   currentQuestionCount,
+  currentStatus,
   failedAttempts,
   testType,
   includeSynonyms,
@@ -96,6 +100,14 @@ export function CreatedPanel({
   }
 
   const navDisabled = currentExamId === null;
+  // start-online은 READY 상태에서만 허용. ONLINE_STARTED/SUBMITTED일 땐 이미 시작·제출된 상태라
+  // 재호출 시 서버 거부 — 버튼을 비활성화하고 라벨을 "Already Started"로 바꿔 사유를 노출한다.
+  const startOnlineDisabled = startOnline.isPending || currentStatus !== 'READY';
+  const startOnlineLabel = startOnline.isPending
+    ? 'Starting...'
+    : currentStatus === 'READY'
+      ? 'Start Online Test'
+      : 'Online Test Started';
 
   return (
     <>
@@ -113,8 +125,7 @@ export function CreatedPanel({
             check_circle
           </span>
           <span className="flex items-center gap-1.5 flex-wrap">
-            Score :{' '}
-            {/* 이전 실패 시도들(빨강) + 현재 시험(채점 전이라 - / questionCount). */}
+            Score : {/* 이전 실패 시도들(빨강) + 현재 시험(채점 전이라 - / questionCount). */}
             {[
               ...failedAttempts.map((a) => ({
                 key: String(a.examId),
@@ -154,10 +165,10 @@ export function CreatedPanel({
         <div className="flex items-center gap-2">
           <button
             onClick={() => startOnline.mutate()}
-            disabled={startOnline.isPending}
-            className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-60"
+            disabled={startOnlineDisabled}
+            className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {startOnline.isPending ? 'Starting...' : 'Start Online Test'}
+            {startOnlineLabel}
           </button>
           <button
             onClick={goPreview}

@@ -9,6 +9,7 @@ type CreateExamRequest = components['schemas']['CreateExamRequest'];
 type RecordOnlineResultsRequest = components['schemas']['RecordOnlineResultsRequest'];
 type RecordOfflineResultsRequest = components['schemas']['RecordOfflineResultsRequest'];
 type RecordResultsResponse = components['schemas']['RecordResultsResponse'];
+type SubmitExamRequest = components['schemas']['SubmitExamRequest'];
 
 export const getExamsByType = (
   studySetId: number,
@@ -51,4 +52,14 @@ export const recordOfflineResults = (
 ): Promise<ApiResponse<RecordResultsResponse>> =>
   axiosInstance
     .post<ApiResponse<RecordResultsResponse>>(`/api/v1/exams/${examId}/results/offline`, body)
+    .then((r) => r.data);
+
+// 학생이 자신의 답안을 제출 — ONLINE_STARTED → SUBMITTED 상태 전이.
+// 이후 채점은 선생님이 recordOnlineResults로 수행.
+export const submitExam = (
+  examId: number,
+  body: SubmitExamRequest,
+): Promise<ApiResponse<void>> =>
+  axiosInstance
+    .post<ApiResponse<void>>(`/api/v1/exams/${examId}/submit`, body)
     .then((r) => r.data);

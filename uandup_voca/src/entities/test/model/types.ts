@@ -31,6 +31,9 @@ export interface StepCardVM {
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;
+  // 학생 WordTestPage가 step 카드의 Start Test / View Results 버튼에서 응시 페이지로 직접 이동할 때 사용.
+  // step에 시험이 아직 없으면(pending/locked) null. teacher 측 StepPanel은 별도 examHistory를 fetch하므로 무관.
+  examId: number | null;
 }
 
 // ── Test Bundle Row ─────────────────────────────────────────────────────────

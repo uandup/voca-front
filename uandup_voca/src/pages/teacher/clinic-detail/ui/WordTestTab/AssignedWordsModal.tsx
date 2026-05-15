@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { TeacherWordCard } from '@/entities/word';
 import type { BundleLevelCount } from '@/entities/test';
-import { useAssignedWords } from '../../model/hooks/useAssignedWords';
+import { useAssignedWords } from '@/features/study-set';
 
 // 한 사이클(study-set)에 배정된 단어들을 read-only로 확인하는 모달.
 // CycleRow의 "View Words" 버튼에서 열린다.

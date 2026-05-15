@@ -6,5 +6,6 @@ export function useStudentOverview(studentId: number) {
     queryKey: studentKeys.overview(studentId),
     queryFn: () => getStudentOverview(studentId),
     select: (res) => toStudentOverview(res.data!),
+    enabled: studentId > 0,
   });
 }

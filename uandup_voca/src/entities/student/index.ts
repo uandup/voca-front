@@ -16,6 +16,7 @@ export {
   toStudentOverview,
   toStudySetRow,
   toTestBundleRow,
+  toStudentTestBundleRow,
   toAssignedTeacherWord,
 } from './model/mapper';
 export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';

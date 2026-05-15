@@ -6,5 +6,6 @@ export function useStudySetList(studentId: number) {
     queryKey: studentKeys.studySets(studentId),
     queryFn: () => getStudySetList(studentId),
     select: (res) => (res.data ?? []).map(toStudySetRow),
+    enabled: studentId > 0,
   });
 }

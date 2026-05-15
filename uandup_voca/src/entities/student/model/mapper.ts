@@ -80,6 +80,11 @@ function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | nu
   };
 }
 
+// teacher 시점 status 해석:
+//   READY            → 'active'  (선생님이 시작 가능)
+//   ONLINE_STARTED   → 'grading' (응시·채점 흐름 진입 가능)
+//   SUBMITTED        → 'grading' (채점 대기)
+//   COMPLETED        → 'passed' / 'fail'
 function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
   if (isLocked) {
     return {
@@ -89,6 +94,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
+      examId: null,
     };
   }
   if (!exam) {
@@ -99,9 +105,10 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
+      examId: null,
     };
   }
-  const { status, isPassed, createdAt, correctCount, totalCount } = exam;
+  const { examId, status, isPassed, createdAt, correctCount, totalCount } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -117,6 +124,59 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
     lastScore: correctCount ?? null,
     maxScore: totalCount ?? null,
     retakeCount: 0,
+    examId,
+  };
+}
+
+// student 시점 status 해석:
+//   READY            → 'pending' (선생님 시작 전 — 학생은 응시 불가)
+//   ONLINE_STARTED   → 'active'  (응시 가능)
+//   SUBMITTED        → 'grading' (채점 대기)
+//   COMPLETED        → 'passed' / 'fail'
+// teacher 매퍼와 의미가 갈리는 지점은 READY / ONLINE_STARTED 뿐.
+function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
+  if (isLocked) {
+    return {
+      name: 'Word',
+      status: 'locked',
+      createdAt: null,
+      lastScore: null,
+      maxScore: null,
+      retakeCount: 0,
+      examId: null,
+    };
+  }
+  if (!exam) {
+    return {
+      name: 'Word',
+      status: 'pending',
+      createdAt: null,
+      lastScore: null,
+      maxScore: null,
+      retakeCount: 0,
+      examId: null,
+    };
+  }
+  const { examId, status, isPassed, createdAt, correctCount, totalCount } = exam;
+  let stepStatus: StepCardVM['status'];
+  if (status === 'COMPLETED') {
+    stepStatus = isPassed ? 'passed' : 'fail';
+  } else if (status === 'ONLINE_STARTED') {
+    stepStatus = 'active';
+  } else if (status === 'SUBMITTED') {
+    stepStatus = 'grading';
+  } else {
+    // READY 등 — 선생님이 시작 안 한 상태.
+    stepStatus = 'pending';
+  }
+  return {
+    name: 'Word',
+    status: stepStatus,
+    createdAt: createdAt ?? null,
+    lastScore: correctCount ?? null,
+    maxScore: totalCount ?? null,
+    retakeCount: 0,
+    examId,
   };
 }
 
@@ -171,6 +231,26 @@ export function toTestBundleRow(row: StudySetRow): TestBundleRow {
   const steps: StepCardVM[] = exams.map((exam, i) => {
     const isLocked = !prevPassed;
     const vm = toStepCardVM(exam, isLocked);
+    const named = { ...vm, name: STEP_NAMES[i] };
+    prevPassed = !isLocked && named.status === 'passed';
+    return named;
+  });
+  return {
+    id: String(row.studySetId),
+    levels: row.levels,
+    wordCount: row.wordCount,
+    steps,
+  };
+}
+
+// 학생 시점의 step 상태로 변환된 cycle row. WordTestPage(student)에서 사용.
+// teacher 버전과 lock 진행 로직은 동일하지만 step status 매핑이 다르다 — 위 toStudentStepCardVM 참조.
+export function toStudentTestBundleRow(row: StudySetRow): TestBundleRow {
+  const exams = [row.word, row.example, row.review1, row.review2, row.review3];
+  let prevPassed = true;
+  const steps: StepCardVM[] = exams.map((exam, i) => {
+    const isLocked = !prevPassed;
+    const vm = toStudentStepCardVM(exam, isLocked);
     const named = { ...vm, name: STEP_NAMES[i] };
     prevPassed = !isLocked && named.status === 'passed';
     return named;

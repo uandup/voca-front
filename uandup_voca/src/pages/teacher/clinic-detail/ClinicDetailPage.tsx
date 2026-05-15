@@ -7,8 +7,8 @@ import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
-import { useStudentOverview } from './model/hooks/useStudentOverview';
-import { useStudySetList } from './model/hooks/useStudySetList';
+import { useStudentOverview } from '@/features/student';
+import { useStudySetList } from '@/features/study-set';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 

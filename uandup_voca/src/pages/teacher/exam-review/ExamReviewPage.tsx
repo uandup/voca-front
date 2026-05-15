@@ -8,7 +8,7 @@ import {
   SentenceReviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail } from '@/pages/teacher/clinic-detail/model/hooks/useExamDetail';
+import { useExamDetail } from '@/features/exam';
 import {
   toVocabReviewItems,
   toSentenceTestItems,

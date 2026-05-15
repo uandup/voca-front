@@ -13,4 +13,3 @@ export {
 } from './api/reviewDeckApi';
 export { reviewDeckKeys } from './api/queryKeys';
 export { ReviewDeckWordsModal } from './ui/ReviewDeckWordsModal';
-export { MOCK_REVIEW_DECK_WORDS } from './lib/mockData';

@@ -12,7 +12,7 @@ import {
   useReviewDeckWords,
   useReviewDeckExamActions,
 } from '@/features/review-deck-exam';
-import { useStudentOverview } from '../model/hooks/useStudentOverview';
+import { useStudentOverview } from '@/features/student';
 
 interface Props {
   studentId: number;

@@ -3,7 +3,7 @@ import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { useAssignmentActions } from '../model/hooks/useAssignmentActions';
-import { useStudentOverview } from '../model/hooks/useStudentOverview';
+import { useStudentOverview } from '@/features/student';
 
 interface Props {
   studentId: number;
