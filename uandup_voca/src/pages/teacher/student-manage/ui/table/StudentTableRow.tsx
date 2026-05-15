@@ -1,5 +1,6 @@
 import { LevelBlock } from '@/entities/word';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/student';
+import { isAdmin } from '@/entities/teacher';
 import { TestConfigBadges } from '@/entities/test';
 
 export interface RowActions {
@@ -14,6 +15,7 @@ interface StudentTableRowProps {
 }
 
 export function StudentTableRow({ student, actions }: StudentTableRowProps) {
+  const admin = isAdmin();
   const latestMemo = student.latestMemoContent;
 
   return (
@@ -77,15 +79,15 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
 
       {/* ACR */}
       <td className="px-4 py-4 text-center border-r border-outline-variant/20">
-        <span className="font-headline font-bold text-sm text-primary">{student.accuracy}</span>
+        <span className="font-headline font-bold text-sm text-primary">
+          {student.accuracy ?? '—'}
+        </span>
       </td>
 
       {/* Memo */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <div className="flex items-center gap-1.5">
-          <p className="text-xs text-on-surface-variant truncate flex-1">
-            {latestMemo ?? '—'}
-          </p>
+          <p className="text-xs text-on-surface-variant truncate flex-1">{latestMemo ?? '—'}</p>
           <button
             onClick={() => actions.onMemo(student)}
             className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
@@ -106,12 +108,14 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
             <span className="material-symbols-outlined text-sm">edit</span>
             Edit
           </button>
-          <button
-            onClick={() => actions.onDelete(student)}
-            className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
-          >
-            <span className="material-symbols-outlined text-xl">delete</span>
-          </button>
+          {admin && (
+            <button
+              onClick={() => actions.onDelete(student)}
+              className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
+            >
+              <span className="material-symbols-outlined text-xl">delete</span>
+            </button>
+          )}
         </div>
       </td>
     </tr>

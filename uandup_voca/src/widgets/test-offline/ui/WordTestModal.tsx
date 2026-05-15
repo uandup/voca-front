@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { PrintActionBar } from './PrintActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-import type { VocabTestItem as TestWord } from '@/entities/word';
+import type { WordTestItem as TestWord } from '@/entities/word';
 import type { TestType } from '@/entities/test';
 
 const PAGE_SIZE = 20;
@@ -14,6 +14,8 @@ interface TestWMSPrintModalProps {
   rows: TestWord[];
   testType?: TestType;
   includeSynonyms?: boolean;
+  studentName?: string;
+  studentEnglishName?: string;
 }
 
 function MeaningCell({
@@ -45,20 +47,25 @@ function MeaningCell({
 function WordSheet({
   id,
   pageRows,
-  page,
   showWord,
   showKor,
   showEng,
   showSynonym,
+  fillSynonym,
+  studentName,
+  studentEnglishName,
   hidden,
 }: {
   id: string;
   pageRows: TestWord[];
-  page: number;
   showWord: boolean;
   showKor: boolean;
   showEng: boolean;
   showSynonym: boolean;
+  // 컬럼이 표시될 때 값을 채울지 여부 — preview는 true, print는 false (학생이 채움).
+  fillSynonym: boolean;
+  studentName?: string;
+  studentEnglishName?: string;
   hidden?: boolean;
 }) {
   return (
@@ -79,7 +86,7 @@ function WordSheet({
           : {}),
       }}
     >
-      <PrintSheetHeader />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -130,13 +137,13 @@ function WordSheet({
             </tr>
           </thead>
           <tbody style={{ height: '100%' }}>
-            {pageRows.map(({ word, korMeaning, engMeaning }, idx) => (
+            {pageRows.map(({ id, word, korMeaning, engMeaning, synonyms }, idx) => (
               <tr key={idx} style={{ height: `${ROW_HEIGHT_MM}mm` }}>
                 <td
                   className="text-center text-sm font-bold"
                   style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                 >
-                  {String((page - 1) * PAGE_SIZE + idx + 1).padStart(2, '0')}
+                  {String(id).padStart(2, '0')}
                 </td>
                 <td
                   className="text-xs"
@@ -154,7 +161,9 @@ function WordSheet({
                   <td
                     className="text-xs"
                     style={{ border: '1.5pt solid black', padding: '4px 12px' }}
-                  />
+                  >
+                    {fillSynonym ? synonyms.join(', ') : ''}
+                  </td>
                 )}
               </tr>
             ))}
@@ -170,27 +179,28 @@ export function WordTestModal({
   rows,
   testType = 'meaning-to-word',
   includeSynonyms = false,
+  studentName,
+  studentEnglishName,
 }: TestWMSPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const showWord = testType === 'word-to-meaning';
-  const showKor = testType === 'meaning-to-word';
-  const showEng = testType === 'meaning-to-word';
+  // Print: 학생이 채워야 하는 칸은 비워둠 (testType 기준).
+  const printShowWord = testType === 'word-to-meaning';
+  const printShowKor = testType === 'meaning-to-word';
+  const printShowEng = testType === 'meaning-to-word';
+  // Preview(화면): 교사가 한눈에 확인할 수 있도록 모든 칸을 채움.
+  const previewShowWord = true;
+  const previewShowKor = true;
+  const previewShowEng = true;
+  // Synonym 표시 여부는 화면/인쇄 모두 학생 설정을 따름.
   const showSynonym = includeSynonyms;
 
-  const allPageIds = Array.from({ length: totalPages }, (_, i) => `wms-print-sheet-${i + 1}`);
-  const handlePrint = () => printAllSheets(allPageIds);
+  const printPageIds = Array.from({ length: totalPages }, (_, i) => `wms-print-sheet-${i + 1}`);
+  const handlePrint = () => printAllSheets(printPageIds);
 
-  const sheetProps = (p: number) => ({
-    pageRows: rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE),
-    page: p,
-    showWord,
-    showKor,
-    showEng,
-    showSynonym,
-  });
+  const pageRowsAt = (p: number) => rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE);
 
   return (
     <div
@@ -213,16 +223,37 @@ export function WordTestModal({
         }}
       />
 
+      {/* Preview — 화면 표시용 (모든 칸 채움, synonym 컬럼이 표시되면 값도 채움) */}
       <div className="mt-20" onClick={(e) => e.stopPropagation()}>
-        <WordSheet id={`wms-print-sheet-${page}`} {...sheetProps(page)} />
+        <WordSheet
+          id={`wms-preview-sheet-${page}`}
+          pageRows={pageRowsAt(page)}
+          showWord={previewShowWord}
+          showKor={previewShowKor}
+          showEng={previewShowEng}
+          showSynonym={showSynonym}
+          fillSynonym
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
+        />
       </div>
 
-      {allPageIds
-        .filter((_, i) => i + 1 !== page)
-        .map((id) => {
-          const p = parseInt(id.split('-').pop()!);
-          return <WordSheet key={id} id={id} {...sheetProps(p)} hidden />;
-        })}
+      {/* Print — 화면 밖 hidden sheets (testType 기준으로 학생용 빈칸 적용) */}
+      {printPageIds.map((id, i) => (
+        <WordSheet
+          key={id}
+          id={id}
+          pageRows={pageRowsAt(i + 1)}
+          showWord={printShowWord}
+          showKor={printShowKor}
+          showEng={printShowEng}
+          showSynonym={showSynonym}
+          fillSynonym={false}
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
+          hidden
+        />
+      ))}
     </div>
   );
 }

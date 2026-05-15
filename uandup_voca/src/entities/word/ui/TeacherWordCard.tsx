@@ -1,40 +1,26 @@
-import type { TeacherWordCardVM } from '../model/types';
+import type { ReactNode } from 'react';
+import type { TeacherWord } from '../model/types';
 
-interface TeacherWordCardProps extends TeacherWordCardVM {
-  onEdit: () => void;
-  onDelete: () => void;
+interface TeacherWordCardProps extends TeacherWord {
+  // 카드 외부에서 컨텍스트별로 주입하는 부가 콘텐츠.
+  // 표시 위치/스타일(액션 버튼 그룹 / 정보 배지 등)은 사용처가 결정한다.
+  // StudentWordCard와 동일한 슬롯 시그니처 — onEdit/onDelete 같은 특정 액션을 prop으로
+  // 분리하지 않는 이유는 카드의 *시각 책임*을 단순하게 유지하기 위함.
+  extraInfo?: ReactNode;
 }
 
 export function TeacherWordCard({
   word,
-  partOfSpeech,
+  partsOfSpeech,
   korMeaning,
-  difficulty: difficulty,
+  difficulty,
   engMeaning,
   synonyms,
   sentence,
-  onEdit,
-  onDelete,
+  extraInfo,
 }: TeacherWordCardProps) {
   return (
     <article className="bg-surface-container-lowest rounded-xl overflow-hidden border shadow-sm border-outline-variant/60 relative group">
-      <div className="absolute top-6 right-6 flex gap-2 z-10">
-        <button
-          onClick={onEdit}
-          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"
-        >
-          <span className="material-symbols-outlined text-[18px]">edit</span>
-          Edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 text-xs font-bold"
-        >
-          <span className="material-symbols-outlined text-[18px]">delete</span>
-          Delete
-        </button>
-      </div>
-
       <div className="p-8">
         <div className="flex flex-col lg:flex-row gap-12">
           <div className="w-1/4">
@@ -53,7 +39,7 @@ export function TeacherWordCard({
               </h4>
               <p className="text-primary font-bold text-lg">
                 <span className="text-on-tertiary-container tracking-wider mr-2">
-                  {partOfSpeech}
+                  {partsOfSpeech.join(' / ')}
                 </span>
                 {korMeaning}
               </p>
@@ -77,6 +63,8 @@ export function TeacherWordCard({
               </div>
             </div>
           </div>
+
+          {extraInfo && <div className="shrink-0">{extraInfo}</div>}
         </div>
       </div>
 

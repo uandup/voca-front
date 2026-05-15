@@ -1,13 +1,49 @@
 import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { MOCK_REVIEW_DECK_HISTORY } from '@/entities/test';
+import { useReviewDeckCount, useReviewDeckExamList } from '@/features/review-deck-exam';
+import type { ReviewDeckExamStatus } from '@/entities/review-deck';
+import { useCurrentStudentId } from '@/shared/jwt';
 
 const COLUMNS = ['Date', 'Quantity', 'Score', 'Status', 'Actions'];
 
+// 활성 시험으로 분류되는 status — student는 ONLINE_STARTED/IN_PROGRESS일 때만 응시 가능.
+// READY는 선생님이 시작 전, SUBMITTED는 채점 대기.
+function isStartable(status: ReviewDeckExamStatus): boolean {
+  return status === 'IN_PROGRESS';
+}
+
+function formatDate(iso: string): string {
+  if (!iso) return '-';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export function WrongWordBankPage() {
-  const totalCount = 43;
   const navigate = useNavigate();
+  const studentId = useCurrentStudentId() ?? 0;
+  const { data: totalCount = 0 } = useReviewDeckCount(studentId);
+  const { data: rows = [] } = useReviewDeckExamList(studentId);
+
+  function returnToCurrent() {
+    return window.location.pathname + window.location.search;
+  }
+
+  function goTake(examId: number) {
+    navigate({
+      to: '/student/exams/$examId/take',
+      params: { examId: String(examId) },
+      search: { returnTo: returnToCurrent(), examType: 'REVIEW_DECK' },
+    });
+  }
+
+  function goWords(studySetId: number) {
+    navigate({
+      to: '/student/review-deck/$studySetId/words',
+      params: { studySetId: String(studySetId) },
+    });
+  }
 
   return (
     <div className="space-y-4">
@@ -57,78 +93,110 @@ export function WrongWordBankPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/20">
-              {MOCK_REVIEW_DECK_HISTORY.map((row, i) => (
-                <tr key={i}>
-                  <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
-                    {row.date}
-                  </td>
-                  <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
-                    {row.quantity}
-                  </td>
-                  <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
-                    <span
-                      className={
-                        row.status === 'fail'
-                          ? 'text-error'
-                          : row.score !== null
-                            ? 'text-success'
-                            : 'text-on-surface-variant/40'
-                      }
-                    >
-                      {row.score !== null ? `${row.score}/${row.quantity}` : '--'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4 border-r border-outline-variant/20">
-                    {row.status === 'active' ? (
-                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
-                        Awaiting Test
-                      </span>
-                    ) : row.status === 'grading' ? (
-                      <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
-                        Awaiting Grading
-                      </span>
-                    ) : row.status === 'fail' ? (
-                      <span className="px-3 py-1 bg-error/5 border border-error/20 rounded-full text-[10px] font-bold text-error uppercase tracking-wide">
-                        Fail
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 bg-success/5 border border-success/20 rounded-full text-[10px] font-bold text-success uppercase tracking-wide">
-                        Completed
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-4">
-                    <div className="flex items-center gap-2 justify-end">
-                      {row.status === 'active' ? (
-                        <button
-                          disabled
-                          className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
-                        >
-                          Start Test
-                        </button>
-                      ) : row.status === 'grading' ? (
-                        <button
-                          disabled
-                          className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full opacity-40 cursor-not-allowed"
-                        >
-                          View Results
-                        </button>
-                      ) : row.status === 'passed' || row.status === 'fail' ? (
-                        <button className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors">
-                          View Results
-                        </button>
-                      ) : null}{' '}
-                      <button className="px-4 py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity">
-                        View Words
-                      </button>
-                    </div>
+              {rows.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={COLUMNS.length}
+                    className="px-4 py-12 text-center text-sm text-on-surface-variant"
+                  >
+                    No tests yet.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                rows.map((row) => {
+                  const isCompleted = row.status === 'PASSED' || row.status === 'FAILED';
+                  const scoreText =
+                    row.correctCount !== null && row.totalCount !== null
+                      ? `${row.correctCount}/${row.totalCount}`
+                      : '--';
+                  const scoreClass = isCompleted
+                    ? row.status === 'PASSED'
+                      ? 'text-success'
+                      : 'text-error'
+                    : 'text-on-surface-variant/40';
+
+                  return (
+                    <tr key={row.examId}>
+                      <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
+                        {formatDate(row.createdAt)}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
+                        {row.wordCount}
+                      </td>
+                      <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
+                        <span className={scoreClass}>{scoreText}</span>
+                      </td>
+                      <td className="px-4 py-4 border-r border-outline-variant/20">
+                        <StatusBadge status={row.status} />
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-2 justify-end">
+                          {isStartable(row.status) ? (
+                            <button
+                              onClick={() => goTake(row.examId)}
+                              className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
+                            >
+                              Start Test
+                            </button>
+                          ) : isCompleted ? (
+                            <button
+                              onClick={() => goTake(row.examId)}
+                              className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
+                            >
+                              View Results
+                            </button>
+                          ) : null}
+                          <button
+                            onClick={() => goWords(row.studySetId)}
+                            className="px-4 py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
+                          >
+                            View Words
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
       </TableContainer>
     </div>
   );
+}
+
+function StatusBadge({ status }: { status: ReviewDeckExamStatus }) {
+  switch (status) {
+    case 'READY':
+      return (
+        <span className="px-3 py-1 bg-slate-100 border border-slate-300 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wide">
+          Awaiting Test
+        </span>
+      );
+    case 'IN_PROGRESS':
+      return (
+        <span className="px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] font-bold text-amber-500 uppercase tracking-wide">
+          In Progress
+        </span>
+      );
+    case 'SUBMITTED':
+      return (
+        <span className="px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-[10px] font-bold text-blue-500 uppercase tracking-wide">
+          Awaiting Grading
+        </span>
+      );
+    case 'PASSED':
+      return (
+        <span className="px-3 py-1 bg-success/5 border border-success/20 rounded-full text-[10px] font-bold text-success uppercase tracking-wide">
+          Completed
+        </span>
+      );
+    case 'FAILED':
+      return (
+        <span className="px-3 py-1 bg-error/5 border border-error/20 rounded-full text-[10px] font-bold text-error uppercase tracking-wide">
+          Fail
+        </span>
+      );
+  }
 }

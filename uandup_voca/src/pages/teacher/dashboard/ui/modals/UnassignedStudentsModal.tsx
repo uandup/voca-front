@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { MOCK_UNASSIGNED_STUDENTS } from '@/entities/member';
+import { MOCK_UNASSIGNED_STUDENTS } from '@/entities/student';
 
 interface AssignFormState {
   levels: number[];

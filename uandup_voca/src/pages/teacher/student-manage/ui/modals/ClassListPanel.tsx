@@ -1,16 +1,24 @@
-import { CLASS_MOCK } from '@/entities/class';
+import { useQuery } from '@tanstack/react-query';
+import { getClassrooms, toClassListItem, classKeys } from '@/entities/class';
+import type { Class } from '@/entities/class';
 
 interface ClassListPanelProps {
-  selectedClasses: string[];
-  onChange: (classes: string[]) => void;
+  selectedClasses: Class[];
+  onChange: (classes: Class[]) => void;
 }
 
 export function ClassListPanel({ selectedClasses, onChange }: ClassListPanelProps) {
-  function handleToggle(name: string) {
-    if (selectedClasses.includes(name)) {
-      onChange(selectedClasses.filter((c) => c !== name));
+  const { data: classList } = useQuery({
+    queryKey: classKeys.list(),
+    queryFn: getClassrooms,
+    select: (res) => res.data?.map(toClassListItem) ?? [],
+  });
+
+  function handleToggle(item: Class) {
+    if (selectedClasses.some((c) => c.id === item.id)) {
+      onChange(selectedClasses.filter((c) => c.id !== item.id));
     } else {
-      onChange([...selectedClasses, name]);
+      onChange([...selectedClasses, item]);
     }
   }
 
@@ -24,13 +32,13 @@ export function ClassListPanel({ selectedClasses, onChange }: ClassListPanelProp
 
       {/* 목록 */}
       <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20">
-        {CLASS_MOCK.map((item) => {
-          const isSelected = selectedClasses.includes(item.name);
+        {(classList ?? []).map((item) => {
+          const isSelected = selectedClasses.some((c) => c.id === item.id);
           return (
             <li key={item.id}>
               <button
                 type="button"
-                onClick={() => handleToggle(item.name)}
+                onClick={() => handleToggle(item)}
                 className={`w-full flex items-center gap-3 px-4 py-3 transition-colors ${
                   isSelected ? 'bg-primary/5' : 'hover:bg-surface-container-low'
                 }`}

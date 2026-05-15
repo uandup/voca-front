@@ -10,12 +10,15 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gen:api": "openapi-typescript http://localhost:8080/v3/api-docs -o src/shared/api/schema.gen.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-router": "^1.168.2",
     "axios": "^1.14.0",
+    "jwt-decode": "^4.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "recharts": "^3.8.1",
@@ -38,6 +41,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.8.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",

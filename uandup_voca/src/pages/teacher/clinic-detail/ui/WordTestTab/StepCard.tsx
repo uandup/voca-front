@@ -33,9 +33,9 @@ export default function StepCard({ step, isSelected, onClick }: StepCardProps) {
         </span>
       </div>
 
-      {step.gradedAt && (
+      {step.createdAt && (
         <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          {step.gradedAt}
+          {step.createdAt}
         </span>
       )}
 

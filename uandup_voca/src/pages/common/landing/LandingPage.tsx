@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { LANDING_CONTENT, type Lang } from './model/landingContent';
 import { LandingNav } from './ui/LandingNav';
 import { HeroSection } from './ui/HeroSection';
@@ -10,13 +9,25 @@ import { LevelTestSection } from './ui/LevelTestSection';
 import { AnalyticsSection } from './ui/AnalyticsSection';
 import { CtaSection } from './ui/CtaSection';
 
+const GOOGLE_AUTH_URL = (() => {
+  const params = new URLSearchParams({
+    client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+    redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'openid email profile',
+    access_type: 'offline',
+  });
+  return `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+})();
+
 export default function LandingPage() {
   const [lang, setLang] = useState<Lang>('en');
   const t = LANDING_CONTENT[lang];
-  const navigate = useNavigate();
 
   const toggleLang = () => setLang((l) => (l === 'en' ? 'ko' : 'en'));
-  const handleGoogleLogin = () => navigate({ to: '/onboarding' });
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL;
+  };
 
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface overflow-x-hidden">

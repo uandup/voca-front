@@ -1,27 +1,25 @@
 import { useState } from 'react';
-
-interface ParentEntry {
-  id: number;
-  nameKo: string;
-  phone: string;
-}
-
-const PARENT_MOCK: ParentEntry[] = [
-  { id: 1, nameKo: '김철수', phone: '010-1234-5678' },
-  { id: 2, nameKo: '이상훈', phone: '010-2345-6789' },
-  { id: 3, nameKo: '박영미', phone: '010-3456-7890' },
-  { id: 4, nameKo: '최영진', phone: '010-4567-8901' },
-  { id: 5, nameKo: '정미경', phone: '010-5678-9012' },
-];
+import { useQuery } from '@tanstack/react-query';
+import { getParents, toParentManageRow, parentKeys } from '@/entities/parent';
+import type { ParentIdentity } from '@/entities/parent';
 
 interface ParentListPanelProps {
-  selectedId: number | null;
-  onSelect: (parent: ParentEntry) => void;
+  selectedIds: number[];
+  onSelect: (parent: ParentIdentity) => void;
 }
 
-export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) {
+export function ParentListPanel({ selectedIds, onSelect }: ParentListPanelProps) {
   const [search, setSearch] = useState('');
-  const filtered = PARENT_MOCK.filter((p) => p.nameKo.includes(search) || p.phone.includes(search));
+
+  const { data: parents } = useQuery({
+    queryKey: parentKeys.list(),
+    queryFn: getParents,
+    select: (res) => res.data?.map(toParentManageRow) ?? [],
+  });
+
+  const filtered = (parents ?? []).filter(
+    (p) => p.name.includes(search) || p.phoneNumber.includes(search),
+  );
 
   return (
     <div className="absolute left-full top-0 ml-3 w-64 bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full">
@@ -52,7 +50,7 @@ export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) 
           </li>
         )}
         {filtered.map((parent) => {
-          const isSelected = selectedId === parent.id;
+          const isSelected = selectedIds.includes(parent.id);
           return (
             <li key={parent.id}>
               <button
@@ -65,10 +63,10 @@ export function ParentListPanel({ selectedId, onSelect }: ParentListPanelProps) 
                 <p
                   className={`text-sm font-bold flex items-center gap-1 ${isSelected ? 'text-primary' : 'text-on-surface'}`}
                 >
-                  {parent.nameKo}
+                  {parent.name}
                   {isSelected && <span className="material-symbols-outlined text-sm">check</span>}
                 </p>
-                <p className="text-xs text-on-surface-variant mt-0.5">{parent.phone}</p>
+                <p className="text-xs text-on-surface-variant mt-0.5">{parent.phoneNumber}</p>
               </button>
             </li>
           );

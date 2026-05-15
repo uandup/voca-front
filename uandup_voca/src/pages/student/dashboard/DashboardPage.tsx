@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { STUDENT_MOCK } from '@/entities/member';
+import { STUDENT_MOCK } from '@/entities/student';
 import { ScoreTrendChart } from './ui/ScoreTrendChart';
 import { StatCards } from './ui/StatCards';
 import { LevelProgress } from './ui/LevelProgress';

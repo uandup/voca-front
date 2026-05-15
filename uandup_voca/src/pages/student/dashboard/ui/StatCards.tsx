@@ -1,4 +1,4 @@
-import type { StudentDashboardStats } from '@/entities/member';
+import type { StudentDashboardStats } from '@/entities/student';
 
 interface Props {
   student: Pick<StudentDashboardStats, 'accuracy' | 'assignedWordCount'>;

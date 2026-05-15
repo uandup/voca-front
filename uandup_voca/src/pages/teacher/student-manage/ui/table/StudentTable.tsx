@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentManageTableRow } from '@/entities/student';
 import { StudentTableRow, type RowActions } from './StudentTableRow';
 
 type SortKey = keyof Pick<

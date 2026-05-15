@@ -1,22 +1,22 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import type { StudentManageTableRow } from '@/entities/member';
+import type { StudentDetail } from '@/entities/student';
+import { getStudentDetail, toStudentDetail, studentKeys } from '@/entities/student';
+import { GRADES } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member';
+import { DIFFICULTY_LEVELS } from '@/entities/word';
+import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
+import { useStudentManage } from '../../model/useStudentManage';
 import { ParentListPanel } from './ParentListPanel';
-
-interface ParentEntry {
-  id: number;
-  nameKo: string;
-  phone: string;
-}
 import { ClassListPanel } from './ClassListPanel';
 import { ClassChips } from '../ClassChips';
 
 interface EditStudentModalProps {
-  student: StudentManageTableRow;
+  studentId: number;
   onClose: () => void;
-  onSave: (updated: StudentManageTableRow) => void;
 }
 
 const TEST_TYPES: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -26,38 +26,46 @@ const TEST_TYPE_LABELS: Record<WordTestType, string> = {
   'word-to-meaning': 'Word to Meaning ( W to M )',
 };
 
-const ALL_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+export function EditStudentModal({ studentId, onClose }: EditStudentModalProps) {
+  const { data: detail } = useQuery({
+    queryKey: studentKeys.detail(studentId),
+    queryFn: () => getStudentDetail(studentId),
+    select: (res) => (res.data ? toStudentDetail(res.data) : null),
+  });
 
-export function EditStudentModal({ student, onClose, onSave }: EditStudentModalProps) {
-  const [nameKo, setNameKo] = useState(student.nameKo);
-  const [nameFirstEn, setNameFirstEn] = useState(student.nameFirstEn);
-  const [nameLastEn, setNameLastEn] = useState(student.nameLastEn);
-  const [grade, setGrade] = useState(student.grade);
-  const [level, setLevel] = useState(student.assignedLevel);
-  const [wordCount, setWordCount] = useState(String(student.assignedWordCount));
-  const [testQuestionCount, setTestQuestionCount] = useState(String(student.testQuestionCount));
-  const [testType, setTestType] = useState<WordTestType>(student.testConfig.type);
-  const [includeSynonyms, setIncludeSynonyms] = useState(student.testConfig.includeSynonyms);
-  const [selectedParent, setSelectedParent] = useState<ParentEntry | null>(null);
+  if (!detail) return <></>;
+  return <EditStudentModalContent detail={detail} onClose={onClose} />;
+}
+
+interface EditStudentModalContentProps {
+  detail: StudentDetail;
+  onClose: () => void;
+}
+
+function EditStudentModalContent({ detail, onClose }: EditStudentModalContentProps) {
+  const { edit } = useStudentManage();
+  const [form, setForm] = useState<StudentDetail>(detail);
+  // NumberInput은 string 값이 필요하므로 별도 관리
+  const [assignmentCountStr, setAssignmentCountStr] = useState(String(detail.assignmentCount));
+  const [examQuestionCountStr, setExamQuestionCountStr] = useState(
+    String(detail.examQuestionCount),
+  );
   const [showParentList, setShowParentList] = useState(false);
-  const [selectedClasses, setSelectedClasses] = useState<string[]>(student.classes);
   const [showClassList, setShowClassList] = useState(false);
 
+  function update<K extends keyof StudentDetail>(key: K, value: StudentDetail[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
   function handleSave() {
-    onSave({
-      ...student,
-      nameKo,
-      nameFirstEn,
-      nameLastEn,
-      grade,
-      assignedLevel: level,
-      assignedWordCount: Number(wordCount),
-      testQuestionCount: Number(testQuestionCount),
-      testConfig: { type: testType, includeSynonyms },
-      parentName: selectedParent ? selectedParent.nameKo : null,
-      classes: selectedClasses,
-    });
-    onClose();
+    edit(
+      {
+        ...form,
+        assignmentCount: Number(assignmentCountStr),
+        examQuestionCount: Number(examQuestionCountStr),
+      },
+      { onSuccess: onClose },
+    );
   }
 
   return (
@@ -89,18 +97,8 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameKo}
-                  onChange={(e) => setNameKo(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-                  Last Name (English)
-                </label>
-                <input
-                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameLastEn}
-                  onChange={(e) => setNameLastEn(e.target.value)}
+                  value={form.nameKo}
+                  onChange={(e) => update('nameKo', e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -109,8 +107,18 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </label>
                 <input
                   className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  value={nameFirstEn}
-                  onChange={(e) => setNameFirstEn(e.target.value)}
+                  value={form.nameFirstEn}
+                  onChange={(e) => update('nameFirstEn', e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
+                  Last Name (English)
+                </label>
+                <input
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  value={form.nameLastEn}
+                  onChange={(e) => update('nameLastEn', e.target.value)}
                 />
               </div>
             </div>
@@ -124,10 +132,10 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={grade}
-                    onChange={(e) => setGrade(Number(e.target.value))}
+                    value={form.grade}
+                    onChange={(e) => update('grade', Number(e.target.value) as StudentGrade)}
                   >
-                    {[12, 11, 10, 9, 8, 7, 6, 5, 4].map((g) => (
+                    {GRADES.map((g) => (
                       <option key={g} value={g}>
                         G{g}
                       </option>
@@ -145,10 +153,10 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={level}
-                    onChange={(e) => setLevel(Number(e.target.value) as typeof level)}
+                    value={form.level}
+                    onChange={(e) => update('level', Number(e.target.value) as WordDifficultyLevel)}
                   >
-                    {ALL_LEVELS.map((l) => (
+                    {DIFFICULTY_LEVELS.map((l) => (
                       <option key={l} value={l}>
                         Level {l}
                       </option>
@@ -168,10 +176,9 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   Assigned QTY
                 </label>
                 <NumberInput
-                  value={wordCount}
-                  onChange={setWordCount}
-                  min={1}
-                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  value={assignmentCountStr}
+                  onChange={setAssignmentCountStr}
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -179,10 +186,9 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                   Test QTY
                 </label>
                 <NumberInput
-                  value={testQuestionCount}
-                  onChange={setTestQuestionCount}
-                  min={1}
-                  className="w-full border border-outline-variant/30 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  value={examQuestionCountStr}
+                  onChange={setExamQuestionCountStr}
+                  className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
               </div>
             </div>
@@ -196,8 +202,13 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 <div className="relative flex-1">
                   <select
                     className="w-full border border-outline-variant/30 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none transition-all"
-                    value={testType}
-                    onChange={(e) => setTestType(e.target.value as WordTestType)}
+                    value={form.testConfig.type}
+                    onChange={(e) =>
+                      update('testConfig', {
+                        ...form.testConfig,
+                        type: e.target.value as WordTestType,
+                      })
+                    }
                   >
                     {TEST_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -211,9 +222,14 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </div>
                 <button
                   type="button"
-                  onClick={() => setIncludeSynonyms((v) => !v)}
+                  onClick={() =>
+                    update('testConfig', {
+                      ...form.testConfig,
+                      includeSynonyms: !form.testConfig.includeSynonyms,
+                    })
+                  }
                   className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
-                    includeSynonyms
+                    form.testConfig.includeSynonyms
                       ? 'bg-primary text-white border-primary'
                       : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
                   }`}
@@ -250,10 +266,15 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
               </div>
 
               {/* 선택된 반 표시 */}
-              {selectedClasses.length > 0 ? (
+              {form.classrooms.length > 0 ? (
                 <ClassChips
-                  classes={selectedClasses}
-                  onRemove={(c) => setSelectedClasses((prev) => prev.filter((x) => x !== c))}
+                  classes={form.classrooms}
+                  onRemove={(id) =>
+                    update(
+                      'classrooms',
+                      form.classrooms.filter((c) => c.id !== id),
+                    )
+                  }
                 />
               ) : (
                 <p className="text-xs text-on-surface-variant/60 px-1">No class selected</p>
@@ -286,20 +307,34 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
                 </button>
               </div>
 
-              {/* 선택된 학부모 표시 */}
-              {selectedParent ? (
-                <div className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3">
-                  <div>
-                    <p className="text-sm font-bold text-on-surface">{selectedParent.nameKo}</p>
-                    <p className="text-xs text-on-surface-variant mt-0.5">{selectedParent.phone}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedParent(null)}
-                    className="p-1 text-on-surface-variant hover:text-error transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base">close</span>
-                  </button>
+              {/* 선택된 학부모 목록 */}
+              {form.parents.length > 0 ? (
+                <div className="flex flex-col gap-2">
+                  {form.parents.map((parent) => (
+                    <div
+                      key={parent.id}
+                      className="flex items-center justify-between bg-primary/5 border border-primary/20 rounded-xl px-4 py-3"
+                    >
+                      <div>
+                        <p className="text-sm font-bold text-on-surface">{parent.name}</p>
+                        <p className="text-xs text-on-surface-variant mt-0.5">
+                          {parent.phoneNumber}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          update(
+                            'parents',
+                            form.parents.filter((p) => p.id !== parent.id),
+                          )
+                        }
+                        className="p-1 text-on-surface-variant hover:text-error transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-base">close</span>
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-xs text-on-surface-variant/60 px-1">No parent selected</p>
@@ -326,15 +361,26 @@ export function EditStudentModal({ student, onClose, onSave }: EditStudentModalP
 
         {/* 반 리스트 패널 */}
         {showClassList && (
-          <ClassListPanel selectedClasses={selectedClasses} onChange={setSelectedClasses} />
+          <ClassListPanel
+            selectedClasses={form.classrooms}
+            onChange={(classes) => update('classrooms', classes)}
+          />
         )}
 
         {/* 학부모 리스트 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {showParentList && (
           <ParentListPanel
-            selectedId={selectedParent?.id ?? null}
+            selectedIds={form.parents.map((p) => p.id)}
             onSelect={(parent) => {
-              setSelectedParent(parent);
+              update(
+                'parents',
+                form.parents.some((p) => p.id === parent.id)
+                  ? form.parents
+                  : [
+                      ...form.parents,
+                      { id: parent.id, name: parent.name, phoneNumber: parent.phoneNumber },
+                    ],
+              );
               setShowParentList(false);
             }}
           />

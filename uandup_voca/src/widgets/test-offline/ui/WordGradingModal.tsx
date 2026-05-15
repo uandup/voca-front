@@ -18,7 +18,6 @@ interface WordGradingModalProps {
 function GradingSheet({
   id,
   pageRows,
-  page,
   includeSynonyms,
   checked,
   onToggle,
@@ -26,7 +25,6 @@ function GradingSheet({
 }: {
   id: string;
   pageRows: TestWord[];
-  page: number;
   includeSynonyms: boolean;
   checked: boolean[];
   onToggle: (idx: number) => void;
@@ -97,7 +95,7 @@ function GradingSheet({
             </tr>
           </thead>
           <tbody style={{ height: '100%' }}>
-            {pageRows.map(({ word, korMeaning, engMeaning, synonymAnswer: synonym }, idx) => (
+            {pageRows.map(({ id, word, korMeaning, engMeaning, synonymAnswer: synonym }, idx) => (
               <tr
                 key={idx}
                 style={{
@@ -109,7 +107,7 @@ function GradingSheet({
                   className="text-center text-sm font-bold"
                   style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                 >
-                  {String((page - 1) * PAGE_SIZE + idx + 1).padStart(2, '0')}
+                  {String(id).padStart(2, '0')}
                 </td>
                 <td
                   className="text-xs font-semibold"
@@ -179,7 +177,6 @@ export function WordGradingModal({
 
   const sheetProps = (p: number) => ({
     pageRows: rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE),
-    page: p,
     includeSynonyms,
     checked: checkedByPage[p - 1] ?? [],
     onToggle: (idx: number) => handleToggle(p - 1, idx),

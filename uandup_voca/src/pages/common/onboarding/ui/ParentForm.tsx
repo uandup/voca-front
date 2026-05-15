@@ -1,5 +1,7 @@
-import { GRADES, inputClass, selectClass, selectStyle } from './formStyles';
+import { inputClass, selectClass, selectStyle } from './formStyles';
 import type { ParentFormState } from '../model/types';
+import { GRADES } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member';
 
 interface Props {
   value: ParentFormState;
@@ -76,13 +78,10 @@ export function ParentForm({ value, onChange }: Props) {
         </label>
         <select
           value={value.childGrade}
-          onChange={(e) => set('childGrade', e.target.value)}
+          onChange={(e) => set('childGrade', Number(e.target.value) as StudentGrade)}
           className={selectClass}
           style={selectStyle}
         >
-          <option value="" disabled>
-            학년을 선택해주세요
-          </option>
           {GRADES.map((g) => (
             <option key={g} value={g}>
               Grade {g}

@@ -1,4 +1,4 @@
-import type { StudentTodoConfig } from '@/entities/member';
+import type { StudentTodoConfig } from '@/entities/student';
 
 interface Props {
   student: StudentTodoConfig;

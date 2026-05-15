@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import CycleRow from './ui/CycleRow';
-import { MOCK_CYCLES } from '@/entities/test';
+import { toStudentTestBundleRow } from '@/entities/student';
 import type { TestBundleRow } from '@/entities/test';
+import { useStudySetList } from '@/features/study-set';
+import { useCurrentStudentId } from '@/shared/jwt';
 
 const TABS = ['Active', 'History'] as const;
 type Tab = (typeof TABS)[number];
@@ -14,8 +16,13 @@ function isCompleted(cycle: TestBundleRow) {
 export default function WordTestPage() {
   const [activeTab, setActiveTab] = useState<Tab>('Active');
 
-  const activeCycles = MOCK_CYCLES.filter((c) => !isCompleted(c));
-  const historyCycles = MOCK_CYCLES.filter((c) => isCompleted(c));
+  const studentId = useCurrentStudentId() ?? 0;
+  const { data: studySets = [], isLoading } = useStudySetList(studentId);
+  // study-set 응답은 최신순. mock과 동일하게 클라이언트에서는 active/history만 분기.
+  const cycles: TestBundleRow[] = studySets.map(toStudentTestBundleRow);
+
+  const activeCycles = cycles.filter((c) => !isCompleted(c));
+  const historyCycles = cycles.filter((c) => isCompleted(c));
   const displayed = activeTab === 'Active' ? activeCycles : historyCycles;
 
   return (
@@ -49,10 +56,14 @@ export default function WordTestPage() {
         })}
       </div>
 
-      {displayed.length > 0 ? (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">
+          <p className="text-sm font-medium">Loading...</p>
+        </div>
+      ) : displayed.length > 0 ? (
         <div className="flex flex-col gap-6">
-          {displayed.map((cycle, idx) => (
-            <CycleRow key={idx} {...cycle} />
+          {displayed.map((cycle) => (
+            <CycleRow key={cycle.id} {...cycle} />
           ))}
         </div>
       ) : (

@@ -16,15 +16,21 @@ const ANSWER_COL_WIDTH = '110px';
 interface TestESPrintModalProps {
   onClose: () => void;
   rows: ESRow[];
+  studentName?: string;
+  studentEnglishName?: string;
 }
 
 function SentenceSheet({
   id,
   pageRows,
+  studentName,
+  studentEnglishName,
   hidden,
 }: {
   id: string;
   pageRows: ESRow[];
+  studentName?: string;
+  studentEnglishName?: string;
   hidden?: boolean;
 }) {
   return (
@@ -38,7 +44,7 @@ function SentenceSheet({
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
-      <PrintSheetHeader />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} />
       <section style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -110,7 +116,12 @@ function SentenceSheet({
   );
 }
 
-export function SentenceModal({ onClose, rows }: TestESPrintModalProps) {
+export function SentenceModal({
+  onClose,
+  rows,
+  studentName,
+  studentEnglishName,
+}: TestESPrintModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
 
@@ -135,6 +146,8 @@ export function SentenceModal({ onClose, rows }: TestESPrintModalProps) {
         <SentenceSheet
           id={`es-print-sheet-${page}`}
           pageRows={rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
         />
       </div>
 
@@ -147,6 +160,8 @@ export function SentenceModal({ onClose, rows }: TestESPrintModalProps) {
               key={id}
               id={id}
               pageRows={rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE)}
+              studentName={studentName}
+              studentEnglishName={studentEnglishName}
               hidden
             />
           );

@@ -14,6 +14,7 @@ interface WordResultModalProps {
   includeSynonyms?: boolean;
   wrongIndices: number[];
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
 }
 
@@ -27,6 +28,7 @@ function ResultSheet({
   checkedWrong,
   onToggle,
   studentName,
+  studentEnglishName,
   score,
   hidden,
 }: {
@@ -39,6 +41,7 @@ function ResultSheet({
   checkedWrong: Set<number>;
   onToggle: (globalIdx: number) => void;
   studentName?: string;
+  studentEnglishName?: string;
   score?: string;
   hidden?: boolean;
 }) {
@@ -53,7 +56,7 @@ function ResultSheet({
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
-      <PrintSheetHeader name={studentName} score={score} />
+      <PrintSheetHeader name={studentName} englishName={studentEnglishName} score={score} />
       <section className="grow" style={{ overflow: 'hidden' }}>
         <table
           className="w-full"
@@ -107,7 +110,7 @@ function ResultSheet({
             </tr>
           </thead>
           <tbody style={{ height: '100%' }}>
-            {pageRows.map(({ word, korMeaning, engMeaning, synonymAnswer: synonym }, idx) => {
+            {pageRows.map(({ id, word, korMeaning, engMeaning, synonymAnswer: synonym }, idx) => {
               const globalIdx = (page - 1) * PAGE_SIZE + idx;
               const isWrong = isEditing ? checkedWrong.has(globalIdx) : wrongSet.has(globalIdx);
               return (
@@ -122,7 +125,7 @@ function ResultSheet({
                     className="text-center text-sm font-bold"
                     style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                   >
-                    {String(globalIdx + 1).padStart(2, '0')}
+                    {String(id).padStart(2, '0')}
                   </td>
                   <td
                     className="text-xs font-semibold"
@@ -183,6 +186,7 @@ export function WordResultModal({
   includeSynonyms = false,
   wrongIndices,
   studentName,
+  studentEnglishName,
   score,
 }: WordResultModalProps) {
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
@@ -214,6 +218,7 @@ export function WordResultModal({
     checkedWrong,
     onToggle: handleToggle,
     studentName,
+    studentEnglishName,
     score,
   });
 

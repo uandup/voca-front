@@ -1,63 +1,64 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from '@tanstack/react-router';
-import { MOCK_SESSION_STUDENTS } from '@/entities/clinic';
-import { MemoPopup, type Memo as MemoItem } from '@/entities/memo';
-import type { WordDifficultyLevel } from '@/entities/word';
+import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
+import { MemoPopup } from '@/features/memo';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
+import { useStudentOverview } from '@/features/student';
+import { useStudySetList } from '@/features/study-set';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
 export function ClinicDetailPage() {
-  const { studentId } = useParams({ from: '/teacher/clinics_/students/$studentId' });
+  const { studentId: studentIdParam } = useParams({
+    from: '/teacher/clinics_/students/$studentId',
+  });
+  const studentId = Number(studentIdParam);
   const navigate = useNavigate();
 
-  const student = Object.values(MOCK_SESSION_STUDENTS)
-    .flat()
-    .find((s) => String(s.id) === studentId);
+  const { data: student, isLoading: overviewLoading } = useStudentOverview(studentId);
+  const { data: studySets = [], isLoading: setsLoading } = useStudySetList(studentId);
 
-  const [memos, setMemos] = useState<MemoItem[]>(student?.memos ?? []);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
-  const [mainTab, setMainTab] = useState<MainTab>('wordTest');
 
-  const [assignTargetLevel, setAssignTargetLevel] = useState<WordDifficultyLevel>(4);
-  const [assignQty, setAssignQty] = useState(50);
+  // mainTab은 URL search param으로 영속화 — preview/review 페이지 이동 후 Exit으로 돌아올 때
+  // 직전 탭이 복원되도록 한다(returnTo가 현재 URL을 통째로 캡처하므로 자연스럽게 살아남는다).
+  const { tab } = useSearch({ from: '/teacher/clinics_/students/$studentId' });
+  const mainTab: MainTab = tab ?? 'wordTest';
+  const setMainTab = (next: MainTab) => {
+    navigate({
+      to: '.',
+      // 탭 전환 시 다른 탭의 펼침 상태(openSet/openStep)는 의미가 없으므로 함께 비운다.
+      search: { tab: next === 'wordTest' ? undefined : next },
+    });
+  };
 
-  if (!student) {
+  if (overviewLoading || setsLoading || !student) {
     return (
       <main className="p-8">
-        <p className="text-on-surface-variant">학생 정보를 찾을 수 없습니다.</p>
+        <p className="text-on-surface-variant">Loading...</p>
       </main>
     );
   }
-
-  const latestMemo = [...memos].sort((a, b) => b.date.localeCompare(a.date))[0];
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
-        title={`${student.nameKo} (${student.nameFirstEn} ${student.nameLastEn})`}
+        title={student.englishName ? `${student.nameKo} (${student.englishName})` : student.nameKo}
       />
 
       {/* Top Section: Student Info & Quick Assignment */}
       <div className="grid grid-cols-12 gap-6 items-stretch">
         <StudentInfoCard
           student={student}
-          latestMemo={latestMemo}
+          latestMemo={student.latestMemo ?? undefined}
           onMemoClick={() => setIsMemoOpen(true)}
         />
-        <QuickAssignmentCard
-          targetLevel={assignTargetLevel}
-          qty={assignQty}
-          onTargetLevelChange={setAssignTargetLevel}
-          onQtyChange={setAssignQty}
-          onAssign={() => {}}
-        />
+        <QuickAssignmentCard studentId={studentId} />
       </div>
 
       {/* Bottom Section: Tab System */}
@@ -68,7 +69,7 @@ export function ClinicDetailPage() {
             {(
               [
                 { key: 'wordTest', label: 'Word Test' },
-                { key: 'reviewDeck', label: 'Review Deck Bank' },
+                { key: 'reviewDeck', label: 'Review Deck' },
                 { key: 'levelTest', label: 'Level Test' },
               ] as { key: MainTab; label: string }[]
             ).map((tab) => (
@@ -90,19 +91,18 @@ export function ClinicDetailPage() {
           </div>
         </div>
 
-        {mainTab === 'wordTest' && <WordTestTab />}
+        {mainTab === 'wordTest' && <WordTestTab studySets={studySets} studentId={studentId} />}
 
-        {mainTab === 'reviewDeck' && <WrongWordBankTab />}
+        {mainTab === 'reviewDeck' && <WrongWordBankTab studentId={studentId} />}
 
-        {mainTab === 'levelTest' && <LevelTestTab />}
+        {mainTab === 'levelTest' && <LevelTestTab studentId={studentId} />}
       </div>
 
       {isMemoOpen && (
         <MemoPopup
+          studentId={student.id}
           studentName={student.nameKo}
-          memos={memos}
           onClose={() => setIsMemoOpen(false)}
-          onChange={(newMemos) => setMemos(newMemos)}
         />
       )}
     </div>
