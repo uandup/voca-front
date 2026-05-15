@@ -3,24 +3,49 @@ import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { useAssignmentActions } from '../model/hooks/useAssignmentActions';
+import { useStudentOverview } from '../model/hooks/useStudentOverview';
 
 interface Props {
   studentId: number;
-  initialLevel: DifficultyLevel;
-  initialQty: number;
 }
 
 const disabledCls =
   'disabled:bg-slate-100 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed';
 
-export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Props) {
+export function QuickAssignmentCard({ studentId }: Props) {
+  // 학생 데이터의 single source of truth는 서버 캐시(useStudentOverview).
+  // invalidate가 일어나면 즉시 새 값이 반영되도록 prop drilling 대신 직접 구독한다 —
+  // 학생 수정 모달에서 변경한 배정 수/레벨이 캐시 갱신과 동시에 여기에 비치도록.
+  const { data: student } = useStudentOverview(studentId);
   const { assign, updateCount } = useAssignmentActions(studentId);
 
-  const [targetLevel, setTargetLevel] = useState<DifficultyLevel>(initialLevel);
-  const [qty, setQty] = useState<number>(initialQty);
-  const [isEditing, setIsEditing] = useState(false);
+  // 편집 중에만 사용되는 임시 값. null이면 view 모드(서버 값 그대로 표시).
+  const [draft, setDraft] = useState<{ level: DifficultyLevel; qty: number } | null>(null);
   const [showApplyWarning, setShowApplyWarning] = useState(false);
   const [isAssigned, setIsAssigned] = useState(false);
+
+  const isEditing = draft !== null;
+  // student가 잠깐 비어있는 첫 렌더에 대비한 fallback. 부모 ClinicDetailPage가
+  // student 로딩을 게이트하지만 캐시 race를 방어적으로 처리.
+  const displayLevel = draft?.level ?? student?.assignedLevel ?? 1;
+  const displayQty = draft?.qty ?? student?.assignmentCount ?? 0;
+
+  function startEditing() {
+    if (!student) return;
+    setDraft({ level: student.assignedLevel, qty: student.assignmentCount });
+  }
+
+  function cancelEdit() {
+    setDraft(null);
+    setShowApplyWarning(false);
+  }
+
+  function applyEdit() {
+    if (!draft) return;
+    setShowApplyWarning(false);
+    // 성공 시 draft를 비워 view 모드로 — 서버 값이 다시 진실의 원천이 된다.
+    updateCount.mutate(draft.qty, { onSuccess: () => setDraft(null) });
+  }
 
   function handleAssign() {
     if (isEditing) {
@@ -30,19 +55,6 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
     assign.mutate(undefined, {
       onSuccess: () => setIsAssigned(true),
     });
-  }
-
-  function handleApply() {
-    setIsEditing(false);
-    setShowApplyWarning(false);
-    updateCount.mutate(qty);
-  }
-
-  function handleCancelEdit() {
-    setTargetLevel(initialLevel);
-    setQty(initialQty);
-    setIsEditing(false);
-    setShowApplyWarning(false);
   }
 
   return (
@@ -69,8 +81,12 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
                 Level
               </label>
               <select
-                value={targetLevel}
-                onChange={(e) => setTargetLevel(Number(e.target.value) as DifficultyLevel)}
+                value={displayLevel}
+                onChange={(e) =>
+                  setDraft((prev) =>
+                    prev ? { ...prev, level: Number(e.target.value) as DifficultyLevel } : prev,
+                  )
+                }
                 disabled={!isEditing}
                 className={`w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 ${disabledCls}`}
               >
@@ -88,8 +104,10 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
                 Qty
               </label>
               <NumberInput
-                value={String(qty)}
-                onChange={(v) => setQty(Number(v))}
+                value={String(displayQty)}
+                onChange={(v) =>
+                  setDraft((prev) => (prev ? { ...prev, qty: Number(v) } : prev))
+                }
                 disabled={!isEditing}
                 className={`w-full text-sm border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/20 ${disabledCls}`}
               />
@@ -99,7 +117,7 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
             <div className="flex gap-1.5 shrink-0">
               {isEditing && (
                 <button
-                  onClick={handleCancelEdit}
+                  onClick={cancelEdit}
                   className="px-3 py-3 rounded-lg border border-outline/30 text-on-surface-variant hover:bg-slate-50 transition-colors flex items-center justify-center"
                   aria-label="Cancel"
                 >
@@ -112,7 +130,7 @@ export function QuickAssignmentCard({ studentId, initialLevel, initialQty }: Pro
                 </button>
               )}
               <button
-                onClick={isEditing ? handleApply : () => setIsEditing(true)}
+                onClick={isEditing ? applyEdit : startEditing}
                 className="w-16 py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
               >
                 {isEditing ? 'Apply' : 'Edit'}
