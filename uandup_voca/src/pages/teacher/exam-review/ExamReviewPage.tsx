@@ -142,6 +142,11 @@ export default function ExamReviewPage() {
   const correctCount = totalItems - wrongIds.size;
   const hideCheckbox = mode === 'result';
 
+  // sentence review용 정답 단어 map — examItem.word가 빈칸을 채울 정답.
+  const sentenceCorrectAnswers: Record<number, string> = Object.fromEntries(
+    examDetail.items.map((item) => [item.itemOrder, item.word]),
+  );
+
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
@@ -250,6 +255,7 @@ export default function ExamReviewPage() {
             <SentenceReviewTable
               items={sentencePageItems}
               answers={sentenceAnswers}
+              correctAnswers={sentenceCorrectAnswers}
               wrongIds={wrongIds}
               readOnly={mode === 'result'}
               hideCheckbox={hideCheckbox}

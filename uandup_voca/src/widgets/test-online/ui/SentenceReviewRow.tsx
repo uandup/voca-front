@@ -15,18 +15,18 @@ function renderSentenceWithReview(
   answerWord: string,
   isWrong: boolean,
 ) {
-  const parts = sentence.split('_____');
+  const parts = sentence.split('______');
   const isEmpty = studentWord.trim() === '';
 
   return (
     <span className="text-sm text-on-surface leading-relaxed">
       {parts[0]}
-      <span className="inline-flex items-baseline gap-0.5 mx-1 border-b-2 border-outline-variant/50 px-1">
-        <span className={`font-semibold text-[13px] ${isWrong ? 'text-error' : 'text-primary'}`}>
+      <span className="inline-flex items-baseline gap-0.5 mx-1 border-b border-primary pb-px px-1">
+        <span className={`font-semibold text-[13px] ${isWrong ? 'text-error' : 'text-on-surface'}`}>
           {isEmpty ? '—' : studentWord}
         </span>
-        <span className="text-on-surface-variant/40 text-[11px]">/</span>
-        <span className="text-[12px] font-medium text-primary/60">{answerWord}</span>
+        <span className="text-on-surface-variant/60 px-0.5 text-[11px]">/</span>
+        <span className="text-sm font-medium text-primary">{answerWord}</span>
       </span>
       {parts[1]}
     </span>

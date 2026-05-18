@@ -186,6 +186,11 @@ export default function ExamTakePage() {
     examDetail.items.filter((i) => i.isCorrect === false).map((i) => i.itemOrder),
   );
 
+  // sentence review용 정답 단어 map — examItem.word가 빈칸을 채울 정답.
+  const sentenceCorrectAnswers: Record<number, string> = Object.fromEntries(
+    examDetail.items.map((item) => [item.itemOrder, item.word]),
+  );
+
   const isAnswerMode = mode === 'answer';
   const showSubmit = isAnswerMode;
 
@@ -204,6 +209,7 @@ export default function ExamTakePage() {
               <SentenceReviewTable
                 items={sentencePageItems}
                 answers={sentenceAnswers}
+                correctAnswers={sentenceCorrectAnswers}
                 wrongIds={wrongIds}
                 readOnly
                 hideCheckbox
