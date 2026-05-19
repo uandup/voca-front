@@ -780,6 +780,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 학습 대시보드 조회
+         * @description 학생의 현재 레벨·암기 진척·시험 점수 그래프·월간 학습량을 한 번에 조회합니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         */
+        get: operations["getDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/normal-study-sets/{studySetId}/exams/{examType}": {
         parameters: {
             query?: never;
@@ -1048,8 +1068,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * [미사용] 내 정보 조회
-         * @description 현재 로그인한 회원의 정보를 조회합니다.
+         * 내 정보 조회
+         * @description 현재 로그인한 회원의 member 테이블 정보를 그대로 반환합니다. 토큰만 있으면 상태(PROFILE_INCOMPLETE / PENDING_APPROVAL / ACTIVE)와 무관하게 호출 가능. 프론트 펜딩 페이지에서 새로고침/폴링 시 최신 status 확인용으로 사용.
          */
         get: operations["getMyInfo"];
         put?: never;
@@ -1809,6 +1829,123 @@ export interface components {
             correctCount?: number;
             /** Format: int32 */
             totalCount?: number;
+        };
+        ApiResponseDashboardResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["DashboardResponse"];
+        };
+        /** @description 학생 학습 대시보드 (NORMAL 단어 기준 지표 일괄) */
+        DashboardResponse: {
+            /**
+             * Format: int32
+             * @description 현재 레벨 (1~10), 미배정이면 null
+             * @example 3
+             */
+            currentLevel?: number;
+            /**
+             * Format: int32
+             * @description 현재 레벨의 전체 단어 수 (currentLevel이 null이면 0)
+             * @example 100
+             */
+            levelTotalWordCount?: number;
+            /**
+             * Format: int32
+             * @description 현재 레벨에서 통과한 마지막 단어의 orderIndex (없으면 0)
+             * @example 12
+             */
+            levelMemorizedIndex?: number;
+            /**
+             * Format: int32
+             * @description 누적 암기 완료 단어 수 (모든 레벨 합)
+             * @example 250
+             */
+            memorizedWordCount?: number;
+            /**
+             * Format: double
+             * @description 전체 정답률 (0.0~1.0), COMPLETED 시험이 없으면 null
+             * @example 0.85
+             */
+            overallAccuracy?: number;
+            /**
+             * Format: int32
+             * @description 진행 중 NORMAL 배정 단어 수 (없으면 0)
+             * @example 10
+             */
+            activeAssignedWordCount?: number;
+            /**
+             * Format: int32
+             * @description 풀어야 할 리뷰 시험 단어 수 (없으면 0)
+             * @example 20
+             */
+            pendingReviewWordCount?: number;
+            /** @description WORD 시험 점수 추이 (createdAt ASC) */
+            wordExamScores?: components["schemas"]["ExamScorePoint"][];
+            /** @description EXAMPLE 시험 점수 추이 (createdAt ASC) */
+            exampleExamScores?: components["schemas"]["ExamScorePoint"][];
+            /** @description REVIEW 시험 점수 추이 (createdAt ASC) */
+            reviewExamScores?: components["schemas"]["ExamScorePoint"][];
+            /** @description 월간 학습 단어 수 */
+            monthlyAssignedCounts?: components["schemas"]["MonthlyCount"][];
+        };
+        /** @description 시험 점수 그래프 한 지점 */
+        ExamScorePoint: {
+            /**
+             * Format: int64
+             * @description 시험 ID
+             * @example 1
+             */
+            examId?: number;
+            /**
+             * @description 시험 타입
+             * @example WORD
+             * @enum {string}
+             */
+            examType?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3";
+            /**
+             * Format: date
+             * @description 시험 생성일
+             * @example 2026-05-15
+             */
+            date?: string;
+            /**
+             * Format: int32
+             * @description 정답 수
+             * @example 9
+             */
+            correctCount?: number;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 10
+             */
+            totalCount?: number;
+            /**
+             * Format: double
+             * @description 정답률 (0.0 ~ 1.0)
+             * @example 0.9
+             */
+            accuracy?: number;
+            /**
+             * @description 합격 여부
+             * @example true
+             */
+            isPassed?: boolean;
+        };
+        /** @description 월간 학습 단어 수 */
+        MonthlyCount: {
+            /**
+             * @description YYYY-MM 형식
+             * @example 2026-05
+             */
+            yearMonth?: string;
+            /**
+             * Format: int32
+             * @description 해당 월에 배정된 단어 수
+             * @example 120
+             */
+            count?: number;
         };
         ApiResponseStudySetExamTypeResponse: {
             /** Format: int32 */
@@ -4513,6 +4650,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+        };
+    };
+    getDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardResponse"];
                 };
             };
         };
