@@ -17,6 +17,11 @@ const navItems = [
   },
 ] as const;
 
-export function StudentSideNavBar() {
-  return <SideNavBar navItems={[...navItems]} />;
+interface StudentSideNavBarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+export function StudentSideNavBar({ collapsed, onToggle }: StudentSideNavBarProps) {
+  return <SideNavBar navItems={[...navItems]} collapsed={collapsed} onToggle={onToggle} />;
 }
