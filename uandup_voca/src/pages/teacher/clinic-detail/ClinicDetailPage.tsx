@@ -45,9 +45,9 @@ export function ClinicDetailPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="max-w-7xl space-y-8">
       <BreadcrumbPageTitle
-        parents={[{ label: 'Clinic', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
+        parents={[{ label: 'Clinics', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
         title={student.englishName ? `${student.nameKo} (${student.englishName})` : student.nameKo}
       />
 
