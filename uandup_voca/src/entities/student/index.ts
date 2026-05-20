@@ -1,6 +1,7 @@
 export type {
   StudentIdentity,
   StudentPickerRow,
+  UnassignedStudentRow,
   StudentDashboardStats,
   StudentTodoConfig,
   StudentManageTableRow,
@@ -13,6 +14,7 @@ export type {
 } from './model/types';
 export {
   toStudentPickerRow,
+  toUnassignedStudentRow,
   toStudentManageTableRow,
   toStudentDetail,
   toStudentOverview,
@@ -24,6 +26,7 @@ export {
 export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';
 export {
   getStudents,
+  getUnassignedStudents,
   getStudentDetail,
   updateStudent,
   deleteStudent,

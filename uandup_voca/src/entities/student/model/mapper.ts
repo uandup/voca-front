@@ -9,6 +9,7 @@ import {
 import type {
   StudentManageTableRow,
   StudentPickerRow,
+  UnassignedStudentRow,
   StudentDetail,
   StudentOverview,
   StudySetRow,
@@ -25,6 +26,7 @@ type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'
 type LevelCountDto = components['schemas']['LevelCount'];
 type ExamSummaryDto = components['schemas']['ExamSummaryDto'];
 type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
+type UnassignedStudentResponse = components['schemas']['UnassignedStudentResponse'];
 
 export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
   return toTeacherWord({
@@ -47,6 +49,17 @@ export function toStudentPickerRow(r: StudentListResponse): StudentPickerRow {
     nameFirstEn,
     nameLastEn,
     grade: (r.grade ?? 1) as StudentGrade,
+  };
+}
+
+export function toUnassignedStudentRow(r: UnassignedStudentResponse): UnassignedStudentRow {
+  return {
+    id: r.studentId!,
+    nameKo: r.name ?? '',
+    englishName: r.englishName ?? '',
+    grade: (r.grade ?? 1) as StudentGrade,
+    assignmentCount: r.assignmentCount ?? 0,
+    clinics: (r.clinics ?? []).map((c) => `${c.dayOfWeek ?? ''} ${c.hour ?? 0}:00`),
   };
 }
 

@@ -6,7 +6,8 @@
       "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/test-assignment/ui)",
       "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/test-grading/ui)",
       "Bash(mkdir -p /Users/leeeunsoo/Desktop/uandup_voca/voca-front/uandup_voca/src/pages/teacher/vocabulary-bank/ui)",
-      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(npx tsc *)"
     ]
   }
 }
