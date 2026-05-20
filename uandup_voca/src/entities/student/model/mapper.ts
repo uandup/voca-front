@@ -8,6 +8,8 @@ import {
 } from '@/entities/word/@x/student';
 import type {
   StudentManageTableRow,
+  StudentPickerRow,
+  UnassignedStudentRow,
   StudentDetail,
   StudentOverview,
   StudySetRow,
@@ -24,6 +26,7 @@ type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'
 type LevelCountDto = components['schemas']['LevelCount'];
 type ExamSummaryDto = components['schemas']['ExamSummaryDto'];
 type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
+type UnassignedStudentResponse = components['schemas']['UnassignedStudentResponse'];
 
 export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
   return toTeacherWord({
@@ -36,6 +39,28 @@ export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
     synonyms: res.synonyms,
     example: res.example,
   });
+}
+
+export function toStudentPickerRow(r: StudentListResponse): StudentPickerRow {
+  const [nameFirstEn = '', nameLastEn = ''] = (r.englishName ?? '').split(' ');
+  return {
+    id: r.studentId!,
+    nameKo: r.name ?? '',
+    nameFirstEn,
+    nameLastEn,
+    grade: (r.grade ?? 1) as StudentGrade,
+  };
+}
+
+export function toUnassignedStudentRow(r: UnassignedStudentResponse): UnassignedStudentRow {
+  return {
+    id: r.studentId!,
+    nameKo: r.name ?? '',
+    englishName: r.englishName ?? '',
+    grade: (r.grade ?? 1) as StudentGrade,
+    assignmentCount: r.assignmentCount ?? 0,
+    clinics: (r.clinics ?? []).map((c) => `${c.dayOfWeek ?? ''} ${c.hour ?? 0}:00`),
+  };
 }
 
 export function toStudentManageTableRow(r: StudentListResponse): StudentManageTableRow {

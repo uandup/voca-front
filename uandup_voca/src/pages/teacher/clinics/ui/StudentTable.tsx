@@ -14,7 +14,7 @@ export function StudentTable({ students, onMemoClick, onEditMembersClick }: Prop
   const navigate = useNavigate();
 
   return (
-    <div className="col-span-9 space-y-4">
+    <div className="col-span-11 space-y-4">
       <div className="flex justify-start">
         <button
           onClick={onEditMembersClick}
@@ -28,12 +28,12 @@ export function StudentTable({ students, onMemoClick, onEditMembersClick }: Prop
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse table-fixed">
             <colgroup>
-              <col className="w-[18%]" />
+              <col className="w-[16%]" />
               <col className="w-[7%]" />
               <col className="w-[7%]" />
               <col className="w-[7%]" />
               <col className="w-[7%]" />
-              <col className="w-[12%]" />
+              <col className="w-[14%]" />
               <col className="w-[42%]" />
             </colgroup>
             <thead>

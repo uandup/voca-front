@@ -66,12 +66,12 @@ export function StudentTable({ students, actions }: StudentTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse table-fixed">
           <colgroup>
-            <col className="w-[12%]" />
+            <col className="w-[11%]" />
             <col className="w-[7%]" />
             <col className="w-[7%]" />
             <col className="w-[6%]" />
             <col className="w-[6%]" />
-            <col className="w-[9%]" />
+            <col className="w-[10%]" />
             <col className="w-[8%]" />
             <col className="w-[6%]" />
             <col className="w-[26%]" />

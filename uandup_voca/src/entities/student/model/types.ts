@@ -13,6 +13,24 @@ export interface StudentIdentity {
   nameLastEn: string;
 }
 
+/** 학생 선택 UI(picker)에서 사용하는 최소 정보. 이름·학년만 필요할 때 재사용. */
+export type StudentPickerRow = StudentIdentity & {
+  grade: StudentGrade;
+};
+
+/** 미배정 학생 모달 row — 단어를 한 번도 배정받지 못한 학생. */
+export interface UnassignedStudentRow {
+  id: number;
+  nameKo: string;
+  // 서버에서 전체 영문 이름(예: "Jisu Kang") 그대로 내려옴.
+  englishName: string;
+  grade: StudentGrade;
+  // 배정 설정값 — 아직 배정 전이라 '시작 개수'로 사용.
+  assignmentCount: number;
+  // 소속 클리닉 슬롯을 "MON 13:00" 형태로 표시한 문자열 목록.
+  clinics: string[];
+}
+
 // ── Student Dashboard ───────────────────────────────────────────────────────
 
 /** Student Dashboard — StatCards + LevelProgress */

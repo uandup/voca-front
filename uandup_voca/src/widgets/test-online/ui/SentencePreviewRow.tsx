@@ -8,7 +8,7 @@ interface SentencePreviewRowProps {
 }
 
 export function SentencePreviewRow({ id, sentence, answer }: SentencePreviewRowProps) {
-  const parts = sentence.split('_____');
+  const parts = sentence.split('______');
 
   return (
     <div className="flex items-center gap-4 px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-low/40">
@@ -19,7 +19,9 @@ export function SentencePreviewRow({ id, sentence, answer }: SentencePreviewRowP
       <div className="flex-1 min-w-0">
         <span className="text-sm text-on-surface leading-relaxed">
           {parts[0]}
-          <span className="font-bold text-primary mx-1">{answer}</span>
+          <span className="font-bold text-primary mx-1 border-b border-primary pb-px">
+            {answer}
+          </span>
           {parts[1]}
         </span>
       </div>

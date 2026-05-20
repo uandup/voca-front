@@ -14,8 +14,13 @@ const ADMIN_NAV_ITEM = {
   to: '/teacher/admin',
 } as const;
 
-export function TeacherSideNavBar() {
+interface TeacherSideNavBarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+export function TeacherSideNavBar({ collapsed, onToggle }: TeacherSideNavBarProps) {
   const navItems = isAdmin() ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM] : [...BASE_NAV_ITEMS];
 
-  return <SideNavBar navItems={navItems} />;
+  return <SideNavBar navItems={navItems} collapsed={collapsed} onToggle={onToggle} />;
 }

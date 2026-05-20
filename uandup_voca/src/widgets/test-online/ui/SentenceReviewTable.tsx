@@ -4,7 +4,10 @@ import { SentenceReviewRow } from './SentenceReviewRow';
 
 interface SentenceReviewTableProps {
   items: SentenceTestItem[];
+  // 학생이 제출한 답안. itemOrder(=item.id) 키 기준.
   answers: Record<number, SentenceTestAnswer>;
+  // 정답 단어 — itemOrder(=item.id) 키 기준. examDetail.items의 word 필드에서 생성.
+  correctAnswers: Record<number, string>;
   wrongIds: Set<number>;
   readOnly?: boolean;
   hideCheckbox?: boolean;
@@ -14,6 +17,7 @@ interface SentenceReviewTableProps {
 export function SentenceReviewTable({
   items,
   answers,
+  correctAnswers,
   wrongIds,
   readOnly = false,
   hideCheckbox = false,
@@ -27,7 +31,7 @@ export function SentenceReviewTable({
             key={item.id}
             id={item.id}
             sentence={item.sentence}
-            answerWord={answers[item.id]?.answer ?? ''}
+            answerWord={correctAnswers[item.id] ?? ''}
             studentWord={answers[item.id]?.answer ?? ''}
             isWrong={wrongIds.has(item.id)}
             readOnly={readOnly}

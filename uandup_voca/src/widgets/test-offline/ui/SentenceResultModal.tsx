@@ -95,7 +95,7 @@ function SentenceResultSheet({
             {pageRows.map(({ no: rowNo, sentence, answer }, idx) => {
               const globalIdx = (page - 1) * PAGE_SIZE + idx;
               const isWrong = isEditing ? checkedWrong.has(globalIdx) : wrongSet.has(globalIdx);
-              const parts = sentence.split('_____');
+              const parts = sentence.split('______');
               return (
                 <tr
                   key={rowNo}

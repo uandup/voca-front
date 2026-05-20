@@ -1,8 +1,30 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { getMyInfo, toMember } from '@/entities/member';
 import { OnboardingNav } from '../onboarding/ui/OnboardingNav';
 
 export default function PendingPage() {
   const navigate = useNavigate();
+  const called = useRef(false);
+
+  useEffect(() => {
+    if (called.current) return;
+    called.current = true;
+
+    getMyInfo()
+      .then(({ data }) => {
+        const member = toMember(data);
+
+        if (member.status === 'PROFILE_INCOMPLETE') {
+          navigate({ to: '/onboarding' });
+        } else if (member.status === 'ACTIVE') {
+          navigate({ to: member.role === 'STUDENT' ? '/student' : '/teacher' });
+        }
+      })
+      .catch(() => {
+        // 조회 실패 시 현재 페이지 유지. 401은 axios 인터셉터가 처리.
+      });
+  }, [navigate]);
 
   return (
     <div className="min-h-screen primary-gradient flex flex-col">

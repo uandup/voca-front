@@ -23,12 +23,16 @@ interface TestESPrintModalProps {
 function SentenceSheet({
   id,
   pageRows,
+  showAnswer,
   studentName,
   studentEnglishName,
   hidden,
 }: {
   id: string;
   pageRows: ESRow[];
+  // preview(화면): true → 정답 단어를 인라인으로 채워 보여줌.
+  // print(인쇄): false → 빈 밑줄만 표시.
+  showAnswer: boolean;
   studentName?: string;
   studentEnglishName?: string;
   hidden?: boolean;
@@ -77,8 +81,8 @@ function SentenceSheet({
             </tr>
           </thead>
           <tbody>
-            {pageRows.map(({ no: rowNo, sentence }) => {
-              const parts = sentence.split('_____');
+            {pageRows.map(({ no: rowNo, sentence, answer }) => {
+              const parts = sentence.split('______');
               return (
                 <tr key={rowNo} style={{ height: `${ROW_HEIGHT_MM}mm` }}>
                   <td
@@ -92,17 +96,34 @@ function SentenceSheet({
                     style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                   >
                     {parts[0]}
-                    {sentence && (
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          minWidth: '100px',
-                          borderBottom: '1px solid black',
-                          margin: '0 2px',
-                          verticalAlign: 'baseline',
-                        }}
-                      />
-                    )}
+                    {sentence &&
+                      (showAnswer ? (
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            minWidth: '100px',
+                            borderBottom: '1px solid black',
+                            margin: '0 2px',
+                            padding: '0 4px',
+                            textAlign: 'center',
+                            fontWeight: 600,
+                            color: '#1d4ed8',
+                            verticalAlign: 'baseline',
+                          }}
+                        >
+                          {answer}
+                        </span>
+                      ) : (
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            minWidth: '100px',
+                            borderBottom: '1px solid black',
+                            margin: '0 2px',
+                            verticalAlign: 'baseline',
+                          }}
+                        />
+                      ))}
                     {parts[1]}
                   </td>
                   <td style={{ border: '1.5pt solid black', padding: '4px 12px' }} />
@@ -125,8 +146,12 @@ export function SentenceModal({
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const [page, setPage] = useState(1);
 
-  const allPageIds = Array.from({ length: totalPages }, (_, i) => `es-print-sheet-${i + 1}`);
-  const handlePrint = () => printAllSheets(allPageIds);
+  // 화면 preview(정답 채워서 표시)와 실제 인쇄용(빈칸)을 별도 ID로 분리해야
+  // 인쇄 시 preview 시트가 같이 출력되지 않는다. WordTestModal과 동일 패턴.
+  const printPageIds = Array.from({ length: totalPages }, (_, i) => `es-print-sheet-${i + 1}`);
+  const handlePrint = () => printAllSheets(printPageIds);
+
+  const pageRowsAt = (p: number) => rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE);
 
   return (
     <div
@@ -142,30 +167,29 @@ export function SentenceModal({
         onNext={() => setPage((p) => Math.min(totalPages, p + 1))}
       />
 
+      {/* Preview — 화면 표시용 (정답 채움). 인쇄에서는 제외. */}
       <div className="mt-20" onClick={(e) => e.stopPropagation()}>
         <SentenceSheet
-          id={`es-print-sheet-${page}`}
-          pageRows={rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)}
+          id={`es-preview-sheet-${page}`}
+          pageRows={pageRowsAt(page)}
+          showAnswer
           studentName={studentName}
           studentEnglishName={studentEnglishName}
         />
       </div>
 
-      {allPageIds
-        .filter((_, i) => i + 1 !== page)
-        .map((id) => {
-          const p = parseInt(id.split('-').pop()!);
-          return (
-            <SentenceSheet
-              key={id}
-              id={id}
-              pageRows={rows.slice((p - 1) * PAGE_SIZE, p * PAGE_SIZE)}
-              studentName={studentName}
-              studentEnglishName={studentEnglishName}
-              hidden
-            />
-          );
-        })}
+      {/* Print — 화면 밖 hidden sheets (전 페이지, 빈칸). printAllSheets 대상. */}
+      {printPageIds.map((id, i) => (
+        <SentenceSheet
+          key={id}
+          id={id}
+          pageRows={pageRowsAt(i + 1)}
+          showAnswer={false}
+          studentName={studentName}
+          studentEnglishName={studentEnglishName}
+          hidden
+        />
+      ))}
     </div>
   );
 }

@@ -43,7 +43,8 @@ export function toESRows(items: ExamItem[]): ESRow[] {
   return items.map((item) => ({
     no: String(item.itemOrder),
     sentence: item.example,
-    answer: item.koreanMeaning,
+    // sentence 시험의 빈칸은 영어 word를 채우는 것 — koreanMeaning이 아님.
+    answer: item.word,
   }));
 }
 

@@ -3,6 +3,7 @@ import type { ApiResponse } from '@/shared/api';
 import type { components } from '@/shared/api/schema.gen';
 
 type StudentListResponse = components['schemas']['StudentListResponse'];
+type UnassignedStudentResponse = components['schemas']['UnassignedStudentResponse'];
 type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
 type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
@@ -17,6 +18,11 @@ type UpdateExamSettingsRequest = components['schemas']['UpdateExamSettingsReques
 export const getStudents = (): Promise<ApiResponse<StudentListResponse[]>> =>
   axiosInstance
     .get<ApiResponse<StudentListResponse[]>>('/api/v1/members/students')
+    .then((r) => r.data);
+
+export const getUnassignedStudents = (): Promise<ApiResponse<UnassignedStudentResponse[]>> =>
+  axiosInstance
+    .get<ApiResponse<UnassignedStudentResponse[]>>('/api/v1/members/students/unassigned')
     .then((r) => r.data);
 
 export const getStudentDetail = (id: number): Promise<ApiResponse<StudentDetailResponse>> =>
