@@ -13,6 +13,11 @@ export interface StudentIdentity {
   nameLastEn: string;
 }
 
+/** 학생 선택 UI(picker)에서 사용하는 최소 정보. 이름·학년만 필요할 때 재사용. */
+export type StudentPickerRow = StudentIdentity & {
+  grade: StudentGrade;
+};
+
 // ── Student Dashboard ───────────────────────────────────────────────────────
 
 /** Student Dashboard — StatCards + LevelProgress */

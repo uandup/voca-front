@@ -8,6 +8,7 @@ import {
 } from '@/entities/word/@x/student';
 import type {
   StudentManageTableRow,
+  StudentPickerRow,
   StudentDetail,
   StudentOverview,
   StudySetRow,
@@ -36,6 +37,17 @@ export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
     synonyms: res.synonyms,
     example: res.example,
   });
+}
+
+export function toStudentPickerRow(r: StudentListResponse): StudentPickerRow {
+  const [nameFirstEn = '', nameLastEn = ''] = (r.englishName ?? '').split(' ');
+  return {
+    id: r.studentId!,
+    nameKo: r.name ?? '',
+    nameFirstEn,
+    nameLastEn,
+    grade: (r.grade ?? 1) as StudentGrade,
+  };
 }
 
 export function toStudentManageTableRow(r: StudentListResponse): StudentManageTableRow {

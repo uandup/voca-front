@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getStudents, toStudentPickerRow, studentKeys } from '@/entities/student';
 import type { PendingParent } from '../../model/types';
 
 interface Props {
@@ -9,11 +11,26 @@ interface Props {
 export function StudentMatchPanel({ parent, onClose }: Props) {
   const [search, setSearch] = useState('');
 
+  // 학생 관리 페이지와 동일한 쿼리 키를 사용하여 react-query 캐시를 공유한다.
+  // select에서 picker용 최소 매퍼를 적용하므로 다른 구독자의 매핑에는 영향을 주지 않는다.
+  const { data: students } = useQuery({
+    queryKey: studentKeys.lists(),
+    queryFn: getStudents,
+    select: (res) => res.data?.map(toStudentPickerRow) ?? [],
+  });
+
+  const keyword = search.trim().toLowerCase();
+  const filtered = (students ?? []).filter((s) => {
+    if (!keyword) return true;
+    const englishName = `${s.nameFirstEn} ${s.nameLastEn}`.trim().toLowerCase();
+    return s.nameKo.toLowerCase().includes(keyword) || englishName.includes(keyword);
+  });
+
   return (
-    <div className="absolute inset-0 bg-surface flex flex-col">
-      <div className="px-7 py-4 border-b border-outline-variant/20 shrink-0">
+    <div className="absolute left-full top-0 ml-3 w-72 bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col h-full">
+      <div className="px-5 py-4 border-b border-outline-variant/30 shrink-0">
         <div className="flex items-center justify-between mb-1">
-          <p className="text-sm font-extrabold text-primary">Match Student</p>
+          <h3 className="text-sm font-extrabold font-headline text-primary">Match Student</h3>
           <button
             type="button"
             onClick={onClose}
@@ -28,19 +45,42 @@ export function StudentMatchPanel({ parent, onClose }: Props) {
         </p>
       </div>
 
-      <div className="px-7 py-3 border-b border-outline-variant/20 shrink-0">
+      <div className="px-4 py-3 border-b border-outline-variant/20 shrink-0">
         <input
           autoFocus
-          className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg py-1.5 pl-2 pr-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           placeholder="Search student name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      <div className="flex-1 flex items-center justify-center text-xs text-on-surface-variant">
-        Student matching will be available via API
-      </div>
+      <ul className="flex-1 overflow-y-auto divide-y divide-outline-variant/20">
+        {filtered.length === 0 ? (
+          <li className="px-5 py-6 text-xs text-on-surface-variant text-center">
+            No students found
+          </li>
+        ) : (
+          filtered.map((student) => (
+            <li key={student.id}>
+              <button
+                type="button"
+                className="w-full text-left px-5 py-3 hover:bg-surface-container-low transition-colors"
+              >
+                <p className="text-sm font-bold text-on-surface">
+                  {student.nameKo}
+                  <span className="text-xs font-medium text-on-surface-variant ml-1.5">
+                    G{student.grade}
+                  </span>
+                </p>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  {`${student.nameFirstEn} ${student.nameLastEn}`.trim()}
+                </p>
+              </button>
+            </li>
+          ))
+        )}
+      </ul>
     </div>
   );
 }

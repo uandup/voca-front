@@ -1,5 +1,6 @@
 export type {
   StudentIdentity,
+  StudentPickerRow,
   StudentDashboardStats,
   StudentTodoConfig,
   StudentManageTableRow,
@@ -11,6 +12,7 @@ export type {
   ExamStatus,
 } from './model/types';
 export {
+  toStudentPickerRow,
   toStudentManageTableRow,
   toStudentDetail,
   toStudentOverview,
