@@ -24,7 +24,7 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
 
   return (
     <aside
-      className={`h-screen fixed -r  left-0 top-0 flex flex-col gap-2 py-4 px-3 bg-slate-50 border-r border-slate-200 z-40 overflow-hidden transition-all duration-200 ${
+      className={`h-screen fixed left-0 top-0 flex flex-col gap-2 py-4 px-3 bg-slate-50 border-r border-slate-200 z-40 overflow-hidden transition-all duration-200 ${
         collapsed ? 'w-18' : 'w-64'
       }`}
     >
@@ -36,7 +36,7 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
           type="button"
           onClick={onToggle}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="flex items-center justify-center  rounded-lg text-slate-600 hover:bg-slate-200/50 transition-colors"
+          className="flex items-center justify-center py-1 rounded-lg text-slate-600 hover:bg-slate-200/50 transition-colors"
         >
           <span className="material-symbols-outlined leading-none">
             {collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'}

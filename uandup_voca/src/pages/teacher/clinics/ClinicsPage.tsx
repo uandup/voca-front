@@ -59,7 +59,7 @@ export default function ClinicsPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-14 gap-8 items-start">
         <SessionPanel
           selectedSlot={selectedSlot}
           expandedGroups={expandedGroups}

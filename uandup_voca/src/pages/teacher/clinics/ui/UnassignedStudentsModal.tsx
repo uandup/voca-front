@@ -46,9 +46,7 @@ export function UnassignedStudentsModal({ onClose }: Props) {
                 key={student.id}
                 student={student}
                 isExpanded={expandedId === student.id}
-                onToggle={() =>
-                  setExpandedId((prev) => (prev === student.id ? null : student.id))
-                }
+                onToggle={() => setExpandedId((prev) => (prev === student.id ? null : student.id))}
               />
             ))
           )}
