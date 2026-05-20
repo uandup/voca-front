@@ -1,25 +1,16 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { MemoPopup } from '@/features/memo';
-import { todayDay } from '@/entities/clinic';
-import type { Day, TimeGroup, ClinicHour } from '@/entities/clinic';
 import type { ClinicStudentRow } from '@/entities/clinic';
 import { useClinics } from './model/hooks/useClinics';
+import { useClinicViewState } from './model/hooks/useClinicViewState';
 import { SessionPanel } from './ui/SessionPanel';
 import { StudentTable } from './ui/StudentTable';
 import { EditMembersModal } from './ui/EditMembersModal';
 import { UnassignedStudentsModal } from './ui/UnassignedStudentsModal';
 
 export default function ClinicsPage() {
-  const [selectedSlot, setSelectedSlot] = useState<{ day: Day; hour: ClinicHour }>({
-    day: todayDay,
-    hour: 9,
-  });
-  const [expandedGroups, setExpandedGroups] = useState<Record<TimeGroup, boolean>>({
-    morning: true,
-    afternoon: true,
-    evening: true,
-  });
+  const { selectedSlot, setSelectedSlot, expandedGroups, setExpandedGroups } = useClinicViewState();
   const [memoStudent, setMemoStudent] = useState<ClinicStudentRow | null>(null);
   const [isEditMembersOpen, setIsEditMembersOpen] = useState(false);
   const [isUnassignedOpen, setIsUnassignedOpen] = useState(false);
