@@ -25,6 +25,10 @@ export default function OAuthCallbackPage() {
           navigate({ to: '/onboarding' });
         } else if (data.status === 'PENDING_APPROVAL') {
           navigate({ to: '/pending' });
+        } else if (data.role === 'PARENT') {
+          // 학부모 전용 화면이 아직 없다 — ACTIVE라도 PendingPage에 머물며,
+          // 자녀 매칭 여부에 따라 PendingPage가 문구를 분기한다.
+          navigate({ to: '/pending' });
         } else {
           navigate({ to: data.role === 'STUDENT' ? '/student' : '/teacher' });
         }

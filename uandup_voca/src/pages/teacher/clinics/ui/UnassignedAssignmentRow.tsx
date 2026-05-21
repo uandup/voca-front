@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  assignWords,
-  updateAssignmentCount,
-  invalidateStudentCascade,
-} from '@/entities/student';
+import { assignWords, updateAssignmentCount, invalidateStudentCascade } from '@/entities/student';
 import type { UnassignedStudentRow } from '@/entities/student';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';

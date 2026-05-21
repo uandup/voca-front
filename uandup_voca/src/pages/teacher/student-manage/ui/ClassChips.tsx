@@ -12,11 +12,11 @@ export function ClassChips({ classes, onRemove }: ClassChipsProps) {
   // null = 아직 측정 전 (전체 렌더), number = 측정 완료
   const [visibleCount, setVisibleCount] = useState<number | null>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     // classes가 바뀌었으면 리셋 후 재측정
     if (prevClassesRef.current !== classes) {
       prevClassesRef.current = classes;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleCount(null);
       return;
     }

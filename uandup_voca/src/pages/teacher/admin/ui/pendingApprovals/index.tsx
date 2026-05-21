@@ -81,10 +81,7 @@ export default function PendingApprovalsModal({ onClose }: Props) {
 
         {/* 학생 매칭 사이드 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {matchingParent && (
-          <StudentMatchPanel
-            parent={matchingParent}
-            onClose={() => setMatchingParent(null)}
-          />
+          <StudentMatchPanel parent={matchingParent} onClose={() => setMatchingParent(null)} />
         )}
       </div>
     </ModalBackdrop>

@@ -1,11 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { getMyInfo, toMember } from '@/entities/member';
 import { OnboardingNav } from '../onboarding/ui/OnboardingNav';
 
+// PendingPage가 표시할 두 가지 안내 — 일반 승인 대기 vs 학부모 자녀 매칭 대기.
+type PendingVariant = 'approval' | 'parentNoChild';
+
 export default function PendingPage() {
   const navigate = useNavigate();
   const called = useRef(false);
+
+  // 학부모 전용 화면이 없어 ACTIVE 학부모도 이 페이지에 머문다 —
+  // 자녀가 매칭되지 않은 학부모는 'parentNoChild' 문구로 분기한다.
+  const [variant, setVariant] = useState<PendingVariant>('approval');
 
   useEffect(() => {
     if (called.current) return;
@@ -17,7 +24,19 @@ export default function PendingPage() {
 
         if (member.status === 'PROFILE_INCOMPLETE') {
           navigate({ to: '/onboarding' });
-        } else if (member.status === 'ACTIVE') {
+          return;
+        }
+
+        if (member.role === 'PARENT') {
+          // 학부모는 status와 무관하게 이 페이지에 머문다.
+          // ACTIVE이지만 자녀가 아직 없으면 '자녀 매칭 대기' 문구로 전환한다.
+          if (member.status === 'ACTIVE' && (member.children?.length ?? 0) === 0) {
+            setVariant('parentNoChild');
+          }
+          return;
+        }
+
+        if (member.status === 'ACTIVE') {
           navigate({ to: member.role === 'STUDENT' ? '/student' : '/teacher' });
         }
       })
@@ -25,6 +44,8 @@ export default function PendingPage() {
         // 조회 실패 시 현재 페이지 유지. 401은 axios 인터셉터가 처리.
       });
   }, [navigate]);
+
+  const isParentNoChild = variant === 'parentNoChild';
 
   return (
     <div className="min-h-screen primary-gradient flex flex-col">
@@ -43,30 +64,59 @@ export default function PendingPage() {
             {/* Icon */}
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-4xl">schedule</span>
+                <span className="material-symbols-outlined text-primary text-4xl">
+                  {isParentNoChild ? 'family_restroom' : 'schedule'}
+                </span>
               </div>
             </div>
 
-            <h1 className="font-headline font-extrabold text-on-surface text-2xl mb-3">
-              Awaiting Approval
-            </h1>
-            <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
-              Your registration is under review by an administrator.
-              <br />
-              You'll be able to access the service once approved.
-            </p>
+            {isParentNoChild ? (
+              <>
+                <h1 className="font-headline font-extrabold text-on-surface text-2xl mb-3">
+                  Waiting for a Linked Child
+                </h1>
+                <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
+                  Your account has been approved.
+                  <br />
+                  You'll be able to access the service once a child is linked to your account.
+                </p>
 
-            {/* Notice */}
-            <div className="flex items-start gap-2.5 px-4 py-3.5 rounded-xl bg-secondary-container/30 border border-outline-variant text-left">
-              <span className="material-symbols-outlined text-base text-on-surface-variant mt-0.5 shrink-0">
-                info
-              </span>
-              <p className="text-xs text-on-surface-variant leading-relaxed">
-                Approval may take some time.
-                <br />
-                Please sign in again once you receive confirmation.
-              </p>
-            </div>
+                {/* Notice */}
+                <div className="flex items-start gap-2.5 px-4 py-3.5 rounded-xl bg-secondary-container/30 border border-outline-variant text-left">
+                  <span className="material-symbols-outlined text-base text-on-surface-variant mt-0.5 shrink-0">
+                    info
+                  </span>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    A child is linked by an administrator.
+                    <br />
+                    Please sign in again once your child has been linked.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="font-headline font-extrabold text-on-surface text-2xl mb-3">
+                  Awaiting Approval
+                </h1>
+                <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
+                  Your registration is under review by an administrator.
+                  <br />
+                  You'll be able to access the service once approved.
+                </p>
+
+                {/* Notice */}
+                <div className="flex items-start gap-2.5 px-4 py-3.5 rounded-xl bg-secondary-container/30 border border-outline-variant text-left">
+                  <span className="material-symbols-outlined text-base text-on-surface-variant mt-0.5 shrink-0">
+                    info
+                  </span>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    Approval may take some time.
+                    <br />
+                    Please sign in again once you receive confirmation.
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
