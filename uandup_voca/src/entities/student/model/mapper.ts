@@ -101,7 +101,7 @@ function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | nu
     createdAt: dto.createdAt ?? null,
     completedAt: dto.completedAt ?? null,
     correctCount: dto.correctCount ?? null,
-    totalCount: dto.totalCount ?? null,
+    totalCount: dto.questionCount ?? null,
   };
 }
 

@@ -29,6 +29,6 @@ export function toLevelTestExamRow(r: LevelExamListResponse): LevelTestExamRow {
     questionCount: r.questionCount ?? 0,
     status: toLevelTestExamStatus(r.status),
     correctCount: r.correctCount ?? null,
-    totalCount: r.totalCount ?? null,
+    totalCount: r.questionCount ?? null,
   };
 }

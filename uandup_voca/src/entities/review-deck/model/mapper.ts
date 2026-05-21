@@ -20,7 +20,7 @@ export function toReviewDeckExamRow(r: WrongBankExamListResponse): ReviewDeckExa
     wordCount: r.wordCount ?? 0,
     status: (r.status ?? 'READY') as ReviewDeckExamStatus,
     correctCount: r.correctCount ?? null,
-    totalCount: r.totalCount ?? null,
+    totalCount: r.questionCount ?? null,
   };
 }
 
