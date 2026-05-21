@@ -58,7 +58,7 @@ export function ClinicDetailPage() {
           latestMemo={student.latestMemo ?? undefined}
           onMemoClick={() => setIsMemoOpen(true)}
         />
-        <QuickAssignmentCard studentId={studentId} />
+        <QuickAssignmentCard studentId={studentId} studySets={studySets} />
       </div>
 
       {/* Bottom Section: Tab System */}

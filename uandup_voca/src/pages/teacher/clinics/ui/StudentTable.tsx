@@ -15,7 +15,7 @@ export function StudentTable({ students, onMemoClick, onEditMembersClick }: Prop
 
   return (
     <div className="col-span-11 space-y-4">
-      <div className="flex justify-start">
+      <div className="flex justify-end">
         <button
           onClick={onEditMembersClick}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-on-primary-fixed-variant bg-surface-container-lowest border/20 shadow-sm hover:bg-surface-container-low transition-colors font-medium"
