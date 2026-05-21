@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
+import { ColumnToggleDropdown } from '@/shared/ui/ColumnToggleDropdown';
+import { usePersistentState } from '@/shared/lib/usePersistentState';
 import type { StudentManageTableRow } from '@/entities/student';
 import { GRADES } from '@/entities/member';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import { useQuery } from '@tanstack/react-query';
 import { getClassrooms, toClassListItem, classKeys } from '@/entities/class';
 import { useStudentManage } from './model/useStudentManage';
+import { STUDENT_COLUMN_STORAGE_KEY, STUDENT_COLUMN_OPTIONS } from './model/studentColumns';
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
 import { MemoPopup } from '@/features/memo';
@@ -20,6 +23,21 @@ export default function StudentManagePage() {
   const [editingStudent, setEditingStudent] = useState<StudentManageTableRow | null>(null);
   const [deletingStudent, setDeletingStudent] = useState<StudentManageTableRow | null>(null);
   const [memoStudent, setMemoStudent] = useState<StudentManageTableRow | null>(null);
+
+  // 테이블 컬럼 가시성은 페이지가 소유한다 — 토글 UI(Columns 버튼)를 검색바 위 제목 줄에 두고,
+  // 숨김 목록은 StudentTable에 prop으로 내린다. localStorage에 영속화되어 재방문 후에도 유지된다.
+  const [hiddenColumns, setHiddenColumns] = usePersistentState<string[]>(
+    STUDENT_COLUMN_STORAGE_KEY,
+    [],
+  );
+  function toggleColumn(key: string) {
+    setHiddenColumns((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
+  }
+  const visibleColumnKeys = new Set(
+    STUDENT_COLUMN_OPTIONS.filter((c) => !hiddenColumns.includes(c.key)).map((c) => c.key),
+  );
 
   const { data: allClasses = [] } = useQuery({
     queryKey: classKeys.list(),
@@ -45,7 +63,15 @@ export default function StudentManagePage() {
 
   return (
     <main>
-      <PageTitle title="Student Management" />
+      {/* 제목 줄 우측에 컬럼 토글 버튼 — 검색 필터 바보다 위에 위치한다. */}
+      <div className="flex items-center justify-between">
+        <PageTitle title="Student Management" />
+        <ColumnToggleDropdown
+          options={STUDENT_COLUMN_OPTIONS}
+          visible={visibleColumnKeys}
+          onToggle={toggleColumn}
+        />
+      </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/10 mb-6">
@@ -119,7 +145,7 @@ export default function StudentManagePage() {
         </button>
       </div>
 
-      <StudentTable students={filtered} actions={rowActions} />
+      <StudentTable students={filtered} actions={rowActions} hiddenColumns={hiddenColumns} />
 
       {editingStudent && (
         <EditStudentModal studentId={editingStudent.id} onClose={() => setEditingStudent(null)} />
