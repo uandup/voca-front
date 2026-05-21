@@ -191,7 +191,7 @@ export interface paths {
         put?: never;
         /**
          * 단어 단건 등록
-         * @description 단어를 직접 입력하여 등록합니다.
+         * @description 단어를 직접 입력하여 등록합니다. 동일한 영단어가 이미 있으면 409.
          */
         post: operations["createWord"];
         delete?: never;
@@ -219,7 +219,8 @@ export interface paths {
          *     - `FAILED` — 채점 완료·불합격
          *
          *     CANCELLED 상태 시험은 목록에서 제외됩니다.
-         *     correctCount·totalCount는 PASSED/FAILED일 때만 포함되며, 그 외에는 null입니다.
+         *     questionCount(문항 수)는 상태와 무관하게 항상 포함됩니다.
+         *     correctCount(맞은 수)는 PASSED/FAILED일 때만 포함되며, 그 외에는 null입니다 — 점수는 correctCount / questionCount.
          */
         get: operations["getWrongBankExamList"];
         put?: never;
@@ -283,7 +284,8 @@ export interface paths {
          *     - `FAILED` — 채점 완료·불합격
          *
          *     CANCELLED 상태 시험은 목록에서 제외됩니다.
-         *     correctCount·totalCount는 PASSED/FAILED일 때만 포함되며, 그 외에는 null입니다.
+         *     questionCount(문항 수)는 상태와 무관하게 항상 포함됩니다.
+         *     correctCount(맞은 수)는 PASSED/FAILED일 때만 포함되며, 그 외에는 null입니다 — 점수는 correctCount / questionCount.
          *     level 필드는 해당 시험의 출제 레벨(난이도)입니다.
          */
         get: operations["getLevelExamList"];
@@ -328,7 +330,16 @@ export interface paths {
         };
         /**
          * 배정 이력 및 시험 현황 조회
-         * @description 학생의 전체 배정 이력을 최신순으로 조회합니다. 각 배정 항목에는 단어·예문·복습1~3 시험의 상태와 점수, 그리고 levels(레벨별 단어 개수 배열 — 레벨 경계를 넘으면 여러 항목이 들어감)가 포함됩니다.
+         * @description 학생의 전체 배정 이력을 최신순으로 조회합니다.
+         *
+         *     각 배정 항목(StudySet)에 포함되는 정보:
+         *     - `wordCount` — StudySet에 배정된 단어 수
+         *     - `levels` — 레벨별 단어 개수 배열 (레벨 경계를 넘어 배정되면 여러 항목)
+         *     - `exams.{word|example|review1|review2|review3}` — 시험 타입별 현황. 미생성·취소된 시험은 null
+         *
+         *     각 시험 칸(ExamSummaryDto)의 수치:
+         *     - `questionCount`(문항 수)는 시험이 존재하는 한 상태와 무관하게 항상 포함됩니다.
+         *     - `correctCount`(맞은 수)·`isPassed`·`completedAt`은 COMPLETED 시험에만 포함되며, 그 외에는 null입니다.
          */
         get: operations["getStudySetExamList"];
         put?: never;
@@ -354,7 +365,7 @@ export interface paths {
         put?: never;
         /**
          * 온라인 시험 제출
-         * @description 학생이 답안을 입력하고 제출합니다. READY → SUBMITTED 상태로 전이됩니다. 동의어 포함 시험(includeSynonym=true)은 wordAnswer + synonymAnswers 모두 전달해야 합니다. 제출 후 선생님이 온라인 채점 API로 채점합니다.
+         * @description 학생이 답안을 입력하고 제출합니다. ONLINE_STARTED → SUBMITTED 상태로 전이됩니다. 선생님이 온라인 시험을 시작한(ONLINE_STARTED) 시험만 제출할 수 있으며, READY 상태에서는 제출할 수 없습니다. 동의어 포함 시험(includeSynonym=true)은 wordAnswer + synonymAnswers 모두 전달해야 합니다. 제출 후 선생님이 온라인 채점 API로 채점합니다.
          */
         post: operations["submitExam"];
         delete?: never;
@@ -394,7 +405,7 @@ export interface paths {
         put?: never;
         /**
          * 온라인 시험 채점
-         * @description 학생이 앱에서 치러진 시험의 정오답, 학생이 작성한 답안(userAnswer), 합격 여부를 저장합니다. 정오답은 클라이언트가 판정합니다. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다.
+         * @description 학생이 앱에서 치러진 시험의 정오답, 학생이 작성한 답안(userAnswer), 합격 여부를 저장합니다. 정오답은 클라이언트가 판정합니다. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가).
          */
         post: operations["recordOnlineResults"];
         delete?: never;
@@ -414,7 +425,7 @@ export interface paths {
         put?: never;
         /**
          * 오프라인 시험 채점
-         * @description 선생님이 종이 시험지로 치러진 시험의 정오답과 합격 여부를 입력합니다. 모든 문항의 examItemId와 isCorrect를 리스트로 전달해야 하며, 누락 시 400 에러. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다.
+         * @description 선생님이 종이 시험지로 치러진 시험의 정오답과 합격 여부를 입력합니다. 모든 문항의 examItemId와 isCorrect를 리스트로 전달해야 하며, 누락 시 400 에러. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가).
          */
         post: operations["recordOfflineResults"];
         delete?: never;
@@ -749,7 +760,7 @@ export interface paths {
          *     - `lastWrongAt` 오름차순 정렬 — 오래전에 틀린 단어가 먼저
          *     - 오답 뱅크 시험에서 또 틀리면 lastWrongAt이 갱신되어 목록 뒤로 이동
          *     - 단어 정보(뜻, 예문, 동의어) + 누적 오답 횟수(wrongCount) 포함
-         *     - 선생님·학생 모두 접근 가능 (학생은 자신의 오답만)
+         *     - 선생님·학생 접근 가능
          */
         get: operations["getActiveWrongBankWords"];
         put?: never;
@@ -809,7 +820,7 @@ export interface paths {
         };
         /**
          * 시험 타입별 응시 이력 조회
-         * @description 특정 배정(studySetId)의 시험 타입별 응시 이력을 조회합니다. 최신 시험(current)은 설정·날짜·점수를 포함하며, 이전 불합격 시험(failedAttempts)은 날짜·점수만 포함합니다. 해당 타입의 시험이 없으면 current는 null, failedAttempts는 빈 배열입니다.
+         * @description 특정 배정(studySetId)의 시험 타입별 응시 이력을 조회합니다. 최신 시험(current)은 설정·날짜·점수를 포함하며, 이전 불합격 시험(failedAttempts)은 날짜·점수만 포함합니다. 해당 타입의 시험이 한 건도 없으면 404 (TEST_NOT_FOUND)를 반환합니다.
          */
         get: operations["getExamsByType"];
         put?: never;
@@ -949,7 +960,7 @@ export interface paths {
         };
         /**
          * 미배정 학생 리스트 조회
-         * @description 단어를 한 번도 배정받지 못한(lastAssignedWordId == null) ACTIVE 학생만 조회합니다. studentId, name, englishName, grade, assignmentCount, examQuestionCount, subType, synonymIncluded, clinics(소속 클리닉 슬롯 dayOfWeek/hour 리스트)를 이름 ASC 순으로 반환합니다. 선생님만 접근 가능합니다.
+         * @description 진행 중인 단어 배정(CREATED 상태 NORMAL StudySet)이 없는 ACTIVE 학생만 조회합니다. 레벨만 설정한 학생, 이전 배정을 모두 완료한 학생도 포함됩니다. studentId, name, englishName, grade, assignmentCount, examQuestionCount, subType, synonymIncluded, clinics(소속 클리닉 슬롯 dayOfWeek/hour 리스트)를 이름 ASC 순으로 반환합니다. 선생님만 접근 가능합니다.
          */
         get: operations["getUnassignedStudents"];
         put?: never;
@@ -1069,7 +1080,19 @@ export interface paths {
         };
         /**
          * 내 정보 조회
-         * @description 현재 로그인한 회원의 member 테이블 정보를 그대로 반환합니다. 토큰만 있으면 상태(PROFILE_INCOMPLETE / PENDING_APPROVAL / ACTIVE)와 무관하게 호출 가능. 프론트 펜딩 페이지에서 새로고침/폴링 시 최신 status 확인용으로 사용.
+         * @description 현재 로그인한 회원의 정보를 반환합니다. 토큰만 있으면 상태(PROFILE_INCOMPLETE / PENDING_APPROVAL / ACTIVE)와 무관하게 호출 가능하며, 펜딩 페이지에서 새로고침/폴링 시 최신 status 확인용으로도 사용합니다.
+         *
+         *     **응답 스키마(키 집합)는 role과 무관하게 항상 동일**하고, 해당 없는 필드는 null로 내려갑니다. role별로 채워지는 주요 필드는 다음과 같습니다.
+         *     - STUDENT: grade, lastAssignedWordId, assignmentCount, examQuestionCount, examSubType, synonymIncluded
+         *     - TEACHER: isAdmin
+         *     - PARENT: phoneNumber, children
+         *
+         *     **children (학부모 전용)**: 연결된 자녀 요약 목록 `[{ studentId, name, grade }]` — 이름 ASC 정렬. STUDENT·TEACHER가 호출하면 항상 null입니다. 자녀가 연결되지 않은 ACTIVE 학부모는 빈 배열 `[]`이 내려가며, status는 그대로 ACTIVE입니다 (자녀 미연결을 이유로 PENDING으로 남지 않음).
+         *
+         *     **학부모 자녀 페이지 분기 기준** — `children` 배열 길이로 판단:
+         *     - `0`: 연결된 자녀 없음 → "자녀 연결 대기" 안내 화면 표시
+         *     - `1`: 해당 자녀 대시보드(`GET /api/v1/students/{studentId}/dashboard`)로 바로 이동
+         *     - `2` 이상: 자녀 선택 화면 표시 후 선택한 studentId로 대시보드 조회
          */
         get: operations["getMyInfo"];
         put?: never;
@@ -1089,7 +1112,7 @@ export interface paths {
         };
         /**
          * 시험 조회
-         * @description 시험 정보와 문항 목록(단어 정보 포함)을 조회합니다. 채점 완료된 시험은 문항별 정답 여부도 포함됩니다.
+         * @description 시험 정보와 문항 목록(단어 정보 포함)을 조회합니다. 채점 완료된 시험은 문항별 정답 여부도 포함됩니다. 취소된(CANCELLED) 시험은 조회할 수 없습니다.
          */
         get: operations["getExam"];
         put?: never;
@@ -1224,30 +1247,113 @@ export interface components {
             message?: string;
             data?: components["schemas"]["MemberResponse"];
         };
-        MemberResponse: {
-            /** Format: int64 */
-            memberId?: number;
-            email?: string;
+        /** @description 학부모에게 연결된 자녀 요약 — 학부모 로그인 후 자녀 페이지 분기에 사용 */
+        ChildSummary: {
+            /**
+             * Format: int64
+             * @description 자녀(학생) ID
+             * @example 7
+             */
+            studentId?: number;
+            /**
+             * @description 자녀 이름
+             * @example 김학생
+             */
             name?: string;
-            englishName?: string;
-            phoneNumber?: string;
-            isAdmin?: boolean;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 자녀 학년 (1~12)
+             * @example 5
+             */
             grade?: number;
-            /** @enum {string} */
+        };
+        /** @description 회원 정보 — 응답 스키마(키 집합)는 role과 무관하게 항상 동일하며, 해당 없는 필드는 null이다. STUDENT: grade·lastAssignedWordId·assignmentCount·examQuestionCount·examSubType·synonymIncluded / TEACHER: isAdmin / PARENT: phoneNumber·children */
+        MemberResponse: {
+            /**
+             * Format: int64
+             * @description 회원 ID
+             * @example 1
+             */
+            memberId?: number;
+            /**
+             * @description 구글 이메일
+             * @example student@gmail.com
+             */
+            email?: string;
+            /**
+             * @description 한국 이름
+             * @example 김학생
+             */
+            name?: string;
+            /**
+             * @description 영어 이름 — STUDENT는 필수, TEACHER는 선택, PARENT는 항상 null
+             * @example John
+             */
+            englishName?: string;
+            /**
+             * @description 전화번호 — PARENT만 채워짐, 그 외 role은 null
+             * @example 010-1234-5678
+             */
+            phoneNumber?: string;
+            /**
+             * @description 관리자 여부 — TEACHER만 채워짐, 그 외 role은 null
+             * @example false
+             */
+            isAdmin?: boolean;
+            /**
+             * Format: int32
+             * @description 학년 (1~12) — STUDENT만 채워짐, 그 외 role은 null
+             * @example 5
+             */
+            grade?: number;
+            /**
+             * @description 역할
+             * @example STUDENT
+             * @enum {string}
+             */
             role?: "TEACHER" | "STUDENT" | "PARENT";
-            /** @enum {string} */
+            /**
+             * @description 회원 상태 — PROFILE_INCOMPLETE(프로필 미입력) / PENDING_APPROVAL(승인 대기) / ACTIVE(승인 완료)
+             * @example ACTIVE
+             * @enum {string}
+             */
             status?: "PROFILE_INCOMPLETE" | "PENDING_APPROVAL" | "ACTIVE";
+            /**
+             * @description 프로필 등록 완료 여부 — true면 PENDING_APPROVAL 이상 상태
+             * @example true
+             */
             profileComplete?: boolean;
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 마지막 배정 단어 ID — STUDENT만 채워짐, 미배정이면 null, 그 외 role은 null
+             * @example 42
+             */
             lastAssignedWordId?: number;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 1회 배정 단어 수 — STUDENT만 채워짐, 그 외 role은 null
+             * @example 20
+             */
             assignmentCount?: number;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 시험 문항 수 — STUDENT만 채워짐, 그 외 role은 null
+             * @example 20
+             */
             examQuestionCount?: number;
-            /** @enum {string} */
+            /**
+             * @description 시험 유형 — STUDENT만 채워짐, 그 외 role은 null
+             * @example MEANING_TO_WORD
+             * @enum {string}
+             */
             examSubType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            /**
+             * @description 동의어 포함 여부 — STUDENT만 채워짐, 그 외 role은 null
+             * @example false
+             */
             synonymIncluded?: boolean;
+            /** @description 연결된 자녀 요약 목록 (이름 ASC 정렬) — PARENT만 채워짐. 자녀가 없는 ACTIVE 학부모는 빈 배열 []. STUDENT·TEACHER는 항상 null */
+            children?: components["schemas"]["ChildSummary"][];
         };
         StudentUpdateRequest: {
             name: string;
@@ -1756,48 +1862,50 @@ export interface components {
             message?: string;
             data?: components["schemas"]["WrongBankExamListResponse"][];
         };
-        /** @description 오답 뱅크 시험 목록 항목 */
+        /** @description 오답 뱅크 시험 목록 항목 — 한 건의 오답 뱅크 시험 요약 */
         WrongBankExamListResponse: {
             /**
              * Format: int64
              * @description 시험 ID
+             * @example 1
              */
             examId?: number;
             /**
              * Format: int64
-             * @description StudySet ID
+             * @description 시험이 속한 StudySet ID (WRONG_BANK 타입)
+             * @example 5
              */
             studySetId?: number;
             /**
              * Format: date-time
              * @description 시험 생성 시각
+             * @example 2026-05-07T10:00:00
              */
             createdAt?: string;
             /**
              * Format: int32
-             * @description 배정된 총 단어 수
+             * @description StudySet에 배정된 단어 수 — 시험 문항 수(questionCount)와 별개이며 보통 더 크다
+             * @example 30
              */
             wordCount?: number;
             /**
              * Format: int32
-             * @description 시험 문항 수
+             * @description 시험 문항 수 — 시험 생성 시 확정되며 상태와 무관하게 항상 포함
+             * @example 20
              */
             questionCount?: number;
             /**
-             * @description 시험 상태 — READY / IN_PROGRESS / SUBMITTED / PASSED / FAILED
+             * @description 클라이언트 표시용 시험 상태. CANCELLED 시험은 목록에서 제외됨 — READY(대기) / IN_PROGRESS(온라인 진행 중) / SUBMITTED(채점 대기) / PASSED(합격) / FAILED(불합격)
+             * @example PASSED
              * @enum {string}
              */
             status?: "READY" | "IN_PROGRESS" | "SUBMITTED" | "PASSED" | "FAILED";
             /**
              * Format: int32
-             * @description 맞춘 문항 수 — PASSED·FAILED 상태일 때만 포함, 그 외 null
+             * @description 맞춘 문항 수 — PASSED·FAILED 상태일 때만 포함, 그 외에는 null. 점수는 correctCount / questionCount 로 계산
+             * @example 18
              */
             correctCount?: number;
-            /**
-             * Format: int32
-             * @description 전체 문항 수 — PASSED·FAILED 상태일 때만 포함, 그 외 null
-             */
-            totalCount?: number;
         };
         ApiResponseListMemoResponse: {
             /** Format: int32 */
@@ -1811,24 +1919,56 @@ export interface components {
             message?: string;
             data?: components["schemas"]["LevelExamListResponse"][];
         };
+        /** @description 레벨 시험 목록 항목 — 한 건의 레벨 시험 요약 */
         LevelExamListResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 시험 ID
+             * @example 1
+             */
             examId?: number;
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 시험이 속한 StudySet ID (LEVEL 타입)
+             * @example 5
+             */
             studySetId?: number;
-            /** Format: date-time */
+            /**
+             * Format: date-time
+             * @description 시험 생성 시각
+             * @example 2026-05-07T10:00:00
+             */
             createdAt?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 출제 레벨 (난이도 1~10)
+             * @example 3
+             */
             level?: number;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description StudySet에 배정된 단어 수 — 시험 문항 수(questionCount)와 별개이며 보통 더 크다
+             * @example 30
+             */
             wordCount?: number;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 시험 문항 수 — 시험 생성 시 확정되며 상태와 무관하게 항상 포함
+             * @example 20
+             */
             questionCount?: number;
-            status?: string;
-            /** Format: int32 */
+            /**
+             * @description 클라이언트 표시용 시험 상태. CANCELLED 시험은 목록에서 제외됨 — READY(대기) / IN_PROGRESS(온라인 진행 중) / SUBMITTED(채점 대기) / PASSED(합격) / FAILED(불합격)
+             * @example PASSED
+             * @enum {string}
+             */
+            status?: "READY" | "IN_PROGRESS" | "SUBMITTED" | "PASSED" | "FAILED";
+            /**
+             * Format: int32
+             * @description 맞춘 문항 수 — PASSED·FAILED 상태일 때만 포함, 그 외에는 null. 점수는 correctCount / questionCount 로 계산
+             * @example 18
+             */
             correctCount?: number;
-            /** Format: int32 */
-            totalCount?: number;
         };
         ApiResponseDashboardResponse: {
             /** Format: int32 */
@@ -2107,16 +2247,16 @@ export interface components {
             completedAt?: string;
             /**
              * Format: int32
+             * @description 시험 문항 수. 상태와 무관하게 항상 존재
+             * @example 10
+             */
+            questionCount?: number;
+            /**
+             * Format: int32
              * @description 맞춘 문항 수. COMPLETED 시험에만 존재
              * @example 8
              */
             correctCount?: number;
-            /**
-             * Format: int32
-             * @description 전체 문항 수. COMPLETED 시험에만 존재
-             * @example 10
-             */
-            totalCount?: number;
         };
         /** @description 시험 타입별 현황 */
         ExamsByType: {
@@ -3235,8 +3375,17 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseWordResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 */
+            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseWordResponse"];
+                };
+            };
+            /** @description 이미 등록된 단어 (DUPLICATE_WORD) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3362,7 +3511,16 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListMemoResponse"];
                 };
             };
-            /** @description 학생을 찾을 수 없음 */
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListMemoResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3401,7 +3559,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseMemoResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 */
+            /** @description 유효성 검증 실패 / 대상이 학생이 아님(MEMBER_NOT_STUDENT) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3410,7 +3568,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseMemoResponse"];
                 };
             };
-            /** @description 학생을 찾을 수 없음 */
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3541,7 +3699,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
                 };
             };
-            /** @description examType 미지원이거나 학생 시험 설정이 누락됨 */
+            /** @description examType 미지원(WRONG_BANK/LEVEL) / 학생 시험 설정 누락(STUDENT_EXAM_SETTINGS_NOT_SET) / 같은 타입 진행 중 시험 있음(EXAM_ALREADY_ACTIVE) / 같은 타입 합격 시험 있음(EXAM_ALREADY_PASSED) / 문항 수가 배정 단어 수 초과(EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3620,7 +3778,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseAssignWordsResponse"];
                 };
             };
-            /** @description 이미 진행 중인 학습 세트가 있거나, 시작 레벨/배정 개수 미설정, 또는 배정 가능한 단어 부족 */
+            /** @description STUDY_SET_ALREADY_ACTIVE(진행 중 학습 세트 있음) / STUDENT_LEVEL_NOT_SET(시작 레벨 미설정) / STUDENT_ASSIGNMENT_COUNT_NOT_SET(배정 개수 미설정) / NOT_ENOUGH_WORDS(배정 가능한 단어 부족) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3668,8 +3826,17 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
-            /** @description 이미 제출/완료된 시험이거나 문항 누락 */
+            /** @description ONLINE_STARTED 상태가 아닌 시험(READY/SUBMITTED/COMPLETED 등 — TEST_NOT_ONLINE_STARTED) 또는 문항 누락(TEST_ITEMS_INCOMPLETE) */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 본인 시험이 아님 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3769,7 +3936,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseRecordResultsResponse"];
                 };
             };
-            /** @description 이미 완료된 시험이거나 문항 누락 */
+            /** @description 취소된(CANCELLED) 시험(TEST_CANCELLED) 또는 문항 결과 누락(TEST_ITEMS_INCOMPLETE) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3817,7 +3984,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseRecordResultsResponse"];
                 };
             };
-            /** @description 이미 완료된 시험이거나 문항 누락 */
+            /** @description 취소된(CANCELLED) 시험(TEST_CANCELLED) 또는 문항 결과 누락(TEST_ITEMS_INCOMPLETE) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3861,7 +4028,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
-            /** @description READY 상태가 아닌 시험 또는 이미 취소된 시험 */
+            /** @description 취소 불가 상태(COMPLETED/CANCELLED)의 시험 — TEST_CANNOT_CANCEL / TEST_CANCELLED */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3870,7 +4037,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
-            /** @description 선생님만 취소 가능 */
+            /** @description 선생님만 취소 가능 (ACCESS_DENIED) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3983,7 +4150,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseLoginResponse"];
                 };
             };
-            /** @description Google 인증 실패 */
+            /** @description Google 인증 실패 (GOOGLE_AUTH_FAILED) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3992,7 +4159,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseLoginResponse"];
                 };
             };
-            /** @description 정지 또는 거절된 계정 */
+            /** @description 승인 대기(PENDING_APPROVAL) 상태에서는 로그인 불가 (MEMBER_PENDING_APPROVAL) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -4467,8 +4634,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
+            /** @description 변경 성공 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                };
+            };
+            /** @description 회원을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4500,7 +4676,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseCompleteProfileResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 또는 이미 프로필 등록 완료 */
+            /** @description 유효성 검증 실패 / 역할별 필수 필드 누락(INVALID_INPUT) / STUDENT가 아닌 회원이 학생 프로필을 시도(MEMBER_NOT_STUDENT) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -4678,7 +4854,16 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseDashboardResponse"];
                 };
             };
-            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 */
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -4687,7 +4872,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseDashboardResponse"];
                 };
             };
-            /** @description 학생을 찾을 수 없음 */
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -4736,7 +4921,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseStudySetExamTypeResponse"];
                 };
             };
-            /** @description 학습 세트를 찾을 수 없음 / 해당 타입의 시험이 아직 생성되지 않음 */
+            /** @description 학습 세트를 찾을 수 없음(STUDY_SET_NOT_FOUND) / 해당 타입의 시험이 한 건도 없음(TEST_NOT_FOUND) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5134,8 +5319,17 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseMemberResponse"];
                 };
             };
-            /** @description 인증 필요 */
+            /** @description 인증 필요 (토큰 없음·만료·위조) */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
+                };
+            };
+            /** @description 회원을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5162,6 +5356,24 @@ export interface operations {
         responses: {
             /** @description 조회 성공 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamDetailResponse"];
+                };
+            };
+            /** @description 취소된 시험 (TEST_CANCELLED) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamDetailResponse"];
+                };
+            };
+            /** @description 본인/담당 학생이 아닌 시험 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5261,8 +5473,26 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
+            /** @description 로그인 성공 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
+                };
+            };
+            /** @description Google 인증 실패 (GOOGLE_AUTH_FAILED) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
+                };
+            };
+            /** @description 승인 대기(PENDING_APPROVAL) 상태에서는 로그인 불가 (MEMBER_PENDING_APPROVAL) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
