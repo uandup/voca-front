@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { STUDENT_MOCK } from '@/entities/student';
-import { ScoreTrendChart } from './ui/ScoreTrendChart';
-import { StatCards } from './ui/StatCards';
-import { LevelProgress } from './ui/LevelProgress';
-import { WordsLearnedCard } from './ui/WordsLearnedCard';
-import { TodoList } from './ui/TodoList';
+import {
+  ScoreTrendChart,
+  StatCards,
+  LevelProgress,
+  WordsLearnedCard,
+  TodoList,
+} from '@/widgets/student-dashboard';
 
 const mockStudent = STUDENT_MOCK[0];
 

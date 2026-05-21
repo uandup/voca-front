@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import { LevelBlock } from '@/entities/word';
 import type { StudentManageTableRow } from '@/entities/student';
 import { isAdmin } from '@/entities/teacher';
@@ -17,9 +18,15 @@ interface StudentTableRowProps {
 export function StudentTableRow({ student, actions }: StudentTableRowProps) {
   const admin = isAdmin();
   const latestMemo = student.latestMemoContent;
+  const navigate = useNavigate();
 
   return (
-    <tr className="hover:bg-surface-container-low/30 transition-colors group">
+    <tr
+      onClick={() =>
+        navigate({ to: '/teacher/students/$studentId', params: { studentId: String(student.id) } })
+      }
+      className="hover:bg-surface-container-low/30 transition-colors group cursor-pointer"
+    >
       {/* Name */}
       <td className="px-4 py-4 border-r border-outline-variant/20">
         <p className="font-headline font-bold text-sm text-primary group-hover:text-primary/80 transition-colors">
@@ -89,7 +96,11 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
         <div className="flex items-center gap-1.5">
           <p className="text-xs text-on-surface-variant truncate flex-1">{latestMemo ?? '—'}</p>
           <button
-            onClick={() => actions.onMemo(student)}
+            onClick={(e) => {
+              // row 클릭 navigate가 함께 발동하지 않도록 전파를 막는다.
+              e.stopPropagation();
+              actions.onMemo(student);
+            }}
             className="shrink-0 p-1 rounded-md text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
             title="메모 보기"
           >
@@ -102,7 +113,10 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
       <td className="px-4 py-4 text-right">
         <div className="flex items-center justify-end gap-1">
           <button
-            onClick={() => actions.onEdit(student)}
+            onClick={(e) => {
+              e.stopPropagation();
+              actions.onEdit(student);
+            }}
             className="bg-primary/10 text-primary px-3 py-1 rounded-md text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-sm">edit</span>
@@ -110,7 +124,10 @@ export function StudentTableRow({ student, actions }: StudentTableRowProps) {
           </button>
           {admin && (
             <button
-              onClick={() => actions.onDelete(student)}
+              onClick={(e) => {
+                e.stopPropagation();
+                actions.onDelete(student);
+              }}
               className="p-1.5 text-on-surface-variant hover:text-error transition-colors"
             >
               <span className="material-symbols-outlined text-xl">delete</span>
