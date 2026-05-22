@@ -44,9 +44,7 @@ export default function OAuthCallbackPage() {
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center">
-      <span className="material-symbols-outlined animate-spin text-primary text-4xl">
-        progress_activity
-      </span>
+      <span className="material-symbols-outlined text-primary text-4xl">progress_activity</span>
     </div>
   );
 }

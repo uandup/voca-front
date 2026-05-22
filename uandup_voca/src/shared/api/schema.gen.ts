@@ -735,7 +735,7 @@ export interface paths {
         };
         /**
          * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다.
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true).
          */
         get: operations["getAssignedWords"];
         put?: never;
@@ -1797,11 +1797,21 @@ export interface components {
             /** Format: int64 */
             level10Count?: number;
         };
-        ApiResponseListAssignedWordResponse: {
+        ApiResponseStudySetWordsResponse: {
             /** Format: int32 */
             status?: number;
             message?: string;
-            data?: components["schemas"]["AssignedWordResponse"][];
+            data?: components["schemas"]["StudySetWordsResponse"];
+        };
+        /** @description 배정 단어 목록 + 예문 공개 여부 */
+        StudySetWordsResponse: {
+            /**
+             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
+             * @example false
+             */
+            exampleVisible?: boolean;
+            /** @description 배정된 단어 목록 */
+            words?: components["schemas"]["AssignedWordResponse"][];
         };
         ApiResponseListWrongBankWordResponse: {
             /** Format: int32 */
@@ -4737,7 +4747,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
             /** @description 타인의 배정 조회 시도 */
@@ -4746,7 +4756,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
             /** @description 학습 세트를 찾을 수 없음 */
@@ -4755,7 +4765,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
         };
