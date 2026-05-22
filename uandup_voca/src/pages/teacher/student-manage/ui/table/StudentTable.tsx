@@ -192,7 +192,7 @@ function ActionButtons({
           e.stopPropagation();
           actions.onEdit(student);
         }}
-        className="bg-primary/10 text-primary px-1 py-1 rounded-md text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
+        className="bg-primary/10 text-primary px-1 py-1 rounded-md cursor-pointer text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
       >
         <span className="material-symbols-outlined text-sm">edit</span>
       </button>
@@ -202,7 +202,7 @@ function ActionButtons({
             e.stopPropagation();
             actions.onDelete(student);
           }}
-          className="p-1.5 text-on-surface-variant leading-none hover:text-error transition-colors items-center"
+          className="p-1.5 text-on-surface-variant leading-none cursor-pointer hover:text-error transition-colors items-center"
         >
           <span className="material-symbols-outlined text-xl">delete</span>
         </button>
