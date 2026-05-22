@@ -6,7 +6,22 @@
 //
 // 이 값은 "마지막으로 본 자녀"로도 쓰인다: 401 만료 후 토큰만 사라지고 이 키는 남으므로,
 // 재로그인 시 PendingPage가 이 값으로 직전 자녀를 복원한다. 명시적 로그아웃에서만 제거된다.
+//
+// localStorage는 React가 변경을 감지하지 못하므로, set/clear 시 구독자에게 직접 알린다.
+// useActiveChildId(useSyncExternalStore 기반)가 이 구독을 통해 전환 즉시 리렌더된다.
 const ACTIVE_CHILD_KEY = 'parent:activeChildId';
+
+const listeners = new Set<() => void>();
+
+function notify(): void {
+  listeners.forEach((l) => l());
+}
+
+// useSyncExternalStore의 subscribe 인자 — 구독 등록 후 해제 함수를 반환한다.
+export function subscribeActiveChildId(listener: () => void): () => void {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
 
 export function getActiveChildId(): number | null {
   const raw = localStorage.getItem(ACTIVE_CHILD_KEY);
@@ -17,8 +32,10 @@ export function getActiveChildId(): number | null {
 
 export function setActiveChildId(studentId: number): void {
   localStorage.setItem(ACTIVE_CHILD_KEY, String(studentId));
+  notify();
 }
 
 export function clearActiveChildId(): void {
   localStorage.removeItem(ACTIVE_CHILD_KEY);
+  notify();
 }
