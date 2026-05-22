@@ -735,7 +735,7 @@ export interface paths {
         };
         /**
          * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true).
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true).
          */
         get: operations["getAssignedWords"];
         put?: never;
@@ -799,10 +799,30 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 학생 학습 대시보드 조회
-         * @description 학생의 현재 레벨·암기 진척·시험 점수 그래프·월간 학습량을 한 번에 조회합니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         * 학생 학습 대시보드 요약 조회
+         * @description 학생의 현재 레벨·암기 진척·전체 정답률 등 요약 지표를 조회합니다. 시험 점수 추이·월간 학습량 등 차트 데이터는 /dashboard/charts에서 별도로 조회합니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/students/{studentId}/dashboard/charts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 대시보드 차트 조회
+         * @description 학생의 시험 점수 추이(WORD·EXAMPLE·REVIEW)와 월간 학습량 등 차트 전용 데이터를 조회합니다. 각 배열은 시간 오름차순으로 정렬됩니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         */
+        get: operations["getDashboardCharts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1020,7 +1040,7 @@ export interface paths {
         };
         /**
          * 승인 대기 학부모 목록 조회
-         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, englishName, phoneNumber, createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
+         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, phoneNumber, requestedChildren(가입 신청 시 입력한 자녀 희망 정보 목록 — 각 name·grade), createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getPendingParents"];
         put?: never;
@@ -1735,9 +1755,13 @@ export interface components {
             /** Format: int32 */
             grade?: number;
             phoneNumber?: string;
-            requestedChildName?: string;
+            /** @description 자녀 희망 정보 목록 — PARENT 전용, 최소 1명 필수. 각 원소는 자녀 이름(name)과 학년(grade). 매칭 전 임시 보관용이며 실제 학생 연결과는 별개 */
+            requestedChildren?: components["schemas"]["RequestedChild"][];
+        };
+        RequestedChild: {
+            name?: string;
             /** Format: int32 */
-            requestedChildGrade?: number;
+            grade?: number;
         };
         ApiResponseCompleteProfileResponse: {
             /** Format: int32 */
@@ -1986,7 +2010,7 @@ export interface components {
             message?: string;
             data?: components["schemas"]["DashboardResponse"];
         };
-        /** @description 학생 학습 대시보드 (NORMAL 단어 기준 지표 일괄) */
+        /** @description 학생 학습 대시보드 요약 지표 (NORMAL 단어 기준). 차트 데이터는 /dashboard/charts 참고 */
         DashboardResponse: {
             /**
              * Format: int32
@@ -2030,13 +2054,22 @@ export interface components {
              * @example 20
              */
             pendingReviewWordCount?: number;
+        };
+        ApiResponseDashboardChartResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["DashboardChartResponse"];
+        };
+        /** @description 학생 대시보드 차트 데이터 (시험 점수 추이 + 월간 학습량) */
+        DashboardChartResponse: {
             /** @description WORD 시험 점수 추이 (createdAt ASC) */
             wordExamScores?: components["schemas"]["ExamScorePoint"][];
             /** @description EXAMPLE 시험 점수 추이 (createdAt ASC) */
             exampleExamScores?: components["schemas"]["ExamScorePoint"][];
             /** @description REVIEW 시험 점수 추이 (createdAt ASC) */
             reviewExamScores?: components["schemas"]["ExamScorePoint"][];
-            /** @description 월간 학습 단어 수 */
+            /** @description 월간 학습 단어 수 (yearMonth ASC) */
             monthlyAssignedCounts?: components["schemas"]["MonthlyCount"][];
         };
         /** @description 시험 점수 그래프 한 지점 */
@@ -2486,16 +2519,36 @@ export interface components {
             message?: string;
             data?: components["schemas"]["PendingParentResponse"][];
         };
+        /** @description 승인 대기 학부모 항목 — 관리자가 승인·자녀 매칭 시 참고 */
         PendingParentResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 학부모 회원 ID
+             * @example 10
+             */
             parentId?: number;
+            /**
+             * @description 구글 이메일
+             * @example parent@gmail.com
+             */
             email?: string;
+            /**
+             * @description 학부모 이름
+             * @example 김부모
+             */
             name?: string;
+            /**
+             * @description 전화번호
+             * @example 010-1234-5678
+             */
             phoneNumber?: string;
-            requestedChildName?: string;
-            /** Format: int32 */
-            requestedChildGrade?: number;
-            /** Format: date-time */
+            /** @description 가입 신청 시 입력한 자녀 희망 정보 목록 (각 name·grade) — 매칭 전 임시 정보이며, 관리자가 이를 보고 실제 학생을 골라 승인 시 연결한다 */
+            requestedChildren?: components["schemas"]["RequestedChild"][];
+            /**
+             * Format: date-time
+             * @description 가입 신청 시각
+             * @example 2026-05-22T10:00:00
+             */
             createdAt?: string;
         };
         ApiResponseListParentListResponse: {
@@ -3429,6 +3482,15 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListWrongBankExamListResponse"];
                 };
             };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankExamListResponse"];
+                };
+            };
             /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
@@ -3613,6 +3675,15 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListLevelExamListResponse"];
                 };
             };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListLevelExamListResponse"];
+                };
+            };
             /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
@@ -3746,6 +3817,15 @@ export interface operations {
         responses: {
             /** @description 조회 성공 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudySetExamListResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4794,6 +4874,15 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
                 };
             };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
+                };
+            };
             /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
@@ -4822,6 +4911,15 @@ export interface operations {
         responses: {
             /** @description 조회 성공 — count 반환 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4893,6 +4991,59 @@ export interface operations {
             };
         };
     };
+    getDashboardCharts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+        };
+    };
     getExamsByType: {
         parameters: {
             query?: never;
@@ -4924,6 +5075,15 @@ export interface operations {
             };
             /** @description 유효하지 않은 examType 값 */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudySetExamTypeResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생의 배정 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5382,7 +5542,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseExamDetailResponse"];
                 };
             };
-            /** @description 본인/담당 학생이 아닌 시험 조회 (ACCESS_DENIED) */
+            /** @description 본인·담당 학생·연결된 자녀가 아닌 시험 조회 (ACCESS_DENIED) — 교사·해당 학생 본인·연결된 학부모만 가능 */
             403: {
                 headers: {
                     [name: string]: unknown;
