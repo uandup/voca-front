@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
 import { usePendingCounts } from '../../model/hooks/usePendingApprovals';
+import { useChildMatching } from '../../model/hooks/useChildMatching';
 import type { PendingParent } from '../../model/types';
 import { StudentTab } from './StudentTab';
 import { ParentTab } from './ParentTab';
@@ -24,6 +25,9 @@ export default function PendingApprovalsModal({ onClose }: Props) {
   const counts = usePendingCounts();
   // 학생 매칭 패널은 모달 옆에 붙는 SidePanel 형태로 보여주기 위해 이 레벨에서 상태를 관리
   const [matchingParent, setMatchingParent] = useState<PendingParent | null>(null);
+
+  // 학부모별 자녀 매칭 상태 — ParentTab과 StudentMatchPanel이 공유하므로 이 레벨에서 보유한다.
+  const { matchedChildren, addChild, removeChild, getSelectedIds } = useChildMatching();
 
   return (
     <ModalBackdrop onClose={onClose} padding="p-6">
@@ -74,14 +78,26 @@ export default function PendingApprovalsModal({ onClose }: Props) {
 
           <div className="flex-1 overflow-hidden relative">
             {tab === 'student' && <StudentTab />}
-            {tab === 'parent' && <ParentTab onMatchStudent={setMatchingParent} />}
+            {tab === 'parent' && (
+              <ParentTab
+                onMatchStudent={setMatchingParent}
+                matchedChildren={matchedChildren}
+                onRemoveChild={removeChild}
+                onApprove={() => setMatchingParent(null)}
+              />
+            )}
             {tab === 'teacher' && <TeacherTab />}
           </div>
         </div>
 
         {/* 학생 매칭 사이드 패널 — 편집 모달 오른쪽에 absolute로 고정 */}
         {matchingParent && (
-          <StudentMatchPanel parent={matchingParent} onClose={() => setMatchingParent(null)} />
+          <StudentMatchPanel
+            parent={matchingParent}
+            selectedIds={getSelectedIds(matchingParent.id)}
+            onSelect={(student) => addChild(matchingParent.id, student)}
+            onClose={() => setMatchingParent(null)}
+          />
         )}
       </div>
     </ModalBackdrop>

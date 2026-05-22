@@ -61,8 +61,10 @@ export function usePendingParents() {
   });
 
   const onSettled = () => invalidateAfterApproval(queryClient, parentKeys.list());
+  // 학부모 승인은 매칭한 자녀 id를 함께 보낸다 — 매칭 없이 승인하면 studentIds는 생략된다.
   const approve = useMutation({
-    mutationFn: (id: number) => approveMember(id),
+    mutationFn: ({ id, studentIds }: { id: number; studentIds?: number[] }) =>
+      approveMember(id, studentIds && studentIds.length > 0 ? { studentIds } : {}),
     onSuccess: onSettled,
   });
   const reject = useMutation({
