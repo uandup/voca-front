@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { clearActiveChildId } from '@/shared/jwt';
 
@@ -12,9 +13,12 @@ interface SideNavBarProps {
   navItems: NavItem[];
   collapsed: boolean;
   onToggle: () => void;
+  // 로고와 메뉴 사이에 들어가는 선택적 영역(예: 학부모의 자녀 전환 드롭다운).
+  // 표시 위치만 제공하고 내용은 사용처가 결정한다 — collapsed 상태 대응도 슬롯 쪽 책임.
+  topSlot?: ReactNode;
 }
 
-export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
+export function SideNavBar({ navItems, collapsed, onToggle, topSlot }: SideNavBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
 
@@ -47,6 +51,8 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
           </span>
         </button>
       </div>
+
+      {topSlot && <div className="mb-2">{topSlot}</div>}
 
       <nav className="flex-1 flex flex-col gap-1">
         {navItems.map((item) => {

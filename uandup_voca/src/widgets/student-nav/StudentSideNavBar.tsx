@@ -1,4 +1,5 @@
 import { SideNavBar } from '@/shared/ui/SideNavBar';
+import { ChildSwitcher } from '@/features/child-switch';
 
 const navItems = [
   { icon: 'dashboard', label: 'Dashboard', to: '/student/dashboard' },
@@ -23,5 +24,13 @@ interface StudentSideNavBarProps {
 }
 
 export function StudentSideNavBar({ collapsed, onToggle }: StudentSideNavBarProps) {
-  return <SideNavBar navItems={[...navItems]} collapsed={collapsed} onToggle={onToggle} />;
+  return (
+    <SideNavBar
+      navItems={[...navItems]}
+      collapsed={collapsed}
+      onToggle={onToggle}
+      // 학부모 열람 세션이면 자녀 전환 드롭다운이 뜬다. 학생 본인 세션이면 ChildSwitcher가 null을 반환.
+      topSlot={<ChildSwitcher collapsed={collapsed} />}
+    />
+  );
 }
