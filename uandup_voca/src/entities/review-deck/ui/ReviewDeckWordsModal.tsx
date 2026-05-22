@@ -1,5 +1,5 @@
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TeacherWordCard } from '@/entities/word/@x/review-deck';
+import { WordCard } from '@/entities/word/@x/review-deck';
 import type { ReviewDeckWord } from '../model/types';
 
 interface Props {
@@ -41,7 +41,7 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
           ) : (
             <div className="flex flex-col gap-5">
               {words.map((word) => (
-                <TeacherWordCard
+                <WordCard
                   key={word.id}
                   id={word.id}
                   difficulty={word.difficulty}
@@ -51,6 +51,7 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
                   engMeaning={word.engMeaning}
                   synonyms={word.synonyms}
                   sentence={word.sentence}
+                  showSentence
                   extraInfo={
                     <div className="flex flex-col items-center justify-center px-3 py-2 bg-error/5 border border-error/20 rounded-lg">
                       <span className="text-[8px] uppercase tracking-widest font-bold text-error/60">

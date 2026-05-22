@@ -8,7 +8,7 @@ type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
 type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
 type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'];
-type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
+type StudySetWordsResponse = components['schemas']['StudySetWordsResponse'];
 type AssignWordsResponse = components['schemas']['AssignWordsResponse'];
 type AssignmentCountResponse = components['schemas']['AssignmentCountResponse'];
 type ExamSettingsResponse = components['schemas']['ExamSettingsResponse'];
@@ -59,9 +59,9 @@ export const getStudySetList = (
 
 export const getAssignedWords = (
   studySetId: number,
-): Promise<ApiResponse<AssignedWordResponse[]>> =>
+): Promise<ApiResponse<StudySetWordsResponse>> =>
   axiosInstance
-    .get<ApiResponse<AssignedWordResponse[]>>(`/api/v1/study-sets/${studySetId}/words`)
+    .get<ApiResponse<StudySetWordsResponse>>(`/api/v1/study-sets/${studySetId}/words`)
     .then((r) => r.data);
 
 export const updateAssignmentCount = (

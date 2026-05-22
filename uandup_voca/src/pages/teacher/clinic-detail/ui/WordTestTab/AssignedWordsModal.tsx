@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TeacherWordCard } from '@/entities/word';
+import { WordCard } from '@/entities/word';
 import type { BundleLevelCount } from '@/entities/test';
 import { useAssignedWords } from '@/features/study-set';
 
@@ -15,7 +15,9 @@ interface Props {
 }
 
 export function AssignedWordsModal({ studySetId, levels, wordCount, onClose }: Props) {
-  const { data: words, isLoading } = useAssignedWords(studySetId, true);
+  // 선생님 화면이므로 exampleVisible과 무관하게 예문을 항상 표시한다.
+  const { data, isLoading } = useAssignedWords(studySetId, true);
+  const words = data?.words ?? [];
 
   return (
     <ModalBackdrop onClose={onClose}>
@@ -71,13 +73,13 @@ export function AssignedWordsModal({ studySetId, levels, wordCount, onClose }: P
           {isLoading && (
             <p className="text-sm text-on-surface-variant text-center py-8">Loading...</p>
           )}
-          {!isLoading && (words?.length ?? 0) === 0 && (
+          {!isLoading && words.length === 0 && (
             <p className="text-sm text-on-surface-variant text-center py-8">No words assigned.</p>
           )}
-          {!isLoading && words && words.length > 0 && (
+          {!isLoading && words.length > 0 && (
             <div className="flex flex-col gap-5">
               {words.map((item) => (
-                <TeacherWordCard key={item.id} {...item} />
+                <WordCard key={item.id} {...item} showSentence />
               ))}
             </div>
           )}

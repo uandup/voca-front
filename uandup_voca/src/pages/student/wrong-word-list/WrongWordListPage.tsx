@@ -1,6 +1,6 @@
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { useRouter } from '@tanstack/react-router';
-import { StudentWordCard } from '@/entities/word';
+import { WordCard } from '@/entities/word';
 import { useReviewDeckWords } from '@/features/review-deck-exam';
 import { useCurrentStudentId } from '@/shared/jwt';
 
@@ -24,14 +24,10 @@ export default function WrongWordListPage() {
       ) : (
         <div className="space-y-5">
           {words.map((word) => (
-            <StudentWordCard
+            <WordCard
               key={word.id}
-              difficulty={word.difficulty}
-              word={word.word}
-              partsOfSpeech={word.partsOfSpeech}
-              korMeaning={word.korMeaning}
-              engMeaning={word.engMeaning}
-              synonyms={word.synonyms}
+              {...word}
+              showSentence
               extraInfo={
                 <div className="flex flex-col items-center justify-center px-2 py-2 bg-error/5 border border-error/20 rounded-lg">
                   <span className="text-[8px] uppercase tracking-widest font-bold text-error/60">

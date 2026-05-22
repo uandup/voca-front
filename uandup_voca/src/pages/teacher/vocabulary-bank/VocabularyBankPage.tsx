@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { TeacherWordCard, DIFFICULTY_LEVELS } from '@/entities/word';
+import { WordCard, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TeacherWord } from '@/entities/word';
 import { useVocabularyBank } from './model/hooks/useVocabularyBank';
 import { WordFormModal } from './ui/modals/WordFormModal';
@@ -96,9 +96,10 @@ export default function VocabularyBankPage() {
 
       <div className="flex flex-col gap-8">
         {words.map((word) => (
-          <TeacherWordCard
+          <WordCard
             key={word.id}
             {...word}
+            showSentence
             extraInfo={
               // 카드 자체가 relative이므로 우상단 absolute 배치를 그대로 유지한다.
               <div className="absolute top-6 right-6 flex gap-2 z-10">
