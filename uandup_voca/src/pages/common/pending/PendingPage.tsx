@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { getMyInfo, toMember } from '@/entities/member';
+import { getActiveChildId, setActiveChildId } from '@/shared/jwt';
 import { OnboardingNav } from '../onboarding/ui/OnboardingNav';
 
 // PendingPage가 표시할 두 가지 안내 — 일반 승인 대기 vs 학부모 자녀 매칭 대기.
@@ -28,9 +29,18 @@ export default function PendingPage() {
         }
 
         if (member.role === 'PARENT') {
-          // 학부모는 status와 무관하게 이 페이지에 머문다.
-          // ACTIVE이지만 자녀가 아직 없으면 '자녀 매칭 대기' 문구로 전환한다.
-          if (member.status === 'ACTIVE' && (member.children?.length ?? 0) === 0) {
+          const children = member.children ?? [];
+          if (member.status === 'ACTIVE' && children.length > 0) {
+            // 자녀가 매칭된 학부모는 자녀 페이지를 읽기전용으로 공유한다.
+            // 마지막으로 본 자녀가 아직 유효하면 그대로 복원하고, 아니면 첫 자녀로 fallback한다.
+            const lastViewedId = getActiveChildId();
+            const restored = children.find((c) => c.studentId === lastViewedId);
+            setActiveChildId((restored ?? children[0]).studentId);
+            navigate({ to: '/student/dashboard' });
+            return;
+          }
+          // 승인 대기 중이거나, ACTIVE라도 자녀가 아직 없으면 이 페이지에 머문다.
+          if (member.status === 'ACTIVE') {
             setVariant('parentNoChild');
           }
           return;

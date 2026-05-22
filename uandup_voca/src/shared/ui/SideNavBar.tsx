@@ -1,4 +1,5 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
+import { clearActiveChildId } from '@/shared/jwt';
 
 interface NavItem {
   icon: string;
@@ -19,6 +20,9 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
 
   const handleSignOut = () => {
     localStorage.removeItem('accessToken');
+    // 명시적 로그아웃에서만 자녀 열람 상태를 비운다.
+    // 401 만료는 axios 인터셉터가 토큰만 지우므로, 재로그인 시 마지막 본 자녀가 복원된다.
+    clearActiveChildId();
     navigate({ to: '/' });
   };
 

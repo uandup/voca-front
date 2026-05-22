@@ -1,11 +1,26 @@
 import { getTokenPayload } from './utils';
+import { getActiveChildId } from './activeChild';
 
-// 학생 페이지에서 본인의 studentId를 JWT에서 직접 추출하는 헬퍼.
-// 페이지/훅이 prop으로 받지 않고도 본인 컨텍스트를 자가 해결할 수 있도록 한다.
-// role !== 'STUDENT'이거나 토큰이 없으면 null — 호출부가 빈 상태/redirect를 결정.
+// 학생 페이지가 "지금 보고 있는 학생"의 studentId를 prop 없이 자가 해결하는 헬퍼.
+//
+//  - STUDENT  : JWT의 sub이 곧 본인 studentId.
+//  - PARENT   : 자녀 페이지를 읽기전용으로 공유하므로, 열람 중인 자녀 id(localStorage)를 반환.
+//  - 그 외/토큰 없음 : null — 호출부가 빈 상태/redirect를 결정.
+//
+// 학부모 자녀 전환은 페이지 네비게이션을 동반하므로 localStorage 동기 읽기로 충분하다
+// (전환 시점에 자동 리렌더가 필요하지 않다).
 export function useCurrentStudentId(): number | null {
   const payload = getTokenPayload();
-  if (!payload || payload.role !== 'STUDENT') return null;
-  const id = Number(payload.sub);
-  return Number.isFinite(id) ? id : null;
+  if (!payload) return null;
+
+  if (payload.role === 'STUDENT') {
+    const id = Number(payload.sub);
+    return Number.isFinite(id) ? id : null;
+  }
+
+  if (payload.role === 'PARENT') {
+    return getActiveChildId();
+  }
+
+  return null;
 }
