@@ -46,7 +46,9 @@ export function StudentMatchPanel({ parent, selectedIds, onSelect, onClose }: Pr
         </div>
         <p className="text-xs text-on-surface-variant">
           Parent: <span className="font-bold text-on-surface">{parent.name}</span> → Child:{' '}
-          <span className="font-bold text-on-surface">{parent.requestedChildName}</span>
+          <span className="font-bold text-on-surface">
+            {parent.requestedChildren.map((c) => c.name).join(', ')}
+          </span>
         </p>
       </div>
 

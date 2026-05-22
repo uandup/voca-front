@@ -17,11 +17,16 @@ export interface PendingTeacher {
   submittedAt: string;
 }
 
+/** 학부모가 가입 신청 시 입력한 자녀 희망 정보 — 매칭 전 임시 정보. */
+export interface RequestedChild {
+  name: string;
+  grade: number;
+}
+
 export interface PendingParent {
   id: number;
   name: string;
   phoneNumber: string;
-  requestedChildName: string;
-  requestedChildGrade: number;
+  requestedChildren: RequestedChild[];
   submittedAt: string;
 }

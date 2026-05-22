@@ -52,7 +52,9 @@ export function SideNavBar({ navItems, collapsed, onToggle, topSlot }: SideNavBa
         </button>
       </div>
 
-      {topSlot && <div className="mb-2">{topSlot}</div>}
+      {/* topSlot은 항상 truthy인 엘리먼트일 수 있어(예: 학생 세션에서 null을 반환하는 ChildSwitcher),
+          래퍼로 감싸면 빈 여백이 남는다. 간격은 슬롯 콘텐츠가 직접 책임진다. */}
+      {topSlot}
 
       <nav className="flex-1 flex flex-col gap-1">
         {navItems.map((item) => {

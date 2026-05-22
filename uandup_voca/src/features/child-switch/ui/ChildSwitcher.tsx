@@ -29,14 +29,14 @@ export function ChildSwitcher({ collapsed }: Props) {
   // 접힌 사이드바에서는 라벨/드롭다운을 펼칠 공간이 없어 아이콘만 보인다.
   if (collapsed) {
     return (
-      <div className="flex justify-center" title={activeChild?.name ?? 'Child'}>
+      <div className="flex justify-center mb-2" title={activeChild?.name ?? 'Child'}>
         <span className="material-symbols-outlined text-slate-600">child_care</span>
       </div>
     );
   }
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="relative mb-2">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
