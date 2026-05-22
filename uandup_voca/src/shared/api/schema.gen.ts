@@ -2061,6 +2061,21 @@ export interface components {
             message?: string;
             data?: components["schemas"]["DashboardChartResponse"];
         };
+        /** @description 일별 암기 완료 단어 수 */
+        DailyCount: {
+            /**
+             * Format: date
+             * @description 암기 완료 날짜
+             * @example 2026-05-23
+             */
+            date?: string;
+            /**
+             * Format: int32
+             * @description 그 날 암기 완료한 단어 수
+             * @example 12
+             */
+            count?: number;
+        };
         /** @description 학생 대시보드 차트 데이터 (시험 점수 추이 + 월간 학습량) */
         DashboardChartResponse: {
             /** @description WORD 시험 점수 추이 (createdAt ASC) */
@@ -2069,8 +2084,8 @@ export interface components {
             exampleExamScores?: components["schemas"]["ExamScorePoint"][];
             /** @description REVIEW 시험 점수 추이 (createdAt ASC) */
             reviewExamScores?: components["schemas"]["ExamScorePoint"][];
-            /** @description 월간 학습 단어 수 (yearMonth ASC) */
-            monthlyAssignedCounts?: components["schemas"]["MonthlyCount"][];
+            /** @description 일별 암기 완료 단어 수 (date ASC) — REVIEW3까지 통과한 단어를 통과일 단위로 집계 */
+            dailyLearnedCounts?: components["schemas"]["DailyCount"][];
         };
         /** @description 시험 점수 그래프 한 지점 */
         ExamScorePoint: {
@@ -2115,20 +2130,6 @@ export interface components {
              * @example true
              */
             isPassed?: boolean;
-        };
-        /** @description 월간 학습 단어 수 */
-        MonthlyCount: {
-            /**
-             * @description YYYY-MM 형식
-             * @example 2026-05
-             */
-            yearMonth?: string;
-            /**
-             * Format: int32
-             * @description 해당 월에 배정된 단어 수
-             * @example 120
-             */
-            count?: number;
         };
         ApiResponseStudySetExamTypeResponse: {
             /** Format: int32 */
