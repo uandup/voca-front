@@ -61,9 +61,9 @@ export default function StepCard({ step, onAction }: StepCardProps) {
         {status === 'pending' && (
           <button
             disabled
-            className="w-full py-2.5 rounded-xl border border-outline/20 text-md font-medium"
+            className="w-full py-2.5 rounded-xl border text-gray-400 border-outline/20 text-md font-medium"
           >
-            Pending Release
+            Pending Test
           </button>
         )}
         {status === 'active' && (
@@ -94,7 +94,7 @@ export default function StepCard({ step, onAction }: StepCardProps) {
           <>
             <button
               disabled
-              className="w-full py-1.5 rounded-xl border text-slate-400 border-outline/20 text-xs font-semibold"
+              className="w-full py-1.5 rounded-xl border text-gray-400 border-outline/20 text-xs font-semibold"
             >
               Pending Re-Test
             </button>
