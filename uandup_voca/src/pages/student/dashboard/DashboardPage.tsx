@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { useCurrentStudentId } from '@/shared/jwt';
-import { useStudentDashboard, useStudentDashboardCharts, useMyInfo } from '@/features/student';
+import {
+  useStudentOverview,
+  useStudentDashboard,
+  useStudentDashboardCharts,
+} from '@/features/student';
 import {
   ScoreTrendChart,
   StatCards,
@@ -10,19 +15,23 @@ import {
   TodoList,
 } from '@/widgets/student-dashboard';
 
-const TEST_TYPE_LABEL: Record<'WORD_TO_MEANING' | 'MEANING_TO_WORD', string> = {
-  WORD_TO_MEANING: 'Word to meaning',
-  MEANING_TO_WORD: 'Meaning to word',
+// 학생 클라이언트 시험 유형('word-to-meaning' 등) → 표시 문구.
+const TEST_TYPE_LABEL: Record<string, string> = {
+  'word-to-meaning': 'Word to meaning',
+  'meaning-to-word': 'Meaning to word',
 };
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   // 학생 본인이면 JWT의 studentId, 학부모 열람이면 선택된 자녀 id.
   const studentId = useCurrentStudentId() ?? 0;
 
   const { data: dashboard, isLoading: dashboardLoading } = useStudentDashboard(studentId);
   const { data: charts, isLoading: chartsLoading } = useStudentDashboardCharts(studentId);
-  // Test Configuration은 대시보드 API에 없어 members/me의 examSettings에서 가져온다.
-  const { data: me } = useMyInfo();
+  // Test Configuration은 대시보드 API에 없어 해당 학생의 overview에서 가져온다.
+  // members/me 대신 student overview를 쓰는 이유 — 학부모가 자녀 대시보드를 열람할 때
+  // members/me는 학부모 본인 정보라 examSubType 등이 비기 때문이다.
+  const { data: overview } = useStudentOverview(studentId);
 
   const [todoOpen, setTodoOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -50,16 +59,13 @@ export default function DashboardPage() {
     );
   }
 
-  const examSettings = me?.examSettings;
-  const testTypeLabel = examSettings?.examSubType
-    ? TEST_TYPE_LABEL[examSettings.examSubType]
-    : '—';
+  const testTypeLabel = overview ? (TEST_TYPE_LABEL[overview.testType] ?? '—') : '—';
 
   return (
     <main className="relative">
       {/* Title row with todo toggle */}
       <div className="flex items-center justify-between">
-        <PageTitle title={me?.name ? `Welcome back, ${me.name}` : 'Welcome back'} />
+        <PageTitle title={overview?.nameKo ? `Welcome back, ${overview.nameKo}` : 'Welcome back'} />
 
         {/* Todo Button */}
         <button
@@ -85,9 +91,9 @@ export default function DashboardPage() {
             level={dashboard.currentLevel}
             progressPercent={dashboard.levelProgressPercent}
             testTypeLabel={testTypeLabel}
-            includeSynonyms={examSettings?.includeSynonyms ?? false}
-            examQuestionCount={examSettings?.examQuestionCount ?? 0}
-            assignmentCount={examSettings?.assignmentCount ?? 0}
+            includeSynonyms={overview?.includeSynonyms ?? false}
+            examQuestionCount={overview?.testQuestionCount ?? 0}
+            assignmentCount={overview?.assignmentCount ?? 0}
           />
         </div>
         <WordsLearnedCard count={dashboard.memorizedWordCount} />
@@ -98,6 +104,8 @@ export default function DashboardPage() {
           accuracy={dashboard.overallAccuracy}
           assignedWordCount={dashboard.activeAssignedWordCount}
           pendingReviewWordCount={dashboard.pendingReviewWordCount}
+          // 카드 클릭 시 진행 중 Word Test 화면으로 이동 — 학생이 본인 배정 단어를 확인할 수 있는 진입점.
+          onAssignedClick={() => navigate({ to: '/student/word-test' })}
         />
       </div>
 

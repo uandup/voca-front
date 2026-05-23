@@ -347,6 +347,9 @@ function toExamScoreDetail(p: ExamScorePointDto): ExamScoreDetail {
   return {
     examId: p.examId ?? 0,
     examType: (p.examType ?? 'WORD') as ExamScoreType,
+    // 서버는 StudySet 정보가 없을 때 null을 내려준다 — 0으로 떨어뜨리지 않고 그대로 보존해 툴팁에서 '—'로 표시한다.
+    level: p.level ?? null,
+    assignedWordCount: p.assignedWordCount ?? null,
     correctCount: p.correctCount ?? 0,
     totalCount: p.totalCount ?? 0,
     accuracy: Math.round((p.accuracy ?? 0) * 100),

@@ -97,15 +97,15 @@ export function LevelProgress({
                 </span>
                 {assignmentCount} words assigned
               </span>
-              <span
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-                ${includeSynonyms ? 'bg-green-50 text-green-700' : 'bg-surface-container text-on-surface-variant'}`}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  {includeSynonyms ? 'library_add_check' : 'block'}
+              {/* 동의어 포함 시에만 칩을 띄운다 — 미포함은 기본 상태이므로 굳이 'Excluded'로 노출하지 않는다. */}
+              {includeSynonyms && (
+                <span className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-green-50 text-green-700">
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                    library_add_check
+                  </span>
+                  Synonyms: Included
                 </span>
-                Synonyms: {includeSynonyms ? 'Included' : 'Excluded'}
-              </span>
+              )}
             </div>
           </div>
 

@@ -150,6 +150,10 @@ export type ExamScoreType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW
 export interface ExamScoreDetail {
   examId: number;
   examType: ExamScoreType;
+  // 이 시험이 속한 배정(StudySet)의 레벨. StudySet 정보가 없으면 null.
+  level: number | null;
+  // 이 시험이 속한 배정에 배정된 단어 수. StudySet 정보가 없으면 null.
+  assignedWordCount: number | null;
   correctCount: number;
   totalCount: number;
   // 0~100 정수(반올림).

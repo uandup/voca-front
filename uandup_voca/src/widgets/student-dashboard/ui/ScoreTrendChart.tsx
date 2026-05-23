@@ -102,24 +102,31 @@ function YAxis({
   );
 }
 
-// 호버된 지점의 툴팁. 시험 차트는 각 시험 정보를, 학습량 차트는 단어 수를 보여준다.
+// 호버된 지점의 툴팁. 시험 차트는 각 시험의 레벨·배정 단어 수·점수·합격 여부를 보여준다.
+// REVIEW 차트는 같은 날 여러 시험이 한 지점에 모이므로 exams 배열을 모두 나열한다.
 function PointTooltip({ point }: { point: ChartPoint }) {
   return (
-    <div className="rounded-lg bg-on-surface px-3 py-2 shadow-lg text-white min-w-40">
-      <p className="text-[11px] font-bold text-white/70 mb-1">{point.label}</p>
+    <div className="rounded-lg bg-on-surface px-3 py-2 shadow-lg text-white min-w-48">
+      <p className="text-[11px] font-bold text-white/70 mb-1.5">{point.label}</p>
       {point.tooltip.kind === 'count' ? (
         <p className="text-sm font-bold">{point.tooltip.count} words learned</p>
       ) : (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2 [&>div+div]:border-t [&>div+div]:border-white/15 [&>div+div]:pt-2">
           {point.tooltip.exams.map((e) => (
-            <div key={e.examId} className="flex items-center justify-between gap-3 text-xs">
-              <span className="font-bold">{EXAM_TYPE_LABEL[e.examType]}</span>
-              <span className="text-white/80">
-                {e.correctCount}/{e.totalCount} ({e.accuracy}%)
-              </span>
-              <span className={e.isPassed ? 'text-green-300' : 'text-red-300'}>
-                {e.isPassed ? 'Pass' : 'Fail'}
-              </span>
+            <div key={e.examId} className="flex flex-col gap-0.5 text-xs">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-bold">{EXAM_TYPE_LABEL[e.examType]}</span>
+                <span className={e.isPassed ? 'text-green-300' : 'text-red-300'}>
+                  {e.isPassed ? 'Pass' : 'Fail'}
+                </span>
+              </div>
+              {/* 레벨·배정 단어 수는 서버가 StudySet 정보를 못 찾으면 null로 내려와 '—'로 표시한다. */}
+              <div className="text-white/70">
+                Level {e.level ?? '—'} · {e.assignedWordCount ?? '—'} words assigned
+              </div>
+              <div className="text-white/80">
+                Score {e.correctCount}/{e.totalCount} ({e.accuracy}%)
+              </div>
             </div>
           ))}
         </div>
