@@ -960,7 +960,7 @@ export interface paths {
         };
         /**
          * 학생 학습 개요 조회
-         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·영어 이름·학년·레벨·배정 개수·시험 설정·alreadyAssigned(진행 중 NORMAL 배정 존재 여부)·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. 선생님만 접근 가능합니다.
+         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·영어 이름·학년·레벨·배정 개수·시험 설정·alreadyAssigned(진행 중 NORMAL 배정 존재 여부)·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getStudentOverview"];
         put?: never;
@@ -2107,6 +2107,18 @@ export interface components {
              * @example 2026-05-15
              */
             date?: string;
+            /**
+             * Format: int32
+             * @description 이 시험이 속한 배정(StudySet)의 레벨 — NORMAL은 첫 단어의 difficulty. StudySet 정보가 없으면 null
+             * @example 3
+             */
+            level?: number;
+            /**
+             * Format: int32
+             * @description 이 시험이 속한 배정(StudySet)에 배정된 단어 수. StudySet 정보가 없으면 null
+             * @example 30
+             */
+            assignedWordCount?: number;
             /**
              * Format: int32
              * @description 정답 수
@@ -5278,7 +5290,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
                 };
             };
-            /** @description 권한 없음 */
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
             403: {
                 headers: {
                     [name: string]: unknown;

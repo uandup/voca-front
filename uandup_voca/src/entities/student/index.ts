@@ -11,6 +11,12 @@ export type {
   LevelCount,
   ExamSummary,
   ExamStatus,
+  StudentDashboard,
+  StudentDashboardCharts,
+  ExamScorePoint,
+  ExamScoreDetail,
+  ExamScoreType,
+  LearnedCountPoint,
 } from './model/types';
 export {
   toStudentPickerRow,
@@ -22,6 +28,8 @@ export {
   toTestBundleRow,
   toStudentTestBundleRow,
   toAssignedTeacherWord,
+  toStudentDashboard,
+  toStudentDashboardCharts,
 } from './model/mapper';
 export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';
 export {
@@ -36,6 +44,8 @@ export {
   updateAssignmentCount,
   assignWords,
   updateExamSettings,
+  getDashboard,
+  getDashboardCharts,
 } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';

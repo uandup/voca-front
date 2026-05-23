@@ -1,12 +1,13 @@
-import type { StudentDashboardStats } from '@/entities/student';
-
 interface Props {
-  student: Pick<StudentDashboardStats, 'accuracy' | 'assignedWordCount'>;
+  // 전체 정답률 — '85%' 형태. COMPLETED 시험이 없으면 undefined.
+  accuracy: string | undefined;
+  // 진행 중 NORMAL 배정 단어 수.
+  assignedWordCount: number;
+  // 풀어야 할 리뷰 시험 단어 수.
+  pendingReviewWordCount: number;
 }
 
-export function StatCards({ student }: Props) {
-  const { accuracy, assignedWordCount } = student;
-
+export function StatCards({ accuracy, assignedWordCount, pendingReviewWordCount }: Props) {
   return (
     <div className="lg:col-span-4 flex flex-col gap-6">
       {/* Overall Accuracy */}
@@ -47,7 +48,9 @@ export function StatCards({ student }: Props) {
           </p>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-4xl font-black text-green-600 font-headline">200</span>
+          <span className="text-4xl font-black text-green-600 font-headline">
+            {pendingReviewWordCount}
+          </span>
           <div className="flex items-center -mr-3">
             <span className="text-lg font-bold text-green-600/60">View words</span>
             <span className="material-symbols-outlined text-green-600" style={{ fontSize: '40px' }}>

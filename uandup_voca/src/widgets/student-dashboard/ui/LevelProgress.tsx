@@ -1,30 +1,41 @@
-import type { StudentDashboardStats } from '@/entities/student';
-
 interface Props {
-  student: Pick<StudentDashboardStats, 'assignedLevel' | 'assignedWordCount' | 'testConfig'>;
+  // 현재 레벨 — 미배정이면 null.
+  level: number | null;
+  // 현재 레벨 진척률 0~100.
+  progressPercent: number;
+  // 시험 유형 표시 문구 — 'Word to meaning' / 'Meaning to word' / '—'. 매핑은 호출부 책임.
+  testTypeLabel: string;
+  includeSynonyms: boolean;
+  // 시험 1회 문항 수.
+  examQuestionCount: number;
+  // 1회 배정 단어 수.
+  assignmentCount: number;
 }
 
 const TOTAL_LEVELS = 10;
 const RADIUS = 54;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-const TEST_TYPE_LABEL: Record<string, string> = {
-  'word-to-meaning': 'Word to meaning (Korean)',
-  'meaning-to-word': 'Meaning to word',
-  sentence: 'Sentence',
-};
-
-export function LevelProgress({ student }: Props) {
-  const { assignedLevel, assignedWordCount, testConfig } = student;
-  const currentLevelProgress = 80; // TODO: API 연동 시 실제 진도율로 교체
-  const offset = CIRCUMFERENCE * (1 - currentLevelProgress / 100);
+export function LevelProgress({
+  level,
+  progressPercent,
+  testTypeLabel,
+  includeSynonyms,
+  examQuestionCount,
+  assignmentCount,
+}: Props) {
+  // 미배정(level null)이면 진척 게이지는 0으로 표시한다.
+  const displayLevel = level ?? 0;
+  const offset = CIRCUMFERENCE * (1 - progressPercent / 100);
 
   return (
     <section>
       <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6 flex gap-8 items-stretch">
         {/* Left: Circular progress */}
         <div className="flex flex-col items-center gap-2 shrink-0 w-44">
-          <p className="text-xl font-extrabold font-headline text-primary">Level {assignedLevel}</p>
+          <p className="text-xl font-extrabold font-headline text-primary">
+            {level != null ? `Level ${level}` : 'Unassigned'}
+          </p>
           <div className="relative w-36 h-36">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
               <circle
@@ -51,7 +62,7 @@ export function LevelProgress({ student }: Props) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-3xl font-black font-headline text-primary">
-                {currentLevelProgress}%
+                {progressPercent}%
               </span>
             </div>
           </div>
@@ -72,22 +83,28 @@ export function LevelProgress({ student }: Props) {
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   translate
                 </span>
-                {TEST_TYPE_LABEL[testConfig.type] ?? testConfig.type}
+                {testTypeLabel}
               </span>
               <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   edit_note
                 </span>
-                {assignedWordCount} words / test
+                {examQuestionCount} words / test
+              </span>
+              <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container text-sm font-medium text-on-surface">
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                  assignment
+                </span>
+                {assignmentCount} words assigned
               </span>
               <span
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium
-                ${testConfig.includeSynonyms ? 'bg-green-50 text-green-700' : 'bg-surface-container text-on-surface-variant'}`}
+                ${includeSynonyms ? 'bg-green-50 text-green-700' : 'bg-surface-container text-on-surface-variant'}`}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  {testConfig.includeSynonyms ? 'library_add_check' : 'block'}
+                  {includeSynonyms ? 'library_add_check' : 'block'}
                 </span>
-                Synonyms: {testConfig.includeSynonyms ? 'Included' : 'Excluded'}
+                Synonyms: {includeSynonyms ? 'Included' : 'Excluded'}
               </span>
             </div>
           </div>
@@ -99,19 +116,19 @@ export function LevelProgress({ student }: Props) {
             </p>
             <div className="flex items-end gap-2">
               {Array.from({ length: TOTAL_LEVELS }, (_, i) => {
-                const level = i + 1;
-                const isCompleted = level < assignedLevel;
-                const isCurrent = level === assignedLevel;
-                const isLocked = level > assignedLevel;
+                const lv = i + 1;
+                const isCompleted = lv < displayLevel;
+                const isCurrent = lv === displayLevel;
+                const isLocked = lv > displayLevel;
 
                 return (
-                  <div key={level} className="flex-1 flex flex-col items-center gap-1">
+                  <div key={lv} className="flex-1 flex flex-col items-center gap-1">
                     <div className="relative h-8 w-full rounded-sm overflow-hidden bg-surface-container-highest">
                       {isCompleted && <div className="absolute inset-0 bg-primary rounded-sm" />}
                       {isCurrent && (
                         <div
                           className="absolute inset-y-0 left-0 bg-primary rounded-sm"
-                          style={{ width: `${currentLevelProgress}%` }}
+                          style={{ width: `${progressPercent}%` }}
                         />
                       )}
                       {isLocked && null}
@@ -119,7 +136,7 @@ export function LevelProgress({ student }: Props) {
                     <span
                       className={`text-[10px] font-medium ${isLocked ? 'text-on-surface-variant/30' : 'text-on-surface-variant'}`}
                     >
-                      L{level}
+                      L{lv}
                     </span>
                   </div>
                 );

@@ -1,103 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
+import type {
+  StudentDashboardCharts,
+  ExamScorePoint,
+  ExamScoreDetail,
+  LearnedCountPoint,
+} from '@/entities/student';
 
-interface ExamResult {
-  label: string;
-  value: number;
-  pass: boolean;
+interface Props {
+  charts: StudentDashboardCharts;
 }
-
-interface DataPoint {
-  label: string;
-  value: number;
-}
-
-const wordResults: ExamResult[] = [
-  { label: '02.03', value: 72, pass: true },
-  { label: '02.10', value: 78, pass: true },
-  // { label: '02.17', value: 55, pass: false },
-  { label: '02.17', value: 82, pass: true }, // 재시험 합격
-  { label: '02.24', value: 90, pass: true },
-  { label: '03.03', value: 88, pass: true },
-  { label: '03.10', value: 93, pass: true },
-  { label: '03.17', value: 98, pass: true },
-  { label: '03.24', value: 95, pass: true },
-];
-
-const sentenceResults: ExamResult[] = [
-  { label: '02.03', value: 74, pass: true },
-  // { label: '02.10', value: 58, pass: false },
-  { label: '02.10', value: 80, pass: true }, // 재시험 합격
-  { label: '02.24', value: 86, pass: true },
-  { label: '03.03', value: 82, pass: true },
-  { label: '03.17', value: 100, pass: true },
-  { label: '03.24', value: 91, pass: true },
-];
-
-const reviewResults: DataPoint[] = [
-  { label: '01.06', value: 68 },
-  { label: '01.13', value: 72 },
-  { label: '01.20', value: 70 },
-  { label: '01.27', value: 75 },
-  { label: '02.03', value: 72 },
-  { label: '02.10', value: 78 },
-  { label: '02.17', value: 82 },
-  { label: '02.24', value: 84 },
-  { label: '03.03', value: 80 },
-  { label: '03.10', value: 87 },
-  { label: '03.17', value: 95 },
-  { label: '03.24', value: 89 },
-  { label: '03.31', value: 96 },
-];
-
-const monthlyWords: DataPoint[] = [
-  { label: '25.10', value: 135 },
-  { label: '25.11', value: 150 },
-  { label: '25.12', value: 150 },
-  { label: '26.01', value: 180 },
-  { label: '26.02', value: 200 },
-  { label: '26.03', value: 200 },
-];
 
 type TabType = 'word' | 'sentence' | 'review' | 'monthly';
 
-interface TabConfig {
-  data: DataPoint[] | ExamResult[];
-  yMin: number;
-  yMax: number;
-  yTicks: number[];
-  passMode: boolean;
+// 차트 렌더링에 쓰는 통합 지점 모델 — 시험 차트·학습량 차트를 한 모델로 다룬다.
+interface ChartPoint {
+  label: string; // x축 라벨 'MM.DD'
+  value: number; // y값 (점수 0~100 또는 단어 수)
+  // dot 색상: true=합격, false=불합격, null=중립(학습량 차트)
+  pass: boolean | null;
+  // 툴팁 상세 — 시험 차트는 exam 목록, 학습량 차트는 단어 수.
+  tooltip: { kind: 'exam'; exams: ExamScoreDetail[] } | { kind: 'count'; count: number };
 }
 
-const tabConfigs: Record<TabType, TabConfig> = {
-  word: {
-    data: wordResults,
-    yMin: 0,
-    yMax: 100,
-    yTicks: [20, 40, 60, 80, 100],
-    passMode: true,
-  },
-  sentence: {
-    data: sentenceResults,
-    yMin: 0,
-    yMax: 100,
-    yTicks: [20, 40, 60, 80, 100],
-    passMode: true,
-  },
-  review: {
-    data: reviewResults,
-    yMin: 0,
-    yMax: 100,
-    yTicks: [20, 40, 60, 80, 100],
-    passMode: false,
-  },
-  monthly: {
-    data: monthlyWords,
-    yMin: 0,
-    yMax: 300,
-    yTicks: [0, 100, 200, 300],
-    passMode: false,
-  },
+const EXAM_TYPE_LABEL: Record<ExamScoreDetail['examType'], string> = {
+  WORD: 'Word',
+  EXAMPLE: 'Sentence',
+  REVIEW1: 'Review 1',
+  REVIEW2: 'Review 2',
+  REVIEW3: 'Review 3',
 };
+
+function examPointToChartPoint(p: ExamScorePoint): ChartPoint {
+  return {
+    label: p.date,
+    value: p.score,
+    pass: p.isPassed,
+    tooltip: { kind: 'exam', exams: p.exams },
+  };
+}
+
+function countPointToChartPoint(p: LearnedCountPoint): ChartPoint {
+  return {
+    label: p.date,
+    value: p.count,
+    pass: null,
+    tooltip: { kind: 'count', count: p.count },
+  };
+}
+
+// 학습량 차트의 y축 최댓값 — 데이터 최대치를 100 단위로 올림(최소 100).
+function roundUpToHundred(max: number): number {
+  return Math.max(100, Math.ceil(max / 100) * 100);
+}
 
 const tabs: { key: TabType; label: string }[] = [
   { key: 'word', label: 'Word' },
@@ -148,173 +102,152 @@ function YAxis({
   );
 }
 
+// 호버된 지점의 툴팁. 시험 차트는 각 시험 정보를, 학습량 차트는 단어 수를 보여준다.
+function PointTooltip({ point }: { point: ChartPoint }) {
+  return (
+    <div className="rounded-lg bg-on-surface px-3 py-2 shadow-lg text-white min-w-40">
+      <p className="text-[11px] font-bold text-white/70 mb-1">{point.label}</p>
+      {point.tooltip.kind === 'count' ? (
+        <p className="text-sm font-bold">{point.tooltip.count} words learned</p>
+      ) : (
+        <div className="flex flex-col gap-1">
+          {point.tooltip.exams.map((e) => (
+            <div key={e.examId} className="flex items-center justify-between gap-3 text-xs">
+              <span className="font-bold">{EXAM_TYPE_LABEL[e.examType]}</span>
+              <span className="text-white/80">
+                {e.correctCount}/{e.totalCount} ({e.accuracy}%)
+              </span>
+              <span className={e.isPassed ? 'text-green-300' : 'text-red-300'}>
+                {e.isPassed ? 'Pass' : 'Fail'}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ChartBody({
-  config,
+  points,
   containerWidth,
   height,
+  yMin,
+  yMax,
+  yTicks,
 }: {
-  config: TabConfig;
+  points: ChartPoint[];
   containerWidth: number;
   height: number;
+  yMin: number;
+  yMax: number;
+  yTicks: number[];
 }) {
-  const { data, yMin, yMax, yTicks, passMode } = config;
+  const [hovered, setHovered] = useState<number | null>(null);
   const innerH = height - MARGIN.top - MARGIN.bottom;
 
-  // x축 기준: passMode는 고유 날짜, 그 외는 인덱스
-  const uniqueLabels = passMode
-    ? Array.from(new Set(data.map((d) => d.label)))
-    : data.map((d) => d.label);
-  const xCount = uniqueLabels.length;
-
+  const xCount = points.length;
   const innerW = Math.max(containerWidth - MARGIN.left - MARGIN.right, (xCount - 1) * POINT_GAP);
   const width = innerW + MARGIN.left + MARGIN.right;
 
-  function getX(label: string): number {
-    const idx = uniqueLabels.indexOf(label);
-    return MARGIN.left + (xCount === 1 ? innerW / 2 : (idx / (xCount - 1)) * innerW);
+  function getX(index: number): number {
+    return MARGIN.left + (xCount <= 1 ? innerW / 2 : (index / (xCount - 1)) * innerW);
   }
-
   function getY(v: number): number {
     return MARGIN.top + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
   }
 
   const segments: React.ReactElement[] = [];
-  const dots: React.ReactElement[] = [];
-  const labels: React.ReactElement[] = [];
-
-  if (passMode) {
-    const examData = data as ExamResult[];
-    let prevPass: { label: string; value: number } | null = null;
-
-    examData.forEach((d, i) => {
-      const cx = getX(d.label);
-      const cy = getY(d.value);
-      const color = d.pass ? PRIMARY : FAIL_COLOR;
-
-      // pass → pass 구간만 선 연결
-      if (d.pass && prevPass) {
-        segments.push(
-          <line
-            key={`seg-${i}`}
-            x1={getX(prevPass.label)}
-            y1={getY(prevPass.value)}
-            x2={cx}
-            y2={cy}
-            stroke={PRIMARY}
-            strokeWidth={2.5}
-            strokeLinecap="round"
-          />,
-        );
-      }
-
-      dots.push(
-        <circle
-          key={`dot-${i}`}
-          cx={cx}
-          cy={cy}
-          r={4}
-          fill={color}
-          stroke="white"
-          strokeWidth={2}
-        />,
-      );
-      labels.push(
-        <text
-          key={`lbl-${i}`}
-          x={cx}
-          y={cy - 10}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={700}
-          fill={color}
-        >
-          {d.value}
-        </text>,
-      );
-
-      if (d.pass) prevPass = { label: d.label, value: d.value };
-    });
-  } else {
-    data.forEach((d, i) => {
-      const cx = getX(d.label);
-      const cy = getY(d.value);
-
-      if (i > 0) {
-        segments.push(
-          <line
-            key={`seg-${i}`}
-            x1={getX(data[i - 1].label)}
-            y1={getY(data[i - 1].value)}
-            x2={cx}
-            y2={cy}
-            stroke={PRIMARY}
-            strokeWidth={2.5}
-            strokeLinecap="round"
-          />,
-        );
-      }
-
-      dots.push(
-        <circle
-          key={`dot-${i}`}
-          cx={cx}
-          cy={cy}
-          r={4}
-          fill={PRIMARY}
-          stroke="white"
-          strokeWidth={2}
-        />,
-      );
-      labels.push(
-        <text
-          key={`lbl-${i}`}
-          x={cx}
-          y={cy - 10}
-          textAnchor="middle"
-          fontSize={10}
-          fontWeight={700}
-          fill={AXIS_COLOR}
-        >
-          {d.value}
-        </text>,
-      );
-    });
+  for (let i = 1; i < points.length; i++) {
+    segments.push(
+      <line
+        key={`seg-${i}`}
+        x1={getX(i - 1)}
+        y1={getY(points[i - 1].value)}
+        x2={getX(i)}
+        y2={getY(points[i].value)}
+        stroke={PRIMARY}
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />,
+    );
   }
 
   return (
-    <svg width={width} height={height}>
-      {yTicks.map((tick) => (
-        <line
-          key={tick}
-          x1={MARGIN.left}
-          y1={getY(tick)}
-          x2={MARGIN.left + innerW}
-          y2={getY(tick)}
-          stroke={GRID_COLOR}
-          strokeDasharray="3 3"
-        />
-      ))}
-      {uniqueLabels.map((lbl, i) => (
-        <text
-          key={`x-${i}`}
-          x={getX(lbl)}
-          y={MARGIN.top + innerH + 18}
-          textAnchor="middle"
-          fontSize={11}
-          fontWeight={700}
-          fill={AXIS_COLOR}
+    <div className="relative" style={{ width }}>
+      <svg width={width} height={height}>
+        {yTicks.map((tick) => (
+          <line
+            key={tick}
+            x1={MARGIN.left}
+            y1={getY(tick)}
+            x2={MARGIN.left + innerW}
+            y2={getY(tick)}
+            stroke={GRID_COLOR}
+            strokeDasharray="3 3"
+          />
+        ))}
+        {points.map((p, i) => (
+          <text
+            key={`x-${i}`}
+            x={getX(i)}
+            y={MARGIN.top + innerH + 18}
+            textAnchor="middle"
+            fontSize={11}
+            fontWeight={700}
+            fill={AXIS_COLOR}
+          >
+            {p.label}
+          </text>
+        ))}
+        {segments}
+        {points.map((p, i) => {
+          const color = p.pass === false ? FAIL_COLOR : PRIMARY;
+          return (
+            <g key={`dot-${i}`}>
+              <text
+                x={getX(i)}
+                y={getY(p.value) - 10}
+                textAnchor="middle"
+                fontSize={10}
+                fontWeight={700}
+                fill={color}
+              >
+                {p.value}
+              </text>
+              <circle cx={getX(i)} cy={getY(p.value)} r={4} fill={color} stroke="white" strokeWidth={2} />
+              {/* 호버 히트 영역 — 작은 dot보다 넓게 잡아 마우스 인식을 쉽게 한다. */}
+              <circle
+                cx={getX(i)}
+                cy={getY(p.value)}
+                r={14}
+                fill="transparent"
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                style={{ cursor: 'pointer' }}
+              />
+            </g>
+          );
+        })}
+      </svg>
+
+      {hovered !== null && (
+        <div
+          className="absolute z-10 pointer-events-none"
+          style={{
+            left: getX(hovered),
+            top: getY(points[hovered].value) - 14,
+            transform: 'translate(-50%, -100%)',
+          }}
         >
-          {lbl}
-        </text>
-      ))}
-      {segments}
-      {dots}
-      {labels}
-    </svg>
+          <PointTooltip point={points[hovered]} />
+        </div>
+      )}
+    </div>
   );
 }
 
-export function ScoreTrendChart() {
+export function ScoreTrendChart({ charts }: Props) {
   const [activeTab, setActiveTab] = useState<TabType>('word');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -324,10 +257,7 @@ export function ScoreTrendChart() {
     const el = wrapperRef.current;
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
-      setSize({
-        width: entry.contentRect.width,
-        height: entry.contentRect.height,
-      });
+      setSize({ width: entry.contentRect.width, height: entry.contentRect.height });
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -339,7 +269,27 @@ export function ScoreTrendChart() {
     el.scrollLeft = el.scrollWidth;
   }, [activeTab, size.width]);
 
-  const config = tabConfigs[activeTab];
+  // 탭별 차트 지점 + y축 구성.
+  let points: ChartPoint[];
+  let yMax: number;
+  let yTicks: number[];
+  if (activeTab === 'monthly') {
+    points = charts.dailyLearnedCounts.map(countPointToChartPoint);
+    yMax = roundUpToHundred(Math.max(0, ...points.map((p) => p.value)));
+    const step = yMax / 4;
+    yTicks = [step, step * 2, step * 3, yMax];
+  } else {
+    const exam =
+      activeTab === 'word'
+        ? charts.wordScores
+        : activeTab === 'sentence'
+          ? charts.exampleScores
+          : charts.reviewScores;
+    points = exam.map(examPointToChartPoint);
+    yMax = 100;
+    yTicks = [20, 40, 60, 80, 100];
+  }
+
   const chartWidth = size.width > 0 ? size.width - Y_AXIS_WIDTH : 0;
 
   return (
@@ -366,21 +316,26 @@ export function ScoreTrendChart() {
 
       <div ref={wrapperRef} className="h-84 flex">
         {size.height > 0 && (
-          <YAxis
-            height={size.height}
-            yMin={config.yMin}
-            yMax={config.yMax}
-            yTicks={config.yTicks}
-          />
+          <YAxis height={size.height} yMin={0} yMax={yMax} yTicks={yTicks} />
         )}
         <div ref={scrollRef} className="flex-1 overflow-x-auto">
-          {chartWidth > 0 && (
-            <ChartBody
-              key={activeTab}
-              config={config}
-              containerWidth={chartWidth}
-              height={size.height}
-            />
+          {points.length === 0 ? (
+            <div className="h-full flex items-center justify-center text-sm text-on-surface-variant">
+              No exam data yet.
+            </div>
+          ) : (
+            chartWidth > 0 &&
+            size.height > 0 && (
+              <ChartBody
+                key={activeTab}
+                points={points}
+                containerWidth={chartWidth}
+                height={size.height}
+                yMin={0}
+                yMax={yMax}
+                yTicks={yTicks}
+              />
+            )
           )}
         </div>
       </div>

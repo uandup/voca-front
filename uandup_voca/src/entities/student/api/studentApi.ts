@@ -9,6 +9,8 @@ type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
 type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'];
 type StudySetWordsResponse = components['schemas']['StudySetWordsResponse'];
+type DashboardResponse = components['schemas']['DashboardResponse'];
+type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
 type AssignWordsResponse = components['schemas']['AssignWordsResponse'];
 type AssignmentCountResponse = components['schemas']['AssignmentCountResponse'];
 type ExamSettingsResponse = components['schemas']['ExamSettingsResponse'];
@@ -48,18 +50,28 @@ export const getStudentOverview = (id: number): Promise<ApiResponse<StudentOverv
     .get<ApiResponse<StudentOverviewResponse>>(`/api/v1/members/students/${id}/overview`)
     .then((r) => r.data);
 
+// ── Student Dashboard ─────────────────────────────────────────────────────
+
+export const getDashboard = (studentId: number): Promise<ApiResponse<DashboardResponse>> =>
+  axiosInstance
+    .get<ApiResponse<DashboardResponse>>(`/api/v1/students/${studentId}/dashboard`)
+    .then((r) => r.data);
+
+export const getDashboardCharts = (
+  studentId: number,
+): Promise<ApiResponse<DashboardChartResponse>> =>
+  axiosInstance
+    .get<ApiResponse<DashboardChartResponse>>(`/api/v1/students/${studentId}/dashboard/charts`)
+    .then((r) => r.data);
+
 export const getStudySetList = (
   studentId: number,
 ): Promise<ApiResponse<StudySetExamListResponse[]>> =>
   axiosInstance
-    .get<ApiResponse<StudySetExamListResponse[]>>(
-      `/api/v1/normal-study-sets/students/${studentId}`,
-    )
+    .get<ApiResponse<StudySetExamListResponse[]>>(`/api/v1/normal-study-sets/students/${studentId}`)
     .then((r) => r.data);
 
-export const getAssignedWords = (
-  studySetId: number,
-): Promise<ApiResponse<StudySetWordsResponse>> =>
+export const getAssignedWords = (studySetId: number): Promise<ApiResponse<StudySetWordsResponse>> =>
   axiosInstance
     .get<ApiResponse<StudySetWordsResponse>>(`/api/v1/study-sets/${studySetId}/words`)
     .then((r) => r.data);
@@ -69,10 +81,9 @@ export const updateAssignmentCount = (
   body: UpdateAssignmentCountRequest,
 ): Promise<ApiResponse<AssignmentCountResponse>> =>
   axiosInstance
-    .patch<ApiResponse<AssignmentCountResponse>>(
-      `/api/v1/members/students/${studentId}/assignment-settings`,
-      body,
-    )
+    .patch<
+      ApiResponse<AssignmentCountResponse>
+    >(`/api/v1/members/students/${studentId}/assignment-settings`, body)
     .then((r) => r.data);
 
 export const assignWords = (studentId: number): Promise<ApiResponse<AssignWordsResponse>> =>
@@ -85,8 +96,7 @@ export const updateExamSettings = (
   body: UpdateExamSettingsRequest,
 ): Promise<ApiResponse<ExamSettingsResponse>> =>
   axiosInstance
-    .patch<ApiResponse<ExamSettingsResponse>>(
-      `/api/v1/members/students/${studentId}/exam-settings`,
-      body,
-    )
+    .patch<
+      ApiResponse<ExamSettingsResponse>
+    >(`/api/v1/members/students/${studentId}/exam-settings`, body)
     .then((r) => r.data);

@@ -125,3 +125,60 @@ export interface StudentDetail {
   classrooms: { id: number; name: string }[];
   parents: ParentIdentity[];
 }
+
+// ── Student Dashboard (/dashboard, /dashboard/charts) ───────────────────────
+
+/** 학생 대시보드 요약 지표 — /api/v1/students/{id}/dashboard */
+export interface StudentDashboard {
+  // 현재 레벨(1~10). 미배정이면 null.
+  currentLevel: number | null;
+  // 현재 레벨 진척률 0~100 — levelMemorizedIndex / levelTotalWordCount.
+  levelProgressPercent: number;
+  // 누적 암기 완료 단어 수(모든 레벨 합).
+  memorizedWordCount: number;
+  // 전체 정답률 — '85%' 형태. COMPLETED 시험이 없으면 undefined.
+  overallAccuracy: string | undefined;
+  // 진행 중 NORMAL 배정 단어 수.
+  activeAssignedWordCount: number;
+  // 풀어야 할 리뷰 시험 단어 수.
+  pendingReviewWordCount: number;
+}
+
+export type ExamScoreType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3';
+
+/** 차트 point hover 시 표시할 개별 시험 정보. */
+export interface ExamScoreDetail {
+  examId: number;
+  examType: ExamScoreType;
+  correctCount: number;
+  totalCount: number;
+  // 0~100 정수(반올림).
+  accuracy: number;
+  isPassed: boolean;
+}
+
+/** 시험 점수 추이 차트의 한 지점. REVIEW는 같은 날 시험들이 한 지점으로 합쳐진다. */
+export interface ExamScorePoint {
+  // x축 라벨 'MM.DD'.
+  date: string;
+  // y값 0~100. REVIEW는 같은 날 시험들의 평균.
+  score: number;
+  // dot 색상용. REVIEW는 그날 시험이 모두 합격일 때만 true.
+  isPassed: boolean;
+  // 툴팁 상세 — WORD·EXAMPLE은 1건, REVIEW는 같은 날 여러 건.
+  exams: ExamScoreDetail[];
+}
+
+/** 일별 암기 단어 수 차트의 한 지점. */
+export interface LearnedCountPoint {
+  date: string;
+  count: number;
+}
+
+/** 학생 대시보드 차트 데이터 — /api/v1/students/{id}/dashboard/charts */
+export interface StudentDashboardCharts {
+  wordScores: ExamScorePoint[];
+  exampleScores: ExamScorePoint[];
+  reviewScores: ExamScorePoint[];
+  dailyLearnedCounts: LearnedCountPoint[];
+}

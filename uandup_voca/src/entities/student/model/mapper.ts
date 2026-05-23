@@ -16,6 +16,12 @@ import type {
   LevelCount,
   ExamSummary,
   ExamStatus,
+  StudentDashboard,
+  StudentDashboardCharts,
+  ExamScorePoint,
+  ExamScoreDetail,
+  ExamScoreType,
+  LearnedCountPoint,
 } from './types';
 import type { StepCardVM, TestBundleRow } from '@/entities/test';
 
@@ -27,6 +33,10 @@ type LevelCountDto = components['schemas']['LevelCount'];
 type ExamSummaryDto = components['schemas']['ExamSummaryDto'];
 type AssignedWordResponse = components['schemas']['AssignedWordResponse'];
 type UnassignedStudentResponse = components['schemas']['UnassignedStudentResponse'];
+type DashboardResponse = components['schemas']['DashboardResponse'];
+type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
+type ExamScorePointDto = components['schemas']['ExamScorePoint'];
+type DailyCountDto = components['schemas']['DailyCount'];
 
 export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
   return toTeacherWord({
@@ -308,5 +318,83 @@ export function toStudentDetail(r: StudentDetailResponse): StudentDetail {
       name: p.name ?? '',
       phoneNumber: p.phoneNumber ?? '',
     })),
+  };
+}
+
+// ── Student Dashboard mappers ────────────────────────────────────────────────
+
+export function toStudentDashboard(r: DashboardResponse): StudentDashboard {
+  const total = r.levelTotalWordCount ?? 0;
+  const memorized = r.levelMemorizedIndex ?? 0;
+  return {
+    currentLevel: r.currentLevel ?? null,
+    levelProgressPercent: total > 0 ? Math.round((memorized / total) * 100) : 0,
+    memorizedWordCount: r.memorizedWordCount ?? 0,
+    // 0.0~1.0 → '85%'. COMPLETED 시험이 없으면 서버가 null로 내려준다.
+    overallAccuracy: r.overallAccuracy != null ? `${Math.round(r.overallAccuracy * 100)}%` : undefined,
+    activeAssignedWordCount: r.activeAssignedWordCount ?? 0,
+    pendingReviewWordCount: r.pendingReviewWordCount ?? 0,
+  };
+}
+
+// 서버 날짜 'YYYY-MM-DD' → 차트 x축 라벨 'MM.DD'.
+function toChartDateLabel(iso: string): string {
+  const [, month = '', day = ''] = iso.split('-');
+  return `${month}.${day}`;
+}
+
+function toExamScoreDetail(p: ExamScorePointDto): ExamScoreDetail {
+  return {
+    examId: p.examId ?? 0,
+    examType: (p.examType ?? 'WORD') as ExamScoreType,
+    correctCount: p.correctCount ?? 0,
+    totalCount: p.totalCount ?? 0,
+    accuracy: Math.round((p.accuracy ?? 0) * 100),
+    isPassed: p.isPassed ?? false,
+  };
+}
+
+// WORD·EXAMPLE: 시험 1건이 곧 차트 지점 1개.
+function toSingleExamPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
+  return points.map((p) => {
+    const detail = toExamScoreDetail(p);
+    return {
+      date: toChartDateLabel(p.date ?? ''),
+      score: detail.accuracy,
+      isPassed: detail.isPassed,
+      exams: [detail],
+    };
+  });
+}
+
+// REVIEW: 같은 날 여러 시험이 있을 수 있어 날짜별로 묶고 점수를 평균낸다.
+// 응답이 createdAt ASC이므로 Map 삽입 순서가 곧 날짜 오름차순이다.
+function toAveragedReviewPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
+  const byDate = new Map<string, ExamScoreDetail[]>();
+  for (const p of points) {
+    const date = p.date ?? '';
+    const list = byDate.get(date) ?? [];
+    list.push(toExamScoreDetail(p));
+    byDate.set(date, list);
+  }
+  return [...byDate.entries()].map(([date, exams]) => ({
+    date: toChartDateLabel(date),
+    score: Math.round(exams.reduce((sum, e) => sum + e.accuracy, 0) / exams.length),
+    // 그날 시험이 모두 합격일 때만 합격 색으로 표시한다.
+    isPassed: exams.every((e) => e.isPassed),
+    exams,
+  }));
+}
+
+function toLearnedCountPoint(c: DailyCountDto): LearnedCountPoint {
+  return { date: toChartDateLabel(c.date ?? ''), count: c.count ?? 0 };
+}
+
+export function toStudentDashboardCharts(r: DashboardChartResponse): StudentDashboardCharts {
+  return {
+    wordScores: toSingleExamPoints(r.wordExamScores ?? []),
+    exampleScores: toSingleExamPoints(r.exampleExamScores ?? []),
+    reviewScores: toAveragedReviewPoints(r.reviewExamScores ?? []),
+    dailyLearnedCounts: (r.dailyLearnedCounts ?? []).map(toLearnedCountPoint),
   };
 }

@@ -1,12 +1,11 @@
-import type { StudentTodoConfig } from '@/entities/student';
-
 interface Props {
-  student: StudentTodoConfig;
+  // 진행 중 NORMAL 배정 단어 수.
+  assignedWordCount: number;
 }
 
-export function TodoList({ student }: Props) {
+export function TodoList({ assignedWordCount }: Props) {
   const todos = [
-    `Assigned Word - ${student.assignedWordCount}`,
+    `Assigned Word - ${assignedWordCount}`,
     'Word Test',
     'Example Sentence Test',
     'Review Test (3)',
