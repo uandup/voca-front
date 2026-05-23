@@ -1,2 +1,2 @@
 export { loginWithGoogle, registerProfile } from './api/authApi';
-export { requireAuth } from './lib/authGuard';
+export { requireAuth, requireTeacher, requireStudentArea } from './lib/authGuard';
