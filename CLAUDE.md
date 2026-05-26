@@ -35,9 +35,21 @@ npm run dev       # 개발 서버 (Vite)
 npm run build     # tsc + vite 빌드
 npm run lint      # ESLint
 npm run preview   # 프로덕션 빌드 미리보기
+npm test          # Vitest (mapper / lib 헬퍼 위주)
+npm run test:watch # 변경 감지 모드
 ```
 
-테스트는 아직 설정되어 있지 않습니다.
+## 테스트 정책
+
+Vitest로 **silent behavior bug** 영역만 선별 테스트합니다 — AI/컴파일러가 못 잡는 곳:
+
+- **Entity mapper** (`entities/*/model/mapper.ts`, `*/api/mapper.ts`) — DTO→도메인 변환, enum 폴백, null 처리
+- **도메인 로직 lib** (`entities/clinic/lib/schedule.ts`, `pages/common/onboarding/lib/validate.ts`)
+- **페이지 mapper** 중 분기 있는 것 (`pages/teacher/clinic-detail/model/mapper.ts:inferPhase` 등)
+
+테스트하지 않는 것: 단순 useQuery 래퍼, 컴포넌트 렌더링, 타입 안전성(TS가 잡음), prop drilling.
+
+테스트 파일은 co-located: `mapper.ts` ↔ `mapper.test.ts`. 빌드 시 `tsconfig.app.json`의 `exclude`로 제외됨.
 
 ## 도메인 사전
 

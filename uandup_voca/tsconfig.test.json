@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "target": "ES2023",
     "useDefineForClassFields": true,
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "node"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Linting — app과 동일 strict 유지. 의도된 invalid input은 명시적 `as never` cast. */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -27,7 +27,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
-  // 테스트 파일은 빌드 대상이 아니다 — Vitest가 별도 컴파일 (의도된 invalid 입력 cast 허용 위함).
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+  // IDE TypeScript 서버가 test 파일을 인식하도록 별도 project로 분리.
+  // 빌드 시점엔 tsconfig.app.json이 test 파일을 exclude하므로 prod 빌드와 무관.
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }
