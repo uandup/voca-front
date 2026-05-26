@@ -7,8 +7,9 @@ import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
 import type { LevelTestExamRow, LevelTestExamStatus } from '@/entities/level-test';
-import { useLevelTestExamList, useLevelTestExamActions } from '@/features/level-test-exam';
-import { useStudentOverview } from '@/features/student';
+import { useLevelTestExamList } from '@/entities/level-test';
+import { useLevelTestExamActions } from '@/features/level-test-exam';
+import { useStudentOverview } from '@/entities/student';
 
 interface Props {
   studentId: number;

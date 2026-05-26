@@ -1,9 +1,9 @@
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import { GRADES } from '@/entities/member';
 import type { StudentGrade } from '@/entities/member';
 import type { Day, ClinicHour } from '@/entities/clinic';
 import type { ClinicMemberStudent } from '../model/types';
-import { useClinicMembersQuery, useClinicMembers } from '../model/hooks/useClinicMembers';
+import { useClinicMembersQuery, useClinicMembers } from '../model/useClinicMembers';
 
 interface EditMembersModalProps {
   day: Day;
@@ -45,7 +45,7 @@ function EditMembersModalContent({ data, day, hour, onClose }: EditMembersModalC
   } = useClinicMembers(data, day, hour, onClose);
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="px-8 py-6 border-b border-outline-variant/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white sticky top-0">
@@ -199,6 +199,6 @@ function EditMembersModalContent({ data, day, hour, onClose }: EditMembersModalC
           </div>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

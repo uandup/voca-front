@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ResultActionBar } from './ResultActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
-import type { ESRow } from './SentenceModal';
+import type { ESRow } from '@/entities/test';
 
 const PAGE_SIZE = 20;
 const ROW_HEIGHT_MM = 235 / PAGE_SIZE;

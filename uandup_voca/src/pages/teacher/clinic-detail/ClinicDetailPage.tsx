@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { MemoPopup } from '@/features/memo';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
-import { useStudentOverview } from '@/features/student';
-import { useStudySetList } from '@/features/study-set';
+import { useStudentOverview } from '@/entities/student';
+import { useStudySetList } from '@/entities/student';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
@@ -39,7 +40,7 @@ export function ClinicDetailPage() {
   if (overviewLoading || setsLoading || !student) {
     return (
       <main className="p-8">
-        <p className="text-on-surface-variant">Loading...</p>
+        <LoadingSpinner />
       </main>
     );
   }

@@ -1,5 +1,5 @@
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useWordActions } from '../../model/hooks/useWordActions';
+import { Modal } from '@/shared/ui/Modal';
+import { useWordActions } from '../../model/useWordActions';
 
 interface DeleteWordModalProps {
   wordId: number;
@@ -15,7 +15,7 @@ export function DeleteWordModal({ wordId, word, onClose }: DeleteWordModalProps)
   }
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
         <div className="p-8 pb-6 flex flex-col items-center text-center">
           <h2 className="text-2xl font-extrabold font-headline text-on-surface mb-3 tracking-tight">
@@ -55,6 +55,6 @@ export function DeleteWordModal({ wordId, word, onClose }: DeleteWordModalProps)
           </button>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

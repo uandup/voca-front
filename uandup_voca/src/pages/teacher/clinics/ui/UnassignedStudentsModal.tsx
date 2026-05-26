@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useUnassignedStudents } from '../model/hooks/useUnassignedStudents';
+import { Modal } from '@/shared/ui/Modal';
+import { useUnassignedStudents } from '../model/useUnassignedStudents';
 import { UnassignedAssignmentRow } from './UnassignedAssignmentRow';
 
 interface Props {
@@ -12,7 +12,7 @@ export function UnassignedStudentsModal({ onClose }: Props) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div className="w-full max-w-2xl bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
@@ -52,6 +52,6 @@ export function UnassignedStudentsModal({ onClose }: Props) {
           )}
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

@@ -18,7 +18,6 @@ import { Route as TeacherIndexRouteImport } from './../routes/teacher/index'
 import { Route as StudentIndexRouteImport } from './../routes/student/index'
 import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
 import { Route as TeacherStudentsRouteImport } from './../routes/teacher/students'
-import { Route as TeacherDashboardRouteImport } from './../routes/teacher/dashboard'
 import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
@@ -79,11 +78,6 @@ const TeacherVocabularyBankRoute = TeacherVocabularyBankRouteImport.update({
 const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
   id: '/students',
   path: '/students',
-  getParentRoute: () => TeacherRoute,
-} as any)
-const TeacherDashboardRoute = TeacherDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherClinicsRoute = TeacherClinicsRouteImport.update({
@@ -184,7 +178,6 @@ export interface FileRoutesByFullPath {
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
-  '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
@@ -210,7 +203,6 @@ export interface FileRoutesByTo {
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
-  '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student': typeof StudentIndexRoute
@@ -239,7 +231,6 @@ export interface FileRoutesById {
   '/student/word-test_': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
-  '/teacher/dashboard': typeof TeacherDashboardRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
@@ -269,7 +260,6 @@ export interface FileRouteTypes {
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
-    | '/teacher/dashboard'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student/'
@@ -295,7 +285,6 @@ export interface FileRouteTypes {
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
-    | '/teacher/dashboard'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student'
@@ -323,7 +312,6 @@ export interface FileRouteTypes {
     | '/student/word-test_'
     | '/teacher/admin'
     | '/teacher/clinics'
-    | '/teacher/dashboard'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student/'
@@ -416,13 +404,6 @@ declare module '@tanstack/react-router' {
       path: '/students'
       fullPath: '/teacher/students'
       preLoaderRoute: typeof TeacherStudentsRouteImport
-      parentRoute: typeof TeacherRoute
-    }
-    '/teacher/dashboard': {
-      id: '/teacher/dashboard'
-      path: '/dashboard'
-      fullPath: '/teacher/dashboard'
-      preLoaderRoute: typeof TeacherDashboardRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/clinics': {
@@ -570,7 +551,6 @@ const StudentRouteWithChildren =
 interface TeacherRouteChildren {
   TeacherAdminRoute: typeof TeacherAdminRoute
   TeacherClinicsRoute: typeof TeacherClinicsRoute
-  TeacherDashboardRoute: typeof TeacherDashboardRoute
   TeacherStudentsRoute: typeof TeacherStudentsRoute
   TeacherVocabularyBankRoute: typeof TeacherVocabularyBankRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -581,7 +561,6 @@ interface TeacherRouteChildren {
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherAdminRoute: TeacherAdminRoute,
   TeacherClinicsRoute: TeacherClinicsRoute,
-  TeacherDashboardRoute: TeacherDashboardRoute,
   TeacherStudentsRoute: TeacherStudentsRoute,
   TeacherVocabularyBankRoute: TeacherVocabularyBankRoute,
   TeacherIndexRoute: TeacherIndexRoute,

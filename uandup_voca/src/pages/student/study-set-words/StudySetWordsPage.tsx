@@ -1,6 +1,8 @@
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word';
-import { useAssignedWords } from '@/features/study-set';
+import { useAssignedWords } from '@/entities/student';
 
 interface Props {
   studySetId: number;
@@ -22,9 +24,9 @@ export function StudySetWordsPage({ studySetId, backLabel, onBack }: Props) {
       <BreadcrumbPageTitle parents={[{ label: backLabel, onClick: onBack }]} title="Words" />
 
       {isLoading ? (
-        <p className="text-sm text-on-surface-variant text-center py-12">Loading...</p>
+        <LoadingSpinner />
       ) : words.length === 0 ? (
-        <p className="text-sm text-on-surface-variant text-center py-12">No words assigned.</p>
+        <EmptyState title="No words assigned." />
       ) : (
         <div className="space-y-5">
           {words.map((word) => (

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import {
   ITEMS_PER_PAGE,
   type ExamType,
@@ -16,13 +17,14 @@ import {
   SentenceReviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail, useSubmitExam } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
+import { useSubmitExam } from '@/features/exam';
 import {
   toWordTestItems,
   toSentenceTestItems,
   toVocabReviewItems,
 } from '@/pages/teacher/clinic-detail/model/mapper';
-import { useCurrentStudentId } from '@/shared/jwt';
+import { useCurrentStudentId } from '@/entities/auth';
 
 // 학생이 시험을 응시하거나 채점된 결과를 확인하는 통합 페이지.
 // status === COMPLETED  → review mode(read-only, isCorrect 마커 표시)
@@ -138,8 +140,8 @@ export default function ExamTakePage() {
     return (
       <div className="min-h-screen bg-surface flex flex-col">
         <TestHeader onExit={handleExit} />
-        <div className="flex-1 flex items-center justify-center text-on-surface-variant">
-          Loading...
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner />
         </div>
       </div>
     );

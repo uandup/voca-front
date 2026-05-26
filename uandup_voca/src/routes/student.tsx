@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { StudentSideNavBar } from '@/widgets/student-nav/StudentSideNavBar';
+import { StudentSideNavBar } from '@/widgets/student-nav';
 import { requireStudentArea } from '@/entities/auth';
 
 export const Route = createFileRoute('/student')({

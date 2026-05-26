@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { TeacherSideNavBar } from '@/widgets/teacher-nav/TeacherSideNavBar';
+import { TeacherSideNavBar } from '@/widgets/teacher-nav';
 import { requireTeacher } from '@/entities/auth';
 
 export const Route = createFileRoute('/teacher')({

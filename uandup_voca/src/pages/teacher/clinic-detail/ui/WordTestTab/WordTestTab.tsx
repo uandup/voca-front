@@ -1,4 +1,4 @@
-import CycleRow from './CycleRow';
+import ClinicCycleRow from './ClinicCycleRow';
 import { toTestBundleRow } from '@/entities/student';
 import type { StudySetRow } from '@/entities/student';
 
@@ -11,7 +11,7 @@ export default function WordTestTab({ studySets, studentId }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {studySets.map((set) => (
-        <CycleRow
+        <ClinicCycleRow
           key={set.studySetId}
           studySetId={set.studySetId}
           studentId={studentId}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
-import { useExamDetail } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
 import { TestPrintModal } from '../modals/TestPrintModal';
 // 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
 // import { TestGradingModal } from '../modals/TestGradingModal';

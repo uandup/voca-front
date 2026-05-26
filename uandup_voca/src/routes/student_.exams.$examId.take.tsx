@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
-import ExamTakePage from '@/pages/student/exam-take/ExamTakePage';
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 import { requireStudentArea } from '@/entities/auth';
 import type { ExamType } from '@/entities/test';
 
@@ -27,7 +26,7 @@ interface ExamTakeSearch {
 export const Route = createFileRoute('/student_/exams/$examId/take')({
   // /student 레이아웃을 우회하는 라우트라 가드를 명시적으로 적용한다.
   beforeLoad: requireStudentArea,
-  component: ExamTakePage,
+  component: lazyRouteComponent(() => import('@/pages/student/exam-take/ExamTakePage')),
   validateSearch: (search: Record<string, unknown>): ExamTakeSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,
     examType: isExamType(search.examType) ? search.examType : undefined,

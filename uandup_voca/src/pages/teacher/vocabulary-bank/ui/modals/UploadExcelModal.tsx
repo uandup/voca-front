@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 
 interface UploadExcelModalProps {
   onClose: () => void;
@@ -37,7 +37,7 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-[0px_32px_64px_-12px_rgba(0,0,0,0.14)] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="px-10 pt-8 flex items-center justify-between ">
@@ -161,6 +161,6 @@ export function UploadExcelModal({ onClose, onUpload }: UploadExcelModalProps) {
           </div>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

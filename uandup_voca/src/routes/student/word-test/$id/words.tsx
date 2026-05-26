@@ -1,6 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { WordTestStudySetWordsRoute } from '@/pages/student/study-set-words/routeWrappers';
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/student/word-test/$id/words')({
-  component: WordTestStudySetWordsRoute,
+  component: lazyRouteComponent(
+    () => import('@/pages/student/study-set-words/routeWrappers'),
+    'WordTestStudySetWordsRoute',
+  ),
 });

@@ -1,19 +1,17 @@
+import { Modal } from './Modal';
+
 interface SuccessModalProps {
   message: string;
   description?: string;
   onClose: () => void;
 }
 
+// 단순 성공 알림 모달 — 큰 체크 아이콘 + 메시지 + Confirm 버튼.
+// ConfirmDialog와 시각 톤이 달라서 별도 컴포넌트로 유지한다 (큰 primary 아이콘 + 단일 버튼 alert 패턴).
 export function SuccessModal({ message, description, onClose }: SuccessModalProps) {
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4 min-w-70"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Modal onClose={onClose}>
+      <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4 min-w-70">
         <span className="material-symbols-outlined text-primary" style={{ fontSize: '48px' }}>
           check_circle
         </span>
@@ -28,6 +26,6 @@ export function SuccessModal({ message, description, onClose }: SuccessModalProp
           Confirm
         </button>
       </div>
-    </div>
+    </Modal>
   );
 }

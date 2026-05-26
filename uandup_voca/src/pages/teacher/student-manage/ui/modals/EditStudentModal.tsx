@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import type { StudentDetail } from '@/entities/student';
 import { getStudentDetail, toStudentDetail, studentKeys } from '@/entities/student';
@@ -69,7 +69,7 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
   }
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       {/* 편집 모달 — 항상 중앙 고정, relative로 학부모 패널 기준점 제공 */}
       <div className="relative">
         {/* 편집 모달 */}
@@ -386,6 +386,6 @@ function EditStudentModalContent({ detail, onClose }: EditStudentModalContentPro
           />
         )}
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

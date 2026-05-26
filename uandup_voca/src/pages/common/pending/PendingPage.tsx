@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { getMyInfo, toMember } from '@/entities/member';
-import { getActiveChildId, setActiveChildId } from '@/shared/jwt';
+import { getActiveChildId, setActiveChildId } from '@/entities/auth';
 import { OnboardingNav } from '../onboarding/ui/OnboardingNav';
 
 // PendingPage가 표시할 두 가지 안내 — 일반 승인 대기 vs 학부모 자녀 매칭 대기.
@@ -9,6 +9,7 @@ type PendingVariant = 'approval' | 'parentNoChild';
 
 export default function PendingPage() {
   const navigate = useNavigate();
+  const router = useRouter();
   const called = useRef(false);
 
   // 학부모 전용 화면이 없어 ACTIVE 학부모도 이 페이지에 머문다 —
@@ -18,6 +19,11 @@ export default function PendingPage() {
   useEffect(() => {
     if (called.current) return;
     called.current = true;
+
+    // getMyInfo 응답이 오기 전에 학생/선생님 destination lazy chunk를 병렬로 prefetch.
+    // ACTIVE 사용자는 즉시 그쪽으로 navigate되므로 청크가 미리 캐시되어 있으면 깜빡임이 줄어든다.
+    router.preloadRoute({ to: '/student/dashboard' });
+    router.preloadRoute({ to: '/teacher/students' });
 
     getMyInfo()
       .then(({ data }) => {
@@ -53,7 +59,7 @@ export default function PendingPage() {
       .catch(() => {
         // 조회 실패 시 현재 페이지 유지. 401은 axios 인터셉터가 처리.
       });
-  }, [navigate]);
+  }, [navigate, router]);
 
   const isParentNoChild = variant === 'parentNoChild';
 

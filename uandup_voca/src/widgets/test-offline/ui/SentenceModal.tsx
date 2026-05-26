@@ -2,12 +2,7 @@ import { useState } from 'react';
 import { PrintActionBar } from './PrintActionBar';
 import { PrintSheetHeader } from './PrintSheetHeader';
 import { printAllSheets } from '../lib/print';
-
-export interface ESRow {
-  no: string;
-  sentence: string;
-  answer: string;
-}
+import type { ESRow } from '@/entities/test';
 
 const PAGE_SIZE = 20;
 const ROW_HEIGHT_MM = 235 / PAGE_SIZE;

@@ -1,5 +1,5 @@
 import { redirect } from '@tanstack/react-router';
-import { getTokenPayload } from '@/shared/jwt';
+import { getTokenPayload } from '../model/jwt';
 
 // 보호된 라우트의 beforeLoad에서 호출. accessToken이 없으면 랜딩 페이지로 리다이렉트.
 // 역할 제한이 필요 없는 라우트(/onboarding, /pending 등)에 사용한다.

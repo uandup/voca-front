@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
-import { clearActiveChildId } from '@/shared/jwt';
+import { Link, useRouterState } from '@tanstack/react-router';
 
 interface NavItem {
   icon: string;
@@ -16,19 +15,19 @@ interface SideNavBarProps {
   // 로고와 메뉴 사이에 들어가는 선택적 영역(예: 학부모의 자녀 전환 드롭다운).
   // 표시 위치만 제공하고 내용은 사용처가 결정한다 — collapsed 상태 대응도 슬롯 쪽 책임.
   topSlot?: ReactNode;
+  // 로그아웃 동작 — auth entity의 useSignOut을 래퍼(StudentSideNavBar/TeacherSideNavBar)에서 주입한다.
+  // 도메인(토큰, 자녀 열람 상태)을 모르는 shared 레이어에 두기 위해 prop으로 분리.
+  onSignOut: () => void;
 }
 
-export function SideNavBar({ navItems, collapsed, onToggle, topSlot }: SideNavBarProps) {
+export function SideNavBar({
+  navItems,
+  collapsed,
+  onToggle,
+  topSlot,
+  onSignOut,
+}: SideNavBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
-
-  const handleSignOut = () => {
-    localStorage.removeItem('accessToken');
-    // 명시적 로그아웃에서만 자녀 열람 상태를 비운다.
-    // 401 만료는 axios 인터셉터가 토큰만 지우므로, 재로그인 시 마지막 본 자녀가 복원된다.
-    clearActiveChildId();
-    navigate({ to: '/' });
-  };
 
   return (
     <aside
@@ -82,7 +81,7 @@ export function SideNavBar({ navItems, collapsed, onToggle, topSlot }: SideNavBa
       <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-slate-200">
         <button
           type="button"
-          onClick={handleSignOut}
+          onClick={onSignOut}
           title={collapsed ? 'Sign Out' : undefined}
           className="flex items-center gap-3 py-2 px-3 rounded-lg text-sm text-slate-600 hover:bg-slate-200/50"
         >

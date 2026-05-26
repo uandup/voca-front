@@ -3,7 +3,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
 // 통합 후 미사용 — modal 기반 채점/결과 흐름 복귀 시 다시 활성화.
 // import { useState } from 'react';
-// import { useExamDetail } from '../../../model/hooks/useExamDetail';
+// import { useExamDetail } from '../../../model/useExamDetail';
 // import { isSentenceStep } from '../../../model/mapper';
 // import { TestGradingModal } from '../modals/TestGradingModal';
 // import { TestResultModal } from '../modals/TestResultModal';

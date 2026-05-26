@@ -222,7 +222,14 @@ function ChartBody({
               >
                 {p.value}
               </text>
-              <circle cx={getX(i)} cy={getY(p.value)} r={4} fill={color} stroke="white" strokeWidth={2} />
+              <circle
+                cx={getX(i)}
+                cy={getY(p.value)}
+                r={4}
+                fill={color}
+                stroke="white"
+                strokeWidth={2}
+              />
               {/* 호버 히트 영역 — 작은 dot보다 넓게 잡아 마우스 인식을 쉽게 한다. */}
               <circle
                 cx={getX(i)}
@@ -322,9 +329,7 @@ export function ScoreTrendChart({ charts }: Props) {
       </div>
 
       <div ref={wrapperRef} className="h-84 flex">
-        {size.height > 0 && (
-          <YAxis height={size.height} yMin={0} yMax={yMax} yTicks={yTicks} />
-        )}
+        {size.height > 0 && <YAxis height={size.height} yMin={0} yMax={yMax} yTicks={yTicks} />}
         <div ref={scrollRef} className="flex-1 overflow-x-auto">
           {points.length === 0 ? (
             <div className="h-full flex items-center justify-center text-sm text-on-surface-variant">

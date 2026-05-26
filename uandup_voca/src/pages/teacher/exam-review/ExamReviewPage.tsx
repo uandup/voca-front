@@ -8,13 +8,13 @@ import {
   SentenceReviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
 import {
   toVocabReviewItems,
   toSentenceTestItems,
   toSentenceAnswers,
 } from '@/pages/teacher/clinic-detail/model/mapper';
-import { useRecordOnlineResults } from './model/hooks/useRecordOnlineResults';
+import { useRecordOnlineResults } from './model/useRecordOnlineResults';
 
 // 선생님이 학생의 시험을 채점하거나 채점 결과를 확인하는 페이지(grading + result 통합).
 // COMPLETED 상태로 진입 시 'result' 모드 — 채점 결과 표시. Edit 클릭으로 grading 재진입.

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { WordTestType } from '@/entities/test';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { useUpdateExamSettings } from '../../model/hooks/useUpdateExamSettings';
+import { useUpdateExamSettings } from '../../model/useUpdateExamSettings';
 
 // StepPanel 상단의 시험 설정(타입/문항 수/동의어 포함) 편집 영역.
 // 모든 phase에서 표시되며 'pending' phase에서만 Edit/Apply 버튼이 노출된다.

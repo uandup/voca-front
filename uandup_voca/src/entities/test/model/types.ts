@@ -59,6 +59,13 @@ export interface SentenceTestAnswer {
   answer: string;
 }
 
+/** 문장 시험 인쇄·채점용 row — 시험지/채점지의 한 줄. widgets/test-offline 출력 + clinic-detail mapper에서 공유. */
+export interface ESRow {
+  no: string;
+  sentence: string;
+  answer: string;
+}
+
 // ── Exam Detail (Clinic Detail WordTestTab) ──────────────────────────────────
 
 // 'REVIEW_DECK'(서버 enum: WRONG_BANK), 'LEVEL_TEST'(서버 enum: LEVEL)는

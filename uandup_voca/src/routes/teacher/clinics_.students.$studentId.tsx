@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { ClinicDetailPage } from '@/pages/teacher/clinic-detail/ClinicDetailPage';
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 // 페이지 내 펼침 상태(어느 main tab을 보고 있는지, 어느 study-set의 어느 step이 열려있는지)를
 // URL에 영속화하여 Preview/Grade 페이지로 이동 후 returnTo(history.replace)로 돌아왔을 때
@@ -18,7 +17,10 @@ export interface ClinicDetailSearch {
 }
 
 export const Route = createFileRoute('/teacher/clinics_/students/$studentId')({
-  component: ClinicDetailPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/teacher/clinic-detail/ClinicDetailPage'),
+    'ClinicDetailPage',
+  ),
   validateSearch: (search: Record<string, unknown>): ClinicDetailSearch => ({
     tab: isMainTab(search.tab) ? search.tab : undefined,
     openSet: typeof search.openSet === 'number' ? search.openSet : undefined,

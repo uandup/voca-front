@@ -1,6 +1,5 @@
-import type { StepCardVM, ExamItem, SentenceTestAnswer } from '@/entities/test';
+import type { StepCardVM, ExamItem, SentenceTestAnswer, ESRow } from '@/entities/test';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word';
-import type { ESRow } from '@/widgets/test-offline';
 import type { SentencePreviewItem } from '@/widgets/test-online';
 
 export type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';

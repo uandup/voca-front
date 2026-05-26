@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { getMyInfo, toMember, memberKeys } from '@/entities/member';
-import { useActiveChildId, setActiveChildId } from '@/shared/jwt';
+import { useActiveChildId, setActiveChildId } from '@/entities/auth';
 
 // 학부모가 자녀 페이지를 공유 열람할 때, 열람 대상 자녀를 선택·전환하는 훅.
 //

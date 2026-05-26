@@ -31,7 +31,6 @@ export {
   toStudentDashboard,
   toStudentDashboardCharts,
 } from './model/mapper';
-export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';
 export {
   getStudents,
   getUnassignedStudents,
@@ -50,3 +49,7 @@ export {
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';
 export { invalidateStudentCascade } from './api/invalidate';
+export { useStudentOverview } from './api/useStudentOverview';
+export { useStudentDashboard, useStudentDashboardCharts } from './api/useStudentDashboard';
+export { useStudySetList } from './api/useStudySetList';
+export { useAssignedWords } from './api/useAssignedWords';

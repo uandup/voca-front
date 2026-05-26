@@ -3,8 +3,8 @@ import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
 import type { StudySetRow } from '@/entities/student';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { useAssignmentActions } from '../model/hooks/useAssignmentActions';
-import { useStudentOverview } from '@/features/student';
+import { useAssignmentActions } from '../model/useAssignmentActions';
+import { useStudentOverview } from '@/entities/student';
 import { AssignedWordsModal } from './WordTestTab/AssignedWordsModal';
 
 interface Props {

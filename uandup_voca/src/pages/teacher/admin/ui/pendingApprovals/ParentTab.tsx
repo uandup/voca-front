@@ -1,5 +1,5 @@
 import type { StudentPickerRow } from '@/entities/student';
-import { usePendingParents } from '../../model/hooks/usePendingApprovals';
+import { usePendingParents } from '../../model/usePendingApprovals';
 import type { PendingParent } from '../../model/types';
 import { EmptyState, ApproveRejectButtons } from './PendingListUI';
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import type { ParentManageRow } from '@/entities/parent';
-import { useParentManage } from '../model/hooks/useParentManage';
+import { useParentManage } from '../model/useParentManage';
 
 interface Props {
   onClose: () => void;
@@ -28,7 +28,7 @@ export function ParentManageModal({ onClose }: Props) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div
         className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '500px' }}
@@ -191,6 +191,6 @@ export function ParentManageModal({ onClose }: Props) {
           )}
         </ul>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

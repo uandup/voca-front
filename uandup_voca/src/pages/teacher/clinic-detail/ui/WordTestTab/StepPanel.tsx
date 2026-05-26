@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { StepCardVM, StudySetExamType } from '@/entities/test';
 import { SuccessModal } from '@/shared/ui/SuccessModal';
-import { useStudentOverview } from '@/features/student';
-import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
-import { useExamActions } from '../../model/hooks/useExamActions';
+import { useStudentOverview } from '@/entities/student';
+import { useStudySetDetail } from '../../model/useStudySetDetail';
+import { useExamActions } from '../../model/useExamActions';
 import { inferPhase } from '../../model/mapper';
 import { TestConfigSection } from './TestConfigSection';
 import { PendingPanel } from './panels/PendingPanel';

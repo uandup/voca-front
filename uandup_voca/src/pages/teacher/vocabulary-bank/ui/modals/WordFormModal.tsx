@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
-import { useWordActions } from '../../model/hooks/useWordActions';
+import { useWordActions } from '../../model/useWordActions';
 
 type WordFormData = Omit<TeacherWord, 'id'>;
 
@@ -72,7 +72,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
   }
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="bg-white w-full max-w-160 rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col max-h-[90vh]">
         <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
@@ -256,6 +256,6 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
           </div>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

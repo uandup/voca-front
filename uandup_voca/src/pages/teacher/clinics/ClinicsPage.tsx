@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { MemoPopup } from '@/features/memo';
 import type { ClinicStudentRow } from '@/entities/clinic';
-import { useClinics } from './model/hooks/useClinics';
-import { useClinicViewState } from './model/hooks/useClinicViewState';
+import { useClinics } from './model/useClinics';
+import { useClinicViewState } from './model/useClinicViewState';
 import { SessionPanel } from './ui/SessionPanel';
-import { StudentTable } from './ui/StudentTable';
+import { ClinicStudentTable } from './ui/ClinicStudentTable';
 import { EditMembersModal } from './ui/EditMembersModal';
 import { UnassignedStudentsModal } from './ui/UnassignedStudentsModal';
 
@@ -61,7 +61,7 @@ export default function ClinicsPage() {
             setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }))
           }
         />
-        <StudentTable
+        <ClinicStudentTable
           students={students}
           onMemoClick={setMemoStudent}
           onEditMembersClick={() => setIsEditMembersOpen(true)}

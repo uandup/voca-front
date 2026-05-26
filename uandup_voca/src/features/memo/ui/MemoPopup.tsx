@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import { useMemoActions } from '../model/useMemoActions';
 
 interface MemoPopupProps {
@@ -44,7 +44,7 @@ export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
         {/* Header */}
         <div className="px-8 py-4 border-b border-outline-variant/30 flex justify-between items-center bg-white shrink-0">
@@ -156,6 +156,6 @@ export function MemoPopup({ studentId, studentName, onClose }: MemoPopupProps) {
           </div>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

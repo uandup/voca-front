@@ -1,4 +1,4 @@
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import type { StudentManageTableRow } from '@/entities/student';
 
 interface DeleteConfirmModalProps {
@@ -9,7 +9,7 @@ interface DeleteConfirmModalProps {
 
 export function DeleteConfirmModal({ student, onClose, onConfirm }: DeleteConfirmModalProps) {
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div className="w-full max-w-110 bg-white rounded-3xl premium-shadow overflow-hidden flex flex-col">
         {/* Modal Content */}
         <div className="p-8 pb-6 flex flex-col items-center text-center">
@@ -57,6 +57,6 @@ export function DeleteConfirmModal({ student, onClose, onConfirm }: DeleteConfir
           </button>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

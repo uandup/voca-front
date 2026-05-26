@@ -10,9 +10,9 @@ import {
   useReviewDeckExamList,
   useReviewDeckCount,
   useReviewDeckWords,
-  useReviewDeckExamActions,
-} from '@/features/review-deck-exam';
-import { useStudentOverview } from '@/features/student';
+} from '@/entities/review-deck';
+import { useReviewDeckExamActions } from '@/features/review-deck-exam';
+import { useStudentOverview } from '@/entities/student';
 
 interface Props {
   studentId: number;

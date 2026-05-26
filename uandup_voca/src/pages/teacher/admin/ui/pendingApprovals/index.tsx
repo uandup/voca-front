@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { usePendingCounts } from '../../model/hooks/usePendingApprovals';
-import { useChildMatching } from '../../model/hooks/useChildMatching';
+import { Modal } from '@/shared/ui/Modal';
+import { usePendingCounts } from '../../model/usePendingApprovals';
+import { useChildMatching } from '../../model/useChildMatching';
 import type { PendingParent } from '../../model/types';
 import { StudentTab } from './StudentTab';
 import { ParentTab } from './ParentTab';
@@ -30,7 +30,7 @@ export default function PendingApprovalsModal({ onClose }: Props) {
   const { matchedChildren, addChild, removeChild, getSelectedIds } = useChildMatching();
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       {/* relative wrapper — StudentMatchPanel이 absolute로 우측에 붙는 기준점. 폭은 여기서 고정하여 탭별 콘텐츠에 따라 모달 너비가 흔들리지 않도록 한다. */}
       <div className="relative w-full max-w-lg">
         <div
@@ -100,6 +100,6 @@ export default function PendingApprovalsModal({ onClose }: Props) {
           />
         )}
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

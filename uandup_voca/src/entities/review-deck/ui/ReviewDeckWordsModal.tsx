@@ -1,4 +1,6 @@
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word/@x/review-deck';
 import type { ReviewDeckWord } from '../model/types';
 
@@ -12,7 +14,7 @@ interface Props {
 // 단순 표시 전용이라 entity-level UI에 둔다(액션 없음).
 export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         <div className="px-8 py-5 border-b border-outline-variant/30 flex justify-between items-center bg-white shrink-0">
           <div>
@@ -33,11 +35,9 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
 
         <div className="flex-1 overflow-y-auto p-6">
           {isLoading ? (
-            <p className="text-sm text-on-surface-variant text-center py-8">Loading...</p>
+            <LoadingSpinner />
           ) : words.length === 0 ? (
-            <p className="text-sm text-on-surface-variant text-center py-8">
-              No active incorrect words.
-            </p>
+            <EmptyState title="No active incorrect words." />
           ) : (
             <div className="flex flex-col gap-5">
               {words.map((word) => (
@@ -66,6 +66,6 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
           )}
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

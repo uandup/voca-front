@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import {
   useStudentOverview,
   useStudentDashboard,
   useStudentDashboardCharts,
-} from '@/features/student';
+} from '@/entities/student';
 import {
   ScoreTrendChart,
   StatCards,
@@ -57,7 +58,7 @@ export default function StudentDashboardPage() {
   if (overviewLoading || dashboardLoading || chartsLoading) {
     return (
       <main>
-        <p className="text-on-surface-variant">Loading...</p>
+        <LoadingSpinner />
       </main>
     );
   }

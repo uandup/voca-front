@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useGradeBulk } from '../model/hooks/useGradeBulk';
+import { Modal } from '@/shared/ui/Modal';
+import { useGradeBulk } from '../model/useGradeBulk';
 
 interface Props {
   onClose: () => void;
@@ -16,7 +16,7 @@ export function GradeBulkModal({ onClose }: Props) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         <div className="px-7 py-5 border-b border-outline-variant/30 flex justify-between items-center shrink-0">
           <div>
@@ -82,6 +82,6 @@ export function GradeBulkModal({ onClose }: Props) {
           </button>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

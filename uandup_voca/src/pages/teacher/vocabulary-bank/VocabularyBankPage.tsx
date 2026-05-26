@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { WordCard, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { TeacherWord } from '@/entities/word';
-import { useVocabularyBank } from './model/hooks/useVocabularyBank';
+import { useVocabularyBank } from './model/useVocabularyBank';
 import { WordFormModal } from './ui/modals/WordFormModal';
 import { DeleteWordModal } from './ui/modals/DeleteWordModal';
 
