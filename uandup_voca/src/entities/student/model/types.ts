@@ -1,5 +1,5 @@
 import type { Memo } from '@/entities/memo/@x/student';
-import type { WordDifficultyLevel } from '@/entities/word/@x/student';
+import type { WordDifficultyLevel, WordCardData } from '@/entities/word/@x/student';
 import type { TestConfig, WordTestType } from '@/entities/test/@x/student';
 import type { StudentGrade } from '@/entities/member';
 import type { ParentIdentity } from '@/entities/parent/@x/student';
@@ -142,6 +142,17 @@ export interface StudentDashboard {
   activeAssignment: { studySetId: number; wordCount: number } | null;
   // 풀어야 할 리뷰 시험 단어 수.
   pendingReviewWordCount: number;
+}
+
+// ── Pending Reviews (/dashboard/pending-reviews) ────────────────────────────
+
+/** 활성 REVIEW1/2/3 시험 1건의 단어 묶음 — scheduledDate·studySetId 오름차순 */
+export interface PendingReviewItem {
+  studySetId: number;
+  examId: number;
+  // 'YYYY-MM-DD' 형식의 리뷰 예정일
+  scheduledDate: string;
+  words: WordCardData[];
 }
 
 export type ExamScoreType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3';

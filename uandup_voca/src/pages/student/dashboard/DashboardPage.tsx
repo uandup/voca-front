@@ -115,6 +115,11 @@ export default function DashboardPage() {
                   })
               : undefined
           }
+          onReviewClick={
+            dashboard.pendingReviewWordCount > 0
+              ? () => navigate({ to: '/student/dashboard/pending-reviews' })
+              : undefined
+          }
         />
       </div>
 

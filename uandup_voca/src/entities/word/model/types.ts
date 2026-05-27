@@ -4,7 +4,7 @@ export type WordDifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
 // ── Student Vocab Pages ─────────────────────────────────────────────────────
 
-/** WordCard 컴포넌트의 기본 데이터(예문 제외). */
+/** WordCard 컴포넌트 데이터. sentence는 exampleVisible에 따라 optional. */
 export interface WordCardData {
   id: number;
   difficulty: WordDifficultyLevel;
@@ -13,11 +13,7 @@ export interface WordCardData {
   korMeaning: string;
   engMeaning: string;
   synonyms: string[];
-}
-
-/** 예문(sentence)까지 포함한 단어 — WordCard가 받는 전체 데이터. */
-export interface TeacherWord extends WordCardData {
-  sentence: string;
+  sentence?: string;
 }
 
 // ── Test Pages ──────────────────────────────────────────────────────────────

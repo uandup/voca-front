@@ -7,7 +7,7 @@ const navItems = [
     icon: 'dashboard',
     label: 'Dashboard',
     to: '/student/dashboard',
-    activePrefixes: ['/student/assigned-words'],
+    activePrefixes: ['/student/dashboard/assigned-words', '/student/dashboard/pending-reviews'],
   },
   { icon: 'book_2', label: 'Word Test', to: '/student/word-test' },
   {

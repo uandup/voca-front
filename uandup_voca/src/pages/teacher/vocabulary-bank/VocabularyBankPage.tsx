@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { WordCard, DIFFICULTY_LEVELS } from '@/entities/word';
-import type { TeacherWord } from '@/entities/word';
+import type { WordCardData } from '@/entities/word';
 import { useVocabularyBank } from './model/useVocabularyBank';
 import { WordFormModal } from './ui/modals/WordFormModal';
 import { DeleteWordModal } from './ui/modals/DeleteWordModal';
@@ -12,8 +12,8 @@ export default function VocabularyBankPage() {
   const [searchParams, setSearchParams] = useState({ keyword: '', level: '' as number | '' });
   const [page, setPage] = useState(0);
 
-  const [editTarget, setEditTarget] = useState<TeacherWord | null | 'new'>(null);
-  const [deleteTarget, setDeleteTarget] = useState<TeacherWord | null>(null);
+  const [editTarget, setEditTarget] = useState<WordCardData | null | 'new'>(null);
+  const [deleteTarget, setDeleteTarget] = useState<WordCardData | null>(null);
 
   const { words, totalElements, totalPages } = useVocabularyBank(searchParams, page);
 

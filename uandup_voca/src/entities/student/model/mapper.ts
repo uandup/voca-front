@@ -2,9 +2,9 @@ import type { components } from '@/shared/api/schema.gen';
 import type { StudentGrade } from '@/entities/member';
 import { toWordTestType } from '@/entities/test/@x/student';
 import {
-  toTeacherWord,
+  toWordCardData,
   type WordDifficultyLevel,
-  type TeacherWord,
+  type WordCardData,
 } from '@/entities/word/@x/student';
 import type {
   StudentManageTableRow,
@@ -22,6 +22,7 @@ import type {
   ExamScoreDetail,
   ExamScoreType,
   LearnedCountPoint,
+  PendingReviewItem,
 } from './types';
 import type { StepCardVM, TestBundleRow } from '@/entities/test';
 
@@ -37,9 +38,10 @@ type DashboardResponse = components['schemas']['DashboardResponse'];
 type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
 type ExamScorePointDto = components['schemas']['ExamScorePoint'];
 type DailyCountDto = components['schemas']['DailyCount'];
+type PendingReviewItemDto = components['schemas']['PendingReviewItem'];
 
-export function toAssignedTeacherWord(res: AssignedWordResponse): TeacherWord {
-  return toTeacherWord({
+export function toAssignedWordCardData(res: AssignedWordResponse): WordCardData {
+  return toWordCardData({
     id: res.wordId,
     word: res.word,
     partsOfSpeech: res.partsOfSpeech,
@@ -331,10 +333,14 @@ export function toStudentDashboard(r: DashboardResponse): StudentDashboard {
     levelProgressPercent: total > 0 ? Math.round((memorized / total) * 100) : 0,
     memorizedWordCount: r.memorizedWordCount ?? 0,
     // 0.0~1.0 → '85%'. COMPLETED 시험이 없으면 서버가 null로 내려준다.
-    overallAccuracy: r.overallAccuracy != null ? `${Math.round(r.overallAccuracy * 100)}%` : undefined,
+    overallAccuracy:
+      r.overallAccuracy != null ? `${Math.round(r.overallAccuracy * 100)}%` : undefined,
     // 진행 중 배정이 없으면 서버가 null로 내려준다.
     activeAssignment: r.activeAssignment
-      ? { studySetId: r.activeAssignment.studySetId ?? 0, wordCount: r.activeAssignment.wordCount ?? 0 }
+      ? {
+          studySetId: r.activeAssignment.studySetId ?? 0,
+          wordCount: r.activeAssignment.wordCount ?? 0,
+        }
       : null,
     pendingReviewWordCount: r.pendingReviewWordCount ?? 0,
   };
@@ -402,5 +408,16 @@ export function toStudentDashboardCharts(r: DashboardChartResponse): StudentDash
     exampleScores: toSingleExamPoints(r.exampleExamScores ?? []),
     reviewScores: toAveragedReviewPoints(r.reviewExamScores ?? []),
     dailyLearnedCounts: (r.dailyLearnedCounts ?? []).map(toLearnedCountPoint),
+  };
+}
+
+// ── Pending Reviews mapper ───────────────────────────────────────────────────
+
+export function toPendingReviewItem(dto: PendingReviewItemDto): PendingReviewItem {
+  return {
+    studySetId: dto.studySetId ?? 0,
+    examId: dto.examId ?? 0,
+    scheduledDate: dto.scheduledDate ?? '',
+    words: (dto.words ?? []).map(toAssignedWordCardData),
   };
 }

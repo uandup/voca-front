@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { toWordCreateRequest, toWordUpdateRequest } from './mapper';
-import type { TeacherWord } from '../model/types';
+import type { WordCardData } from '../model/types';
 
-const base: Omit<TeacherWord, 'id'> = {
+const base: Omit<WordCardData, 'id'> = {
   word: 'go',
   partsOfSpeech: ['V'],
   korMeaning: '가다',

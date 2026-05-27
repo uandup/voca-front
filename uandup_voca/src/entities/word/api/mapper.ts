@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { PartOfSpeech, TeacherWord } from '../model/types';
+import type { PartOfSpeech, WordCardData } from '../model/types';
 
 type WordCreateRequest = components['schemas']['WordCreateRequest'];
 type WordUpdateRequest = components['schemas']['WordUpdateRequest'];
@@ -15,7 +15,7 @@ const POS_TO_TOKEN: Record<PartOfSpeech, string> = {
   Interj: 'interj',
 };
 
-function toWordRequestBody(data: Omit<TeacherWord, 'id'>): WordCreateRequest {
+function toWordRequestBody(data: Omit<WordCardData, 'id'>): WordCreateRequest {
   return {
     word: data.word,
     partsOfSpeech: data.partsOfSpeech.map((p) => POS_TO_TOKEN[p]),
@@ -27,10 +27,10 @@ function toWordRequestBody(data: Omit<TeacherWord, 'id'>): WordCreateRequest {
   };
 }
 
-export function toWordCreateRequest(data: Omit<TeacherWord, 'id'>): WordCreateRequest {
+export function toWordCreateRequest(data: Omit<WordCardData, 'id'>): WordCreateRequest {
   return toWordRequestBody(data);
 }
 
-export function toWordUpdateRequest(data: Omit<TeacherWord, 'id'>): WordUpdateRequest {
+export function toWordUpdateRequest(data: Omit<WordCardData, 'id'>): WordUpdateRequest {
   return toWordRequestBody(data);
 }

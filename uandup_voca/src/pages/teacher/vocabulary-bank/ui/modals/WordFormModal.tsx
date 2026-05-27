@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Modal } from '@/shared/ui/Modal';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
-import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
+import type { WordCardData, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
 import { useWordActions } from '../../model/useWordActions';
 
-type WordFormData = Omit<TeacherWord, 'id'>;
+type WordFormData = Omit<WordCardData, 'id'>;
 
 interface WordFormModalProps {
   wordId?: number;

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getWords, toTeacherWord, wordKeys } from '@/entities/word';
+import { getWords, toWordCardData, wordKeys } from '@/entities/word';
 
 interface SearchParams {
   keyword: string;
@@ -17,7 +17,7 @@ export function useVocabularyBank(searchParams: SearchParams, page: number) {
         size: 20,
       }),
     select: (res) => ({
-      words: res.data?.content?.map(toTeacherWord) ?? [],
+      words: res.data?.content?.map(toWordCardData) ?? [],
       totalElements: res.data?.totalElements ?? 0,
       totalPages: res.data?.totalPages ?? 0,
     }),

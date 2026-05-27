@@ -27,6 +27,7 @@ import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/
 import { Route as StudentLevelTestIndexRouteImport } from './../routes/student/level-test/index'
 import { Route as TeacherStudentsStudentIdRouteImport } from './../routes/teacher/students_.$studentId'
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
+import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
 import { Route as TeacherClinicsStudentsStudentIdRouteImport } from './../routes/teacher/clinics_.students.$studentId'
@@ -127,6 +128,12 @@ const StudentReviewDeckWordsRoute = StudentReviewDeckWordsRouteImport.update({
   path: '/review-deck/words',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentDashboardPendingReviewsRoute =
+  StudentDashboardPendingReviewsRouteImport.update({
+    id: '/dashboard_/pending-reviews',
+    path: '/dashboard/pending-reviews',
+    getParentRoute: () => StudentRoute,
+  } as any)
 const TeacherExamsExamIdReviewRoute =
   TeacherExamsExamIdReviewRouteImport.update({
     id: '/teacher_/exams/$examId/review',
@@ -189,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
@@ -215,6 +223,7 @@ export interface FileRoutesByTo {
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student': typeof StudentIndexRoute
   '/teacher': typeof TeacherIndexRoute
+  '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test': typeof StudentLevelTestIndexRoute
@@ -244,6 +253,7 @@ export interface FileRoutesById {
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/student/dashboard_/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students_/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/teacher/vocabulary-bank'
     | '/student/'
     | '/teacher/'
+    | '/student/dashboard/pending-reviews'
     | '/student/review-deck/words'
     | '/teacher/students/$studentId'
     | '/student/level-test/'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/teacher/vocabulary-bank'
     | '/student'
     | '/teacher'
+    | '/student/dashboard/pending-reviews'
     | '/student/review-deck/words'
     | '/teacher/students/$studentId'
     | '/student/level-test'
@@ -328,6 +340,7 @@ export interface FileRouteTypes {
     | '/teacher/vocabulary-bank'
     | '/student/'
     | '/teacher/'
+    | '/student/dashboard_/pending-reviews'
     | '/student/review-deck/words'
     | '/teacher/students_/$studentId'
     | '/student/level-test/'
@@ -482,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentReviewDeckWordsRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/dashboard_/pending-reviews': {
+      id: '/student/dashboard_/pending-reviews'
+      path: '/dashboard/pending-reviews'
+      fullPath: '/student/dashboard/pending-reviews'
+      preLoaderRoute: typeof StudentDashboardPendingReviewsRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/teacher_/exams/$examId/review': {
       id: '/teacher_/exams/$examId/review'
       path: '/teacher/exams/$examId/review'
@@ -545,6 +565,7 @@ interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
   StudentWordTestRoute: typeof StudentWordTestRoute
   StudentIndexRoute: typeof StudentIndexRoute
+  StudentDashboardPendingReviewsRoute: typeof StudentDashboardPendingReviewsRoute
   StudentReviewDeckWordsRoute: typeof StudentReviewDeckWordsRoute
   StudentLevelTestIndexRoute: typeof StudentLevelTestIndexRoute
   StudentReviewDeckIndexRoute: typeof StudentReviewDeckIndexRoute
@@ -558,6 +579,7 @@ const StudentRouteChildren: StudentRouteChildren = {
   StudentDashboardRoute: StudentDashboardRoute,
   StudentWordTestRoute: StudentWordTestRoute,
   StudentIndexRoute: StudentIndexRoute,
+  StudentDashboardPendingReviewsRoute: StudentDashboardPendingReviewsRoute,
   StudentReviewDeckWordsRoute: StudentReviewDeckWordsRoute,
   StudentLevelTestIndexRoute: StudentLevelTestIndexRoute,
   StudentReviewDeckIndexRoute: StudentReviewDeckIndexRoute,

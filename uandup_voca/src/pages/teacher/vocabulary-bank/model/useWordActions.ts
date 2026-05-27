@@ -7,9 +7,9 @@ import {
   toWordUpdateRequest,
   wordKeys,
 } from '@/entities/word';
-import type { TeacherWord } from '@/entities/word';
+import type { WordCardData } from '@/entities/word';
 
-type WordFormData = Omit<TeacherWord, 'id'>;
+type WordFormData = Omit<WordCardData, 'id'>;
 
 export function useWordActions() {
   const queryClient = useQueryClient();

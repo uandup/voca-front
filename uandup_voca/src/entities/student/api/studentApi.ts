@@ -11,6 +11,7 @@ type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'
 type StudySetWordsResponse = components['schemas']['StudySetWordsResponse'];
 type DashboardResponse = components['schemas']['DashboardResponse'];
 type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
+type PendingReviewsResponse = components['schemas']['PendingReviewsResponse'];
 type AssignWordsResponse = components['schemas']['AssignWordsResponse'];
 type AssignmentCountResponse = components['schemas']['AssignmentCountResponse'];
 type ExamSettingsResponse = components['schemas']['ExamSettingsResponse'];
@@ -89,6 +90,13 @@ export const updateAssignmentCount = (
 export const assignWords = (studentId: number): Promise<ApiResponse<AssignWordsResponse>> =>
   axiosInstance
     .post<ApiResponse<AssignWordsResponse>>(`/api/v1/normal-study-sets/students/${studentId}`)
+    .then((r) => r.data);
+
+export const getPendingReviews = (
+  studentId: number,
+): Promise<ApiResponse<PendingReviewsResponse>> =>
+  axiosInstance
+    .get<ApiResponse<PendingReviewsResponse>>(`/api/v1/students/${studentId}/pending-reviews`)
     .then((r) => r.data);
 
 export const updateExamSettings = (

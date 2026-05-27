@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssignedWords } from './studentApi';
-import { toAssignedTeacherWord } from '../model/mapper';
+import { toAssignedWordCardData } from '../model/mapper';
 import { studentKeys } from './queryKeys';
 
 // study-set 배정 단어 목록 + 예문 공개 여부.
@@ -11,7 +11,7 @@ export function useAssignedWords(studySetId: number, enabled: boolean) {
     queryFn: () => getAssignedWords(studySetId),
     select: (res) => ({
       exampleVisible: res.data?.exampleVisible ?? false,
-      words: (res.data?.words ?? []).map(toAssignedTeacherWord),
+      words: (res.data?.words ?? []).map(toAssignedWordCardData),
     }),
     enabled,
   });

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { TeacherWord } from '../model/types';
+import type { WordCardData } from '../model/types';
 
-interface WordCardProps extends TeacherWord {
+interface WordCardProps extends WordCardData {
   // 예문(sentence) footer 표시 여부.
   // 선생님 화면은 항상 true, 학생 화면은 study-set 응답의 exampleVisible 값을 따른다
   // (NORMAL 배정은 예문시험 채점 완료 후에만 공개).

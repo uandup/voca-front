@@ -3,12 +3,11 @@ export type {
   PartOfSpeech,
   WordDifficultyLevel,
   WordCardData,
-  TeacherWord,
   WordTestItem,
   SentenceTestItem,
   VocabReviewItem,
 } from './model/types';
-export { toTeacherWord } from './model/mapper';
+export { toWordCardData } from './model/mapper';
 export { LevelBlock } from './ui/LevelBlock';
 export { WordCard } from './ui/WordCard';
 export { getWords, createWord, updateWord, deleteWord } from './api/wordApi';

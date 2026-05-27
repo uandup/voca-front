@@ -17,6 +17,7 @@ export type {
   ExamScoreDetail,
   ExamScoreType,
   LearnedCountPoint,
+  PendingReviewItem,
 } from './model/types';
 export {
   toStudentPickerRow,
@@ -27,9 +28,10 @@ export {
   toStudySetRow,
   toTestBundleRow,
   toStudentTestBundleRow,
-  toAssignedTeacherWord,
+  toAssignedWordCardData,
   toStudentDashboard,
   toStudentDashboardCharts,
+  toPendingReviewItem,
 } from './model/mapper';
 export {
   getStudents,
@@ -45,6 +47,7 @@ export {
   updateExamSettings,
   getDashboard,
   getDashboardCharts,
+  getPendingReviews,
 } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';
@@ -53,3 +56,4 @@ export { useStudentOverview } from './api/useStudentOverview';
 export { useStudentDashboard, useStudentDashboardCharts } from './api/useStudentDashboard';
 export { useStudySetList } from './api/useStudySetList';
 export { useAssignedWords } from './api/useAssignedWords';
+export { usePendingReviews } from './api/usePendingReviews';

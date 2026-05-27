@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { TeacherWord, PartOfSpeech } from './types';
+import type { WordCardData, PartOfSpeech } from './types';
 
 type WordResponse = components['schemas']['WordResponse'];
 
@@ -18,14 +18,14 @@ function toPartOfSpeech(value: string): PartOfSpeech {
   return POS_MAP[value.toLowerCase()] ?? 'N';
 }
 
-export function toTeacherWord(res: WordResponse): TeacherWord {
+export function toWordCardData(res: WordResponse): WordCardData {
   return {
     id: res.id ?? 0,
     word: res.word ?? '',
     partsOfSpeech: (res.partsOfSpeech ?? []).map(toPartOfSpeech),
     korMeaning: res.koreanMeaning ?? '',
     engMeaning: res.englishMeaning ?? '',
-    difficulty: (res.difficulty ?? 1) as TeacherWord['difficulty'],
+    difficulty: (res.difficulty ?? 1) as WordCardData['difficulty'],
     synonyms: res.synonyms ?? [],
     sentence: res.example ?? '',
   };
