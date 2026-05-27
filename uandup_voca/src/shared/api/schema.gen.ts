@@ -791,6 +791,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/pending-reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 풀어야 할 리뷰 단어 일괄 조회
+         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. 응답 reviews는 scheduledDate ASC, studySetId ASC 정렬. 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         */
+        get: operations["getPendingReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/dashboard": {
         parameters: {
             query?: never;
@@ -1941,6 +1961,40 @@ export interface components {
              */
             correctCount?: number;
         };
+        ApiResponsePendingReviewsResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PendingReviewsResponse"];
+        };
+        /** @description 한 리뷰 시험의 단어 묶음 */
+        PendingReviewItem: {
+            /**
+             * Format: int64
+             * @description 학습셋 ID
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: int64
+             * @description 리뷰 시험 ID
+             * @example 123
+             */
+            examId?: number;
+            /**
+             * Format: date
+             * @description 리뷰 예정일
+             * @example 2026-05-28
+             */
+            scheduledDate?: string;
+            /** @description 리뷰 대상 단어 (difficulty·wordId 오름차순) */
+            words?: components["schemas"]["AssignedWordResponse"][];
+        };
+        /** @description 풀어야 할 리뷰 단어 일괄 조회 응답 — 활성 REVIEW1/2/3 시험 1건당 한 항목 */
+        PendingReviewsResponse: {
+            /** @description 활성 리뷰 시험 목록 (scheduledDate ASC, studySetId ASC 정렬) */
+            reviews?: components["schemas"]["PendingReviewItem"][];
+        };
         ApiResponseListMemoResponse: {
             /** Format: int32 */
             status?: number;
@@ -2004,6 +2058,21 @@ export interface components {
              */
             correctCount?: number;
         };
+        /** @description 진행 중인 NORMAL 배정 — 없으면 응답에서 null */
+        ActiveAssignment: {
+            /**
+             * Format: int64
+             * @description 진행 중 NORMAL StudySet ID — 클릭 시 해당 배정 단어 목록 페이지로 이동
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: int32
+             * @description 배정된 단어 수
+             * @example 10
+             */
+            wordCount?: number;
+        };
         ApiResponseDashboardResponse: {
             /** Format: int32 */
             status?: number;
@@ -2042,12 +2111,8 @@ export interface components {
              * @example 0.85
              */
             overallAccuracy?: number;
-            /**
-             * Format: int32
-             * @description 진행 중 NORMAL 배정 단어 수 (없으면 0)
-             * @example 10
-             */
-            activeAssignedWordCount?: number;
+            /** @description 진행 중 NORMAL 배정 — studySetId와 단어 수를 함께 반환, 없으면 null */
+            activeAssignment?: components["schemas"]["ActiveAssignment"];
             /**
              * Format: int32
              * @description 풀어야 할 리뷰 시험 단어 수 (없으면 0)
@@ -4947,6 +5012,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+        };
+    };
+    getPendingReviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
                 };
             };
         };

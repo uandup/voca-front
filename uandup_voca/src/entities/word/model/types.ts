@@ -1,4 +1,4 @@
-export type PartOfSpeech = 'N' | 'V' | 'Adj' | 'Adv' | 'Conj';
+export type PartOfSpeech = 'N' | 'V' | 'Adj' | 'Adv' | 'Prep' | 'Conj' | 'Interj';
 export const DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 export type WordDifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 

@@ -12,7 +12,7 @@ interface WordFormModalProps {
   onClose: () => void;
 }
 
-const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
+const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Prep', 'Conj', 'Interj'];
 
 const DEFAULT_FORM: WordFormData = {
   word: '',
@@ -89,13 +89,14 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
         </div>
 
         <div className="px-10 pb-10 space-y-4 overflow-y-auto">
+          {/* Row 1: Word + Difficulty Level */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Word
               </label>
               <input
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary text-lg placeholder:text-on-surface-variant/30"
+                className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary placeholder:text-on-surface-variant/30"
                 placeholder="e.g. Ephemeral"
                 type="text"
                 value={form.word}
@@ -105,63 +106,11 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             </div>
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Part of Speech
-              </label>
-              <div className="flex flex-wrap gap-2 bg-surface-container-low rounded-xl p-3">
-                {PARTS_OF_SPEECH.map((pos) => {
-                  const selected = form.partsOfSpeech.includes(pos);
-                  return (
-                    <button
-                      key={pos}
-                      type="button"
-                      onClick={() =>
-                        update(
-                          'partsOfSpeech',
-                          selected
-                            ? form.partsOfSpeech.filter((p) => p !== pos)
-                            : [...form.partsOfSpeech, pos],
-                        )
-                      }
-                      className={`px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                        selected
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
-                      }`}
-                    >
-                      {pos}
-                    </button>
-                  );
-                })}
-              </div>
-              {submitted && errors.partsOfSpeech && (
-                <p className="text-xs text-error ml-1">{errors.partsOfSpeech}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Korean Meaning
-              </label>
-              <input
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
-                placeholder="e.g. 일시적인, 덧없는"
-                type="text"
-                value={form.korMeaning}
-                onChange={(e) => update('korMeaning', e.target.value)}
-              />
-              {submitted && errors.korMeaning && (
-                <p className="text-xs text-error ml-1">{errors.korMeaning}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
               </label>
               <div className="relative">
                 <select
-                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
+                  className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={form.difficulty}
                   onChange={(e) =>
                     update('difficulty', Number(e.target.value) as WordDifficultyLevel)
@@ -180,12 +129,65 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             </div>
           </div>
 
+          {/* Row 2: Part of Speech — 풀 너비로 7개 버튼을 한 줄에 배치 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Part of Speech
+            </label>
+            <div className="flex gap-2 bg-surface-container-low rounded-xl p-3">
+              {PARTS_OF_SPEECH.map((pos) => {
+                const selected = form.partsOfSpeech.includes(pos);
+                return (
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() =>
+                      update(
+                        'partsOfSpeech',
+                        selected
+                          ? form.partsOfSpeech.filter((p) => p !== pos)
+                          : [...form.partsOfSpeech, pos],
+                      )
+                    }
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                      selected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
+                    }`}
+                  >
+                    {pos}
+                  </button>
+                );
+              })}
+            </div>
+            {submitted && errors.partsOfSpeech && (
+              <p className="text-xs text-error ml-1">{errors.partsOfSpeech}</p>
+            )}
+          </div>
+
+          {/* Row 3: Korean Meaning */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Korean Meaning
+            </label>
+            <input
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
+              placeholder="e.g. 일시적인, 덧없는"
+              type="text"
+              value={form.korMeaning}
+              onChange={(e) => update('korMeaning', e.target.value)}
+            />
+            {submitted && errors.korMeaning && (
+              <p className="text-xs text-error ml-1">{errors.korMeaning}</p>
+            )}
+          </div>
+
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               English Meaning
             </label>
             <textarea
-              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Describe the nuanced definition..."
               rows={2}
               value={form.engMeaning}
@@ -209,7 +211,9 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                     onClick={() => removeSynonym(i)}
                     className="flex items-center justify-center hover:bg-surface-container-low rounded-md p-0.5"
                   >
-                    <span className="material-symbols-outlined text-[16px]">close</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                      close
+                    </span>
                   </button>
                 </div>
               ))}
@@ -229,7 +233,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
               Example Sentence
             </label>
             <textarea
-              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
               value={form.sentence}

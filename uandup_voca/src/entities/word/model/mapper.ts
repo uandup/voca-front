@@ -3,11 +3,19 @@ import type { TeacherWord, PartOfSpeech } from './types';
 
 type WordResponse = components['schemas']['WordResponse'];
 
-const VALID_POS = new Set(['N', 'V', 'Adj', 'Adv', 'Conj']);
+// 백엔드는 소문자 약어('n', 'v', 'adj', 'adv', 'prep', 'conj', 'interj')로 내려준다.
+const POS_MAP: Record<string, PartOfSpeech> = {
+  n: 'N',
+  v: 'V',
+  adj: 'Adj',
+  adv: 'Adv',
+  prep: 'Prep',
+  conj: 'Conj',
+  interj: 'Interj',
+};
 
 function toPartOfSpeech(value: string): PartOfSpeech {
-  if (VALID_POS.has(value)) return value as PartOfSpeech;
-  return 'N';
+  return POS_MAP[value.toLowerCase()] ?? 'N';
 }
 
 export function toTeacherWord(res: WordResponse): TeacherWord {

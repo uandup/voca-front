@@ -18,14 +18,17 @@ describe('toReviewDeckExamRow', () => {
 });
 
 describe('toReviewDeckWord', () => {
-  it('유효한 POS는 그대로 통과한다 (N/V/Adj/Adv/Conj)', () => {
-    const result = toReviewDeckWord({ wordId: 1, partsOfSpeech: ['N', 'V', 'Adj', 'Adv', 'Conj'] });
-    expect(result.partsOfSpeech).toEqual(['N', 'V', 'Adj', 'Adv', 'Conj']);
+  it('백엔드 소문자 약어 7종을 클라이언트 대소문자 약어로 변환한다', () => {
+    const result = toReviewDeckWord({
+      wordId: 1,
+      partsOfSpeech: ['n', 'v', 'adj', 'adv', 'prep', 'conj', 'interj'],
+    });
+    expect(result.partsOfSpeech).toEqual(['N', 'V', 'Adj', 'Adv', 'Prep', 'Conj', 'Interj']);
   });
 
   it('알 수 없는 POS는 N으로 폴백된다', () => {
     // 서버가 새 품사를 추가하거나 잘못된 값을 내려도 클라이언트가 깨지지 않게 폴백.
-    const result = toReviewDeckWord({ wordId: 1, partsOfSpeech: ['Pron', 'GARBAGE'] });
+    const result = toReviewDeckWord({ wordId: 1, partsOfSpeech: ['pron', 'GARBAGE'] });
     expect(result.partsOfSpeech).toEqual(['N', 'N']);
   });
 
