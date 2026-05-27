@@ -8,11 +8,13 @@ interface Props {
   studySetId: number;
   backLabel: string;
   onBack: () => void;
+  // breadcrumb의 현재 페이지 제목. 미전달 시 "Words".
+  title?: string;
 }
 
 // 한 study-set에 배정된 단어 목록을 학생에게 보여주는 공통 페이지.
 // word-test cycle / review-deck exam / level-test exam 세 곳에서 모두 동일한 흐름이라 재사용.
-export function StudySetWordsPage({ studySetId, backLabel, onBack }: Props) {
+export function StudySetWordsPage({ studySetId, backLabel, onBack, title = 'Words' }: Props) {
   // 학생 화면이므로 예문 노출은 서버의 exampleVisible을 따른다
   // (NORMAL 배정은 예문시험 채점 완료 후에만 true).
   const { data, isLoading } = useAssignedWords(studySetId, studySetId > 0);
@@ -21,7 +23,7 @@ export function StudySetWordsPage({ studySetId, backLabel, onBack }: Props) {
 
   return (
     <main>
-      <BreadcrumbPageTitle parents={[{ label: backLabel, onClick: onBack }]} title="Words" />
+      <BreadcrumbPageTitle parents={[{ label: backLabel, onClick: onBack }]} title={title} />
 
       {isLoading ? (
         <LoadingSpinner />

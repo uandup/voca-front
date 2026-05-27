@@ -34,6 +34,7 @@ import { Route as StudentExamsExamIdTakeRouteImport } from './../routes/student_
 import { Route as StudentWordTestIdWordsRouteImport } from './../routes/student/word-test/$id/words'
 import { Route as StudentReviewDeckStudySetIdWordsRouteImport } from './../routes/student/review-deck/$studySetId/words'
 import { Route as StudentLevelTestStudySetIdWordsRouteImport } from './../routes/student/level-test/$studySetId/words'
+import { Route as StudentDashboardAssignedWordsStudySetIdRouteImport } from './../routes/student/dashboard_/assigned-words/$studySetId'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -166,6 +167,12 @@ const StudentLevelTestStudySetIdWordsRoute =
     path: '/level-test/$studySetId/words',
     getParentRoute: () => StudentRoute,
   } as any)
+const StudentDashboardAssignedWordsStudySetIdRoute =
+  StudentDashboardAssignedWordsStudySetIdRouteImport.update({
+    id: '/dashboard_/assigned-words/$studySetId',
+    path: '/dashboard/assigned-words/$studySetId',
+    getParentRoute: () => StudentRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
@@ -211,6 +219,7 @@ export interface FileRoutesByTo {
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test': typeof StudentLevelTestIndexRoute
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
+  '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
@@ -239,6 +248,7 @@ export interface FileRoutesById {
   '/teacher/students_/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/student/dashboard_/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/teacher/students/$studentId'
     | '/student/level-test/'
     | '/student/review-deck/'
+    | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/teacher/students/$studentId'
     | '/student/level-test'
     | '/student/review-deck'
+    | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
@@ -320,6 +332,7 @@ export interface FileRouteTypes {
     | '/teacher/students_/$studentId'
     | '/student/level-test/'
     | '/student/review-deck/'
+    | '/student/dashboard_/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
     | '/student/word-test/$id/words'
@@ -518,6 +531,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentLevelTestStudySetIdWordsRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/dashboard_/assigned-words/$studySetId': {
+      id: '/student/dashboard_/assigned-words/$studySetId'
+      path: '/dashboard/assigned-words/$studySetId'
+      fullPath: '/student/dashboard/assigned-words/$studySetId'
+      preLoaderRoute: typeof StudentDashboardAssignedWordsStudySetIdRouteImport
+      parentRoute: typeof StudentRoute
+    }
   }
 }
 
@@ -528,6 +548,7 @@ interface StudentRouteChildren {
   StudentReviewDeckWordsRoute: typeof StudentReviewDeckWordsRoute
   StudentLevelTestIndexRoute: typeof StudentLevelTestIndexRoute
   StudentReviewDeckIndexRoute: typeof StudentReviewDeckIndexRoute
+  StudentDashboardAssignedWordsStudySetIdRoute: typeof StudentDashboardAssignedWordsStudySetIdRoute
   StudentLevelTestStudySetIdWordsRoute: typeof StudentLevelTestStudySetIdWordsRoute
   StudentReviewDeckStudySetIdWordsRoute: typeof StudentReviewDeckStudySetIdWordsRoute
   StudentWordTestIdWordsRoute: typeof StudentWordTestIdWordsRoute
@@ -540,6 +561,8 @@ const StudentRouteChildren: StudentRouteChildren = {
   StudentReviewDeckWordsRoute: StudentReviewDeckWordsRoute,
   StudentLevelTestIndexRoute: StudentLevelTestIndexRoute,
   StudentReviewDeckIndexRoute: StudentReviewDeckIndexRoute,
+  StudentDashboardAssignedWordsStudySetIdRoute:
+    StudentDashboardAssignedWordsStudySetIdRoute,
   StudentLevelTestStudySetIdWordsRoute: StudentLevelTestStudySetIdWordsRoute,
   StudentReviewDeckStudySetIdWordsRoute: StudentReviewDeckStudySetIdWordsRoute,
   StudentWordTestIdWordsRoute: StudentWordTestIdWordsRoute,

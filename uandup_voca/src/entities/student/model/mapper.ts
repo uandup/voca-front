@@ -332,7 +332,10 @@ export function toStudentDashboard(r: DashboardResponse): StudentDashboard {
     memorizedWordCount: r.memorizedWordCount ?? 0,
     // 0.0~1.0 → '85%'. COMPLETED 시험이 없으면 서버가 null로 내려준다.
     overallAccuracy: r.overallAccuracy != null ? `${Math.round(r.overallAccuracy * 100)}%` : undefined,
-    activeAssignedWordCount: r.activeAssignedWordCount ?? 0,
+    // 진행 중 배정이 없으면 서버가 null로 내려준다.
+    activeAssignment: r.activeAssignment
+      ? { studySetId: r.activeAssignment.studySetId ?? 0, wordCount: r.activeAssignment.wordCount ?? 0 }
+      : null,
     pendingReviewWordCount: r.pendingReviewWordCount ?? 0,
   };
 }

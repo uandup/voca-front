@@ -103,10 +103,18 @@ export default function DashboardPage() {
         <ScoreTrendChart charts={charts} />
         <StatCards
           accuracy={dashboard.overallAccuracy}
-          assignedWordCount={dashboard.activeAssignedWordCount}
+          assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0}
           pendingReviewWordCount={dashboard.pendingReviewWordCount}
-          // 카드 클릭 시 진행 중 Word Test 화면으로 이동 — 학생이 본인 배정 단어를 확인할 수 있는 진입점.
-          onAssignedClick={() => navigate({ to: '/student/word-test' })}
+          // 카드 클릭 시 진행 중 배정의 단어 목록 페이지로 이동 — activeAssignment가 없으면 버튼 비활성.
+          onAssignedClick={
+            dashboard.activeAssignment
+              ? () =>
+                  navigate({
+                    to: '/student/dashboard/assigned-words/$studySetId',
+                    params: { studySetId: String(dashboard.activeAssignment!.studySetId) },
+                  })
+              : undefined
+          }
         />
       </div>
 
@@ -117,7 +125,7 @@ export default function DashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList assignedWordCount={dashboard.activeAssignedWordCount} />
+          <TodoList assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0} />
         </div>
       </div>
     </main>

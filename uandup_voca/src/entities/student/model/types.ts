@@ -138,8 +138,8 @@ export interface StudentDashboard {
   memorizedWordCount: number;
   // 전체 정답률 — '85%' 형태. COMPLETED 시험이 없으면 undefined.
   overallAccuracy: string | undefined;
-  // 진행 중 NORMAL 배정 단어 수.
-  activeAssignedWordCount: number;
+  // 진행 중 NORMAL 배정 — studySetId + wordCount. 미배정이면 null.
+  activeAssignment: { studySetId: number; wordCount: number } | null;
   // 풀어야 할 리뷰 시험 단어 수.
   pendingReviewWordCount: number;
 }

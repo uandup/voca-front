@@ -3,7 +3,12 @@ import { ChildSwitcher } from '@/features/child-switch';
 import { useSignOut } from '@/entities/auth';
 
 const navItems = [
-  { icon: 'dashboard', label: 'Dashboard', to: '/student/dashboard' },
+  {
+    icon: 'dashboard',
+    label: 'Dashboard',
+    to: '/student/dashboard',
+    activePrefixes: ['/student/assigned-words'],
+  },
   { icon: 'book_2', label: 'Word Test', to: '/student/word-test' },
   {
     icon: 'error',
