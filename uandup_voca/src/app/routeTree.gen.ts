@@ -30,12 +30,14 @@ import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/
 import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
+import { Route as TeacherStudentsStudentIdPendingReviewsRouteImport } from './../routes/teacher/students_.$studentId_/pending-reviews'
 import { Route as TeacherClinicsStudentsStudentIdRouteImport } from './../routes/teacher/clinics_.students.$studentId'
 import { Route as StudentExamsExamIdTakeRouteImport } from './../routes/student_.exams.$examId.take'
 import { Route as StudentWordTestIdWordsRouteImport } from './../routes/student/word-test/$id/words'
 import { Route as StudentReviewDeckStudySetIdWordsRouteImport } from './../routes/student/review-deck/$studySetId/words'
 import { Route as StudentLevelTestStudySetIdWordsRouteImport } from './../routes/student/level-test/$studySetId/words'
 import { Route as StudentDashboardAssignedWordsStudySetIdRouteImport } from './../routes/student/dashboard_/assigned-words/$studySetId'
+import { Route as TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport } from './../routes/teacher/students_.$studentId_/assigned-words/$studySetId'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -146,6 +148,12 @@ const TeacherExamsExamIdPreviewRoute =
     path: '/teacher/exams/$examId/preview',
     getParentRoute: () => rootRouteImport,
   } as any)
+const TeacherStudentsStudentIdPendingReviewsRoute =
+  TeacherStudentsStudentIdPendingReviewsRouteImport.update({
+    id: '/students_/$studentId_/pending-reviews',
+    path: '/students/$studentId/pending-reviews',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 const TeacherClinicsStudentsStudentIdRoute =
   TeacherClinicsStudentsStudentIdRouteImport.update({
     id: '/clinics_/students/$studentId',
@@ -180,6 +188,12 @@ const StudentDashboardAssignedWordsStudySetIdRoute =
     path: '/dashboard/assigned-words/$studySetId',
     getParentRoute: () => StudentRoute,
   } as any)
+const TeacherStudentsStudentIdAssignedWordsStudySetIdRoute =
+  TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport.update({
+    id: '/students_/$studentId_/assigned-words/$studySetId',
+    path: '/students/$studentId/assigned-words/$studySetId',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -207,8 +221,10 @@ export interface FileRoutesByFullPath {
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/student/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher/students/$studentId/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/students/$studentId/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -234,8 +250,10 @@ export interface FileRoutesByTo {
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/student/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher/students/$studentId/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/students/$studentId/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -264,8 +282,10 @@ export interface FileRoutesById {
   '/student/word-test/$id/words': typeof StudentWordTestIdWordsRoute
   '/student_/exams/$examId/take': typeof StudentExamsExamIdTakeRoute
   '/teacher/clinics_/students/$studentId': typeof TeacherClinicsStudentsStudentIdRoute
+  '/teacher/students_/$studentId_/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher_/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher_/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/students_/$studentId_/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -295,8 +315,10 @@ export interface FileRouteTypes {
     | '/student/word-test/$id/words'
     | '/student/exams/$examId/take'
     | '/teacher/clinics/students/$studentId'
+    | '/teacher/students/$studentId/pending-reviews'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
+    | '/teacher/students/$studentId/assigned-words/$studySetId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -322,8 +344,10 @@ export interface FileRouteTypes {
     | '/student/word-test/$id/words'
     | '/student/exams/$examId/take'
     | '/teacher/clinics/students/$studentId'
+    | '/teacher/students/$studentId/pending-reviews'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
+    | '/teacher/students/$studentId/assigned-words/$studySetId'
   id:
     | '__root__'
     | '/'
@@ -351,8 +375,10 @@ export interface FileRouteTypes {
     | '/student/word-test/$id/words'
     | '/student_/exams/$examId/take'
     | '/teacher/clinics_/students/$studentId'
+    | '/teacher/students_/$studentId_/pending-reviews'
     | '/teacher_/exams/$examId/preview'
     | '/teacher_/exams/$examId/review'
+    | '/teacher/students_/$studentId_/assigned-words/$studySetId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -516,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherExamsExamIdPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher/students_/$studentId_/pending-reviews': {
+      id: '/teacher/students_/$studentId_/pending-reviews'
+      path: '/students/$studentId/pending-reviews'
+      fullPath: '/teacher/students/$studentId/pending-reviews'
+      preLoaderRoute: typeof TeacherStudentsStudentIdPendingReviewsRouteImport
+      parentRoute: typeof TeacherRoute
+    }
     '/teacher/clinics_/students/$studentId': {
       id: '/teacher/clinics_/students/$studentId'
       path: '/clinics/students/$studentId'
@@ -557,6 +590,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/dashboard/assigned-words/$studySetId'
       preLoaderRoute: typeof StudentDashboardAssignedWordsStudySetIdRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/teacher/students_/$studentId_/assigned-words/$studySetId': {
+      id: '/teacher/students_/$studentId_/assigned-words/$studySetId'
+      path: '/students/$studentId/assigned-words/$studySetId'
+      fullPath: '/teacher/students/$studentId/assigned-words/$studySetId'
+      preLoaderRoute: typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport
+      parentRoute: typeof TeacherRoute
     }
   }
 }
@@ -601,6 +641,8 @@ interface TeacherRouteChildren {
   TeacherIndexRoute: typeof TeacherIndexRoute
   TeacherStudentsStudentIdRoute: typeof TeacherStudentsStudentIdRoute
   TeacherClinicsStudentsStudentIdRoute: typeof TeacherClinicsStudentsStudentIdRoute
+  TeacherStudentsStudentIdPendingReviewsRoute: typeof TeacherStudentsStudentIdPendingReviewsRoute
+  TeacherStudentsStudentIdAssignedWordsStudySetIdRoute: typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 
 const TeacherRouteChildren: TeacherRouteChildren = {
@@ -611,6 +653,10 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherIndexRoute: TeacherIndexRoute,
   TeacherStudentsStudentIdRoute: TeacherStudentsStudentIdRoute,
   TeacherClinicsStudentsStudentIdRoute: TeacherClinicsStudentsStudentIdRoute,
+  TeacherStudentsStudentIdPendingReviewsRoute:
+    TeacherStudentsStudentIdPendingReviewsRoute,
+  TeacherStudentsStudentIdAssignedWordsStudySetIdRoute:
+    TeacherStudentsStudentIdAssignedWordsStudySetIdRoute,
 }
 
 const TeacherRouteWithChildren =

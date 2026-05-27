@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word';
-import { useCurrentStudentId } from '@/entities/auth';
 import { usePendingReviews } from '@/entities/student';
 
 // 'YYYY-MM-DD' → 'MMM DD, YYYY' (예: May 28, 2026)
@@ -13,9 +11,13 @@ function formatDate(iso: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-export default function PendingReviewsPage() {
-  const navigate = useNavigate();
-  const studentId = useCurrentStudentId() ?? 0;
+interface Props {
+  studentId: number;
+  // BreadcrumbPageTitle의 parents 배열. 여러 단계(e.g. Student Management > 이름) 지원.
+  parents: { label: string; onClick?: () => void }[];
+}
+
+export function PendingReviewsPage({ studentId, parents }: Props) {
   const { data: reviews, isLoading } = usePendingReviews(studentId);
 
   // 드롭다운에서 선택된 날짜 — 초기값은 첫 번째 날짜
@@ -30,10 +32,7 @@ export default function PendingReviewsPage() {
 
   return (
     <main>
-      <BreadcrumbPageTitle
-        parents={[{ label: 'Dashboard', onClick: () => navigate({ to: '/student/dashboard' }) }]}
-        title="Words to Review"
-      />
+      <BreadcrumbPageTitle parents={parents} title="Words to Review" />
 
       {isLoading ? (
         <LoadingSpinner />

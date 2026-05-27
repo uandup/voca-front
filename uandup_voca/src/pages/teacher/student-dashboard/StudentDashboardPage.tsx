@@ -125,6 +125,27 @@ export default function StudentDashboardPage() {
           accuracy={dashboard.overallAccuracy}
           assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0}
           pendingReviewWordCount={dashboard.pendingReviewWordCount}
+          onAssignedClick={
+            dashboard.activeAssignment
+              ? () =>
+                  navigate({
+                    to: '/teacher/students/$studentId/assigned-words/$studySetId',
+                    params: {
+                      studentId: String(studentId),
+                      studySetId: String(dashboard.activeAssignment!.studySetId),
+                    },
+                  })
+              : undefined
+          }
+          onReviewClick={
+            dashboard.pendingReviewWordCount > 0
+              ? () =>
+                  navigate({
+                    to: '/teacher/students/$studentId/pending-reviews',
+                    params: { studentId: String(studentId) },
+                  })
+              : undefined
+          }
         />
       </div>
 

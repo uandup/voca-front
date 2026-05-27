@@ -1,4 +1,5 @@
 import { useNavigate, useParams, useRouter } from '@tanstack/react-router';
+import { useStudentOverview } from '@/entities/student';
 import { StudySetWordsPage } from './StudySetWordsPage';
 
 // 각 라우트는 동일한 StudySetWordsPage를 보여주지만 URL param 키와 back 라벨이 다르다.
@@ -12,8 +13,7 @@ export function WordTestStudySetWordsRoute() {
   return (
     <StudySetWordsPage
       studySetId={Number(id)}
-      backLabel="Word Test"
-      onBack={() => router.history.back()}
+      parents={[{ label: 'Word Test', onClick: () => router.history.back() }]}
     />
   );
 }
@@ -24,8 +24,7 @@ export function LevelTestStudySetWordsRoute() {
   return (
     <StudySetWordsPage
       studySetId={Number(studySetId)}
-      backLabel="Level Test"
-      onBack={() => router.history.back()}
+      parents={[{ label: 'Level Test', onClick: () => router.history.back() }]}
     />
   );
 }
@@ -36,13 +35,12 @@ export function ReviewDeckStudySetWordsRoute() {
   return (
     <StudySetWordsPage
       studySetId={Number(studySetId)}
-      backLabel="Review Deck"
-      onBack={() => router.history.back()}
+      parents={[{ label: 'Review Deck', onClick: () => router.history.back() }]}
     />
   );
 }
 
-// 대시보드 StatCards "Assigned Words" 카드 진입점.
+// 대시보드 StatCards "Assigned Words" 카드 진입점 (학생).
 // 뒤로 가면 /student/dashboard로 복귀한다.
 export function DashboardAssignedWordsRoute() {
   const navigate = useNavigate();
@@ -50,9 +48,36 @@ export function DashboardAssignedWordsRoute() {
   return (
     <StudySetWordsPage
       studySetId={Number(studySetId)}
-      backLabel="Dashboard"
+      parents={[{ label: 'Dashboard', onClick: () => navigate({ to: '/student/dashboard' }) }]}
       title="Assigned Words"
-      onBack={() => navigate({ to: '/student/dashboard' })}
+    />
+  );
+}
+
+// 선생님이 학생 대시보드 StatCards "Assigned Words" 카드에서 진입.
+// 뒤로 가면 해당 학생 대시보드로 복귀한다.
+// breadcrumb: Student Management > 학생이름 > Assigned Words
+export function TeacherStudentAssignedWordsRoute() {
+  const navigate = useNavigate();
+  const { studentId, studySetId } = useParams({
+    from: '/teacher/students_/$studentId_/assigned-words/$studySetId',
+  });
+  const { data: overview } = useStudentOverview(Number(studentId));
+
+  return (
+    <StudySetWordsPage
+      studySetId={Number(studySetId)}
+      parents={[
+        {
+          label: 'Student Management',
+          onClick: () => navigate({ to: '/teacher/students' }),
+        },
+        {
+          label: overview?.nameKo ?? '...',
+          onClick: () => navigate({ to: '/teacher/students/$studentId', params: { studentId } }),
+        },
+      ]}
+      title="Assigned Words"
     />
   );
 }
