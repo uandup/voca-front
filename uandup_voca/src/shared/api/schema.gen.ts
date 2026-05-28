@@ -1262,14 +1262,58 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         WordUpdateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그 (예: 26.3 기출)
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         ApiResponseWordResponse: {
             /** Format: int32 */
@@ -1278,18 +1322,70 @@ export interface components {
             data?: components["schemas"]["WordResponse"];
         };
         WordResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 단어 ID
+             * @example 1
+             */
             id?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word?: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech?: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning?: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty?: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 레벨 내 순서
+             * @example 3
+             */
             orderIndex?: number;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         MemoRequest: {
             /** Format: date */
@@ -1500,14 +1596,58 @@ export interface components {
             name: string;
         };
         WordCreateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그 (예: 26.3 기출)
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         /** @description 오답 뱅크 시험 생성 요청 */
         CreateWrongBankExamRequest: {
@@ -1583,16 +1723,64 @@ export interface components {
             words?: components["schemas"]["AssignedWordResponse"][];
         };
         AssignedWordResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 단어 ID
+             * @example 1
+             */
             wordId?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word?: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech?: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning?: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty?: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         /** @description 온라인 시험 제출 요청 — 학생이 입력한 답안 */
         SubmitExamRequest: {
@@ -2450,6 +2638,12 @@ export interface components {
              * @example 8
              */
             correctCount?: number;
+            /**
+             * Format: date
+             * @description 복습 예정일. REVIEW1/2/3 시험에만 존재, 나머지는 null. 오늘 이전이면 밀린 복습
+             * @example 2026-05-29
+             */
+            scheduledDate?: string;
         };
         /** @description 시험 타입별 현황 */
         ExamsByType: {
@@ -2849,7 +3043,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseWordResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 */
+            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) / SAT 중요도 범위 밖(INVALID_SAT_PRIORITY) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3588,7 +3782,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseWordResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) */
+            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) / SAT 중요도 범위 밖(INVALID_SAT_PRIORITY) */
             400: {
                 headers: {
                     [name: string]: unknown;
