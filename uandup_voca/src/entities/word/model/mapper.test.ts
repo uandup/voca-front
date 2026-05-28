@@ -29,4 +29,23 @@ describe('toWordCardData', () => {
     expect(result.korMeaning).toBe('');
     expect(result.engMeaning).toBe('');
   });
+
+  it('satPriority 미존재 시 0으로 폴백', () => {
+    expect(toWordCardData({ id: 1 }).satPriority).toBe(0);
+  });
+
+  it('examTag 단일 값은 길이 1 배열', () => {
+    expect(toWordCardData({ id: 1, examTag: '26.3 기출' }).examTags).toEqual(['26.3 기출']);
+  });
+
+  it('examTag 콤마 구분 복수 값은 트림 후 배열', () => {
+    expect(toWordCardData({ id: 1, examTag: '26.3 기출, 25.2 기출' }).examTags).toEqual([
+      '26.3 기출',
+      '25.2 기출',
+    ]);
+  });
+
+  it('examTag 미존재 시 빈 배열', () => {
+    expect(toWordCardData({ id: 1 }).examTags).toEqual([]);
+  });
 });

@@ -53,6 +53,8 @@ export function toAssignedWordCardData(res: AssignedWordResponse): WordCardData 
     difficulty: res.difficulty,
     synonyms: res.synonyms,
     example: res.example,
+    satPriority: res.satPriority,
+    examTag: res.examTag,
   });
 }
 

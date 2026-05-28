@@ -11,6 +11,27 @@ interface WordCardProps extends WordCardData {
   extraInfo?: ReactNode;
 }
 
+// SAT 중요도(0~3). 채워진 별은 amber, 빈 별은 outline/25. 0이면 빈 별 3개.
+function SatStars({ priority }: { priority: number }) {
+  return (
+    <div className="flex items-center gap-0.5 mt-1.5">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <span
+          key={i}
+          className={
+            i < priority
+              ? 'material-symbols-outlined text-amber-400'
+              : 'material-symbols-outlined text-outline/25'
+          }
+          style={{ fontSize: '16px', fontVariationSettings: "'FILL' 1" }}
+        >
+          star
+        </span>
+      ))}
+    </div>
+  );
+}
+
 // 단어 1건을 표시하는 카드. 학생·선생님 화면이 공유하며, 예문 노출만 showSentence로 토글한다.
 export function WordCard({
   word,
@@ -20,6 +41,8 @@ export function WordCard({
   engMeaning,
   synonyms,
   sentence,
+  satPriority,
+  examTags,
   showSentence = false,
   extraInfo,
 }: WordCardProps) {
@@ -34,6 +57,21 @@ export function WordCard({
               </span>
             </div>
             <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>
+            {/* SAT 중요도 별표 */}
+            <SatStars priority={satPriority} />
+            {/* 기출 태그 */}
+            {examTags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {examTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2 py-0.5 bg-surface-container-highest text-outline text-[11px] font-bold rounded-full tracking-wide"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex-1 space-y-4">

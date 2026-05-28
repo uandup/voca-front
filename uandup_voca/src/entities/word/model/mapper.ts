@@ -28,5 +28,10 @@ export function toWordCardData(res: WordResponse): WordCardData {
     difficulty: (res.difficulty ?? 1) as WordCardData['difficulty'],
     synonyms: res.synonyms ?? [],
     sentence: res.example ?? '',
+    satPriority: res.satPriority ?? 0,
+    // 서버가 "26.3 기출, 25.2 기출" 형태로 내려주면 콤마로 분리·트림한다.
+    examTags: res.examTag
+      ? res.examTag.split(',').map((t) => t.trim()).filter(Boolean)
+      : [],
   };
 }

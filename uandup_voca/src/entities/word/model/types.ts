@@ -14,6 +14,10 @@ export interface WordCardData {
   engMeaning: string;
   synonyms: string[];
   sentence?: string;
+  // SAT 중요도 0~3. 0이면 별 표시 없음.
+  satPriority: number;
+  // 기출 태그 목록. 서버의 콤마 구분 문자열을 파싱한 배열.
+  examTags: string[];
 }
 
 // ── Test Pages ──────────────────────────────────────────────────────────────
