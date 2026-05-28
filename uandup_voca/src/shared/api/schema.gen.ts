@@ -791,6 +791,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/todos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 할 일 목록 조회
+         * @description 학생이 현재 응시해야 할 시험 목록을 반환합니다.
+         *
+         *     **포함 조건**: 시험 상태가 `READY` 또는 `ONLINE_STARTED`인 시험.
+         *     - `READY`: 오프라인 대기 또는 온라인 미시작 — 학생이 단어를 외울 수 있으나, 실제 제출은 선생님이 온라인 시험을 시작해야 가능 (`actionable: false`)
+         *     - `ONLINE_STARTED`: 선생님이 온라인 시험을 시작한 상태 — 학생이 앱에서 바로 답안을 제출할 수 있음 (`actionable: true`)
+         *     - `SUBMITTED` 상태(이미 제출)는 제외됩니다.
+         *
+         *     **항목 정렬**: 시험 유형(type) ASC → examId ASC
+         *
+         *     **권한**:
+         *     - TEACHER: 모든 학생 조회 가능
+         *     - STUDENT: 본인만 조회 가능
+         *     - PARENT: 연결된 자녀만 조회 가능
+         *
+         *     **확장 예고**: 현재는 활성 시험만 포함되며, 추후 오답 쌓임·복습 밀림 등의 항목이 같은 구조로 추가될 예정입니다.
+         */
+        get: operations["getTodos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/pending-reviews": {
         parameters: {
             query?: never;
@@ -1960,6 +1994,44 @@ export interface components {
              * @example 18
              */
             correctCount?: number;
+        };
+        /** @description 학생 할 일 항목 — 현재는 활성 시험(READY/ONLINE_STARTED)만 포함 */
+        TodoItem: {
+            /**
+             * @description 시험 유형
+             * @example REVIEW1
+             * @enum {string}
+             */
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            /**
+             * Format: int64
+             * @description 시험 ID — GET /api/v1/exams/{examId} 로 시험 상세 진입
+             * @example 42
+             */
+            examId?: number;
+            /**
+             * Format: int64
+             * @description 소속 배정(StudySet) ID — GET /api/v1/study-sets/{studySetId}/words 로 배정 단어 목록 진입
+             * @example 7
+             */
+            studySetId?: number;
+            /**
+             * @description 학생이 지금 바로 행동 가능 여부. true = ONLINE_STARTED 상태(앱에서 답안 제출 가능). false = READY 상태(선생님이 시험을 켜줘야 진행 가능).
+             * @example false
+             */
+            actionable?: boolean;
+            /**
+             * Format: date
+             * @description 복습 예정일 — REVIEW1/2/3 타입만 존재, 나머지는 null. 오늘보다 이전이면 밀린 복습.
+             * @example 2026-05-29
+             */
+            scheduledDate?: string;
+        };
+        ApiResponseListTodoItem: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["TodoItem"][];
         };
         ApiResponsePendingReviewsResponse: {
             /** Format: int32 */
@@ -5012,6 +5084,59 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+        };
+    };
+    getTodos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — 할 일 없으면 빈 배열 반환 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TodoItem"][];
+                };
+            };
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
                 };
             };
         };

@@ -94,7 +94,8 @@ export default function PendingPage() {
                 <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
                   Your account has been approved.
                   <br />
-                  You'll be able to access the service once a child is linked to your account.
+                  You'll be able to access the service <br /> once a child is linked to your
+                  account.
                 </p>
 
                 {/* Notice */}
