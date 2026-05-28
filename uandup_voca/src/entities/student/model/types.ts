@@ -155,6 +155,21 @@ export interface PendingReviewItem {
   words: WordCardData[];
 }
 
+// ── Todo (/todos) ────────────────────────────────────────────────────────────
+
+export type TodoType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3' | 'WRONG_BANK' | 'LEVEL';
+
+/** 학생 할 일 한 건 — /api/v1/students/{id}/todos */
+export interface TodoItem {
+  type: TodoType;
+  examId: number;
+  studySetId: number | null;
+  // 지금 바로 앱에서 제출 가능한 상태(ONLINE_STARTED)이면 true, 선생님이 켜줘야 하면 false.
+  actionable: boolean;
+  // REVIEW1/2/3 타입만 존재. 오늘보다 이전이면 밀린 복습.
+  scheduledDate: string | null;
+}
+
 export type ExamScoreType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3';
 
 /** 차트 point hover 시 표시할 개별 시험 정보. */

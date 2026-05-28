@@ -9,4 +9,5 @@ export const studentKeys = {
   dashboard: (id: number) => [...studentKeys.all, id, 'dashboard'] as const,
   dashboardCharts: (id: number) => [...studentKeys.all, id, 'dashboard-charts'] as const,
   pendingReviews: (id: number) => [...studentKeys.all, id, 'pending-reviews'] as const,
+  todos: (id: number) => [...studentKeys.all, id, 'todos'] as const,
 };

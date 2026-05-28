@@ -130,7 +130,7 @@ export default function DashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0} />
+          <TodoList studentId={studentId} />
         </div>
       </div>
     </main>

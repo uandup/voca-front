@@ -23,6 +23,8 @@ import type {
   ExamScoreType,
   LearnedCountPoint,
   PendingReviewItem,
+  TodoItem,
+  TodoType,
 } from './types';
 import type { StepCardVM, TestBundleRow } from '@/entities/test';
 
@@ -39,6 +41,7 @@ type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
 type ExamScorePointDto = components['schemas']['ExamScorePoint'];
 type DailyCountDto = components['schemas']['DailyCount'];
 type PendingReviewItemDto = components['schemas']['PendingReviewItem'];
+type TodoItemDto = components['schemas']['TodoItem'];
 
 export function toAssignedWordCardData(res: AssignedWordResponse): WordCardData {
   return toWordCardData({
@@ -419,5 +422,17 @@ export function toPendingReviewItem(dto: PendingReviewItemDto): PendingReviewIte
     examId: dto.examId ?? 0,
     scheduledDate: dto.scheduledDate ?? '',
     words: (dto.words ?? []).map(toAssignedWordCardData),
+  };
+}
+
+// ── Todo mapper ──────────────────────────────────────────────────────────────
+
+export function toTodoItem(dto: TodoItemDto): TodoItem {
+  return {
+    type: (dto.type ?? 'WORD') as TodoType,
+    examId: dto.examId ?? 0,
+    studySetId: dto.studySetId ?? null,
+    actionable: dto.actionable ?? false,
+    scheduledDate: dto.scheduledDate ?? null,
   };
 }

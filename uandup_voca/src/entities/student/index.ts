@@ -18,6 +18,8 @@ export type {
   ExamScoreType,
   LearnedCountPoint,
   PendingReviewItem,
+  TodoItem,
+  TodoType,
 } from './model/types';
 export {
   toStudentPickerRow,
@@ -32,6 +34,7 @@ export {
   toStudentDashboard,
   toStudentDashboardCharts,
   toPendingReviewItem,
+  toTodoItem,
 } from './model/mapper';
 export {
   getStudents,
@@ -48,6 +51,7 @@ export {
   getDashboard,
   getDashboardCharts,
   getPendingReviews,
+  getTodos,
 } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';
@@ -57,3 +61,4 @@ export { useStudentDashboard, useStudentDashboardCharts } from './api/useStudent
 export { useStudySetList } from './api/useStudySetList';
 export { useAssignedWords } from './api/useAssignedWords';
 export { usePendingReviews } from './api/usePendingReviews';
+export { useTodos } from './api/useTodos';

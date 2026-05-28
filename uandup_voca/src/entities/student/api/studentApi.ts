@@ -12,6 +12,7 @@ type StudySetWordsResponse = components['schemas']['StudySetWordsResponse'];
 type DashboardResponse = components['schemas']['DashboardResponse'];
 type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
 type PendingReviewsResponse = components['schemas']['PendingReviewsResponse'];
+type TodoItemDto = components['schemas']['TodoItem'];
 type AssignWordsResponse = components['schemas']['AssignWordsResponse'];
 type AssignmentCountResponse = components['schemas']['AssignmentCountResponse'];
 type ExamSettingsResponse = components['schemas']['ExamSettingsResponse'];
@@ -97,6 +98,11 @@ export const getPendingReviews = (
 ): Promise<ApiResponse<PendingReviewsResponse>> =>
   axiosInstance
     .get<ApiResponse<PendingReviewsResponse>>(`/api/v1/students/${studentId}/pending-reviews`)
+    .then((r) => r.data);
+
+export const getTodos = (studentId: number): Promise<ApiResponse<TodoItemDto[]>> =>
+  axiosInstance
+    .get<ApiResponse<TodoItemDto[]>>(`/api/v1/students/${studentId}/todos`)
     .then((r) => r.data);
 
 export const updateExamSettings = (
