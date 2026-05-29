@@ -22,6 +22,8 @@ const DEFAULT_FORM: WordFormData = {
   engMeaning: '',
   synonyms: [],
   sentence: '',
+  satPriority: 0,
+  examTags: [],
 };
 
 export function WordFormModal({ wordId, initialData, onClose }: WordFormModalProps) {
@@ -30,6 +32,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
 
   const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
   const [synonymInput, setSynonymInput] = useState('');
+  const [examTagInput, setExamTagInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   function update<K extends keyof WordFormData>(key: K, value: WordFormData[K]) {
@@ -65,6 +68,21 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
     );
   }
 
+  function handleExamTagKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && examTagInput.trim()) {
+      e.preventDefault();
+      update('examTags', [...form.examTags, examTagInput.trim()]);
+      setExamTagInput('');
+    }
+  }
+
+  function removeExamTag(index: number) {
+    update(
+      'examTags',
+      form.examTags.filter((_, i) => i !== index),
+    );
+  }
+
   function handleSave() {
     setSubmitted(true);
     if (errors.word || errors.korMeaning || errors.partsOfSpeech) return;
@@ -89,21 +107,23 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
         </div>
 
         <div className="px-10 pb-10 space-y-4 overflow-y-auto">
-          {/* Row 1: Word + Difficulty Level */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Word
-              </label>
-              <input
-                className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary placeholder:text-on-surface-variant/30"
-                placeholder="e.g. Ephemeral"
-                type="text"
-                value={form.word}
-                onChange={(e) => update('word', e.target.value)}
-              />
-              {submitted && errors.word && <p className="text-xs text-error ml-1">{errors.word}</p>}
-            </div>
+          {/* Row 1: Word — 풀 너비 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Word
+            </label>
+            <input
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary placeholder:text-on-surface-variant/30"
+              placeholder="e.g. Ephemeral"
+              type="text"
+              value={form.word}
+              onChange={(e) => update('word', e.target.value)}
+            />
+            {submitted && errors.word && <p className="text-xs text-error ml-1">{errors.word}</p>}
+          </div>
+
+          {/* Row 2: Difficulty Level + SAT Priority */}
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
@@ -127,9 +147,37 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                 </span>
               </div>
             </div>
+
+            {/* SAT Priority: 별 3개 토글. i번 별 클릭 시 satPriority = i+1, 이미 같으면 0으로 해제 */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+                SAT Priority
+              </label>
+              <div className="flex items-center gap-1.5 bg-surface-container-low rounded-xl px-4 h-[52px]">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => update('satPriority', form.satPriority === i + 1 ? 0 : i + 1)}
+                    className="flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+                  >
+                    <span
+                      className={
+                        i < form.satPriority
+                          ? 'material-symbols-outlined text-amber-400'
+                          : 'material-symbols-outlined text-outline/30'
+                      }
+                      style={{ fontSize: '22px', fontVariationSettings: "'FILL' 1" }}
+                    >
+                      star
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Row 2: Part of Speech — 풀 너비로 7개 버튼을 한 줄에 배치 */}
+          {/* Row 3: Part of Speech — 풀 너비로 7개 버튼을 한 줄에 배치 */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Part of Speech
@@ -165,7 +213,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             )}
           </div>
 
-          {/* Row 3: Korean Meaning */}
+          {/* Row 4: Korean Meaning */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Korean Meaning
@@ -182,6 +230,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             )}
           </div>
 
+          {/* Row 5: English Meaning */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               English Meaning
@@ -195,6 +244,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             />
           </div>
 
+          {/* Row 6: Synonyms */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Synonyms
@@ -228,6 +278,41 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             </div>
           </div>
 
+          {/* Row 7: Exam Tags — Synonyms와 동일한 패턴. Enter로 추가, × 버튼으로 삭제 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Exam Tags
+            </label>
+            <div className="w-full bg-surface-container-low rounded-xl p-3 flex flex-wrap gap-2 items-center min-h-14">
+              {form.examTags.map((tag, i) => (
+                <div
+                  key={i}
+                  className="pl-3 pr-2 py-1.5 bg-white text-primary rounded-lg text-[13px] font-semibold flex items-center gap-2 shadow-sm border border-black/5"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeExamTag(i)}
+                    className="flex items-center justify-center hover:bg-surface-container-low rounded-md p-0.5"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                      close
+                    </span>
+                  </button>
+                </div>
+              ))}
+              <input
+                className="bg-transparent border-none focus:ring-0 outline-none p-1 text-[13px] grow min-w-28 text-on-surface-variant placeholder:text-on-surface-variant/40"
+                placeholder="Add exam tag and press Enter..."
+                type="text"
+                value={examTagInput}
+                onChange={(e) => setExamTagInput(e.target.value)}
+                onKeyDown={handleExamTagKeyDown}
+              />
+            </div>
+          </div>
+
+          {/* Row 8: Example Sentence */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Example Sentence

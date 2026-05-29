@@ -24,6 +24,9 @@ function toWordRequestBody(data: Omit<WordCardData, 'id'>): WordCreateRequest {
     difficulty: data.difficulty,
     synonyms: data.synonyms.length > 0 ? data.synonyms : undefined,
     example: data.sentence || undefined,
+    satPriority: data.satPriority,
+    // 배열 → 콤마 구분 문자열 역변환. 빈 배열이면 필드 생략.
+    examTag: data.examTags.length > 0 ? data.examTags.join(', ') : undefined,
   };
 }
 
