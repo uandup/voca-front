@@ -1,5 +1,11 @@
 import type { StepCardVM } from '@/entities/test';
 
+// 'YYYY-MM-DD' → 'May 30'
+function formatScheduledDate(iso: string): string {
+  const date = new Date(iso);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 interface StepCardProps {
   step: StepCardVM;
   isSelected: boolean;
@@ -25,17 +31,23 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
               : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
         }`}
     >
-      <div className="flex items-start justify-between gap-1">
+      {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때 name 오른쪽에 표시 */}
+      <div className="flex items-center gap-2 flex-wrap">
         <span
           className={`text-sm font-bold leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface'}`}
         >
           {step.name}
         </span>
+        {step.scheduledDate && (
+          <span className="text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-2 py-0.5">
+            Due {formatScheduledDate(step.scheduledDate)}
+          </span>
+        )}
       </div>
 
       {step.createdAt && (
         <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          {step.createdAt}
+          Created At {step.createdAt}
         </span>
       )}
 

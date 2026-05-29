@@ -7,6 +7,12 @@ interface StepCardProps {
   onAction?: () => void;
 }
 
+// 'YYYY-MM-DD' → 'May 30'
+function formatScheduledDate(iso: string): string {
+  const date = new Date(iso);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 const containerClass: Record<StepStatus, string> = {
   locked: 'border border-primary/30 bg-primary/5',
   grading: 'border border-primary/30 bg-primary/5',
@@ -24,15 +30,24 @@ export default function WordTestStepCard({ step, onAction }: StepCardProps) {
     maxScore: totalScore,
     createdAt: gradedDate,
     retakeCount,
+    scheduledDate,
   } = step;
 
   return (
     <div
       className={`flex-1 min-w-0 h-44 rounded-2xl p-4 flex flex-col gap-2 ${containerClass[status]}`}
     >
-      <span className="text-sm font-bold leading-tight text-on-surface">{name}</span>
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-sm font-bold leading-tight text-on-surface">{name}</span>
+        {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때만 name 오른쪽에 표시 */}
+        {scheduledDate && (
+          <span className="text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-2 py-0.5">
+            Due {formatScheduledDate(scheduledDate)}
+          </span>
+        )}
+      </div>
 
-      <span className="text-xs text-on-surface-variant">{gradedDate ?? ''}</span>
+      <span className="text-xs text-on-surface-variant">Graded At {gradedDate ?? ''}</span>
 
       {(status === 'fail' || status === 'passed') && lastScore && (
         <div className="flex items-baseline gap-1.5">

@@ -46,7 +46,7 @@ export function ClinicDetailPage() {
   }
 
   return (
-    <div className="max-w-7xl space-y-8">
+    <main className="space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinics', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
         title={student.englishName ? `${student.nameKo} (${student.englishName})` : student.nameKo}
@@ -106,6 +106,6 @@ export function ClinicDetailPage() {
           onClose={() => setIsMemoOpen(false)}
         />
       )}
-    </div>
+    </main>
   );
 }

@@ -119,6 +119,7 @@ function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | nu
     completedAt: dto.completedAt ?? null,
     correctCount: dto.correctCount ?? null,
     totalCount: dto.questionCount ?? null,
+    scheduledDate: dto.scheduledDate ?? null,
   };
 }
 
@@ -137,6 +138,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      scheduledDate: null,
     };
   }
   if (!exam) {
@@ -148,9 +150,10 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, correctCount, totalCount } = exam;
+  const { examId, status, isPassed, createdAt, correctCount, totalCount, scheduledDate } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -167,6 +170,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
     maxScore: totalCount ?? null,
     retakeCount: 0,
     examId,
+    scheduledDate: scheduledDate ?? null,
   };
 }
 
@@ -186,6 +190,7 @@ function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepC
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      scheduledDate: null,
     };
   }
   if (!exam) {
@@ -197,9 +202,10 @@ function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepC
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, correctCount, totalCount } = exam;
+  const { examId, status, isPassed, createdAt, correctCount, totalCount, scheduledDate } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -219,6 +225,7 @@ function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepC
     maxScore: totalCount ?? null,
     retakeCount: 0,
     examId,
+    scheduledDate: scheduledDate ?? null,
   };
 }
 

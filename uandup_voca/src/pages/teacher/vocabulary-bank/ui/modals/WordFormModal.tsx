@@ -153,7 +153,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 SAT Priority
               </label>
-              <div className="flex items-center gap-1.5 bg-surface-container-low rounded-xl px-4 h-[52px]">
+              <div className="flex items-center gap-1.5 bg-surface-container-low rounded-xl px-4 h-13">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <button
                     key={i}

@@ -90,6 +90,8 @@ export interface ExamSummary {
   completedAt: string | null;
   correctCount: number | null;
   totalCount: number | null;
+  // REVIEW1/2/3 시험에만 존재. 복습 예정일 'YYYY-MM-DD'.
+  scheduledDate: string | null;
 }
 
 // 한 study-set이 레벨 경계를 넘어 배정될 수 있어 레벨별 단어 수를 배열로 노출한다.
