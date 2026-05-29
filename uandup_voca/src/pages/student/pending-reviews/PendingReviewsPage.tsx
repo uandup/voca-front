@@ -61,7 +61,7 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
                 expand_more
               </span>
             </div>
-            <span className="text-xs text-on-surface-variant">
+            <span className="text-sm font-semibold text-on-surface-variant">
               {activeWords.length} word{activeWords.length !== 1 ? 's' : ''}
             </span>
           </div>

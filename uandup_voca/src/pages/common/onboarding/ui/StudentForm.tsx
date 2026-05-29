@@ -23,7 +23,7 @@ export function StudentForm({ value, onChange }: Props) {
             type="text"
             placeholder="예) 이은수"
             value={value.nameKo}
-            onChange={(e) => set('nameKo', e.target.value)}
+            onChange={(e) => set('nameKo', e.target.value.replace(/\s/g, ''))}
             className={inputClass}
           />
         </div>
@@ -36,7 +36,7 @@ export function StudentForm({ value, onChange }: Props) {
             type="text"
             placeholder="예) Eunsoo"
             value={value.nameFirstEn}
-            onChange={(e) => set('nameFirstEn', e.target.value)}
+            onChange={(e) => set('nameFirstEn', e.target.value.replace(/\s/g, ''))}
             className={inputClass}
           />
         </div>
@@ -48,7 +48,7 @@ export function StudentForm({ value, onChange }: Props) {
             type="text"
             placeholder="예) Lee"
             value={value.nameLastEn}
-            onChange={(e) => set('nameLastEn', e.target.value)}
+            onChange={(e) => set('nameLastEn', e.target.value.replace(/\s/g, ''))}
             className={inputClass}
           />
         </div>

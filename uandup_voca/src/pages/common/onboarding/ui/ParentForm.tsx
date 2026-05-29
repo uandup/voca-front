@@ -39,7 +39,7 @@ export function ParentForm({ value, onChange }: Props) {
           type="text"
           placeholder="예) 김영희"
           value={value.nameKo}
-          onChange={(e) => set('nameKo', e.target.value)}
+          onChange={(e) => set('nameKo', e.target.value.replace(/\s/g, ''))}
           className={inputClass}
         />
       </div>
@@ -53,7 +53,7 @@ export function ParentForm({ value, onChange }: Props) {
           type="tel"
           placeholder="연락처를 입력해주세요"
           value={value.phone}
-          onChange={(e) => set('phone', e.target.value)}
+          onChange={(e) => set('phone', e.target.value.replace(/\D/g, ''))}
           className={inputClass}
         />
         <label className="flex items-start gap-2 mt-1 cursor-pointer">
@@ -87,7 +87,7 @@ export function ParentForm({ value, onChange }: Props) {
               type="text"
               placeholder="예) 김민수"
               value={child.nameKo}
-              onChange={(e) => setChild(index, { nameKo: e.target.value })}
+              onChange={(e) => setChild(index, { nameKo: e.target.value.replace(/\s/g, '') })}
               className={`${inputBaseClass} flex-1 min-w-0`}
             />
             <select
