@@ -87,7 +87,9 @@ export function toStudentManageTableRow(r: StudentListResponse): StudentManageTa
     r.recentScore != null && r.recentScoreTotal != null
       ? { score: r.recentScore, total: r.recentScoreTotal }
       : null;
-  const accuracy = r.acr != null ? `${Math.round(r.acr * 100)}%` : undefined;
+  // acr은 서버가 0~100 퍼센트 값으로 내려준다 (0~1 비율이 아님) — × 100 하지 않는다.
+  // 소수 첫째 자리까지 표시, 불필요한 .0은 제거 (예: 87.6% / 87%).
+  const accuracy = r.acr != null ? `${+r.acr.toFixed(1)}%` : undefined;
 
   return {
     id: r.studentId!,

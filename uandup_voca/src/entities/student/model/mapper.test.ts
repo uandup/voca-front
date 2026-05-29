@@ -50,8 +50,9 @@ describe('englishName 파싱 — toStudentPickerRow / toStudentManageTableRow / 
 // ── toStudentManageTableRow ─────────────────────────────────────────────────
 
 describe('toStudentManageTableRow', () => {
-  it('acr이 0~1 사이 비율이면 백분율 문자열로 변환된다 (0.87 → "87%")', () => {
-    const row = toStudentManageTableRow({ studentId: 1, acr: 0.87 });
+  it('acr이 0~100 퍼센트 값이면 백분율 문자열로 변환된다 (87 → "87%")', () => {
+    // 서버는 acr을 0~1 비율이 아닌 0~100 퍼센트 값으로 내려준다.
+    const row = toStudentManageTableRow({ studentId: 1, acr: 87 });
     expect(row.accuracy).toBe('87%');
   });
 
@@ -62,12 +63,13 @@ describe('toStudentManageTableRow', () => {
     ).toBeUndefined();
   });
 
-  it('acr 100% 정확히 (1.0 → "100%")', () => {
-    expect(toStudentManageTableRow({ studentId: 1, acr: 1.0 }).accuracy).toBe('100%');
+  it('acr 100% 정확히 (100 → "100%")', () => {
+    expect(toStudentManageTableRow({ studentId: 1, acr: 100 }).accuracy).toBe('100%');
   });
 
-  it('acr 반올림 (0.876 → "88%")', () => {
-    expect(toStudentManageTableRow({ studentId: 1, acr: 0.876 }).accuracy).toBe('88%');
+  it('acr 소수 첫째 자리까지 표시 (87.6 → "87.6%"), 정수면 소수점 없음 (87 → "87%")', () => {
+    expect(toStudentManageTableRow({ studentId: 1, acr: 87.6 }).accuracy).toBe('87.6%');
+    expect(toStudentManageTableRow({ studentId: 1, acr: 87 }).accuracy).toBe('87%');
   });
 
   it('recentScore가 부분 정보만 있으면 null 처리 (score는 있고 total은 없음)', () => {
