@@ -364,6 +364,12 @@ function toChartDateLabel(iso: string): string {
   return `${month}.${day}`;
 }
 
+// 서버 날짜 'YYYY-MM-DD' → 월 라벨 'yy.mm' (예: '2026-05' → '26.05').
+function toMonthLabel(iso: string): string {
+  const [year = '2000', month = '01'] = iso.split('-');
+  return `${year.slice(2)}.${month}`;
+}
+
 function toExamScoreDetail(p: ExamScorePointDto): ExamScoreDetail {
   return {
     examId: p.examId ?? 0,
@@ -378,12 +384,23 @@ function toExamScoreDetail(p: ExamScorePointDto): ExamScoreDetail {
   };
 }
 
-// WORD·EXAMPLE: 시험 1건이 곧 차트 지점 1개.
-function toSingleExamPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
+// WORD·EXAMPLE: 날짜별 dateIndex를 부여해 같은 날 시험이 같은 x 위치에 표시되도록 한다.
+// 각 시험은 개별 점으로 유지(집계하지 않음) — fail 점은 빨간 단독 점, pass 점끼리만 선 연결.
+// 응답은 createdAt ASC이므로 Map 삽입 순서가 날짜 오름차순을 보장한다.
+function toGroupedExamPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
+  const dateToIndex = new Map<string, number>();
+  for (const p of points) {
+    const date = p.date ?? '';
+    if (!dateToIndex.has(date)) {
+      dateToIndex.set(date, dateToIndex.size);
+    }
+  }
   return points.map((p) => {
     const detail = toExamScoreDetail(p);
+    const date = p.date ?? '';
     return {
-      date: toChartDateLabel(p.date ?? ''),
+      date: toChartDateLabel(date),
+      dateIndex: dateToIndex.get(date) ?? 0,
       score: detail.accuracy,
       isPassed: detail.isPassed,
       exams: [detail],
@@ -401,8 +418,10 @@ function toAveragedReviewPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
     list.push(toExamScoreDetail(p));
     byDate.set(date, list);
   }
+  let dateIndex = 0;
   return [...byDate.entries()].map(([date, exams]) => ({
     date: toChartDateLabel(date),
+    dateIndex: dateIndex++,
     score: Math.round(exams.reduce((sum, e) => sum + e.accuracy, 0) / exams.length),
     // 그날 시험이 모두 합격일 때만 합격 색으로 표시한다.
     isPassed: exams.every((e) => e.isPassed),
@@ -410,16 +429,28 @@ function toAveragedReviewPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
   }));
 }
 
-function toLearnedCountPoint(c: DailyCountDto): LearnedCountPoint {
-  return { date: toChartDateLabel(c.date ?? ''), count: c.count ?? 0 };
+// LearnedWords: 일별 count를 월별로 합산한다. x축 라벨은 'May'처럼 월 이름만 표시.
+// 서버 응답이 날짜 ASC이면 Map 삽입 순서가 월 오름차순을 보장한다.
+function toMonthlyLearnedCounts(points: DailyCountDto[]): LearnedCountPoint[] {
+  const byMonth = new Map<string, number>();
+  for (const p of points) {
+    const iso = p.date ?? '';
+    const monthKey = iso.substring(0, 7); // 'YYYY-MM'
+    byMonth.set(monthKey, (byMonth.get(monthKey) ?? 0) + (p.count ?? 0));
+  }
+  return [...byMonth.entries()].map(([monthKey, count]) => ({
+    date: toMonthLabel(monthKey),
+    count,
+  }));
 }
 
 export function toStudentDashboardCharts(r: DashboardChartResponse): StudentDashboardCharts {
   return {
-    wordScores: toSingleExamPoints(r.wordExamScores ?? []),
-    exampleScores: toSingleExamPoints(r.exampleExamScores ?? []),
+    wordScores: toGroupedExamPoints(r.wordExamScores ?? []),
+    exampleScores: toGroupedExamPoints(r.exampleExamScores ?? []),
     reviewScores: toAveragedReviewPoints(r.reviewExamScores ?? []),
-    dailyLearnedCounts: (r.dailyLearnedCounts ?? []).map(toLearnedCountPoint),
+    // 일별 데이터를 월별로 집계해 x축 밀도를 줄이고 트렌드를 보기 쉽게 한다.
+    dailyLearnedCounts: toMonthlyLearnedCounts(r.dailyLearnedCounts ?? []),
   };
 }
 

@@ -151,6 +151,7 @@ describe('toTestBundleRow (teacher 시점)', () => {
         completedAt: null,
         correctCount: 10,
         totalCount: 10,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('passed');
@@ -169,6 +170,7 @@ describe('toTestBundleRow (teacher 시점)', () => {
         completedAt: null,
         correctCount: 5,
         totalCount: 10,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('fail');
@@ -186,6 +188,7 @@ describe('toTestBundleRow (teacher 시점)', () => {
         completedAt: null,
         correctCount: null,
         totalCount: null,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('active');
@@ -203,6 +206,7 @@ describe('toTestBundleRow (teacher 시점)', () => {
           completedAt: null,
           correctCount: null,
           totalCount: null,
+          scheduledDate: null,
         },
       });
       expect(row.steps[0].status).toBe('grading');
@@ -236,6 +240,7 @@ describe('toStudentTestBundleRow (student 시점)', () => {
         completedAt: null,
         correctCount: null,
         totalCount: null,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('pending');
@@ -252,6 +257,7 @@ describe('toStudentTestBundleRow (student 시점)', () => {
         completedAt: null,
         correctCount: null,
         totalCount: null,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('active');
@@ -268,6 +274,7 @@ describe('toStudentTestBundleRow (student 시점)', () => {
         completedAt: null,
         correctCount: null,
         totalCount: null,
+        scheduledDate: null,
       },
     });
     expect(row.steps[0].status).toBe('grading');

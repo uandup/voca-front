@@ -189,13 +189,16 @@ export interface ExamScoreDetail {
   isPassed: boolean;
 }
 
-/** 시험 점수 추이 차트의 한 지점. REVIEW는 같은 날 시험들이 한 지점으로 합쳐진다. */
+/** 시험 점수 추이 차트의 한 지점. */
 export interface ExamScorePoint {
   // x축 라벨 'MM.DD'.
   date: string;
-  // y값 0~100. REVIEW는 같은 날 시험들의 평균.
+  // x축 슬롯 인덱스. WORD·EXAMPLE은 같은 날 시험들이 이 값을 공유해 같은 x 위치에 표시된다.
+  // REVIEW는 날짜별 집계이므로 각 지점이 고유한 dateIndex를 가진다.
+  dateIndex: number;
+  // y값 0~100.
   score: number;
-  // dot 색상용. REVIEW는 그날 시험이 모두 합격일 때만 true.
+  // dot 색상용. false → 빨간 단독 점(선 미연결). true → primary 점(인접 pass끼리만 선 연결).
   isPassed: boolean;
   // 툴팁 상세 — WORD·EXAMPLE은 1건, REVIEW는 같은 날 여러 건.
   exams: ExamScoreDetail[];
