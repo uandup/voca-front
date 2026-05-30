@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
 import { ITEMS_PER_PAGE, type ExamType, type WordTestType } from '@/entities/test';
+import { AlertDialog } from '@/shared/ui/Modal';
 import {
   TestPagination,
   ProgressPanel,
@@ -47,6 +48,7 @@ export default function ExamReviewPage() {
   const [isEditing, setIsEditing] = useState(false);
   // 합격 여부는 선생님이 명시적으로 선택. 채점 완료된 시험으로 재진입 시 기존 값으로 초기화.
   const [outcome, setOutcome] = useState<'pass' | 'fail'>('pass');
+  const [showGradingSuccess, setShowGradingSuccess] = useState(false);
 
   // examDetail 로드 시 초기 상태 동기화 — 이미 채점된 시험이면 result 모드 + 기존 오답/합격 표시.
   // wrongIds는 itemOrder를 키로 추적한다(row id와 일치). 채점 mutation을 보낼 땐 examItemId로 다시 매핑.
@@ -96,6 +98,7 @@ export default function ExamReviewPage() {
         onSuccess: () => {
           setMode('result');
           setIsEditing(false);
+          setShowGradingSuccess(true);
         },
       },
     );
@@ -291,6 +294,16 @@ export default function ExamReviewPage() {
           onQuestionClick={setCurrentPage}
         />
       </div>
+
+      {/* 채점 완료 알림 — 점수와 합격 여부를 한눈에 확인한다. */}
+      {showGradingSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Grading Complete!"
+          description={`${correctCount} / ${totalItems} correct · ${outcome === 'pass' ? 'Passed' : 'Failed'}`}
+          onClose={() => setShowGradingSuccess(false)}
+        />
+      )}
     </div>
   );
 }
