@@ -41,6 +41,8 @@ export function toReviewDeckWord(r: WrongBankWordResponse): ReviewDeckWord {
     engMeaning: r.englishMeaning ?? '',
     difficulty: (r.difficulty ?? 1) as WordDifficultyLevel,
     synonyms: r.synonyms ?? [],
+    satPriority: 0,
+    examTags: [],
     wrongCount: r.wrongCount ?? 0,
     lastWrongAt: r.lastWrongAt ?? '',
     sentence: r.example ?? '',

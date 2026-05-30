@@ -735,7 +735,7 @@ export interface paths {
         };
         /**
          * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true).
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true).
          */
         get: operations["getAssignedWords"];
         put?: never;
@@ -2072,7 +2072,7 @@ export interface components {
         /** @description 배정 단어 목록 + 예문 공개 여부 */
         StudySetWordsResponse: {
             /**
-             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 채점 완료 후 true, WRONG_BANK·LEVEL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
+             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
              * @example false
              */
             exampleVisible?: boolean;
@@ -2114,6 +2114,17 @@ export interface components {
             synonyms?: string[];
             /** @description 예문 */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
             /**
              * Format: int32
              * @description 누적 오답 횟수 — resolve 후에도 유지됨
@@ -2645,18 +2656,18 @@ export interface components {
              */
             scheduledDate?: string;
         };
-        /** @description 시험 타입별 현황 */
+        /** @description 시험 타입별 시도 이력. 각 필드는 해당 타입의 모든 시도를 최신순으로 담은 배열 (취소 제외, 없으면 빈 배열) */
         ExamsByType: {
-            /** @description 단어 시험 */
-            word?: components["schemas"]["ExamSummaryDto"];
-            /** @description 예문 시험 */
-            example?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습1 시험 */
-            review1?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습2 시험 */
-            review2?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습3 시험 */
-            review3?: components["schemas"]["ExamSummaryDto"];
+            /** @description 단어 시험 시도 이력 (최신순) */
+            word?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 예문 시험 시도 이력 (최신순) */
+            example?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습1 시험 시도 이력 (최신순) */
+            review1?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습2 시험 시도 이력 (최신순) */
+            review2?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습3 시험 시도 이력 (최신순) */
+            review3?: components["schemas"]["ExamSummaryDto"][];
         };
         /** @description 레벨별 단어 개수 */
         LevelCount: {
@@ -2695,7 +2706,7 @@ export interface components {
              * @example 2026-04-01
              */
             assignedDate?: string;
-            /** @description 단어·예문·복습 시험 현황. 생성되지 않았거나 취소된 시험은 null */
+            /** @description 단어·예문·복습 시험 시도 이력. 각 타입은 시도 배열(최신순)이며, 시험이 없거나 모두 취소되면 빈 배열 */
             exams?: components["schemas"]["ExamsByType"];
         };
         ApiResponseAssignmentSettingsResponse: {
