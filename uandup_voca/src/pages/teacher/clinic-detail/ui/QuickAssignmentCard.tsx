@@ -151,7 +151,7 @@ export function QuickAssignmentCard({ studentId, studySets }: Props) {
               )}
               <button
                 onClick={isEditing ? applyEdit : startEditing}
-                disabled={updateSettings.isPending}
+                disabled={updateSettings.isPending || (isEditing && displayQty === 0)}
                 className="w-16 py-3 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isEditing ? 'Apply' : 'Edit'}
@@ -163,9 +163,14 @@ export function QuickAssignmentCard({ studentId, studySets }: Props) {
             <p className="text-xs py-2 text-error">Please apply your changes before assigning.</p>
           )}
 
+          {/* qty가 0이면 편집/배정 모두 불가 — 이유를 표시해 사용자가 직접 수정할 수 있게 한다. */}
+          {displayQty === 0 && (
+            <p className="text-xs py-2 text-error">Qty must be at least 1 to assign.</p>
+          )}
+
           <button
             onClick={handleAssign}
-            disabled={assign.isPending}
+            disabled={assign.isPending || displayQty === 0}
             className="w-full bg-primary text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition-opacity mt-auto pt-5 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             Assign New Words
