@@ -43,14 +43,7 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
               {words.map((word) => (
                 <WordCard
                   key={word.id}
-                  id={word.id}
-                  difficulty={word.difficulty}
-                  word={word.word}
-                  partsOfSpeech={word.partsOfSpeech}
-                  korMeaning={word.korMeaning}
-                  engMeaning={word.engMeaning}
-                  synonyms={word.synonyms}
-                  sentence={word.sentence}
+                  {...word}
                   showSentence
                   extraInfo={
                     <div className="flex flex-col items-center justify-center px-3 py-2 bg-error/5 border border-error/20 rounded-lg">
