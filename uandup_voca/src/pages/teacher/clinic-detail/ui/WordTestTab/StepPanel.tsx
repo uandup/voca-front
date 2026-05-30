@@ -88,6 +88,8 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
       {phase === 'pending' && (
         <PendingPanel
           isEditing={isConfigEditing}
+          // 저장된 Quantity가 0이면 Generate Test 자체를 막는다.
+          testQtyIsZero={initialConfig.testQty === 0}
           create={create}
           onCreateSuccess={() => setShowCreateSuccess(true)}
         />

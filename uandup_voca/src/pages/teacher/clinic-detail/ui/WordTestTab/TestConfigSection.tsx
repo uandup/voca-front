@@ -138,13 +138,20 @@ export function TestConfigSection({
           {showEditButton && (
             <button
               onClick={handleToggleEdit}
-              className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+              // 편집 중일 때 Quantity가 0이면 Apply 불가 — 0문항 시험 생성을 원천 차단.
+              disabled={isEditing && config.testQty === 0}
+              className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isEditing ? 'Apply' : 'Edit'}
             </button>
           )}
         </div>
       </div>
+
+      {/* Quantity가 0이면 이유를 표시한다 — 버튼만 막으면 사용자가 이유를 모른다. */}
+      {isEditing && config.testQty === 0 && (
+        <p className="text-xs text-error -mt-1">Quantity must be at least 1.</p>
+      )}
     </div>
   );
 }

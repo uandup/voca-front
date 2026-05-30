@@ -75,7 +75,8 @@ export function WrongWordBankTab({ studentId }: Props) {
 
   const { create, startOnline, cancel } = useReviewDeckExamActions({ studentId, currentExamId });
 
-  const generateDisabled = activeRow !== null || count === 0 || create.isPending;
+  const qtyIsZero = Number(config.qty) === 0;
+  const generateDisabled = activeRow !== null || count === 0 || qtyIsZero || create.isPending;
 
   function handleGenerate() {
     create.mutate(
@@ -192,6 +193,10 @@ export function WrongWordBankTab({ studentId }: Props) {
               )}
               {!activeRow && count === 0 && (
                 <p className="text-xs text-on-surface-variant">No incorrect words to test yet.</p>
+              )}
+              {/* Quantity가 0이면 시험 생성 불가 */}
+              {!activeRow && count > 0 && qtyIsZero && (
+                <p className="text-xs text-error">Quantity must be at least 1.</p>
               )}
               <button
                 onClick={handleGenerate}

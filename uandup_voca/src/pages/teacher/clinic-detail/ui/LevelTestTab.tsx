@@ -74,7 +74,10 @@ export function LevelTestTab({ studentId }: Props) {
 
   const { create, startOnline, cancel } = useLevelTestExamActions({ studentId, currentExamId });
 
-  const generateDisabled = activeRow !== null || create.isPending;
+  const assignmentCountIsZero = Number(config.assignmentCount) === 0;
+  const questionCountIsZero = Number(config.questionCount) === 0;
+  const generateDisabled =
+    activeRow !== null || assignmentCountIsZero || questionCountIsZero || create.isPending;
 
   function handleGenerate() {
     create.mutate(
@@ -205,6 +208,13 @@ export function LevelTestTab({ studentId }: Props) {
                 <p className="text-xs text-error">
                   An active test exists. Cancel or finish it before generating.
                 </p>
+              )}
+              {/* Assignment / Question Quantity가 0이면 시험 생성 불가 */}
+              {!activeRow && assignmentCountIsZero && (
+                <p className="text-xs text-error">Assignment Quantity must be at least 1.</p>
+              )}
+              {!activeRow && !assignmentCountIsZero && questionCountIsZero && (
+                <p className="text-xs text-error">Question Quantity must be at least 1.</p>
               )}
               <button
                 onClick={handleGenerate}
