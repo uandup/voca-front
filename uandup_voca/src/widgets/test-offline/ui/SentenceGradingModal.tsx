@@ -4,7 +4,6 @@ import { PrintSheetHeader } from './PrintSheetHeader';
 import type { ESRow } from '@/entities/test';
 
 const PAGE_SIZE = 20;
-const ROW_HEIGHT_MM = 235 / PAGE_SIZE;
 const ANSWER_COL_WIDTH = '110px';
 
 interface SentenceGradingModalProps {
@@ -32,18 +31,19 @@ function SentenceGradingSheet({
       className="bg-white border border-black shadow-2xl flex flex-col"
       style={{
         width: '210mm',
-        height: '297mm',
+        // 예문 row 높이 가변 — minHeight로 A4 최소 보장, 내용 초과 시 자연 확장.
+        minHeight: '297mm',
         padding: '10mm 10mm',
         ...(hidden ? { position: 'absolute', left: '-9999px', top: 0, visibility: 'hidden' } : {}),
       }}
     >
       <PrintSheetHeader />
-      <section className="grow" style={{ overflow: 'hidden' }}>
+      {/* 예문 길이가 가변 — overflow: visible로 row 잘림 없이 자연 확장. */}
+      <section className="grow" style={{ overflow: 'visible' }}>
         <table
           className="w-full"
           style={{
             borderCollapse: 'collapse',
-            height: `${pageRows.length * ROW_HEIGHT_MM}mm`,
             tableLayout: 'fixed',
           }}
         >
@@ -83,7 +83,6 @@ function SentenceGradingSheet({
                 <tr
                   key={rowNo}
                   style={{
-                    height: `${ROW_HEIGHT_MM}mm`,
                     backgroundColor: checked[idx] ? '#fff5f5' : undefined,
                   }}
                 >

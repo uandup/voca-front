@@ -94,3 +94,57 @@ export function printAllSheets(sheetIds: string[], title?: string): void {
   if (!pagesHtml) return;
   triggerPrint(buildPrintHtml(pagesHtml, title));
 }
+
+// 예문 시험처럼 row 높이가 가변인 경우에 사용한다.
+// 고정 높이 대신 row 단위 break-inside: avoid를 적용해 행이 페이지 경계에서 잘리지 않게 한다.
+// overflow: hidden을 제거하므로 내용이 A4를 넘어도 다음 물리적 인쇄 페이지로 이어진다.
+function buildFlowingPrintHtml(sheetHtml: string, title = 'VOCAB TEST'): string {
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    <title>${title}</title>
+    ${collectAppStyles()}
+    <style>
+      @page { size: A4; margin: 10mm 10mm; }
+      body { margin: 0; padding: 0; background: white; }
+      main, [id$="-print-sheet"] {
+        width: 100% !important;
+        height: auto !important;
+        min-height: unset !important;
+        box-shadow: none !important;
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .print-page {
+        width: 100%;
+        page-break-after: always;
+        break-after: page;
+        overflow: visible;
+        box-sizing: border-box;
+      }
+      .print-page:last-child {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+      tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    </style>
+  </head>
+  <body>${sheetHtml}</body>
+</html>`;
+}
+
+/** 예문 시험 출력 — row 높이가 가변이므로 overflow 클리핑 없이 row 단위로 page-break 처리 */
+export function printAllSheetsFlowing(sheetIds: string[], title?: string): void {
+  const pagesHtml = sheetIds
+    .map((id) => document.getElementById(id)?.innerHTML)
+    .filter(Boolean)
+    .map((html) => `<div class="print-page">${html}</div>`)
+    .join('');
+
+  if (!pagesHtml) return;
+  triggerPrint(buildFlowingPrintHtml(pagesHtml, title));
+}
