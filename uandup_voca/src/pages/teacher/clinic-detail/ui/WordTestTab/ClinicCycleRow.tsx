@@ -12,13 +12,7 @@ interface Props extends TestBundleRow {
   studentId: number;
 }
 
-export default function ClinicCycleRow({
-  levels,
-  wordCount,
-  steps,
-  studySetId,
-  studentId,
-}: Props) {
+export default function ClinicCycleRow({ levels, wordCount, steps, studySetId, studentId }: Props) {
   // URL의 openSet/openStep을 단일 진실로 사용한다.
   // Preview/Grade Online 페이지 이동 후 돌아와도 같은 step이 다시 열리도록 한다.
   const search = useSearch({ from: '/teacher/clinics_/students/$studentId' });

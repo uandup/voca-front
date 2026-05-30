@@ -12,11 +12,19 @@ interface Props {
   isEditing: boolean;
   // 저장된 Quantity가 0이면 Generate Test 자체를 막는다 — 0문항 시험 생성 방지.
   testQtyIsZero: boolean;
+  // 저장된 Quantity가 배정 단어 수를 초과하면 Generate Test를 막는다.
+  testQtyExceedsMax: boolean;
   create: UseMutationResult<unknown, Error, void>;
   onCreateSuccess: () => void;
 }
 
-export function PendingPanel({ isEditing, testQtyIsZero, create, onCreateSuccess }: Props) {
+export function PendingPanel({
+  isEditing,
+  testQtyIsZero,
+  testQtyExceedsMax,
+  create,
+  onCreateSuccess,
+}: Props) {
   function handleGenerate() {
     create.mutate(undefined, {
       onSuccess: () => onCreateSuccess(),
@@ -26,7 +34,7 @@ export function PendingPanel({ isEditing, testQtyIsZero, create, onCreateSuccess
   return (
     <div className="flex items-center gap-3">
       <button
-        disabled={isEditing || testQtyIsZero || create.isPending}
+        disabled={isEditing || testQtyIsZero || testQtyExceedsMax || create.isPending}
         onClick={handleGenerate}
         className="px-5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-primary/20 disabled:opacity-40 disabled:cursor-not-allowed"
       >
@@ -37,6 +45,9 @@ export function PendingPanel({ isEditing, testQtyIsZero, create, onCreateSuccess
       )}
       {!isEditing && testQtyIsZero && (
         <p className="text-xs text-error">Quantity must be at least 1 to generate a test.</p>
+      )}
+      {!isEditing && !testQtyIsZero && testQtyExceedsMax && (
+        <p className="text-xs text-error">Quantity exceeds the assigned word count.</p>
       )}
     </div>
   );

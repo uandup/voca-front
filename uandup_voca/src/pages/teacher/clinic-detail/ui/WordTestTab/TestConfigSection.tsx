@@ -19,6 +19,8 @@ interface Props {
   showEditButton: boolean;
   // 편집 모드 전환을 상위에 알린다 — Generate Test 같은 다른 액션을 잠그는 용도.
   onEditingChange?: (editing: boolean) => void;
+  // 시험 문항 수의 상한 — 배정 단어 수를 초과할 수 없다.
+  maxQty?: number;
 }
 
 const TEST_TYPE_OPTIONS: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -28,6 +30,7 @@ export function TestConfigSection({
   initialConfig,
   showEditButton,
   onEditingChange,
+  maxQty,
 }: Props) {
   const [config, setConfig] = useState<ExamConfig>(initialConfig);
   const [isEditing, setIsEditing] = useState(false);
@@ -138,8 +141,11 @@ export function TestConfigSection({
           {showEditButton && (
             <button
               onClick={handleToggleEdit}
-              // 편집 중일 때 Quantity가 0이면 Apply 불가 — 0문항 시험 생성을 원천 차단.
-              disabled={isEditing && config.testQty === 0}
+              // 편집 중일 때 Quantity가 0이거나 배정 단어 수를 초과하면 Apply 불가.
+              disabled={
+                isEditing &&
+                (config.testQty === 0 || (maxQty != null && config.testQty > maxQty))
+              }
               className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isEditing ? 'Apply' : 'Edit'}
@@ -148,9 +154,14 @@ export function TestConfigSection({
         </div>
       </div>
 
-      {/* Quantity가 0이면 이유를 표시한다 — 버튼만 막으면 사용자가 이유를 모른다. */}
+      {/* 편집 중 유효성 에러 — 버튼만 막으면 사용자가 이유를 모른다. */}
       {isEditing && config.testQty === 0 && (
         <p className="text-xs text-error -mt-1">Quantity must be at least 1.</p>
+      )}
+      {isEditing && maxQty != null && config.testQty > maxQty && config.testQty !== 0 && (
+        <p className="text-xs text-error -mt-1">
+          Quantity cannot exceed the assigned word count ({maxQty}).
+        </p>
       )}
     </div>
   );

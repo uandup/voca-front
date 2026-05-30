@@ -111,8 +111,7 @@ export function toStudentManageTableRow(r: StudentListResponse): StudentManageTa
 
 // ── Clinic Detail mappers ────────────────────────────────────────────────────
 
-function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | null {
-  if (!dto) return null;
+function toExamSummary(dto: ExamSummaryDto): ExamSummary {
   return {
     examId: dto.examId!,
     status: (dto.status ?? 'READY') as ExamStatus,
@@ -130,7 +129,8 @@ function toExamSummary(dto: ExamSummaryDto | null | undefined): ExamSummary | nu
 //   ONLINE_STARTED   → 'grading' (응시·채점 흐름 진입 가능)
 //   SUBMITTED        → 'grading' (채점 대기)
 //   COMPLETED        → 'passed' / 'fail'
-function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
+// exams[0]이 가장 최근 시도. retakeCount = 이전 시도 수(= exams.length - 1).
+function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
   if (isLocked) {
     return {
       name: 'Word',
@@ -143,6 +143,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
       scheduledDate: null,
     };
   }
+  const exam = exams[0] ?? null;
   if (!exam) {
     return {
       name: 'Word',
@@ -170,7 +171,7 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
     createdAt: createdAt ?? null,
     lastScore: correctCount ?? null,
     maxScore: totalCount ?? null,
-    retakeCount: 0,
+    retakeCount: exams.length - 1,
     examId,
     scheduledDate: scheduledDate ?? null,
   };
@@ -182,7 +183,8 @@ function toStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
 //   SUBMITTED        → 'grading' (채점 대기)
 //   COMPLETED        → 'passed' / 'fail'
 // teacher 매퍼와 의미가 갈리는 지점은 READY / ONLINE_STARTED 뿐.
-function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepCardVM {
+// exams[0]이 가장 최근 시도. retakeCount = 이전 시도 수(= exams.length - 1).
+function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
   if (isLocked) {
     return {
       name: 'Word',
@@ -195,6 +197,7 @@ function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepC
       scheduledDate: null,
     };
   }
+  const exam = exams[0] ?? null;
   if (!exam) {
     return {
       name: 'Word',
@@ -225,7 +228,7 @@ function toStudentStepCardVM(exam: ExamSummary | null, isLocked: boolean): StepC
     createdAt: createdAt ?? null,
     lastScore: correctCount ?? null,
     maxScore: totalCount ?? null,
-    retakeCount: 0,
+    retakeCount: exams.length - 1,
     examId,
     scheduledDate: scheduledDate ?? null,
   };
@@ -266,11 +269,11 @@ export function toStudySetRow(r: StudySetExamListResponse): StudySetRow {
     levels: (r.levels ?? []).map(toLevelCount),
     wordCount: r.wordCount ?? 0,
     assignedDate: r.assignedDate ?? '',
-    word: toExamSummary(r.exams?.word),
-    example: toExamSummary(r.exams?.example),
-    review1: toExamSummary(r.exams?.review1),
-    review2: toExamSummary(r.exams?.review2),
-    review3: toExamSummary(r.exams?.review3),
+    word: (r.exams?.word ?? []).map(toExamSummary),
+    example: (r.exams?.example ?? []).map(toExamSummary),
+    review1: (r.exams?.review1 ?? []).map(toExamSummary),
+    review2: (r.exams?.review2 ?? []).map(toExamSummary),
+    review3: (r.exams?.review3 ?? []).map(toExamSummary),
   };
 }
 

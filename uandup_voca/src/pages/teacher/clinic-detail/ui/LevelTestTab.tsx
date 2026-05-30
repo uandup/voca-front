@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
 import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
@@ -76,8 +76,16 @@ export function LevelTestTab({ studentId }: Props) {
 
   const assignmentCountIsZero = Number(config.assignmentCount) === 0;
   const questionCountIsZero = Number(config.questionCount) === 0;
+  const questionExceedsAssignment =
+    !assignmentCountIsZero &&
+    !questionCountIsZero &&
+    Number(config.questionCount) > Number(config.assignmentCount);
   const generateDisabled =
-    activeRow !== null || assignmentCountIsZero || questionCountIsZero || create.isPending;
+    activeRow !== null ||
+    assignmentCountIsZero ||
+    questionCountIsZero ||
+    questionExceedsAssignment ||
+    create.isPending;
 
   function handleGenerate() {
     create.mutate(
@@ -209,12 +217,17 @@ export function LevelTestTab({ studentId }: Props) {
                   An active test exists. Cancel or finish it before generating.
                 </p>
               )}
-              {/* Assignment / Question Quantity가 0이면 시험 생성 불가 */}
+              {/* Assignment / Question Quantity 유효성 검사 */}
               {!activeRow && assignmentCountIsZero && (
                 <p className="text-xs text-error">Assignment Quantity must be at least 1.</p>
               )}
               {!activeRow && !assignmentCountIsZero && questionCountIsZero && (
                 <p className="text-xs text-error">Question Quantity must be at least 1.</p>
+              )}
+              {!activeRow && questionExceedsAssignment && (
+                <p className="text-xs text-error">
+                  Question Quantity cannot exceed Assignment Quantity ({config.assignmentCount}).
+                </p>
               )}
               <button
                 onClick={handleGenerate}
@@ -343,8 +356,9 @@ export function LevelTestTab({ studentId }: Props) {
       </TableContainer>
 
       {showCreateSuccess && (
-        <SuccessModal
-          message="Test Generated!"
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
           description="The test has been successfully created."
           onClose={() => setShowCreateSuccess(false)}
         />

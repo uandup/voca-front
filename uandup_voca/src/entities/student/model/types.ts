@@ -106,11 +106,12 @@ export interface StudySetRow {
   levels: LevelCount[];
   wordCount: number;
   assignedDate: string;
-  word: ExamSummary | null;
-  example: ExamSummary | null;
-  review1: ExamSummary | null;
-  review2: ExamSummary | null;
-  review3: ExamSummary | null;
+  // 최신순 시도 이력. 시험이 없으면 빈 배열. [0]이 가장 최근 시도.
+  word: ExamSummary[];
+  example: ExamSummary[];
+  review1: ExamSummary[];
+  review2: ExamSummary[];
+  review3: ExamSummary[];
 }
 
 /** EditStudentModal */
