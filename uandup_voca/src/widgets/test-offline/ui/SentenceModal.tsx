@@ -90,38 +90,34 @@ function SentenceSheet({
                     className="text-xs"
                     style={{ border: '1.5pt solid black', padding: '4px 12px' }}
                   >
+                    {/* preview / print 모두 문장 빈칸은 밑줄로만 표시.
+                        정답은 Answer 컬럼(아래)에 표시한다. */}
                     {parts[0]}
-                    {sentence &&
-                      (showAnswer ? (
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            minWidth: '100px',
-                            borderBottom: '1px solid black',
-                            margin: '0 2px',
-                            padding: '0 4px',
-                            textAlign: 'center',
-                            fontWeight: 600,
-                            color: '#1d4ed8',
-                            verticalAlign: 'baseline',
-                          }}
-                        >
-                          {answer}
-                        </span>
-                      ) : (
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            minWidth: '100px',
-                            borderBottom: '1px solid black',
-                            margin: '0 2px',
-                            verticalAlign: 'baseline',
-                          }}
-                        />
-                      ))}
+                    {sentence && (
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          minWidth: '100px',
+                          borderBottom: '1px solid black',
+                          margin: '0 2px',
+                          verticalAlign: 'baseline',
+                        }}
+                      />
+                    )}
                     {parts[1]}
                   </td>
-                  <td style={{ border: '1.5pt solid black', padding: '4px 12px' }} />
+                  {/* preview 시 Answer 컬럼에 정답을 표시한다. print 시엔 학생이 직접 기입. */}
+                  <td
+                    style={{
+                      border: '1.5pt solid black',
+                      padding: '4px 12px',
+                      fontSize: '11px',
+                      fontWeight: showAnswer ? 600 : undefined,
+                      color: showAnswer ? '#1d4ed8' : undefined,
+                    }}
+                  >
+                    {showAnswer ? answer : null}
+                  </td>
                 </tr>
               );
             })}
