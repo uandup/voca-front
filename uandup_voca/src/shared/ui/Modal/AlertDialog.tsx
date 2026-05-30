@@ -65,7 +65,7 @@ export function AlertDialog({
     <Modal onClose={onClose} closeOnBackdrop={false}>
       <div className="bg-surface rounded-2xl shadow-xl w-full max-w-sm px-6 py-6 flex flex-col items-center gap-4 text-center">
         {/* 상태 아이콘 */}
-        <div className={`rounded-full p-3 ${bgColor}`}>
+        <div className={`leading-none rounded-full p-3 ${bgColor}`}>
           <span
             className={`material-symbols-outlined ${iconColor}`}
             style={{ fontSize: '32px', fontVariationSettings: "'FILL' 1" }}
