@@ -139,24 +139,7 @@ export function FailPanel({
           View Results
         </button>
         */}
-        <div className="ml-auto">
-          <button
-            onClick={goReview}
-            disabled={currentExamId === null}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Grade
-          </button>
-          {/* 통합 이전 modal 기반 채점 — 보존용 주석. */}
-          {/*
-          <button
-            onClick={() => setShowGrading(true)}
-            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
-          >
-            Grade
-          </button>
-          */}
-        </div>
+        {/* fail 단계는 채점이 이미 완료된 상태 — Grade 버튼 숨김. View Results로만 확인 가능. */}
       </div>
 
       {/*
