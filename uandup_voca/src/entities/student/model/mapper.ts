@@ -136,6 +136,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       name: 'Word',
       status: 'locked',
       createdAt: null,
+      completedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -149,6 +150,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       name: 'Word',
       status: 'pending',
       createdAt: null,
+      completedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -156,7 +158,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, correctCount, totalCount, scheduledDate } = exam;
+  const { examId, status, isPassed, createdAt, completedAt, correctCount, totalCount, scheduledDate } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -169,6 +171,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     name: 'Word',
     status: stepStatus,
     createdAt: createdAt ?? null,
+    completedAt: completedAt ?? null,
     lastScore: correctCount ?? null,
     maxScore: totalCount ?? null,
     retakeCount: exams.length - 1,
@@ -190,6 +193,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       name: 'Word',
       status: 'locked',
       createdAt: null,
+      completedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -203,6 +207,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       name: 'Word',
       status: 'pending',
       createdAt: null,
+      completedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -210,7 +215,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, correctCount, totalCount, scheduledDate } = exam;
+  const { examId, status, isPassed, createdAt, completedAt, correctCount, totalCount, scheduledDate } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -222,12 +227,18 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     // READY 등 — 선생님이 시작 안 한 상태.
     stepStatus = 'pending';
   }
+
+  // active/grading/pending 상태이면 현재 시험엔 점수가 없다.
+  // 이전 fail 시도가 있으면 가장 최근 완료 시험에서 점수·completedAt을 가져와 표시한다.
+  const lastCompleted = status !== 'COMPLETED' ? (exams.find((e) => e.status === 'COMPLETED') ?? null) : null;
+
   return {
     name: 'Word',
     status: stepStatus,
     createdAt: createdAt ?? null,
-    lastScore: correctCount ?? null,
-    maxScore: totalCount ?? null,
+    completedAt: lastCompleted ? (lastCompleted.completedAt ?? null) : (completedAt ?? null),
+    lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
+    maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
     retakeCount: exams.length - 1,
     examId,
     scheduledDate: scheduledDate ?? null,

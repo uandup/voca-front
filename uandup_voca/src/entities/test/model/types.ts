@@ -28,6 +28,8 @@ export interface StepCardVM {
   name: TestStepName;
   status: StepStatus;
   createdAt: string | null;
+  // 채점 완료 일시. 학생 StepCard의 "Graded At" 표시에 사용. null이면 표시 안 함.
+  completedAt: string | null;
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;

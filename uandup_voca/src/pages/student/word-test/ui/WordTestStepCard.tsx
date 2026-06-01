@@ -28,7 +28,7 @@ export default function WordTestStepCard({ step, onAction }: StepCardProps) {
     name,
     lastScore,
     maxScore: totalScore,
-    createdAt: gradedDate,
+    completedAt,
     retakeCount,
     scheduledDate,
   } = step;
@@ -47,9 +47,11 @@ export default function WordTestStepCard({ step, onAction }: StepCardProps) {
         )}
       </div>
 
-      <span className="text-xs text-on-surface-variant">Graded At {gradedDate ?? ''}</span>
+      {completedAt && (
+        <span className="text-xs text-on-surface-variant">Graded At {completedAt}</span>
+      )}
 
-      {(status === 'fail' || status === 'passed') && lastScore && (
+      {lastScore !== null && (
         <div className="flex items-baseline gap-1.5">
           <span
             className={`text-sm font-bold ${status === 'passed' ? 'text-success' : 'text-error'}`}
