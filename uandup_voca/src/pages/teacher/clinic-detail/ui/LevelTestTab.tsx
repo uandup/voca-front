@@ -278,10 +278,11 @@ export function LevelTestTab({ studentId }: Props) {
               ) : (
                 rows.map((row) => {
                   const active = isActive(row);
+                  // QTY 컬럼은 배정 단어 수(wordCount). Score 분모는 출제 문항 수(questionCount).
                   const scoreText =
                     row.correctCount !== null && row.totalCount !== null
                       ? `${row.correctCount}/${row.totalCount}`
-                      : `- / ${row.wordCount}`;
+                      : `- / ${row.questionCount}`;
                   const scoreClass = active
                     ? 'text-on-surface-variant/40'
                     : row.status === 'PASSED'

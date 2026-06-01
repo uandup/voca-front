@@ -34,7 +34,8 @@ export function toVocabReviewItems(items: ExamItem[]): VocabReviewItem[] {
     word: item.word,
     korMeaning: item.koreanMeaning,
     engMeaning: item.englishMeaning,
-    synonymAnswer: item.synonyms[0] ?? '',
+    // 정답 synonym은 복수 — 전부 ", "로 이어서 표시.
+    synonymAnswer: item.synonyms.join(', '),
   }));
 }
 

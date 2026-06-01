@@ -90,9 +90,10 @@ export default function WordTestStepCard({ step, onAction }: StepCardProps) {
           </button>
         )}
         {status === 'grading' && (
+          // 제출 완료 → 채점 대기 중. 클릭 시 제출 답안을 read-only로 확인할 수 있다.
           <button
-            disabled
-            className="w-full py-2.5 rounded-xl border border-outline/20 text-md font-medium"
+            onClick={onAction}
+            className="w-full py-2.5 rounded-xl border border-primary/30 text-primary text-md font-medium hover:bg-primary/5 transition-colors"
           >
             Awaiting Grading
           </button>

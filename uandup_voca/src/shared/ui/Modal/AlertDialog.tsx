@@ -78,7 +78,7 @@ export function AlertDialog({
         <div className="flex flex-col gap-1">
           <h2 className="text-base font-bold text-on-surface">{title}</h2>
           {description && (
-            <p className="text-sm text-on-surface-variant leading-relaxed">{description}</p>
+            <p className="text-sm text-on-surface-variant leading-relaxed whitespace-pre-line">{description}</p>
           )}
         </div>
 
