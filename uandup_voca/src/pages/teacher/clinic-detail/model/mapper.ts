@@ -1,6 +1,5 @@
-import type { StepCardVM, ExamItem, SentenceTestAnswer } from '@/entities/test';
+import type { StepCardVM, ExamItem, SentenceTestAnswer, ESRow } from '@/entities/test';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word';
-import type { ESRow } from '@/widgets/test-offline';
 import type { SentencePreviewItem } from '@/widgets/test-online';
 
 export type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
@@ -35,7 +34,8 @@ export function toVocabReviewItems(items: ExamItem[]): VocabReviewItem[] {
     word: item.word,
     korMeaning: item.koreanMeaning,
     engMeaning: item.englishMeaning,
-    synonymAnswer: item.synonyms[0] ?? '',
+    // 정답 synonym은 복수 — 전부 ", "로 이어서 표시.
+    synonymAnswer: item.synonyms.join(', '),
   }));
 }
 

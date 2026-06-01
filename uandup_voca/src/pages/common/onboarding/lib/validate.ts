@@ -9,5 +9,7 @@ export function isTeacherValid(f: TeacherFormState) {
 }
 
 export function isParentValid(f: ParentFormState) {
-  return !!(f.nameKo && f.phone && f.phoneConsent && f.childNameKo && f.childGrade);
+  // 자녀는 최소 1명, 모든 행이 이름·학년을 갖춰야 한다.
+  const childrenValid = f.children.length > 0 && f.children.every((c) => !!c.nameKo && !!c.grade);
+  return !!(f.nameKo && f.phone && f.phoneConsent && childrenValid);
 }

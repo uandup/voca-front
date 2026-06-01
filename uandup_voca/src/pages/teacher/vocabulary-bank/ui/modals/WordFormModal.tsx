@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
-import type { TeacherWord, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
-import { useWordActions } from '../../model/hooks/useWordActions';
+import type { WordCardData, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
+import { useWordActions } from '../../model/useWordActions';
 
-type WordFormData = Omit<TeacherWord, 'id'>;
+type WordFormData = Omit<WordCardData, 'id'>;
 
 interface WordFormModalProps {
   wordId?: number;
@@ -12,7 +12,7 @@ interface WordFormModalProps {
   onClose: () => void;
 }
 
-const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Conj'];
+const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Prep', 'Conj', 'Interj'];
 
 const DEFAULT_FORM: WordFormData = {
   word: '',
@@ -22,6 +22,8 @@ const DEFAULT_FORM: WordFormData = {
   engMeaning: '',
   synonyms: [],
   sentence: '',
+  satPriority: 0,
+  examTags: [],
 };
 
 export function WordFormModal({ wordId, initialData, onClose }: WordFormModalProps) {
@@ -30,6 +32,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
 
   const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
   const [synonymInput, setSynonymInput] = useState('');
+  const [examTagInput, setExamTagInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   function update<K extends keyof WordFormData>(key: K, value: WordFormData[K]) {
@@ -65,6 +68,21 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
     );
   }
 
+  function handleExamTagKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && examTagInput.trim()) {
+      e.preventDefault();
+      update('examTags', [...form.examTags, examTagInput.trim()]);
+      setExamTagInput('');
+    }
+  }
+
+  function removeExamTag(index: number) {
+    update(
+      'examTags',
+      form.examTags.filter((_, i) => i !== index),
+    );
+  }
+
   function handleSave() {
     setSubmitted(true);
     if (errors.word || errors.korMeaning || errors.partsOfSpeech) return;
@@ -72,7 +90,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
   }
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="bg-white w-full max-w-160 rounded-3xl shadow-[0px_24px_64px_rgba(0,27,95,0.12)] overflow-hidden flex flex-col max-h-[90vh]">
         <div className="px-10 pt-8 pb-6 flex justify-between items-start shrink-0">
           <div>
@@ -89,79 +107,30 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
         </div>
 
         <div className="px-10 pb-10 space-y-4 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Word
-              </label>
-              <input
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary text-lg placeholder:text-on-surface-variant/30"
-                placeholder="e.g. Ephemeral"
-                type="text"
-                value={form.word}
-                onChange={(e) => update('word', e.target.value)}
-              />
-              {submitted && errors.word && <p className="text-xs text-error ml-1">{errors.word}</p>}
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Part of Speech
-              </label>
-              <div className="flex flex-wrap gap-2 bg-surface-container-low rounded-xl p-3">
-                {PARTS_OF_SPEECH.map((pos) => {
-                  const selected = form.partsOfSpeech.includes(pos);
-                  return (
-                    <button
-                      key={pos}
-                      type="button"
-                      onClick={() =>
-                        update(
-                          'partsOfSpeech',
-                          selected
-                            ? form.partsOfSpeech.filter((p) => p !== pos)
-                            : [...form.partsOfSpeech, pos],
-                        )
-                      }
-                      className={`px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all ${
-                        selected
-                          ? 'bg-primary text-white border-primary'
-                          : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
-                      }`}
-                    >
-                      {pos}
-                    </button>
-                  );
-                })}
-              </div>
-              {submitted && errors.partsOfSpeech && (
-                <p className="text-xs text-error ml-1">{errors.partsOfSpeech}</p>
-              )}
-            </div>
+          {/* Row 1: Word — 풀 너비 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Word
+            </label>
+            <input
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-headline font-bold text-primary placeholder:text-on-surface-variant/30"
+              placeholder="e.g. Ephemeral"
+              type="text"
+              value={form.word}
+              onChange={(e) => update('word', e.target.value)}
+            />
+            {submitted && errors.word && <p className="text-xs text-error ml-1">{errors.word}</p>}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
-                Korean Meaning
-              </label>
-              <input
-                className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
-                placeholder="e.g. 일시적인, 덧없는"
-                type="text"
-                value={form.korMeaning}
-                onChange={(e) => update('korMeaning', e.target.value)}
-              />
-              {submitted && errors.korMeaning && (
-                <p className="text-xs text-error ml-1">{errors.korMeaning}</p>
-              )}
-            </div>
+          {/* Row 2: Difficulty Level + SAT Priority */}
+          <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
                 Difficulty Level
               </label>
               <div className="relative">
                 <select
-                  className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
+                  className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none appearance-none cursor-pointer text-on-surface-variant pr-10"
                   value={form.difficulty}
                   onChange={(e) =>
                     update('difficulty', Number(e.target.value) as WordDifficultyLevel)
@@ -178,14 +147,96 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                 </span>
               </div>
             </div>
+
+            {/* SAT Priority: 별 3개 토글. i번 별 클릭 시 satPriority = i+1, 이미 같으면 0으로 해제 */}
+            <div className="space-y-2">
+              <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+                SAT Priority
+              </label>
+              <div className="flex items-center gap-1.5 bg-surface-container-low rounded-xl px-4 h-13">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => update('satPriority', form.satPriority === i + 1 ? 0 : i + 1)}
+                    className="flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+                  >
+                    <span
+                      className={
+                        i < form.satPriority
+                          ? 'material-symbols-outlined text-amber-400'
+                          : 'material-symbols-outlined text-outline/30'
+                      }
+                      style={{ fontSize: '22px', fontVariationSettings: "'FILL' 1" }}
+                    >
+                      star
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
+          {/* Row 3: Part of Speech — 풀 너비로 7개 버튼을 한 줄에 배치 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Part of Speech
+            </label>
+            <div className="flex gap-2 bg-surface-container-low rounded-xl p-3">
+              {PARTS_OF_SPEECH.map((pos) => {
+                const selected = form.partsOfSpeech.includes(pos);
+                return (
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() =>
+                      update(
+                        'partsOfSpeech',
+                        selected
+                          ? form.partsOfSpeech.filter((p) => p !== pos)
+                          : [...form.partsOfSpeech, pos],
+                      )
+                    }
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                      selected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-on-surface-variant border-outline-variant/30 hover:border-primary/50'
+                    }`}
+                  >
+                    {pos}
+                  </button>
+                );
+              })}
+            </div>
+            {submitted && errors.partsOfSpeech && (
+              <p className="text-xs text-error ml-1">{errors.partsOfSpeech}</p>
+            )}
+          </div>
+
+          {/* Row 4: Korean Meaning */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Korean Meaning
+            </label>
+            <input
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all text-on-surface-variant placeholder:text-on-surface-variant/30"
+              placeholder="e.g. 일시적인, 덧없는"
+              type="text"
+              value={form.korMeaning}
+              onChange={(e) => update('korMeaning', e.target.value)}
+            />
+            {submitted && errors.korMeaning && (
+              <p className="text-xs text-error ml-1">{errors.korMeaning}</p>
+            )}
+          </div>
+
+          {/* Row 5: English Meaning */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               English Meaning
             </label>
             <textarea
-              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Describe the nuanced definition..."
               rows={2}
               value={form.engMeaning}
@@ -193,6 +244,7 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             />
           </div>
 
+          {/* Row 6: Synonyms */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Synonyms
@@ -209,7 +261,9 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
                     onClick={() => removeSynonym(i)}
                     className="flex items-center justify-center hover:bg-surface-container-low rounded-md p-0.5"
                   >
-                    <span className="material-symbols-outlined text-[16px]">close</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                      close
+                    </span>
                   </button>
                 </div>
               ))}
@@ -224,12 +278,47 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
             </div>
           </div>
 
+          {/* Row 7: Exam Tags — Synonyms와 동일한 패턴. Enter로 추가, × 버튼으로 삭제 */}
+          <div className="space-y-2">
+            <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
+              Exam Tags
+            </label>
+            <div className="w-full bg-surface-container-low rounded-xl p-3 flex flex-wrap gap-2 items-center min-h-14">
+              {form.examTags.map((tag, i) => (
+                <div
+                  key={i}
+                  className="pl-3 pr-2 py-1.5 bg-white text-primary rounded-lg text-[13px] font-semibold flex items-center gap-2 shadow-sm border border-black/5"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeExamTag(i)}
+                    className="flex items-center justify-center hover:bg-surface-container-low rounded-md p-0.5"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                      close
+                    </span>
+                  </button>
+                </div>
+              ))}
+              <input
+                className="bg-transparent border-none focus:ring-0 outline-none p-1 text-[13px] grow min-w-28 text-on-surface-variant placeholder:text-on-surface-variant/40"
+                placeholder="Add exam tag and press Enter..."
+                type="text"
+                value={examTagInput}
+                onChange={(e) => setExamTagInput(e.target.value)}
+                onKeyDown={handleExamTagKeyDown}
+              />
+            </div>
+          </div>
+
+          {/* Row 8: Example Sentence */}
           <div className="space-y-2">
             <label className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest ml-1 block">
               Example Sentence
             </label>
             <textarea
-              className="w-full bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
+              className="w-full text-sm bg-surface-container-low border-none rounded-xl p-4 focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none text-on-surface-variant placeholder:text-on-surface-variant/30"
               placeholder="Fashions are ephemeral; style is eternal."
               rows={3}
               value={form.sentence}
@@ -256,6 +345,6 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
           </div>
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

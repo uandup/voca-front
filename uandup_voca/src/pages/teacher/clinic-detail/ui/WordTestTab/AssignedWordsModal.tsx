@@ -1,8 +1,10 @@
 import { Fragment } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { TeacherWordCard } from '@/entities/word';
+import { Modal } from '@/shared/ui/Modal';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { EmptyState } from '@/shared/ui/EmptyState';
+import { WordCard } from '@/entities/word';
 import type { BundleLevelCount } from '@/entities/test';
-import { useAssignedWords } from '@/features/study-set';
+import { useAssignedWords } from '@/entities/student';
 
 // 한 사이클(study-set)에 배정된 단어들을 read-only로 확인하는 모달.
 // CycleRow의 "View Words" 버튼에서 열린다.
@@ -15,10 +17,12 @@ interface Props {
 }
 
 export function AssignedWordsModal({ studySetId, levels, wordCount, onClose }: Props) {
-  const { data: words, isLoading } = useAssignedWords(studySetId, true);
+  // 선생님 화면이므로 exampleVisible과 무관하게 예문을 항상 표시한다.
+  const { data, isLoading } = useAssignedWords(studySetId, true);
+  const words = data?.words ?? [];
 
   return (
-    <ModalBackdrop onClose={onClose}>
+    <Modal onClose={onClose}>
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="px-8 pt-5 pb-2.5 border-b border-outline-variant/30 flex justify-between items-center bg-white shrink-0">
@@ -68,21 +72,17 @@ export function AssignedWordsModal({ studySetId, levels, wordCount, onClose }: P
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-6">
-          {isLoading && (
-            <p className="text-sm text-on-surface-variant text-center py-8">Loading...</p>
-          )}
-          {!isLoading && (words?.length ?? 0) === 0 && (
-            <p className="text-sm text-on-surface-variant text-center py-8">No words assigned.</p>
-          )}
-          {!isLoading && words && words.length > 0 && (
+          {isLoading && <LoadingSpinner />}
+          {!isLoading && words.length === 0 && <EmptyState title="No words assigned." />}
+          {!isLoading && words.length > 0 && (
             <div className="flex flex-col gap-5">
               {words.map((item) => (
-                <TeacherWordCard key={item.id} {...item} />
+                <WordCard key={item.id} {...item} showSentence />
               ))}
             </div>
           )}
         </div>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { MemoPopup } from '@/features/memo';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { StudentInfoCard } from './ui/StudentInfoCard';
 import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
-import { useStudentOverview } from '@/features/student';
-import { useStudySetList } from '@/features/study-set';
+import { useStudentOverview } from '@/entities/student';
+import { useStudySetList } from '@/entities/student';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
@@ -39,13 +40,13 @@ export function ClinicDetailPage() {
   if (overviewLoading || setsLoading || !student) {
     return (
       <main className="p-8">
-        <p className="text-on-surface-variant">Loading...</p>
+        <LoadingSpinner />
       </main>
     );
   }
 
   return (
-    <div className="max-w-7xl space-y-8">
+    <main className="space-y-8">
       <BreadcrumbPageTitle
         parents={[{ label: 'Clinics', onClick: () => navigate({ to: '/teacher/clinics' }) }]}
         title={student.englishName ? `${student.nameKo} (${student.englishName})` : student.nameKo}
@@ -105,6 +106,6 @@ export function ClinicDetailPage() {
           onClose={() => setIsMemoOpen(false)}
         />
       )}
-    </div>
+    </main>
   );
 }

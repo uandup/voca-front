@@ -1,4 +1,5 @@
-import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
+import type { ReactNode } from 'react';
+import { Link, useRouterState } from '@tanstack/react-router';
 
 interface NavItem {
   icon: string;
@@ -11,16 +12,22 @@ interface SideNavBarProps {
   navItems: NavItem[];
   collapsed: boolean;
   onToggle: () => void;
+  // 로고와 메뉴 사이에 들어가는 선택적 영역(예: 학부모의 자녀 전환 드롭다운).
+  // 표시 위치만 제공하고 내용은 사용처가 결정한다 — collapsed 상태 대응도 슬롯 쪽 책임.
+  topSlot?: ReactNode;
+  // 로그아웃 동작 — auth entity의 useSignOut을 래퍼(StudentSideNavBar/TeacherSideNavBar)에서 주입한다.
+  // 도메인(토큰, 자녀 열람 상태)을 모르는 shared 레이어에 두기 위해 prop으로 분리.
+  onSignOut: () => void;
 }
 
-export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
+export function SideNavBar({
+  navItems,
+  collapsed,
+  onToggle,
+  topSlot,
+  onSignOut,
+}: SideNavBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
-
-  const handleSignOut = () => {
-    localStorage.removeItem('accessToken');
-    navigate({ to: '/' });
-  };
 
   return (
     <aside
@@ -43,6 +50,10 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
           </span>
         </button>
       </div>
+
+      {/* topSlot은 항상 truthy인 엘리먼트일 수 있어(예: 학생 세션에서 null을 반환하는 ChildSwitcher),
+          래퍼로 감싸면 빈 여백이 남는다. 간격은 슬롯 콘텐츠가 직접 책임진다. */}
+      {topSlot}
 
       <nav className="flex-1 flex flex-col gap-1">
         {navItems.map((item) => {
@@ -70,7 +81,7 @@ export function SideNavBar({ navItems, collapsed, onToggle }: SideNavBarProps) {
       <div className="mt-auto flex flex-col gap-1 pt-4 border-t border-slate-200">
         <button
           type="button"
-          onClick={handleSignOut}
+          onClick={onSignOut}
           title={collapsed ? 'Sign Out' : undefined}
           className="flex items-center gap-3 py-2 px-3 rounded-lg text-sm text-slate-600 hover:bg-slate-200/50"
         >

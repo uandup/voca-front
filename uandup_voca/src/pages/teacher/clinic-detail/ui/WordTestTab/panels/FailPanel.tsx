@@ -3,7 +3,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
 // 통합 후 미사용 — modal 기반 채점/결과 흐름 복귀 시 다시 활성화.
 // import { useState } from 'react';
-// import { useExamDetail } from '../../../model/hooks/useExamDetail';
+// import { useExamDetail } from '../../../model/useExamDetail';
 // import { isSentenceStep } from '../../../model/mapper';
 // import { TestGradingModal } from '../modals/TestGradingModal';
 // import { TestResultModal } from '../modals/TestResultModal';
@@ -59,12 +59,18 @@ export function FailPanel({
 
   // 통합: Grade와 View Results 모두 /review 페이지로 이동(online 양식).
   // 페이지가 examDetail.status === 'COMPLETED'이면 자동으로 result 모드로 진입한다.
+  //
+  // Retake 후 cancel 시 currentExamId가 null이 된다(active exam 없음).
+  // 이때 마지막 failedAttempt의 examId로 fallback해 View Results를 유지한다.
+  const viewResultsExamId =
+    currentExamId ?? failedAttempts[failedAttempts.length - 1]?.examId ?? null;
+
   function goReview() {
-    if (currentExamId === null) return;
+    if (viewResultsExamId === null) return;
     const returnTo = window.location.pathname + window.location.search;
     navigate({
       to: '/teacher/exams/$examId/review',
-      params: { examId: String(currentExamId) },
+      params: { examId: String(viewResultsExamId) },
       search: { returnTo, studentId, studySetId, examType },
     });
   }
@@ -86,6 +92,8 @@ export function FailPanel({
           </span>
           <span className="flex items-center gap-1.5 flex-wrap">
             Score : {/* 이전 실패 시도들 + 현재 시험 — FailPanel에선 모두 실패이므로 전부 빨강. */}
+            {/* currentExamId가 null이면 retake cancel 후 상태 — 기존 fail exam이 failedAttempts로 이동했으므로
+                'current' 항목을 추가하지 않는다. 추가하면 같은 점수가 중복 표시된다. */}
             {[
               ...failedAttempts.map((a) => ({
                 key: String(a.examId),
@@ -93,12 +101,16 @@ export function FailPanel({
                 max: a.totalCount,
                 isPassed: false,
               })),
-              {
-                key: 'current',
-                score: step.lastScore,
-                max: step.maxScore,
-                isPassed: false,
-              },
+              ...(currentExamId !== null
+                ? [
+                    {
+                      key: 'current',
+                      score: step.lastScore,
+                      max: step.maxScore,
+                      isPassed: false,
+                    },
+                  ]
+                : []),
             ].map((entry, i, arr) => (
               <span key={entry.key} className="flex items-center">
                 <span
@@ -108,7 +120,7 @@ export function FailPanel({
                 >
                   {entry.score ?? '-'} / {entry.max ?? 'N'}
                 </span>
-                {i < arr.length - 1 && <span className="text-on-surface-variant ">,</span>}
+                {i < arr.length - 1 && <span className="text-on-surface-variant/40 ml-1">,</span>}
               </span>
             ))}
           </span>
@@ -121,11 +133,11 @@ export function FailPanel({
           disabled={create.isPending}
           className="px-4 py-2 rounded-xl bg-error text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-error/20 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {create.isPending ? 'Creating...' : 'Retake Test'}
+          Retake Test
         </button>
         <button
           onClick={goReview}
-          disabled={currentExamId === null}
+          disabled={viewResultsExamId === null}
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           View Results
@@ -139,24 +151,7 @@ export function FailPanel({
           View Results
         </button>
         */}
-        <div className="ml-auto">
-          <button
-            onClick={goReview}
-            disabled={currentExamId === null}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Grade
-          </button>
-          {/* 통합 이전 modal 기반 채점 — 보존용 주석. */}
-          {/*
-          <button
-            onClick={() => setShowGrading(true)}
-            className="px-4 py-2 rounded-xl border border-primary/30 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
-          >
-            Grade
-          </button>
-          */}
-        </div>
+        {/* fail 단계는 채점이 이미 완료된 상태 — Grade 버튼 숨김. View Results로만 확인 가능. */}
       </div>
 
       {/*

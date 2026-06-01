@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getStudents, toStudentPickerRow, studentKeys } from '@/entities/student';
+import type { StudentPickerRow } from '@/entities/student';
 import type { PendingParent } from '../../model/types';
 
 interface Props {
   parent: PendingParent;
+  // 이미 이 학부모에 매칭된 학생 id 집합 — 목록에서 '추가됨'으로 표시한다.
+  selectedIds: Set<number>;
+  // 학생을 선택하면 호출 — 다자녀 연속 선택을 위해 패널은 닫지 않는다(닫기 책임은 onClose).
+  onSelect: (student: StudentPickerRow) => void;
   onClose: () => void;
 }
 
-export function StudentMatchPanel({ parent, onClose }: Props) {
+export function StudentMatchPanel({ parent, selectedIds, onSelect, onClose }: Props) {
   const [search, setSearch] = useState('');
 
   // 학생 관리 페이지와 동일한 쿼리 키를 사용하여 react-query 캐시를 공유한다.
@@ -41,7 +46,9 @@ export function StudentMatchPanel({ parent, onClose }: Props) {
         </div>
         <p className="text-xs text-on-surface-variant">
           Parent: <span className="font-bold text-on-surface">{parent.name}</span> → Child:{' '}
-          <span className="font-bold text-on-surface">{parent.requestedChildName}</span>
+          <span className="font-bold text-on-surface">
+            {parent.requestedChildren.map((c) => c.name).join(', ')}
+          </span>
         </p>
       </div>
 
@@ -61,24 +68,39 @@ export function StudentMatchPanel({ parent, onClose }: Props) {
             No students found
           </li>
         ) : (
-          filtered.map((student) => (
-            <li key={student.id}>
-              <button
-                type="button"
-                className="w-full text-left px-5 py-3 hover:bg-surface-container-low transition-colors"
-              >
-                <p className="text-sm font-bold text-on-surface">
-                  {student.nameKo}
-                  <span className="text-xs font-medium text-on-surface-variant ml-1.5">
-                    G{student.grade}
-                  </span>
-                </p>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  {`${student.nameFirstEn} ${student.nameLastEn}`.trim()}
-                </p>
-              </button>
-            </li>
-          ))
+          filtered.map((student) => {
+            const added = selectedIds.has(student.id);
+            return (
+              <li key={student.id}>
+                <button
+                  type="button"
+                  onClick={() => onSelect(student)}
+                  className="w-full flex items-center justify-between gap-2 text-left px-5 py-3 hover:bg-surface-container-low transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-on-surface">
+                      {student.nameKo}
+                      <span className="text-xs font-medium text-on-surface-variant ml-1.5">
+                        G{student.grade}
+                      </span>
+                    </p>
+                    <p className="text-xs text-on-surface-variant mt-0.5">
+                      {`${student.nameFirstEn} ${student.nameLastEn}`.trim()}
+                    </p>
+                  </div>
+                  {/* 이미 매칭된 학생 — 다시 눌러도 중복은 무시되므로 표시만 한다. */}
+                  {added && (
+                    <span
+                      className="material-symbols-outlined text-primary shrink-0"
+                      style={{ fontSize: '18px' }}
+                    >
+                      check_circle
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })
         )}
       </ul>
     </div>

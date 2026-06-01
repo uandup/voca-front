@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { ConfirmDialog } from '@/shared/ui/Modal';
+
 export function PendingList<T>({
   empty,
   items,
@@ -38,20 +41,36 @@ export function ApproveRejectButtons({
   onApprove: () => void;
   onReject: () => void;
 }) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   return (
-    <div className="flex items-center gap-2 shrink-0">
-      <button
-        onClick={onReject}
-        className="px-4 py-1.5 rounded-lg text-xs font-bold border border-outline-variant/30 text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error/30 transition-colors"
-      >
-        Reject
-      </button>
-      <button
-        onClick={onApprove}
-        className="px-4 py-1.5 rounded-lg text-xs font-bold bg-primary text-white hover:opacity-90 transition-opacity"
-      >
-        Approve
-      </button>
-    </div>
+    <>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          onClick={() => setConfirmOpen(true)}
+          className="px-4 py-1.5 rounded-lg text-xs font-bold border border-outline-variant/30 text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error/30 transition-colors"
+        >
+          Reject
+        </button>
+        <button
+          onClick={onApprove}
+          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-primary text-white hover:opacity-90 transition-opacity"
+        >
+          Approve
+        </button>
+      </div>
+
+      {/* Reject 확인 모달 — 실수로 누르는 것을 방지한다. */}
+      {confirmOpen && (
+        <ConfirmDialog
+          title="Reject this member?"
+          description="The member will be denied access and must re-apply to join."
+          confirmLabel="Reject"
+          variant="danger"
+          onConfirm={onReject}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      )}
+    </>
   );
 }

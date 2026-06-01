@@ -5,11 +5,19 @@ import type { ReviewDeckExamRow, ReviewDeckWord, ReviewDeckExamStatus } from './
 type WrongBankExamListResponse = components['schemas']['WrongBankExamListResponse'];
 type WrongBankWordResponse = components['schemas']['WrongBankWordResponse'];
 
-const VALID_POS = new Set(['N', 'V', 'Adj', 'Adv', 'Conj']);
+// 백엔드는 소문자 약어('n', 'v', 'adj', 'adv', 'prep', 'conj', 'interj')로 내려준다.
+const POS_MAP: Record<string, PartOfSpeech> = {
+  n: 'N',
+  v: 'V',
+  adj: 'Adj',
+  adv: 'Adv',
+  prep: 'Prep',
+  conj: 'Conj',
+  interj: 'Interj',
+};
 
 function toPartOfSpeech(value: string): PartOfSpeech {
-  if (VALID_POS.has(value)) return value as PartOfSpeech;
-  return 'N';
+  return POS_MAP[value.toLowerCase()] ?? 'N';
 }
 
 export function toReviewDeckExamRow(r: WrongBankExamListResponse): ReviewDeckExamRow {
@@ -33,6 +41,10 @@ export function toReviewDeckWord(r: WrongBankWordResponse): ReviewDeckWord {
     engMeaning: r.englishMeaning ?? '',
     difficulty: (r.difficulty ?? 1) as WordDifficultyLevel,
     synonyms: r.synonyms ?? [],
+    satPriority: r.satPriority ?? 0,
+    examTags: r.examTag
+      ? r.examTag.split(',').map((t) => t.trim()).filter(Boolean)
+      : [],
     wrongCount: r.wrongCount ?? 0,
     lastWrongAt: r.lastWrongAt ?? '',
     sentence: r.example ?? '',

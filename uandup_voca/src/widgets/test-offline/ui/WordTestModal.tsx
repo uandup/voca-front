@@ -159,8 +159,7 @@ function WordSheet({
                 />
                 {showSynonym && (
                   <td
-                    className="text-xs"
-                    style={{ border: '1.5pt solid black', padding: '4px 12px' }}
+                    style={{ fontSize: '0.6rem', border: '1.5pt solid black', padding: '4px 12px' }}
                   >
                     {fillSynonym ? synonyms.join(', ') : ''}
                   </td>

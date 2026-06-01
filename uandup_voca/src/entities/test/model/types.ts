@@ -28,12 +28,16 @@ export interface StepCardVM {
   name: TestStepName;
   status: StepStatus;
   createdAt: string | null;
+  // 채점 완료 일시. 학생 StepCard의 "Graded At" 표시에 사용. null이면 표시 안 함.
+  completedAt: string | null;
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;
   // 학생 WordTestPage가 step 카드의 Start Test / View Results 버튼에서 응시 페이지로 직접 이동할 때 사용.
   // step에 시험이 아직 없으면(pending/locked) null. teacher 측 StepPanel은 별도 examHistory를 fetch하므로 무관.
   examId: number | null;
+  // REVIEW1/2/3 시험에만 존재. 복습 예정일 'YYYY-MM-DD'. 나머지 step은 null.
+  scheduledDate: string | null;
 }
 
 // ── Test Bundle Row ─────────────────────────────────────────────────────────
@@ -56,6 +60,13 @@ export interface TestBundleRow {
 
 /** 문장 시험 답안 (페이지 로컬 state) */
 export interface SentenceTestAnswer {
+  answer: string;
+}
+
+/** 문장 시험 인쇄·채점용 row — 시험지/채점지의 한 줄. widgets/test-offline 출력 + clinic-detail mapper에서 공유. */
+export interface ESRow {
+  no: string;
+  sentence: string;
   answer: string;
 }
 

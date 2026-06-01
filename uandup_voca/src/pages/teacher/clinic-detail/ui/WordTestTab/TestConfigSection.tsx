@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { WordTestType } from '@/entities/test';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { useUpdateExamSettings } from '../../model/hooks/useUpdateExamSettings';
+import { useUpdateExamSettings } from '../../model/useUpdateExamSettings';
 
 // StepPanel 상단의 시험 설정(타입/문항 수/동의어 포함) 편집 영역.
 // 모든 phase에서 표시되며 'pending' phase에서만 Edit/Apply 버튼이 노출된다.
@@ -19,6 +19,8 @@ interface Props {
   showEditButton: boolean;
   // 편집 모드 전환을 상위에 알린다 — Generate Test 같은 다른 액션을 잠그는 용도.
   onEditingChange?: (editing: boolean) => void;
+  // 시험 문항 수의 상한 — 배정 단어 수를 초과할 수 없다.
+  maxQty?: number;
 }
 
 const TEST_TYPE_OPTIONS: WordTestType[] = ['meaning-to-word', 'word-to-meaning'];
@@ -28,6 +30,7 @@ export function TestConfigSection({
   initialConfig,
   showEditButton,
   onEditingChange,
+  maxQty,
 }: Props) {
   const [config, setConfig] = useState<ExamConfig>(initialConfig);
   const [isEditing, setIsEditing] = useState(false);
@@ -138,13 +141,28 @@ export function TestConfigSection({
           {showEditButton && (
             <button
               onClick={handleToggleEdit}
-              className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity"
+              // 편집 중일 때 Quantity가 0이거나 배정 단어 수를 초과하면 Apply 불가.
+              disabled={
+                isEditing &&
+                (config.testQty === 0 || (maxQty != null && config.testQty > maxQty))
+              }
+              className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isEditing ? 'Apply' : 'Edit'}
             </button>
           )}
         </div>
       </div>
+
+      {/* 편집 중 유효성 에러 — 버튼만 막으면 사용자가 이유를 모른다. */}
+      {isEditing && config.testQty === 0 && (
+        <p className="text-xs text-error -mt-1">Quantity must be at least 1.</p>
+      )}
+      {isEditing && maxQty != null && config.testQty > maxQty && config.testQty !== 0 && (
+        <p className="text-xs text-error -mt-1">
+          Quantity cannot exceed the assigned word count ({maxQty}).
+        </p>
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
 // 통합 후 미사용 — modal 기반 결과 화면 복귀 시 다시 활성화.
 // import { useState } from 'react';
-// import { useExamDetail } from '../../../model/hooks/useExamDetail';
+// import { useExamDetail } from '../../../model/useExamDetail';
 // import { TestResultModal } from '../modals/TestResultModal';
 
 // 채점이 완료되어 통과한 단계에서 렌더링된다.

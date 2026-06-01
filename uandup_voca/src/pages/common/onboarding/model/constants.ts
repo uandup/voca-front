@@ -29,8 +29,8 @@ export const INITIAL_PARENT: ParentFormState = {
   nameKo: '',
   phone: '',
   phoneConsent: false,
-  childNameKo: '',
-  childGrade: 1,
+  // 자녀 최소 1명 — 첫 행은 기본 제공한다.
+  children: [{ nameKo: '', grade: 1 }],
 };
 
 export const USER_TYPE_OPTIONS: { value: MemberRole; label: string; icon: string }[] = [

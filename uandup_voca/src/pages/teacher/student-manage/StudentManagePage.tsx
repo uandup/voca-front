@@ -12,7 +12,7 @@ import { STUDENT_COLUMN_STORAGE_KEY, STUDENT_COLUMN_OPTIONS } from './model/stud
 import { EditStudentModal } from './ui/modals/EditStudentModal';
 import { DeleteConfirmModal } from './ui/modals/DeleteConfirmModal';
 import { MemoPopup } from '@/features/memo';
-import { StudentTable } from './ui/table/StudentTable';
+import { StudentManageTable } from './ui/table/StudentManageTable';
 
 export default function StudentManagePage() {
   const { students, remove } = useStudentManage();
@@ -145,7 +145,7 @@ export default function StudentManagePage() {
         </button>
       </div>
 
-      <StudentTable students={filtered} actions={rowActions} hiddenColumns={hiddenColumns} />
+      <StudentManageTable students={filtered} actions={rowActions} hiddenColumns={hiddenColumns} />
 
       {editingStudent && (
         <EditStudentModal studentId={editingStudent.id} onClose={() => setEditingStudent(null)} />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
-import { useClassManage } from '../model/hooks/useClassManage';
+import { Modal } from '@/shared/ui/Modal';
+import { useClassManage } from '../model/useClassManage';
 
 interface Props {
   onClose: () => void;
@@ -40,7 +40,7 @@ export function ClassManageModal({ onClose }: Props) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div
         className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '500px' }}
@@ -164,6 +164,6 @@ export function ClassManageModal({ onClose }: Props) {
           )}
         </ul>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

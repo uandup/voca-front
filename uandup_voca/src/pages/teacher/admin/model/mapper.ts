@@ -30,8 +30,10 @@ export function toPendingParent(r: PendingParentResponse): PendingParent {
     id: r.parentId!,
     name: r.name ?? '',
     phoneNumber: r.phoneNumber ?? '',
-    requestedChildName: r.requestedChildName ?? '',
-    requestedChildGrade: r.requestedChildGrade ?? 0,
+    requestedChildren: (r.requestedChildren ?? []).map((c) => ({
+      name: c.name ?? '',
+      grade: c.grade ?? 0,
+    })),
     submittedAt: r.createdAt ?? '',
   };
 }

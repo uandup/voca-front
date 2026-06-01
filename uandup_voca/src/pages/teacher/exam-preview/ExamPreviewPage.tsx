@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { ITEMS_PER_PAGE, type ExamType } from '@/entities/test';
 import {
   TestHeader,
@@ -7,7 +8,7 @@ import {
   VocabPreviewTable,
   SentencePreviewTable,
 } from '@/widgets/test-online';
-import { useExamDetail } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
 import {
   toVocabReviewItems,
   toSentencePreviewItems,
@@ -38,8 +39,8 @@ export default function ExamPreviewPage() {
     return (
       <div className="min-h-screen bg-surface flex flex-col">
         <TestHeader onExit={handleExit} />
-        <div className="flex-1 flex items-center justify-center text-on-surface-variant">
-          Loading...
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner />
         </div>
       </div>
     );

@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import { ConfirmDialog } from '@/shared/ui/Modal/ConfirmDialog';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
 import {
   ITEMS_PER_PAGE,
   type ExamType,
@@ -14,20 +17,22 @@ import {
   SentenceAnswerTable,
   VocabReviewTable,
   SentenceReviewTable,
+  SentencePreviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail, useSubmitExam } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
+import { useSubmitExam } from '@/features/exam';
 import {
   toWordTestItems,
   toSentenceTestItems,
   toVocabReviewItems,
 } from '@/pages/teacher/clinic-detail/model/mapper';
-import { useCurrentStudentId } from '@/shared/jwt';
+import { useCurrentStudentId } from '@/entities/auth';
 
 // 학생이 시험을 응시하거나 채점된 결과를 확인하는 통합 페이지.
-// status === COMPLETED  → review mode(read-only, isCorrect 마커 표시)
-// 그 외(ONLINE_STARTED/SUBMITTED 등) → answer mode(입력 + Submit 가능)
-//   - SUBMITTED: 이미 제출됨 — 제출한 답안만 read-only로 보여주고 Submit 버튼 숨김
+// status === COMPLETED/PASSED/FAILED → review mode(read-only, isCorrect 마커 표시)
+// status === SUBMITTED              → submitted mode(read-only, 마커 없음 — 채점 대기)
+// 그 외(ONLINE_STARTED 등)          → answer mode(입력 + Submit 가능)
 
 type ExamMode = 'answer' | 'review' | 'submitted';
 
@@ -62,6 +67,11 @@ export default function ExamTakePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [vocabAnswers, setVocabAnswers] = useState<Record<number, Answer>>({});
   const [sentenceAnswers, setSentenceAnswers] = useState<Record<number, SentenceTestAnswer>>({});
+
+  // 미제출 답 확인 모달 (Task 19)
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  // 제출 완료 모달 (Task 20)
+  const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
 
   // examDetail 로드 시 — 이미 제출했거나 채점 완료된 시험이면 기존 답안으로 시드.
   useEffect(() => {
@@ -99,27 +109,6 @@ export default function ExamTakePage() {
     }
   }
 
-  function handleSubmit() {
-    if (!examDetail) return;
-    // itemOrder(클라이언트 키) → examItemId(서버 식별자)로 매핑하여 페이로드 구성.
-    const results = examDetail.items.map((item) => {
-      const order = item.itemOrder;
-      if (isSentence) {
-        return {
-          examItemId: item.examItemId,
-          wordAnswer: sentenceAnswers[order]?.answer ?? '',
-        };
-      }
-      const a = vocabAnswers[order];
-      return {
-        examItemId: item.examItemId,
-        wordAnswer: a?.answer ?? '',
-        synonymAnswer: a?.synonym ?? '',
-      };
-    });
-    submit.mutate({ results });
-  }
-
   // 단어 vocab 결과 모드용 answers map(itemOrder 기준).
   const vocabReviewAnswers: Record<number, Answer> = useMemo(() => {
     if (!examDetail) return {};
@@ -138,8 +127,8 @@ export default function ExamTakePage() {
     return (
       <div className="min-h-screen bg-surface flex flex-col">
         <TestHeader onExit={handleExit} />
-        <div className="flex-1 flex items-center justify-center text-on-surface-variant">
-          Loading...
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner />
         </div>
       </div>
     );
@@ -171,13 +160,18 @@ export default function ExamTakePage() {
   const allIds = isSentence ? sentenceItems.map((i) => i.id) : vocabItems.map((i) => i.id);
 
   // answer mode에서 "completed" 판정: 입력값이 있으면 완료.
+  // vocab의 경우 showSynonym=true면 synonym까지 채워야 완료로 본다 (VocabAnswerRow와 동일 로직).
   const completedIds = new Set<number>(
     isSentence
       ? Object.entries(sentenceAnswers)
           .filter(([, v]) => (v.answer ?? '').trim() !== '')
           .map(([k]) => Number(k))
       : Object.entries(vocabAnswers)
-          .filter(([, v]) => (v.answer ?? '').trim() !== '')
+          .filter(([, v]) => {
+            const meaningFilled = (v.answer ?? '').trim() !== '';
+            const synonymFilled = (v.synonym ?? '').trim() !== '';
+            return showSynonym ? meaningFilled && synonymFilled : meaningFilled;
+          })
           .map(([k]) => Number(k)),
   );
 
@@ -194,6 +188,35 @@ export default function ExamTakePage() {
   const isAnswerMode = mode === 'answer';
   const showSubmit = isAnswerMode;
 
+  // itemOrder(클라이언트 키) → examItemId(서버 식별자)로 매핑하여 제출 페이로드 구성.
+  function doSubmit() {
+    const results = examDetail!.items.map((item) => {
+      const order = item.itemOrder;
+      if (isSentence) {
+        return {
+          examItemId: item.examItemId,
+          wordAnswer: sentenceAnswers[order]?.answer ?? '',
+        };
+      }
+      const a = vocabAnswers[order];
+      return {
+        examItemId: item.examItemId,
+        wordAnswer: a?.answer ?? '',
+        synonymAnswer: a?.synonym ?? '',
+      };
+    });
+    submit.mutate({ results }, { onSuccess: () => setShowSubmitSuccess(true) });
+  }
+
+  // 미제출 문항이 있으면 확인 모달을 먼저 표시한다 (Task 19).
+  function handleSubmit() {
+    if (completedIds.size < totalItems) {
+      setShowSubmitConfirm(true);
+      return;
+    }
+    doSubmit();
+  }
+
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       <TestHeader
@@ -204,6 +227,7 @@ export default function ExamTakePage() {
 
       <div className="relative flex flex-1 justify-center px-6 py-6">
         <div className="w-240 flex flex-col gap-4">
+          {/* review: 채점 완료 — isCorrect 마커 표시. */}
           {mode === 'review' ? (
             isSentence ? (
               <SentenceReviewTable
@@ -227,7 +251,32 @@ export default function ExamTakePage() {
                 onToggleWrong={() => {}}
               />
             )
+          ) : mode === 'submitted' ? (
+            /* submitted: 채점 대기 — 정답 없이 학생 제출 답만 read-only로 표시 (Task 21).
+               sentence: SentencePreviewRow 재사용(학생 답을 answer prop으로 전달).
+               vocab: VocabAnswerTable readOnly(input → span, correct answer 행 없음). */
+            isSentence ? (
+              <SentencePreviewTable
+                items={sentencePageItems.map((item) => ({
+                  id: item.id,
+                  sentence: item.sentence,
+                  answer: sentenceAnswers[item.id]?.answer ?? '',
+                }))}
+              />
+            ) : (
+              <VocabAnswerTable
+                items={vocabPageItems}
+                testType={testType}
+                showSynonym={showSynonym}
+                answers={vocabAnswers}
+                onAnswerChange={() => {}}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                readOnly
+              />
+            )
           ) : isSentence ? (
+            /* answer: 응시 중 — 입력 가능. */
             <SentenceAnswerTable
               items={sentencePageItems}
               answers={sentenceAnswers}
@@ -264,6 +313,29 @@ export default function ExamTakePage() {
           onQuestionClick={setCurrentPage}
         />
       </div>
+
+      {/* Task 19: 미제출 문항 확인 모달 */}
+      {showSubmitConfirm && (
+        <ConfirmDialog
+          title="Unanswered Questions"
+          description={`${totalItems - completedIds.size} question(s) are still unanswered.\nSubmit anyway?`}
+          confirmLabel="Submit"
+          cancelLabel="Go Back"
+          onConfirm={doSubmit}
+          onCancel={() => setShowSubmitConfirm(false)}
+        />
+      )}
+
+      {/* Task 20: 제출 완료 모달 */}
+      {showSubmitSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Submission Complete"
+          description="Your answers have been submitted successfully."
+          okLabel="OK"
+          onClose={() => setShowSubmitSuccess(false)}
+        />
+      )}
     </div>
   );
 }

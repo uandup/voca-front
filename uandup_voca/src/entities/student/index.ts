@@ -11,6 +11,15 @@ export type {
   LevelCount,
   ExamSummary,
   ExamStatus,
+  StudentDashboard,
+  StudentDashboardCharts,
+  ExamScorePoint,
+  ExamScoreDetail,
+  ExamScoreType,
+  LearnedCountPoint,
+  PendingReviewItem,
+  TodoItem,
+  TodoType,
 } from './model/types';
 export {
   toStudentPickerRow,
@@ -21,9 +30,12 @@ export {
   toStudySetRow,
   toTestBundleRow,
   toStudentTestBundleRow,
-  toAssignedTeacherWord,
+  toAssignedWordCardData,
+  toStudentDashboard,
+  toStudentDashboardCharts,
+  toPendingReviewItem,
+  toTodoItem,
 } from './model/mapper';
-export { STUDENT_MOCK, MOCK_PENDING_APPROVALS, MOCK_UNASSIGNED_STUDENTS } from './lib/mockData';
 export {
   getStudents,
   getUnassignedStudents,
@@ -36,7 +48,17 @@ export {
   updateAssignmentCount,
   assignWords,
   updateExamSettings,
+  getDashboard,
+  getDashboardCharts,
+  getPendingReviews,
+  getTodos,
 } from './api/studentApi';
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';
 export { invalidateStudentCascade } from './api/invalidate';
+export { useStudentOverview } from './api/useStudentOverview';
+export { useStudentDashboard, useStudentDashboardCharts } from './api/useStudentDashboard';
+export { useStudySetList } from './api/useStudySetList';
+export { useAssignedWords } from './api/useAssignedWords';
+export { usePendingReviews } from './api/usePendingReviews';
+export { useTodos } from './api/useTodos';

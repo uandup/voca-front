@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ModalBackdrop } from '@/shared/ui/ModalBackdrop';
+import { Modal } from '@/shared/ui/Modal';
 import type { TeacherRow } from '@/entities/teacher';
-import { useTeacherPermission } from '../model/hooks/useTeacherPermission';
+import { useTeacherPermission } from '../model/useTeacherPermission';
 
 interface Props {
   onClose: () => void;
@@ -35,7 +35,7 @@ export function TeacherPermissionModal({ onClose }: Props) {
   }
 
   return (
-    <ModalBackdrop onClose={onClose} padding="p-6">
+    <Modal onClose={onClose} backdropPadding="p-6">
       <div
         className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         style={{ height: '500px' }}
@@ -130,6 +130,6 @@ export function TeacherPermissionModal({ onClose }: Props) {
           )}
         </ul>
       </div>
-    </ModalBackdrop>
+    </Modal>
   );
 }

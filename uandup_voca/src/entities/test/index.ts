@@ -7,6 +7,7 @@ export type {
   TestBundleRow,
   BundleLevelCount,
   SentenceTestAnswer,
+  ESRow,
   ExamType,
   StudySetExamType,
   ExamItem,
@@ -26,16 +27,6 @@ export {
   submitExam,
 } from './api/testApi';
 export { testKeys } from './api/queryKeys';
+export { useExamDetail } from './api/useExamDetail';
 export { TestConfigBadges } from './ui/TestConfigBadges';
-export {
-  MOCK_VOCAB_LIST,
-  MOCK_ES_ROWS,
-  ITEMS_PER_PAGE,
-  MOCK_SENTENCE_ITEMS,
-  MOCK_VOCAB_ITEMS,
-  MOCK_VOCAB_REVIEW_ITEMS,
-  MOCK_ANSWERS_WTM,
-  MOCK_ANSWERS_MTW,
-  MOCK_SENTENCE_ANSWERS,
-  MOCK_ES_TEMPLATE,
-} from './lib/mockData';
+export { ITEMS_PER_PAGE } from './model/constants';

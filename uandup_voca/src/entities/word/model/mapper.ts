@@ -1,24 +1,37 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { TeacherWord, PartOfSpeech } from './types';
+import type { WordCardData, PartOfSpeech } from './types';
 
 type WordResponse = components['schemas']['WordResponse'];
 
-const VALID_POS = new Set(['N', 'V', 'Adj', 'Adv', 'Conj']);
+// 백엔드는 소문자 약어('n', 'v', 'adj', 'adv', 'prep', 'conj', 'interj')로 내려준다.
+const POS_MAP: Record<string, PartOfSpeech> = {
+  n: 'N',
+  v: 'V',
+  adj: 'Adj',
+  adv: 'Adv',
+  prep: 'Prep',
+  conj: 'Conj',
+  interj: 'Interj',
+};
 
 function toPartOfSpeech(value: string): PartOfSpeech {
-  if (VALID_POS.has(value)) return value as PartOfSpeech;
-  return 'N';
+  return POS_MAP[value.toLowerCase()] ?? 'N';
 }
 
-export function toTeacherWord(res: WordResponse): TeacherWord {
+export function toWordCardData(res: WordResponse): WordCardData {
   return {
     id: res.id ?? 0,
     word: res.word ?? '',
     partsOfSpeech: (res.partsOfSpeech ?? []).map(toPartOfSpeech),
     korMeaning: res.koreanMeaning ?? '',
     engMeaning: res.englishMeaning ?? '',
-    difficulty: (res.difficulty ?? 1) as TeacherWord['difficulty'],
+    difficulty: (res.difficulty ?? 1) as WordCardData['difficulty'],
     synonyms: res.synonyms ?? [],
     sentence: res.example ?? '',
+    satPriority: res.satPriority ?? 0,
+    // 서버가 "26.3 기출, 25.2 기출" 형태로 내려주면 콤마로 분리·트림한다.
+    examTags: res.examTag
+      ? res.examTag.split(',').map((t) => t.trim()).filter(Boolean)
+      : [],
   };
 }

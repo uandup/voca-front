@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router';
-import VocabularyBankPage from '@/pages/teacher/vocabulary-bank/VocabularyBankPage';
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/teacher/vocabulary-bank')({
-  component: VocabularyBankPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/teacher/vocabulary-bank/VocabularyBankPage'),
+  ),
 });

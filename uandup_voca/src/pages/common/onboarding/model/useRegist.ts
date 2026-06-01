@@ -52,7 +52,6 @@ function buildProfileBody(
     role: 'PARENT' as const,
     name: parent.nameKo,
     phoneNumber: parent.phone,
-    requestedChildName: parent.childNameKo,
-    requestedChildGrade: parent.childGrade,
+    requestedChildren: parent.children.map((c) => ({ name: c.nameKo, grade: c.grade })),
   };
 }

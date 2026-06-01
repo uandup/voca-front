@@ -15,6 +15,8 @@ interface VocabAnswerRowProps {
   answer: Answer | undefined;
   onAnswerChange: (id: number, field: keyof Answer, value: string) => void;
   isLast: boolean;
+  // 채점 전(submitted) 상태 — input을 read-only span으로 렌더링한다.
+  readOnly?: boolean;
 }
 
 function focusInput(id: number, field: keyof Answer) {
@@ -31,6 +33,7 @@ export function VocabAnswerRow({
   answer,
   onAnswerChange,
   isLast,
+  readOnly = false,
 }: VocabAnswerRowProps) {
   const meaningFilled = (answer?.answer ?? '').trim() !== '';
   const synonymFilled = (answer?.synonym ?? '').trim() !== '';
@@ -75,6 +78,12 @@ export function VocabAnswerRow({
         >
           {word}
         </span>
+      ) : readOnly ? (
+        <span className="w-40 shrink-0 text-sm font-semibold text-on-surface px-3 py-1.5">
+          {answer?.answer || (
+            <span className="text-on-surface-variant/40 italic text-xs">No answer</span>
+          )}
+        </span>
       ) : (
         <input
           data-row={id}
@@ -90,16 +99,24 @@ export function VocabAnswerRow({
 
       {/* Meaning 위치 — word-to-meaning: 뜻 입력 / meaning-to-word: 한글/영어 뜻 표시 */}
       {testType === 'word-to-meaning' ? (
-        <input
-          data-row={id}
-          data-field="meaning"
-          type="text"
-          value={answer?.answer ?? ''}
-          onChange={(e) => onAnswerChange(id, 'answer', e.target.value)}
-          onKeyDown={handleMeaningKeyDown}
-          placeholder="Meaning"
-          className="flex-1 min-w-0 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"
-        />
+        readOnly ? (
+          <span className="flex-1 min-w-0 text-sm font-semibold text-on-surface px-3 py-1.5">
+            {answer?.answer || (
+              <span className="text-on-surface-variant/40 italic text-xs">No answer</span>
+            )}
+          </span>
+        ) : (
+          <input
+            data-row={id}
+            data-field="meaning"
+            type="text"
+            value={answer?.answer ?? ''}
+            onChange={(e) => onAnswerChange(id, 'answer', e.target.value)}
+            onKeyDown={handleMeaningKeyDown}
+            placeholder="Meaning"
+            className="flex-1 min-w-0 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"
+          />
+        )
       ) : (
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-on-surface leading-tight">{korMeaning}</p>
@@ -110,18 +127,25 @@ export function VocabAnswerRow({
       )}
 
       {/* Synonym input (optional) */}
-      {showSynonym && (
-        <input
-          data-row={id}
-          data-field="synonym"
-          type="text"
-          value={answer?.synonym ?? ''}
-          onChange={(e) => onAnswerChange(id, 'synonym', e.target.value)}
-          onKeyDown={handleSynonymKeyDown}
-          placeholder="Synonyms"
-          className="w-40 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"
-        />
-      )}
+      {showSynonym &&
+        (readOnly ? (
+          <span className="w-40 shrink-0 text-sm font-semibold text-on-surface px-3 py-1.5">
+            {answer?.synonym || (
+              <span className="text-on-surface-variant/40 italic text-xs">No synonym</span>
+            )}
+          </span>
+        ) : (
+          <input
+            data-row={id}
+            data-field="synonym"
+            type="text"
+            value={answer?.synonym ?? ''}
+            onChange={(e) => onAnswerChange(id, 'synonym', e.target.value)}
+            onKeyDown={handleSynonymKeyDown}
+            placeholder="Synonyms"
+            className="w-40 bg-transparent border border-outline-variant/40 rounded-lg px-3 py-1.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary/50 transition-colors"
+          />
+        ))}
     </div>
   );
 }

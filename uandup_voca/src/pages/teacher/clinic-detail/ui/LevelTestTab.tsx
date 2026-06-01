@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
 import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
 import type { LevelTestExamRow, LevelTestExamStatus } from '@/entities/level-test';
-import { useLevelTestExamList, useLevelTestExamActions } from '@/features/level-test-exam';
-import { useStudentOverview } from '@/features/student';
+import { useLevelTestExamList } from '@/entities/level-test';
+import { useLevelTestExamActions } from '@/features/level-test-exam';
+import { useStudentOverview } from '@/entities/student';
 
 interface Props {
   studentId: number;
@@ -73,7 +74,18 @@ export function LevelTestTab({ studentId }: Props) {
 
   const { create, startOnline, cancel } = useLevelTestExamActions({ studentId, currentExamId });
 
-  const generateDisabled = activeRow !== null || create.isPending;
+  const assignmentCountIsZero = Number(config.assignmentCount) === 0;
+  const questionCountIsZero = Number(config.questionCount) === 0;
+  const questionExceedsAssignment =
+    !assignmentCountIsZero &&
+    !questionCountIsZero &&
+    Number(config.questionCount) > Number(config.assignmentCount);
+  const generateDisabled =
+    activeRow !== null ||
+    assignmentCountIsZero ||
+    questionCountIsZero ||
+    questionExceedsAssignment ||
+    create.isPending;
 
   function handleGenerate() {
     create.mutate(
@@ -205,6 +217,18 @@ export function LevelTestTab({ studentId }: Props) {
                   An active test exists. Cancel or finish it before generating.
                 </p>
               )}
+              {/* Assignment / Question Quantity 유효성 검사 */}
+              {!activeRow && assignmentCountIsZero && (
+                <p className="text-xs text-error">Assignment Quantity must be at least 1.</p>
+              )}
+              {!activeRow && !assignmentCountIsZero && questionCountIsZero && (
+                <p className="text-xs text-error">Question Quantity must be at least 1.</p>
+              )}
+              {!activeRow && questionExceedsAssignment && (
+                <p className="text-xs text-error">
+                  Question Quantity cannot exceed Assignment Quantity ({config.assignmentCount}).
+                </p>
+              )}
               <button
                 onClick={handleGenerate}
                 disabled={generateDisabled}
@@ -254,10 +278,11 @@ export function LevelTestTab({ studentId }: Props) {
               ) : (
                 rows.map((row) => {
                   const active = isActive(row);
+                  // QTY 컬럼은 배정 단어 수(wordCount). Score 분모는 출제 문항 수(questionCount).
                   const scoreText =
                     row.correctCount !== null && row.totalCount !== null
                       ? `${row.correctCount}/${row.totalCount}`
-                      : `- / ${row.wordCount}`;
+                      : `- / ${row.questionCount}`;
                   const scoreClass = active
                     ? 'text-on-surface-variant/40'
                     : row.status === 'PASSED'
@@ -332,8 +357,9 @@ export function LevelTestTab({ studentId }: Props) {
       </TableContainer>
 
       {showCreateSuccess && (
-        <SuccessModal
-          message="Test Generated!"
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
           description="The test has been successfully created."
           onClose={() => setShowCreateSuccess(false)}
         />

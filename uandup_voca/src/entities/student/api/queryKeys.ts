@@ -6,4 +6,8 @@ export const studentKeys = {
   overview: (id: number) => [...studentKeys.all, id, 'overview'] as const,
   studySets: (id: number) => [...studentKeys.all, id, 'study-sets'] as const,
   studyWords: (studySetId: number) => [...studentKeys.all, 'study-set-words', studySetId] as const,
+  dashboard: (id: number) => [...studentKeys.all, id, 'dashboard'] as const,
+  dashboardCharts: (id: number) => [...studentKeys.all, id, 'dashboard-charts'] as const,
+  pendingReviews: (id: number) => [...studentKeys.all, id, 'pending-reviews'] as const,
+  todos: (id: number) => [...studentKeys.all, id, 'todos'] as const,
 };

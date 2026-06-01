@@ -134,7 +134,7 @@ export function VocabReviewRow({
 
         {/* Synonym column: correct synonym (both types) */}
         {showSynonym && (
-          <p className="w-40 shrink-0 text-[11px] text-primary/60 leading-snug wrap-break-word">
+          <p className="w-40 shrink-0 font-semibold text-[11px] text-primary/60 leading-snug wrap-break-word">
             {synonymAnswer}
           </p>
         )}

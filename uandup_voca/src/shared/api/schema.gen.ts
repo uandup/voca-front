@@ -735,7 +735,7 @@ export interface paths {
         };
         /**
          * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정 조회 가능, 학생은 자신의 배정만 조회 가능합니다.
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true).
          */
         get: operations["getAssignedWords"];
         put?: never;
@@ -791,6 +791,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/todos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 할 일 목록 조회
+         * @description 학생이 현재 응시해야 할 시험 목록을 반환합니다.
+         *
+         *     **포함 조건**: 시험 상태가 `READY` 또는 `ONLINE_STARTED`인 시험.
+         *     - `READY`: 오프라인 대기 또는 온라인 미시작 — 학생이 단어를 외울 수 있으나, 실제 제출은 선생님이 온라인 시험을 시작해야 가능 (`actionable: false`)
+         *     - `ONLINE_STARTED`: 선생님이 온라인 시험을 시작한 상태 — 학생이 앱에서 바로 답안을 제출할 수 있음 (`actionable: true`)
+         *     - `SUBMITTED` 상태(이미 제출)는 제외됩니다.
+         *
+         *     **항목 정렬**: 시험 유형(type) ASC → examId ASC
+         *
+         *     **권한**:
+         *     - TEACHER: 모든 학생 조회 가능
+         *     - STUDENT: 본인만 조회 가능
+         *     - PARENT: 연결된 자녀만 조회 가능
+         *
+         *     **확장 예고**: 현재는 활성 시험만 포함되며, 추후 오답 쌓임·복습 밀림 등의 항목이 같은 구조로 추가될 예정입니다.
+         */
+        get: operations["getTodos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/students/{studentId}/pending-reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 풀어야 할 리뷰 단어 일괄 조회
+         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. 응답 reviews는 scheduledDate ASC, studySetId ASC 정렬. 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         */
+        get: operations["getPendingReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/dashboard": {
         parameters: {
             query?: never;
@@ -799,10 +853,30 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 학생 학습 대시보드 조회
-         * @description 학생의 현재 레벨·암기 진척·시험 점수 그래프·월간 학습량을 한 번에 조회합니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         * 학생 학습 대시보드 요약 조회
+         * @description 학생의 현재 레벨·암기 진척·전체 정답률 등 요약 지표를 조회합니다. 시험 점수 추이·월간 학습량 등 차트 데이터는 /dashboard/charts에서 별도로 조회합니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/students/{studentId}/dashboard/charts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 대시보드 차트 조회
+         * @description 학생의 시험 점수 추이(WORD·EXAMPLE·REVIEW)와 월간 학습량 등 차트 전용 데이터를 조회합니다. 각 배열은 시간 오름차순으로 정렬됩니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         */
+        get: operations["getDashboardCharts"];
         put?: never;
         post?: never;
         delete?: never;
@@ -940,7 +1014,7 @@ export interface paths {
         };
         /**
          * 학생 학습 개요 조회
-         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·영어 이름·학년·레벨·배정 개수·시험 설정·alreadyAssigned(진행 중 NORMAL 배정 존재 여부)·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. 선생님만 접근 가능합니다.
+         * @description 클리닉·상세 화면에서 사용하는 API입니다. 학생의 이름·영어 이름·학년·레벨·배정 개수·시험 설정·alreadyAssigned(진행 중 NORMAL 배정 존재 여부)·최신 메모 1건을 조회합니다. 반·학부모 정보는 포함하지 않습니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getStudentOverview"];
         put?: never;
@@ -1020,7 +1094,7 @@ export interface paths {
         };
         /**
          * 승인 대기 학부모 목록 조회
-         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, englishName, phoneNumber, createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
+         * @description 승인 대기(PENDING_APPROVAL) 상태인 학부모 목록을 조회합니다. parentId, email, name, phoneNumber, requestedChildren(가입 신청 시 입력한 자녀 희망 정보 목록 — 각 name·grade), createdAt(신청 시각)을 반환합니다. 관리자만 접근 가능합니다.
          */
         get: operations["getPendingParents"];
         put?: never;
@@ -1188,14 +1262,58 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         WordUpdateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그 (예: 26.3 기출)
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         ApiResponseWordResponse: {
             /** Format: int32 */
@@ -1204,18 +1322,70 @@ export interface components {
             data?: components["schemas"]["WordResponse"];
         };
         WordResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 단어 ID
+             * @example 1
+             */
             id?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word?: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech?: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning?: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty?: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 레벨 내 순서
+             * @example 3
+             */
             orderIndex?: number;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         MemoRequest: {
             /** Format: date */
@@ -1426,14 +1596,58 @@ export interface components {
             name: string;
         };
         WordCreateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그 (예: 26.3 기출)
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         /** @description 오답 뱅크 시험 생성 요청 */
         CreateWrongBankExamRequest: {
@@ -1509,16 +1723,64 @@ export interface components {
             words?: components["schemas"]["AssignedWordResponse"][];
         };
         AssignedWordResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 단어 ID
+             * @example 1
+             */
             wordId?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
             word?: string;
+            /**
+             * @description 품사 목록
+             * @example [
+             *       "adjective"
+             *     ]
+             */
             partsOfSpeech?: string[];
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
             koreanMeaning?: string;
+            /**
+             * @description 영어 뜻
+             * @example fluent and persuasive in speaking or writing
+             */
             englishMeaning?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 난이도 (1~10)
+             * @example 5
+             */
             difficulty?: number;
+            /**
+             * @description 동의어 목록
+             * @example [
+             *       "articulate",
+             *       "fluent"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 예문
+             * @example She gave an eloquent speech.
+             */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
         };
         /** @description 온라인 시험 제출 요청 — 학생이 입력한 답안 */
         SubmitExamRequest: {
@@ -1735,9 +1997,13 @@ export interface components {
             /** Format: int32 */
             grade?: number;
             phoneNumber?: string;
-            requestedChildName?: string;
+            /** @description 자녀 희망 정보 목록 — PARENT 전용, 최소 1명 필수. 각 원소는 자녀 이름(name)과 학년(grade). 매칭 전 임시 보관용이며 실제 학생 연결과는 별개 */
+            requestedChildren?: components["schemas"]["RequestedChild"][];
+        };
+        RequestedChild: {
+            name?: string;
             /** Format: int32 */
-            requestedChildGrade?: number;
+            grade?: number;
         };
         ApiResponseCompleteProfileResponse: {
             /** Format: int32 */
@@ -1797,11 +2063,21 @@ export interface components {
             /** Format: int64 */
             level10Count?: number;
         };
-        ApiResponseListAssignedWordResponse: {
+        ApiResponseStudySetWordsResponse: {
             /** Format: int32 */
             status?: number;
             message?: string;
-            data?: components["schemas"]["AssignedWordResponse"][];
+            data?: components["schemas"]["StudySetWordsResponse"];
+        };
+        /** @description 배정 단어 목록 + 예문 공개 여부 */
+        StudySetWordsResponse: {
+            /**
+             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
+             * @example false
+             */
+            exampleVisible?: boolean;
+            /** @description 배정된 단어 목록 */
+            words?: components["schemas"]["AssignedWordResponse"][];
         };
         ApiResponseListWrongBankWordResponse: {
             /** Format: int32 */
@@ -1838,6 +2114,17 @@ export interface components {
             synonyms?: string[];
             /** @description 예문 */
             example?: string;
+            /**
+             * Format: int32
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @example 2
+             */
+            satPriority?: number;
+            /**
+             * @description 기출 태그
+             * @example 26.3 기출
+             */
+            examTag?: string;
             /**
              * Format: int32
              * @description 누적 오답 횟수 — resolve 후에도 유지됨
@@ -1907,6 +2194,78 @@ export interface components {
              */
             correctCount?: number;
         };
+        /** @description 학생 할 일 항목 — 현재는 활성 시험(READY/ONLINE_STARTED)만 포함 */
+        TodoItem: {
+            /**
+             * @description 시험 유형
+             * @example REVIEW1
+             * @enum {string}
+             */
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            /**
+             * Format: int64
+             * @description 시험 ID — GET /api/v1/exams/{examId} 로 시험 상세 진입
+             * @example 42
+             */
+            examId?: number;
+            /**
+             * Format: int64
+             * @description 소속 배정(StudySet) ID — GET /api/v1/study-sets/{studySetId}/words 로 배정 단어 목록 진입
+             * @example 7
+             */
+            studySetId?: number;
+            /**
+             * @description 학생이 지금 바로 행동 가능 여부. true = ONLINE_STARTED 상태(앱에서 답안 제출 가능). false = READY 상태(선생님이 시험을 켜줘야 진행 가능).
+             * @example false
+             */
+            actionable?: boolean;
+            /**
+             * Format: date
+             * @description 복습 예정일 — REVIEW1/2/3 타입만 존재, 나머지는 null. 오늘보다 이전이면 밀린 복습.
+             * @example 2026-05-29
+             */
+            scheduledDate?: string;
+        };
+        ApiResponseListTodoItem: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["TodoItem"][];
+        };
+        ApiResponsePendingReviewsResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PendingReviewsResponse"];
+        };
+        /** @description 한 리뷰 시험의 단어 묶음 */
+        PendingReviewItem: {
+            /**
+             * Format: int64
+             * @description 학습셋 ID
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: int64
+             * @description 리뷰 시험 ID
+             * @example 123
+             */
+            examId?: number;
+            /**
+             * Format: date
+             * @description 리뷰 예정일
+             * @example 2026-05-28
+             */
+            scheduledDate?: string;
+            /** @description 리뷰 대상 단어 (difficulty·wordId 오름차순) */
+            words?: components["schemas"]["AssignedWordResponse"][];
+        };
+        /** @description 풀어야 할 리뷰 단어 일괄 조회 응답 — 활성 REVIEW1/2/3 시험 1건당 한 항목 */
+        PendingReviewsResponse: {
+            /** @description 활성 리뷰 시험 목록 (scheduledDate ASC, studySetId ASC 정렬) */
+            reviews?: components["schemas"]["PendingReviewItem"][];
+        };
         ApiResponseListMemoResponse: {
             /** Format: int32 */
             status?: number;
@@ -1970,13 +2329,28 @@ export interface components {
              */
             correctCount?: number;
         };
+        /** @description 진행 중인 NORMAL 배정 — 없으면 응답에서 null */
+        ActiveAssignment: {
+            /**
+             * Format: int64
+             * @description 진행 중 NORMAL StudySet ID — 클릭 시 해당 배정 단어 목록 페이지로 이동
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: int32
+             * @description 배정된 단어 수
+             * @example 10
+             */
+            wordCount?: number;
+        };
         ApiResponseDashboardResponse: {
             /** Format: int32 */
             status?: number;
             message?: string;
             data?: components["schemas"]["DashboardResponse"];
         };
-        /** @description 학생 학습 대시보드 (NORMAL 단어 기준 지표 일괄) */
+        /** @description 학생 학습 대시보드 요약 지표 (NORMAL 단어 기준). 차트 데이터는 /dashboard/charts 참고 */
         DashboardResponse: {
             /**
              * Format: int32
@@ -2008,26 +2382,46 @@ export interface components {
              * @example 0.85
              */
             overallAccuracy?: number;
-            /**
-             * Format: int32
-             * @description 진행 중 NORMAL 배정 단어 수 (없으면 0)
-             * @example 10
-             */
-            activeAssignedWordCount?: number;
+            /** @description 진행 중 NORMAL 배정 — studySetId와 단어 수를 함께 반환, 없으면 null */
+            activeAssignment?: components["schemas"]["ActiveAssignment"];
             /**
              * Format: int32
              * @description 풀어야 할 리뷰 시험 단어 수 (없으면 0)
              * @example 20
              */
             pendingReviewWordCount?: number;
+        };
+        ApiResponseDashboardChartResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["DashboardChartResponse"];
+        };
+        /** @description 일별 암기 완료 단어 수 */
+        DailyCount: {
+            /**
+             * Format: date
+             * @description 암기 완료 날짜
+             * @example 2026-05-23
+             */
+            date?: string;
+            /**
+             * Format: int32
+             * @description 그 날 암기 완료한 단어 수
+             * @example 12
+             */
+            count?: number;
+        };
+        /** @description 학생 대시보드 차트 데이터 (시험 점수 추이 + 월간 학습량) */
+        DashboardChartResponse: {
             /** @description WORD 시험 점수 추이 (createdAt ASC) */
             wordExamScores?: components["schemas"]["ExamScorePoint"][];
             /** @description EXAMPLE 시험 점수 추이 (createdAt ASC) */
             exampleExamScores?: components["schemas"]["ExamScorePoint"][];
             /** @description REVIEW 시험 점수 추이 (createdAt ASC) */
             reviewExamScores?: components["schemas"]["ExamScorePoint"][];
-            /** @description 월간 학습 단어 수 */
-            monthlyAssignedCounts?: components["schemas"]["MonthlyCount"][];
+            /** @description 일별 암기 완료 단어 수 (date ASC) — REVIEW3까지 통과한 단어를 통과일 단위로 집계 */
+            dailyLearnedCounts?: components["schemas"]["DailyCount"][];
         };
         /** @description 시험 점수 그래프 한 지점 */
         ExamScorePoint: {
@@ -2051,6 +2445,18 @@ export interface components {
             date?: string;
             /**
              * Format: int32
+             * @description 이 시험이 속한 배정(StudySet)의 레벨 — NORMAL은 첫 단어의 difficulty. StudySet 정보가 없으면 null
+             * @example 3
+             */
+            level?: number;
+            /**
+             * Format: int32
+             * @description 이 시험이 속한 배정(StudySet)에 배정된 단어 수. StudySet 정보가 없으면 null
+             * @example 30
+             */
+            assignedWordCount?: number;
+            /**
+             * Format: int32
              * @description 정답 수
              * @example 9
              */
@@ -2072,20 +2478,6 @@ export interface components {
              * @example true
              */
             isPassed?: boolean;
-        };
-        /** @description 월간 학습 단어 수 */
-        MonthlyCount: {
-            /**
-             * @description YYYY-MM 형식
-             * @example 2026-05
-             */
-            yearMonth?: string;
-            /**
-             * Format: int32
-             * @description 해당 월에 배정된 단어 수
-             * @example 120
-             */
-            count?: number;
         };
         ApiResponseStudySetExamTypeResponse: {
             /** Format: int32 */
@@ -2257,19 +2649,25 @@ export interface components {
              * @example 8
              */
             correctCount?: number;
+            /**
+             * Format: date
+             * @description 복습 예정일. REVIEW1/2/3 시험에만 존재, 나머지는 null. 오늘 이전이면 밀린 복습
+             * @example 2026-05-29
+             */
+            scheduledDate?: string;
         };
-        /** @description 시험 타입별 현황 */
+        /** @description 시험 타입별 시도 이력. 각 필드는 해당 타입의 모든 시도를 최신순으로 담은 배열 (취소 제외, 없으면 빈 배열) */
         ExamsByType: {
-            /** @description 단어 시험 */
-            word?: components["schemas"]["ExamSummaryDto"];
-            /** @description 예문 시험 */
-            example?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습1 시험 */
-            review1?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습2 시험 */
-            review2?: components["schemas"]["ExamSummaryDto"];
-            /** @description 복습3 시험 */
-            review3?: components["schemas"]["ExamSummaryDto"];
+            /** @description 단어 시험 시도 이력 (최신순) */
+            word?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 예문 시험 시도 이력 (최신순) */
+            example?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습1 시험 시도 이력 (최신순) */
+            review1?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습2 시험 시도 이력 (최신순) */
+            review2?: components["schemas"]["ExamSummaryDto"][];
+            /** @description 복습3 시험 시도 이력 (최신순) */
+            review3?: components["schemas"]["ExamSummaryDto"][];
         };
         /** @description 레벨별 단어 개수 */
         LevelCount: {
@@ -2308,7 +2706,7 @@ export interface components {
              * @example 2026-04-01
              */
             assignedDate?: string;
-            /** @description 단어·예문·복습 시험 현황. 생성되지 않았거나 취소된 시험은 null */
+            /** @description 단어·예문·복습 시험 시도 이력. 각 타입은 시도 배열(최신순)이며, 시험이 없거나 모두 취소되면 빈 배열 */
             exams?: components["schemas"]["ExamsByType"];
         };
         ApiResponseAssignmentSettingsResponse: {
@@ -2476,16 +2874,36 @@ export interface components {
             message?: string;
             data?: components["schemas"]["PendingParentResponse"][];
         };
+        /** @description 승인 대기 학부모 항목 — 관리자가 승인·자녀 매칭 시 참고 */
         PendingParentResponse: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 학부모 회원 ID
+             * @example 10
+             */
             parentId?: number;
+            /**
+             * @description 구글 이메일
+             * @example parent@gmail.com
+             */
             email?: string;
+            /**
+             * @description 학부모 이름
+             * @example 김부모
+             */
             name?: string;
+            /**
+             * @description 전화번호
+             * @example 010-1234-5678
+             */
             phoneNumber?: string;
-            requestedChildName?: string;
-            /** Format: int32 */
-            requestedChildGrade?: number;
-            /** Format: date-time */
+            /** @description 가입 신청 시 입력한 자녀 희망 정보 목록 (각 name·grade) — 매칭 전 임시 정보이며, 관리자가 이를 보고 실제 학생을 골라 승인 시 연결한다 */
+            requestedChildren?: components["schemas"]["RequestedChild"][];
+            /**
+             * Format: date-time
+             * @description 가입 신청 시각
+             * @example 2026-05-22T10:00:00
+             */
             createdAt?: string;
         };
         ApiResponseListParentListResponse: {
@@ -2636,7 +3054,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseWordResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 */
+            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) / SAT 중요도 범위 밖(INVALID_SAT_PRIORITY) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3375,7 +3793,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseWordResponse"];
                 };
             };
-            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) */
+            /** @description 유효성 검증 실패 / 난이도 범위 밖(INVALID_DIFFICULTY) / SAT 중요도 범위 밖(INVALID_SAT_PRIORITY) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3412,6 +3830,15 @@ export interface operations {
         responses: {
             /** @description 조회 성공 — 빈 배열 가능 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankExamListResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3603,6 +4030,15 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseListLevelExamListResponse"];
                 };
             };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListLevelExamListResponse"];
+                };
+            };
             /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
@@ -3736,6 +4172,15 @@ export interface operations {
         responses: {
             /** @description 조회 성공 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudySetExamListResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4737,7 +5182,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
             /** @description 타인의 배정 조회 시도 */
@@ -4746,7 +5191,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
             /** @description 학습 세트를 찾을 수 없음 */
@@ -4755,7 +5200,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListAssignedWordResponse"];
+                    "*/*": components["schemas"]["ApiResponseStudySetWordsResponse"];
                 };
             };
         };
@@ -4777,6 +5222,15 @@ export interface operations {
         responses: {
             /** @description 조회 성공 — 빈 배열 가능 */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListWrongBankWordResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4819,6 +5273,15 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseLong"];
                 };
             };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
             /** @description MEMBER_NOT_FOUND — 학생 없음 */
             404: {
                 headers: {
@@ -4826,6 +5289,103 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseLong"];
+                };
+            };
+        };
+    };
+    getTodos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — 할 일 없으면 빈 배열 반환 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TodoItem"][];
+                };
+            };
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTodoItem"];
+                };
+            };
+        };
+    };
+    getPendingReviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePendingReviewsResponse"];
                 };
             };
         };
@@ -4883,6 +5443,59 @@ export interface operations {
             };
         };
     };
+    getDashboardCharts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+        };
+    };
     getExamsByType: {
         parameters: {
             query?: never;
@@ -4914,6 +5527,15 @@ export interface operations {
             };
             /** @description 유효하지 않은 examType 값 */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStudySetExamTypeResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생의 배정 조회 (ACCESS_DENIED) */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5107,7 +5729,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseStudentOverviewResponse"];
                 };
             };
-            /** @description 권한 없음 */
+            /** @description 본인/자녀가 아닌 학생 데이터 조회 시도 (ACCESS_DENIED) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5372,7 +5994,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseExamDetailResponse"];
                 };
             };
-            /** @description 본인/담당 학생이 아닌 시험 조회 (ACCESS_DENIED) */
+            /** @description 본인·담당 학생·연결된 자녀가 아닌 시험 조회 (ACCESS_DENIED) — 교사·해당 학생 본인·연결된 학부모만 가능 */
             403: {
                 headers: {
                     [name: string]: unknown;

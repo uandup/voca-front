@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { StudentSideNavBar } from '@/widgets/student-nav/StudentSideNavBar';
-import { requireAuth } from '@/entities/auth';
+import { StudentSideNavBar } from '@/widgets/student-nav';
+import { requireStudentArea } from '@/entities/auth';
 
 export const Route = createFileRoute('/student')({
-  beforeLoad: requireAuth,
+  // STUDENT(본인) 또는 PARENT(자녀 열람)만 허용 — TEACHER는 /teacher/students로 리다이렉트.
+  beforeLoad: requireStudentArea,
   component: function StudentLayout() {
     const [collapsed, setCollapsed] = useState(false);
 

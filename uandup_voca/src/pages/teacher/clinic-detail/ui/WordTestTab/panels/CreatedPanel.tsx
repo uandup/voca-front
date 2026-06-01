@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
-import { useExamDetail } from '@/features/exam';
+import { useExamDetail } from '@/entities/test';
 import { TestPrintModal } from '../modals/TestPrintModal';
 // 통합 후 미사용 — modal 기반 채점 흐름 복귀 시 다시 활성화.
 // import { TestGradingModal } from '../modals/TestGradingModal';
@@ -103,11 +103,7 @@ export function CreatedPanel({
   // start-online은 READY 상태에서만 허용. ONLINE_STARTED/SUBMITTED일 땐 이미 시작·제출된 상태라
   // 재호출 시 서버 거부 — 버튼을 비활성화하고 라벨을 "Already Started"로 바꿔 사유를 노출한다.
   const startOnlineDisabled = startOnline.isPending || currentStatus !== 'READY';
-  const startOnlineLabel = startOnline.isPending
-    ? 'Starting...'
-    : currentStatus === 'READY'
-      ? 'Start Online Test'
-      : 'Online Test Started';
+  const startOnlineLabel = currentStatus === 'READY' ? 'Start Online Test' : 'Online Test Started';
 
   return (
     <>

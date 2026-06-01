@@ -1,4 +1,4 @@
-import type { WordCard } from '@/entities/word/@x/review-deck';
+import type { WordCardData } from '@/entities/word/@x/review-deck';
 import type { WordTestType } from '@/entities/test/@x/review-deck';
 
 // 서버 WrongBankExamListResponse.status — examType 기반 step 시험과 enum이 다르다.
@@ -17,9 +17,9 @@ export interface ReviewDeckExamRow {
   totalCount: number | null;
 }
 
-// 활성 오답 단어 — 모달에서 TeacherWordCard extraInfo로 wrongCount 배지를 표시한다.
+// 활성 오답 단어 — 모달에서 WordCard extraInfo로 wrongCount 배지를 표시한다.
 // lastWrongAt은 정렬 기준이며 화면 표시는 선택적.
-export interface ReviewDeckWord extends WordCard {
+export interface ReviewDeckWord extends WordCardData {
   wrongCount: number;
   lastWrongAt: string;
   sentence: string;

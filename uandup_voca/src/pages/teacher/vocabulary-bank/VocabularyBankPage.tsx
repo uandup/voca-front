@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import { TeacherWordCard, DIFFICULTY_LEVELS } from '@/entities/word';
-import type { TeacherWord } from '@/entities/word';
-import { useVocabularyBank } from './model/hooks/useVocabularyBank';
+import { WordCard, DIFFICULTY_LEVELS } from '@/entities/word';
+import type { WordCardData } from '@/entities/word';
+import { useVocabularyBank } from './model/useVocabularyBank';
 import { WordFormModal } from './ui/modals/WordFormModal';
 import { DeleteWordModal } from './ui/modals/DeleteWordModal';
 
@@ -12,8 +12,8 @@ export default function VocabularyBankPage() {
   const [searchParams, setSearchParams] = useState({ keyword: '', level: '' as number | '' });
   const [page, setPage] = useState(0);
 
-  const [editTarget, setEditTarget] = useState<TeacherWord | null | 'new'>(null);
-  const [deleteTarget, setDeleteTarget] = useState<TeacherWord | null>(null);
+  const [editTarget, setEditTarget] = useState<WordCardData | null | 'new'>(null);
+  const [deleteTarget, setDeleteTarget] = useState<WordCardData | null>(null);
 
   const { words, totalElements, totalPages } = useVocabularyBank(searchParams, page);
 
@@ -96,9 +96,10 @@ export default function VocabularyBankPage() {
 
       <div className="flex flex-col gap-8">
         {words.map((word) => (
-          <TeacherWordCard
+          <WordCard
             key={word.id}
             {...word}
+            showSentence
             extraInfo={
               // 카드 자체가 relative이므로 우상단 absolute 배치를 그대로 유지한다.
               <div className="absolute top-6 right-6 flex gap-2 z-10">

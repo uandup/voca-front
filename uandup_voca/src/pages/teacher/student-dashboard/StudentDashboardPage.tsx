@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
-import { getStudents, toStudentManageTableRow, studentKeys } from '@/entities/student';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import {
+  useStudentOverview,
+  useStudentDashboard,
+  useStudentDashboardCharts,
+} from '@/entities/student';
 import {
   ScoreTrendChart,
   StatCards,
@@ -11,9 +15,17 @@ import {
   TodoList,
 } from '@/widgets/student-dashboard';
 
+// 학생 클라이언트 시험 유형('word-to-meaning' 등) → 표시 문구.
+const TEST_TYPE_LABEL: Record<string, string> = {
+  'word-to-meaning': 'Word to meaning',
+  'meaning-to-word': 'Meaning to word',
+};
+
 // 선생님이 학생 목록(row)에서 진입하는 학생 조회 화면.
-// 학생 본인 대시보드(pages/student/dashboard)와 동일한 widgets/student-dashboard
-// 블록을 재사용하되, 제목은 BreadcrumbPageTitle(Student > 이름)로 바꾼다.
+// 학생 본인 대시보드와 동일한 widgets/student-dashboard 블록을 재사용하되,
+// 제목은 BreadcrumbPageTitle(Student Management > 이름)로 바꾼다.
+// 대시보드 데이터는 본인/자녀와 동일하게 /dashboard·/dashboard/charts에서 받고,
+// Test Configuration은 해당 학생의 overview에서 가져온다(선생님 members/me에는 없음).
 export default function StudentDashboardPage() {
   const { studentId: studentIdParam } = useParams({
     from: '/teacher/students_/$studentId',
@@ -21,15 +33,9 @@ export default function StudentDashboardPage() {
   const studentId = Number(studentIdParam);
   const navigate = useNavigate();
 
-  // 학생 목록 쿼리(studentKeys.lists())를 그대로 재사용 — StudentManagePage와 캐시를 공유한다.
-  // 단일 학생 overview API가 별도로 있지만, 대시보드 위젯이 요구하는 필드는
-  // StudentManageTableRow에 모두 포함되어 있어 목록 캐시에서 찾는 것으로 충분하다.
-  const { data: students = [], isLoading } = useQuery({
-    queryKey: studentKeys.lists(),
-    queryFn: getStudents,
-    select: (res) => res.data?.map(toStudentManageTableRow) ?? [],
-  });
-  const student = students.find((s) => s.id === studentId);
+  const { data: overview, isLoading: overviewLoading } = useStudentOverview(studentId);
+  const { data: dashboard, isLoading: dashboardLoading } = useStudentDashboard(studentId);
+  const { data: charts, isLoading: chartsLoading } = useStudentDashboardCharts(studentId);
 
   const [todoOpen, setTodoOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -49,15 +55,15 @@ export default function StudentDashboardPage() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [todoOpen]);
 
-  if (isLoading) {
+  if (overviewLoading || dashboardLoading || chartsLoading) {
     return (
       <main>
-        <p className="text-on-surface-variant">Loading...</p>
+        <LoadingSpinner />
       </main>
     );
   }
 
-  if (!student) {
+  if (!overview || !dashboard || !charts) {
     return (
       <main>
         <BreadcrumbPageTitle
@@ -79,7 +85,7 @@ export default function StudentDashboardPage() {
           parents={[
             { label: 'Student Management', onClick: () => navigate({ to: '/teacher/students' }) },
           ]}
-          title={student.nameKo}
+          title={overview.nameKo}
         />
 
         {/* Todo Button */}
@@ -103,19 +109,43 @@ export default function StudentDashboardPage() {
       <div className="flex gap-4 items-stretch mb-8">
         <div className="flex-1">
           <LevelProgress
-            student={{
-              assignedLevel: student.assignedLevel,
-              assignedWordCount: student.assignedWordCount,
-              testConfig: student.testConfig,
-            }}
+            level={dashboard.currentLevel}
+            progressPercent={dashboard.levelProgressPercent}
+            testTypeLabel={TEST_TYPE_LABEL[overview.testType] ?? '—'}
+            includeSynonyms={overview.includeSynonyms}
+            examQuestionCount={overview.testQuestionCount}
+            assignmentCount={overview.assignmentCount}
           />
         </div>
-        <WordsLearnedCard />
+        <WordsLearnedCard count={dashboard.memorizedWordCount} />
       </div>
       <div className="grid grid-cols-12 gap-8 items-stretch">
-        <ScoreTrendChart />
+        <ScoreTrendChart charts={charts} />
         <StatCards
-          student={{ accuracy: student.accuracy, assignedWordCount: student.assignedWordCount }}
+          accuracy={dashboard.overallAccuracy}
+          assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0}
+          pendingReviewWordCount={dashboard.pendingReviewWordCount}
+          onAssignedClick={
+            dashboard.activeAssignment
+              ? () =>
+                  navigate({
+                    to: '/teacher/students/$studentId/assigned-words/$studySetId',
+                    params: {
+                      studentId: String(studentId),
+                      studySetId: String(dashboard.activeAssignment!.studySetId),
+                    },
+                  })
+              : undefined
+          }
+          onReviewClick={
+            dashboard.pendingReviewWordCount > 0
+              ? () =>
+                  navigate({
+                    to: '/teacher/students/$studentId/pending-reviews',
+                    params: { studentId: String(studentId) },
+                  })
+              : undefined
+          }
         />
       </div>
 
@@ -126,7 +156,7 @@ export default function StudentDashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList student={{ assignedWordCount: student.assignedWordCount }} />
+          <TodoList studentId={studentId} />
         </div>
       </div>
     </main>

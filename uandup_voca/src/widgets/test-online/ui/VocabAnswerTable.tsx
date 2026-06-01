@@ -10,6 +10,8 @@ interface VocabAnswerTableProps {
   onAnswerChange: (id: number, field: keyof Answer, value: string) => void;
   currentPage: number;
   totalPages: number;
+  // 채점 전(submitted) 상태 — input을 read-only span으로 렌더링한다.
+  readOnly?: boolean;
 }
 
 export function VocabAnswerTable({
@@ -20,6 +22,7 @@ export function VocabAnswerTable({
   onAnswerChange,
   currentPage,
   totalPages,
+  readOnly = false,
 }: VocabAnswerTableProps) {
   return (
     <div className="bg-white border border-outline-variant/30 rounded-2xl p-4">
@@ -36,6 +39,7 @@ export function VocabAnswerTable({
             answer={answers[item.id]}
             onAnswerChange={onAnswerChange}
             isLast={index === items.length - 1 && currentPage === totalPages}
+            readOnly={readOnly}
           />
         ))}
       </div>

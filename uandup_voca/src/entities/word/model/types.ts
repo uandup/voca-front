@@ -1,11 +1,11 @@
-export type PartOfSpeech = 'N' | 'V' | 'Adj' | 'Adv' | 'Conj';
+export type PartOfSpeech = 'N' | 'V' | 'Adj' | 'Adv' | 'Prep' | 'Conj' | 'Interj';
 export const DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 export type WordDifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
 
 // ── Student Vocab Pages ─────────────────────────────────────────────────────
 
-/** VocabListPage, LevelWordListPage — StudentWordCard */
-export interface WordCard {
+/** WordCard 컴포넌트 데이터. sentence는 exampleVisible에 따라 optional. */
+export interface WordCardData {
   id: number;
   difficulty: WordDifficultyLevel;
   word: string;
@@ -13,11 +13,11 @@ export interface WordCard {
   korMeaning: string;
   engMeaning: string;
   synonyms: string[];
-}
-
-/** VocabularyBankPage (teacher) — TeacherWordCard with sentence footer */
-export interface TeacherWord extends WordCard {
-  sentence: string;
+  sentence?: string;
+  // SAT 중요도 0~3. 0이면 별 표시 없음.
+  satPriority: number;
+  // 기출 태그 목록. 서버의 콤마 구분 문자열을 파싱한 배열.
+  examTags: string[];
 }
 
 // ── Test Pages ──────────────────────────────────────────────────────────────

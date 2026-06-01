@@ -2,16 +2,14 @@ export { DIFFICULTY_LEVELS } from './model/types';
 export type {
   PartOfSpeech,
   WordDifficultyLevel,
-  WordCard,
-  TeacherWord,
+  WordCardData,
   WordTestItem,
   SentenceTestItem,
   VocabReviewItem,
 } from './model/types';
-export { toTeacherWord } from './model/mapper';
+export { toWordCardData } from './model/mapper';
 export { LevelBlock } from './ui/LevelBlock';
-export { StudentWordCard } from './ui/StudentWordCard';
-export { TeacherWordCard } from './ui/TeacherWordCard';
+export { WordCard } from './ui/WordCard';
 export { getWords, createWord, updateWord, deleteWord } from './api/wordApi';
 export { toWordCreateRequest, toWordUpdateRequest } from './api/mapper';
 export { wordKeys } from './api/queryKeys';

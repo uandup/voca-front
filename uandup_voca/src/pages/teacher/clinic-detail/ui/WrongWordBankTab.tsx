@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
-import { SuccessModal } from '@/shared/ui/SuccessModal';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
 import type { WordTestType } from '@/entities/test';
 import { ReviewDeckWordsModal } from '@/entities/review-deck';
 import type { ReviewDeckExamRow, ReviewDeckExamStatus } from '@/entities/review-deck';
@@ -10,9 +10,9 @@ import {
   useReviewDeckExamList,
   useReviewDeckCount,
   useReviewDeckWords,
-  useReviewDeckExamActions,
-} from '@/features/review-deck-exam';
-import { useStudentOverview } from '@/features/student';
+} from '@/entities/review-deck';
+import { useReviewDeckExamActions } from '@/features/review-deck-exam';
+import { useStudentOverview } from '@/entities/student';
 
 interface Props {
   studentId: number;
@@ -75,7 +75,10 @@ export function WrongWordBankTab({ studentId }: Props) {
 
   const { create, startOnline, cancel } = useReviewDeckExamActions({ studentId, currentExamId });
 
-  const generateDisabled = activeRow !== null || count === 0 || create.isPending;
+  const qtyIsZero = Number(config.qty) === 0;
+  const qtyExceedsCount = count > 0 && Number(config.qty) > count;
+  const generateDisabled =
+    activeRow !== null || count === 0 || qtyIsZero || qtyExceedsCount || create.isPending;
 
   function handleGenerate() {
     create.mutate(
@@ -192,6 +195,15 @@ export function WrongWordBankTab({ studentId }: Props) {
               )}
               {!activeRow && count === 0 && (
                 <p className="text-xs text-on-surface-variant">No incorrect words to test yet.</p>
+              )}
+              {/* Quantity가 0이거나 오답 단어 수를 초과하면 시험 생성 불가 */}
+              {!activeRow && count > 0 && qtyIsZero && (
+                <p className="text-xs text-error">Quantity must be at least 1.</p>
+              )}
+              {!activeRow && qtyExceedsCount && (
+                <p className="text-xs text-error">
+                  Quantity cannot exceed the review deck size ({count}).
+                </p>
               )}
               <button
                 onClick={handleGenerate}
@@ -325,8 +337,9 @@ export function WrongWordBankTab({ studentId }: Props) {
       )}
 
       {showCreateSuccess && (
-        <SuccessModal
-          message="Test Generated!"
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
           description="The test has been successfully created."
           onClose={() => setShowCreateSuccess(false)}
         />

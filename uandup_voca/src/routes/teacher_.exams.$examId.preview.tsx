@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import ExamPreviewPage from '@/pages/teacher/exam-preview/ExamPreviewPage';
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { requireTeacher } from '@/entities/auth';
 import type { ExamType } from '@/entities/test';
 
 const EXAM_TYPES: readonly ExamType[] = [
@@ -24,7 +24,9 @@ interface ExamPreviewSearch {
 }
 
 export const Route = createFileRoute('/teacher_/exams/$examId/preview')({
-  component: ExamPreviewPage,
+  // /teacher 레이아웃을 우회하는 라우트라 가드를 명시적으로 적용한다.
+  beforeLoad: requireTeacher,
+  component: lazyRouteComponent(() => import('@/pages/teacher/exam-preview/ExamPreviewPage')),
   validateSearch: (search: Record<string, unknown>): ExamPreviewSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,
     examType: isExamType(search.examType) ? search.examType : undefined,

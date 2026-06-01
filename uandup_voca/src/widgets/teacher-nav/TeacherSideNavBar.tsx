@@ -1,8 +1,7 @@
 import { SideNavBar } from '@/shared/ui/SideNavBar';
-import { isAdmin } from '@/entities/teacher';
+import { isAdmin, useSignOut } from '@/entities/auth';
 
 const BASE_NAV_ITEMS = [
-  // { icon: 'dashboard', label: 'Dashboard', to: '/teacher/dashboard' },
   { icon: 'people', label: 'Students', to: '/teacher/students' },
   { icon: 'clinical_notes', label: 'Clinics', to: '/teacher/clinics' },
   { icon: 'book_2', label: 'Vocabulary Bank', to: '/teacher/vocabulary-bank' },
@@ -21,6 +20,14 @@ interface TeacherSideNavBarProps {
 
 export function TeacherSideNavBar({ collapsed, onToggle }: TeacherSideNavBarProps) {
   const navItems = isAdmin() ? [...BASE_NAV_ITEMS, ADMIN_NAV_ITEM] : [...BASE_NAV_ITEMS];
+  const onSignOut = useSignOut();
 
-  return <SideNavBar navItems={navItems} collapsed={collapsed} onToggle={onToggle} />;
+  return (
+    <SideNavBar
+      navItems={navItems}
+      collapsed={collapsed}
+      onToggle={onToggle}
+      onSignOut={onSignOut}
+    />
+  );
 }

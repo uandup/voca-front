@@ -27,5 +27,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  // 테스트 파일은 빌드 대상이 아니다 — Vitest가 별도 컴파일 (의도된 invalid 입력 cast 허용 위함).
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
 }

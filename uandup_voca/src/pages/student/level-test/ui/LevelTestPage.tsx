@@ -3,8 +3,8 @@ import { TableContainer } from '@/shared/ui/TableContainer';
 import { LevelBlock } from '@/entities/word';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import type { LevelTestExamStatus } from '@/entities/level-test';
-import { useLevelTestExamList } from '@/features/level-test-exam';
-import { useCurrentStudentId } from '@/shared/jwt';
+import { useLevelTestExamList } from '@/entities/level-test';
+import { useCurrentStudentId } from '@/entities/auth';
 
 const COLUMNS = ['Date', 'Level', 'Assigned QTY', 'Test QTY', 'Score', 'Status', 'Actions'];
 

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
-import CycleRow from './ui/CycleRow';
+import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
+import WordTestCycleRow from './ui/WordTestCycleRow';
 import { toStudentTestBundleRow } from '@/entities/student';
 import type { TestBundleRow } from '@/entities/test';
-import { useStudySetList } from '@/features/study-set';
-import { useCurrentStudentId } from '@/shared/jwt';
+import { useStudySetList } from '@/entities/student';
+import { useCurrentStudentId } from '@/entities/auth';
 
 const TABS = ['Active', 'History'] as const;
 type Tab = (typeof TABS)[number];
@@ -57,13 +58,11 @@ export default function WordTestPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">
-          <p className="text-sm font-medium">Loading...</p>
-        </div>
+        <LoadingSpinner />
       ) : displayed.length > 0 ? (
         <div className="flex flex-col gap-6">
           {displayed.map((cycle) => (
-            <CycleRow key={cycle.id} {...cycle} />
+            <WordTestCycleRow key={cycle.id} {...cycle} />
           ))}
         </div>
       ) : (

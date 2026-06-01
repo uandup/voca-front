@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { getMyInfo, toMember } from '@/entities/member';
+import { getActiveChildId, setActiveChildId } from '@/entities/auth';
 import { OnboardingNav } from '../onboarding/ui/OnboardingNav';
 
 // PendingPage가 표시할 두 가지 안내 — 일반 승인 대기 vs 학부모 자녀 매칭 대기.
@@ -8,6 +9,7 @@ type PendingVariant = 'approval' | 'parentNoChild';
 
 export default function PendingPage() {
   const navigate = useNavigate();
+  const router = useRouter();
   const called = useRef(false);
 
   // 학부모 전용 화면이 없어 ACTIVE 학부모도 이 페이지에 머문다 —
@@ -17,6 +19,11 @@ export default function PendingPage() {
   useEffect(() => {
     if (called.current) return;
     called.current = true;
+
+    // getMyInfo 응답이 오기 전에 학생/선생님 destination lazy chunk를 병렬로 prefetch.
+    // ACTIVE 사용자는 즉시 그쪽으로 navigate되므로 청크가 미리 캐시되어 있으면 깜빡임이 줄어든다.
+    router.preloadRoute({ to: '/student/dashboard' });
+    router.preloadRoute({ to: '/teacher/students' });
 
     getMyInfo()
       .then(({ data }) => {
@@ -28,9 +35,18 @@ export default function PendingPage() {
         }
 
         if (member.role === 'PARENT') {
-          // 학부모는 status와 무관하게 이 페이지에 머문다.
-          // ACTIVE이지만 자녀가 아직 없으면 '자녀 매칭 대기' 문구로 전환한다.
-          if (member.status === 'ACTIVE' && (member.children?.length ?? 0) === 0) {
+          const children = member.children ?? [];
+          if (member.status === 'ACTIVE' && children.length > 0) {
+            // 자녀가 매칭된 학부모는 자녀 페이지를 읽기전용으로 공유한다.
+            // 마지막으로 본 자녀가 아직 유효하면 그대로 복원하고, 아니면 첫 자녀로 fallback한다.
+            const lastViewedId = getActiveChildId();
+            const restored = children.find((c) => c.studentId === lastViewedId);
+            setActiveChildId((restored ?? children[0]).studentId);
+            navigate({ to: '/student/dashboard' });
+            return;
+          }
+          // 승인 대기 중이거나, ACTIVE라도 자녀가 아직 없으면 이 페이지에 머문다.
+          if (member.status === 'ACTIVE') {
             setVariant('parentNoChild');
           }
           return;
@@ -43,7 +59,7 @@ export default function PendingPage() {
       .catch(() => {
         // 조회 실패 시 현재 페이지 유지. 401은 axios 인터셉터가 처리.
       });
-  }, [navigate]);
+  }, [navigate, router]);
 
   const isParentNoChild = variant === 'parentNoChild';
 
@@ -78,7 +94,8 @@ export default function PendingPage() {
                 <p className="text-sm text-on-surface-variant leading-relaxed mb-6">
                   Your account has been approved.
                   <br />
-                  You'll be able to access the service once a child is linked to your account.
+                  You'll be able to access the service <br /> once a child is linked to your
+                  account.
                 </p>
 
                 {/* Notice */}

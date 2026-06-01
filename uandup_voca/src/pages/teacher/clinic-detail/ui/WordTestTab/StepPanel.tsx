@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { StepCardVM, StudySetExamType } from '@/entities/test';
-import { SuccessModal } from '@/shared/ui/SuccessModal';
-import { useStudentOverview } from '@/features/student';
-import { useStudySetDetail } from '../../model/hooks/useStudySetDetail';
-import { useExamActions } from '../../model/hooks/useExamActions';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
+import { useStudentOverview } from '@/entities/student';
+import { useStudySetDetail } from '../../model/useStudySetDetail';
+import { useExamActions } from '../../model/useExamActions';
 import { inferPhase } from '../../model/mapper';
 import { TestConfigSection } from './TestConfigSection';
 import { PendingPanel } from './panels/PendingPanel';
@@ -83,11 +83,17 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         initialConfig={initialConfig}
         showEditButton={phase === 'pending'}
         onEditingChange={setIsConfigEditing}
+        // 배정 단어 수를 시험 문항 수의 상한으로 전달한다.
+        maxQty={student.assignmentCount}
       />
 
       {phase === 'pending' && (
         <PendingPanel
           isEditing={isConfigEditing}
+          // 저장된 Quantity가 0이면 Generate Test 자체를 막는다.
+          testQtyIsZero={initialConfig.testQty === 0}
+          // 저장된 Quantity가 배정 단어 수를 초과하면 Generate Test를 막는다.
+          testQtyExceedsMax={initialConfig.testQty > student.assignmentCount}
           create={create}
           onCreateSuccess={() => setShowCreateSuccess(true)}
         />
@@ -140,8 +146,9 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
       )}
 
       {showCreateSuccess && (
-        <SuccessModal
-          message="Test Generated!"
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
           description="The test has been successfully created."
           onClose={() => setShowCreateSuccess(false)}
         />

@@ -1,4 +1,4 @@
-import { usePendingStudents } from '../../model/hooks/usePendingApprovals';
+import { usePendingStudents } from '../../model/usePendingApprovals';
 import { PendingList, LoadingState, ApproveRejectButtons } from './PendingListUI';
 
 export function StudentTab() {

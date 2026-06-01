@@ -1,2 +1,2 @@
-export type { WordDifficultyLevel, TeacherWord } from '../model/types';
-export { toTeacherWord } from '../model/mapper';
+export type { WordDifficultyLevel, WordCardData } from '../model/types';
+export { toWordCardData } from '../model/mapper';
