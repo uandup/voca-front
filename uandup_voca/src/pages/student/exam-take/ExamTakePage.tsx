@@ -54,15 +54,35 @@ export default function ExamTakePage() {
   const search = useSearch({ from: '/student_/exams/$examId/take' });
   const router = useRouter();
 
-  const examId = Number(examIdParam);
+  const routeExamId = Number(examIdParam);
   const studentId = useCurrentStudentId() ?? 0;
+
+  // allExamIds가 있으면 탭 전환 뷰. "examId:score,..." 형식 → { examId, score }[].
+  const examAttempts: { examId: number; score: string }[] = useMemo(() => {
+    if (!search.allExamIds) return [];
+    return search.allExamIds
+      .split(',')
+      .map((part) => {
+        const colonIdx = part.indexOf(':');
+        const examId = Number(part.slice(0, colonIdx));
+        const score = part.slice(colonIdx + 1);
+        return { examId, score };
+      })
+      .filter((a) => !isNaN(a.examId) && a.examId > 0);
+  }, [search.allExamIds]);
+
+  const showAttemptTabs = examAttempts.length > 1;
+  const [selectedExamId, setSelectedExamId] = useState(routeExamId);
+
+  const examId = showAttemptTabs ? selectedExamId : routeExamId;
   const { data: examDetail, isLoading } = useExamDetail(examId);
 
   const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
   const isSentence = examType === 'EXAMPLE';
   const source = inferSource(search.examType);
 
-  const submit = useSubmitExam({ examId, studentId, source });
+  // 제출은 항상 라우트의 examId 대상. 탭 전환 중에도 다른 시험을 실수로 제출하지 않는다.
+  const submit = useSubmitExam({ examId: routeExamId, studentId, source });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [vocabAnswers, setVocabAnswers] = useState<Record<number, Answer>>({});
@@ -186,7 +206,8 @@ export default function ExamTakePage() {
   );
 
   const isAnswerMode = mode === 'answer';
-  const showSubmit = isAnswerMode;
+  // 탭 전환 히스토리 뷰에서는 실수로 제출하지 않도록 Submit 버튼을 숨긴다.
+  const showSubmit = isAnswerMode && !showAttemptTabs;
 
   // itemOrder(클라이언트 키) → examItemId(서버 식별자)로 매핑하여 제출 페이로드 구성.
   function doSubmit() {
@@ -217,12 +238,41 @@ export default function ExamTakePage() {
     doSubmit();
   }
 
+  // 헤더 중앙: 복수 시도면 탭, 응시 중이면 경고, 나머지는 없음.
+  const headerCenter = showAttemptTabs ? (
+    <>
+      {examAttempts.map((attempt) => (
+        <button
+          key={attempt.examId}
+          onClick={() => setSelectedExamId(attempt.examId)}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+            selectedExamId === attempt.examId
+              ? 'bg-primary text-white'
+              : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
+          }`}
+        >
+          {attempt.score === '-' ? '-' : attempt.score}
+        </button>
+      ))}
+    </>
+  ) : isAnswerMode ? (
+    <div className="flex items-center gap-1.5 text-on-surface-variant">
+      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+        warning
+      </span>
+      <p className="text-sm font-semibold">
+        Your answers are not saved automatically. Refreshing or exiting this page will discard all
+        progress.
+      </p>
+    </div>
+  ) : undefined;
+
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       <TestHeader
         onExit={handleExit}
         onSubmit={showSubmit ? handleSubmit : undefined}
-        showWarning={isAnswerMode}
+        center={headerCenter}
       />
 
       <div className="relative flex flex-1 justify-center px-6 py-6">

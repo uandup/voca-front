@@ -13,13 +13,30 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
     return window.location.pathname + window.location.search;
   }
 
+  function serializeAttempts(step: StepCardVM): string | undefined {
+    if (step.examAttempts.length <= 1) return undefined;
+    return step.examAttempts.map((a) => `${a.examId}:${a.score}`).join(',');
+  }
+
   function handleStepAction(step: StepCardVM, idx: number) {
     if (step.examId === null) return;
     const examType = STEP_EXAM_TYPES[idx];
+    // active 상태(시험 응시 중)는 탭 없이 단일 뷰. 그 외(passed/fail/grading)는 attempts 전달.
+    const allExamIds = step.status !== 'active' ? serializeAttempts(step) : undefined;
     navigate({
       to: '/student/exams/$examId/take',
       params: { examId: String(step.examId) },
-      search: { returnTo: returnToCurrent(), examType },
+      search: { returnTo: returnToCurrent(), examType, allExamIds },
+    });
+  }
+
+  function handleViewResults(step: StepCardVM, idx: number) {
+    if (step.lastCompletedExamId === null) return;
+    const examType = STEP_EXAM_TYPES[idx];
+    navigate({
+      to: '/student/exams/$examId/take',
+      params: { examId: String(step.lastCompletedExamId) },
+      search: { returnTo: returnToCurrent(), examType, allExamIds: serializeAttempts(step) },
     });
   }
 
@@ -81,7 +98,15 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
           return (
             <Fragment key={step.name}>
               <div className="relative flex-1 min-w-0 h-44">
-                <WordTestStepCard step={step} onAction={() => handleStepAction(step, idx)} />
+                <WordTestStepCard
+                  step={step}
+                  onAction={() => handleStepAction(step, idx)}
+                  onViewResults={
+                    step.lastCompletedExamId !== null
+                      ? () => handleViewResults(step, idx)
+                      : undefined
+                  }
+                />
                 {isInactive && <div className="absolute inset-0 rounded-2xl bg-white/60" />}
               </div>
               {idx < steps.length - 1 && (

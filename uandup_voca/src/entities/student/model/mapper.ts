@@ -141,6 +141,8 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      lastCompletedExamId: null,
+      examAttempts: [],
       scheduledDate: null,
     };
   }
@@ -155,6 +157,8 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      lastCompletedExamId: null,
+      examAttempts: [],
       scheduledDate: null,
     };
   }
@@ -176,6 +180,8 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     maxScore: totalCount ?? null,
     retakeCount: exams.length - 1,
     examId,
+    lastCompletedExamId: null,
+    allExamIds: [],
     scheduledDate: scheduledDate ?? null,
   };
 }
@@ -198,6 +204,8 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      lastCompletedExamId: null,
+      examAttempts: [],
       scheduledDate: null,
     };
   }
@@ -212,6 +220,8 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       maxScore: null,
       retakeCount: 0,
       examId: null,
+      lastCompletedExamId: null,
+      examAttempts: [],
       scheduledDate: null,
     };
   }
@@ -228,9 +238,12 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     stepStatus = 'pending';
   }
 
+  // COMPLETED 시험만 필터링. retakeCount 계산·lastCompleted 조회에 사용.
+  const completedExams = exams.filter((e) => e.status === 'COMPLETED');
+
   // active/grading/pending 상태이면 현재 시험엔 점수가 없다.
   // 이전 fail 시도가 있으면 가장 최근 완료 시험에서 점수·completedAt을 가져와 표시한다.
-  const lastCompleted = status !== 'COMPLETED' ? (exams.find((e) => e.status === 'COMPLETED') ?? null) : null;
+  const lastCompleted = status !== 'COMPLETED' ? (completedExams[0] ?? null) : null;
 
   return {
     name: 'Word',
@@ -239,8 +252,18 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     completedAt: lastCompleted ? (lastCompleted.completedAt ?? null) : (completedAt ?? null),
     lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
     maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
-    retakeCount: exams.length - 1,
+    // COMPLETED 시험 수만으로 retakeCount 산정 — READY/SUBMITTED 시험은 제외.
+    retakeCount: Math.max(0, completedExams.length - 1),
     examId,
+    lastCompletedExamId: lastCompleted?.examId ?? null,
+    // oldest → newest 순 전체 시도 목록. examId + 점수 레이블. 탭 전환 UI에 사용.
+    examAttempts: [...exams].reverse().map((e) => ({
+      examId: e.examId,
+      score:
+        e.correctCount !== null && e.totalCount !== null
+          ? `${e.correctCount}/${e.totalCount}`
+          : '-',
+    })),
     scheduledDate: scheduledDate ?? null,
   };
 }

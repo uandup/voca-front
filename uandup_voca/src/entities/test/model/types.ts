@@ -36,6 +36,11 @@ export interface StepCardVM {
   // 학생 WordTestPage가 step 카드의 Start Test / View Results 버튼에서 응시 페이지로 직접 이동할 때 사용.
   // step에 시험이 아직 없으면(pending/locked) null. teacher 측 StepPanel은 별도 examHistory를 fetch하므로 무관.
   examId: number | null;
+  // pending/active/grading 상태에서 "View Results" 클릭 시 기본으로 열 exam ID (가장 최근 COMPLETED 시험).
+  // 현재 시험이 이미 COMPLETED이거나 이전 기록이 없으면 null. teacher 측은 null.
+  lastCompletedExamId: number | null;
+  // 이 step의 모든 시도 목록 (oldest→newest). examId + 점수 레이블. 탭 전환 UI에 사용. teacher 측은 [].
+  examAttempts: { examId: number; score: string }[];
   // REVIEW1/2/3 시험에만 존재. 복습 예정일 'YYYY-MM-DD'. 나머지 step은 null.
   scheduledDate: string | null;
 }

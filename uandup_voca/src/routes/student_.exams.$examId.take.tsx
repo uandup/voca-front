@@ -18,9 +18,11 @@ function isExamType(v: unknown): v is ExamType {
 
 // 학생 응시·결과 통합 페이지. examType은 invalidation 분기 + sentence/vocab variant 결정에 사용.
 // returnTo: Exit 시 history.replace로 돌아갈 학생 리스트 페이지 URL.
+// allExamIds: comma-separated examId 목록. 복수 시도가 있을 때 상단 탭 전환 UI를 활성화한다.
 interface ExamTakeSearch {
   returnTo?: string;
   examType?: ExamType;
+  allExamIds?: string;
 }
 
 export const Route = createFileRoute('/student_/exams/$examId/take')({
@@ -30,5 +32,6 @@ export const Route = createFileRoute('/student_/exams/$examId/take')({
   validateSearch: (search: Record<string, unknown>): ExamTakeSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,
     examType: isExamType(search.examType) ? search.examType : undefined,
+    allExamIds: typeof search.allExamIds === 'string' ? search.allExamIds : undefined,
   }),
 });

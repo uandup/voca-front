@@ -1,12 +1,14 @@
+import type { ReactNode } from 'react';
+
 interface TestHeaderProps {
   onExit?: () => void;
   // Submit 버튼은 onSubmit이 주어진 경우에만 표시 — 선생님 Preview에선 생략.
   onSubmit?: () => void;
-  // "답이 저장되지 않으니 조심하라"는 경고는 학생 응시 화면 같은 곳에서만 표시.
-  showWarning?: boolean;
+  // 헤더 중앙 슬롯 — Attempt 탭, 경고 문구 등 호출처가 자유롭게 주입.
+  center?: ReactNode;
 }
 
-export function TestHeader({ onExit, onSubmit, showWarning = false }: TestHeaderProps) {
+export function TestHeader({ onExit, onSubmit, center }: TestHeaderProps) {
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -21,19 +23,7 @@ export function TestHeader({ onExit, onSubmit, showWarning = false }: TestHeader
         </button>
       </div>
 
-      {showWarning ? (
-        <div className="flex items-center gap-1.5  text-on-surface-variant ">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-            warning
-          </span>
-          <p className="text-sm font-semibold">
-            Your answers are not saved automatically. Refreshing or exiting this page will discard
-            all progress.
-          </p>
-        </div>
-      ) : (
-        <div />
-      )}
+      <div className="flex items-center gap-2">{center}</div>
 
       <div className="flex items-center gap-3">
         {onSubmit && (
