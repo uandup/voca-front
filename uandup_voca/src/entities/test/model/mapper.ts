@@ -6,6 +6,8 @@ import type {
   StepExamHistory,
   ExamType,
   ExamAttempt,
+  ExamMode,
+  ExamSource,
 } from './types';
 
 type StudySetExamTypeResponse = components['schemas']['StudySetExamTypeResponse'];
@@ -44,6 +46,20 @@ export function toExamDetail(r: ExamDetailResponse): ExamDetail {
     // itemOrder 오름차순으로 정렬해 화면 표시 순서를 보장한다.
     items: (r.items ?? []).map(toExamItem).sort((a, b) => a.itemOrder - b.itemOrder),
   };
+}
+
+// examDetail.status → 렌더링 모드 변환.
+export function inferMode(status: string): ExamMode {
+  if (status === 'COMPLETED' || status === 'PASSED' || status === 'FAILED') return 'review';
+  if (status === 'SUBMITTED') return 'submitted';
+  return 'answer';
+}
+
+// ExamType → cache invalidation / useSubmitExam 출처 변환.
+export function inferSource(examType: ExamType | undefined): ExamSource {
+  if (examType === 'REVIEW_DECK') return 'review-deck';
+  if (examType === 'LEVEL_TEST') return 'level-test';
+  return 'study-set';
 }
 
 export function toStepExamHistory(r: StudySetExamTypeResponse): StepExamHistory {

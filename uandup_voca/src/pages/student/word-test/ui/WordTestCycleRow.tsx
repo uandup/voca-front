@@ -21,20 +21,28 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
   function handleStepAction(step: StepCardVM, idx: number) {
     if (step.examId === null) return;
     const examType = STEP_EXAM_TYPES[idx];
-    // active 상태(시험 응시 중)는 탭 없이 단일 뷰. 그 외(passed/fail/grading)는 attempts 전달.
-    const allExamIds = step.status !== 'active' ? serializeAttempts(step) : undefined;
-    navigate({
-      to: '/student/exams/$examId/take',
-      params: { examId: String(step.examId) },
-      search: { returnTo: returnToCurrent(), examType, allExamIds },
-    });
+    if (step.status === 'active') {
+      // 응시 중인 시험은 /take로 이동.
+      navigate({
+        to: '/student/exams/$examId/take',
+        params: { examId: String(step.examId) },
+        search: { returnTo: returnToCurrent(), examType },
+      });
+    } else {
+      // grading/passed/failed 상태는 결과 확인 페이지(/review)로 이동.
+      navigate({
+        to: '/student/exams/$examId/review',
+        params: { examId: String(step.examId) },
+        search: { returnTo: returnToCurrent(), examType, allExamIds: serializeAttempts(step) },
+      });
+    }
   }
 
   function handleViewResults(step: StepCardVM, idx: number) {
     if (step.lastCompletedExamId === null) return;
     const examType = STEP_EXAM_TYPES[idx];
     navigate({
-      to: '/student/exams/$examId/take',
+      to: '/student/exams/$examId/review',
       params: { examId: String(step.lastCompletedExamId) },
       search: { returnTo: returnToCurrent(), examType, allExamIds: serializeAttempts(step) },
     });

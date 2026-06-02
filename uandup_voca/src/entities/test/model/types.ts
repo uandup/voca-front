@@ -3,6 +3,11 @@
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
 export type WordTestType = Exclude<TestType, 'sentence'>;
 
+// 시험 응시 페이지의 렌더링 모드. examDetail.status로부터 inferMode()로 결정.
+export type ExamMode = 'answer' | 'review' | 'submitted';
+// useSubmitExam / cache invalidation에서 사용하는 시험 출처 구분.
+export type ExamSource = 'study-set' | 'review-deck' | 'level-test';
+
 // ── Shared ──────────────────────────────────────────────────────────────────
 
 /** TestConfigBadges, StudentDashboardStats, ClinicStudentRow에서 공통 사용 */

@@ -1,23 +1,14 @@
-import { type ExamDetail, type ExamType, type WordTestType, useExamDetail } from '@/entities/test';
+import { type ExamMode, type ExamSource, inferMode, useExamDetail } from '@/entities/test';
 import { useSubmitExam } from '@/features/exam';
 import { useCurrentStudentId } from '@/entities/auth';
 import { useExamAnswers } from './useExamAnswers';
 import { useExamItems } from './useExamItems';
 
-export type ExamMode = 'answer' | 'review' | 'submitted';
-export type ExamSource = 'study-set' | 'review-deck' | 'level-test';
+export type { ExamMode, ExamSource };
+export { inferMode };
 
-export function inferMode(status: string): ExamMode {
-  if (status === 'COMPLETED' || status === 'PASSED' || status === 'FAILED') return 'review';
-  if (status === 'SUBMITTED') return 'submitted';
-  return 'answer';
-}
-
-export function inferSource(examType: ExamType | undefined): ExamSource {
-  if (examType === 'REVIEW_DECK') return 'review-deck';
-  if (examType === 'LEVEL_TEST') return 'level-test';
-  return 'study-set';
-}
+// ExamType → ExamSource 변환은 entities/test에 있지만, 라우트 search param 파싱과 함께
+// 페이지에서 직접 inferSource를 import해서 쓴다.
 
 interface UseExamTakeParams {
   // 라우트 examId — submit 대상. 탭 전환 중에도 변하지 않는다.
@@ -30,8 +21,8 @@ interface UseExamTakeParams {
   onSubmitSuccess: () => void;
 }
 
-// useExamDetail, useExamAnswers, useExamItems, useSubmitExam을 조합하는 최상위 시험 훅.
-// 페이지는 이 훅을 통해 시험에 필요한 모든 데이터와 액션을 얻는다.
+// useExamDetail, useExamAnswers, useExamItems, useSubmitExam을 조합하는 answer 모드 훅.
+// review/submitted 모드는 pages/student/exam-review의 useExamReview가 담당한다.
 export function useExamTake({
   routeExamId,
   examId,
