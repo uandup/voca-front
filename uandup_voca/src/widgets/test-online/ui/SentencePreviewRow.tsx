@@ -11,7 +11,13 @@ export function SentencePreviewRow({ id, sentence, answer }: SentencePreviewRowP
   const parts = sentence.split('______');
 
   return (
-    <div className="flex items-center gap-4 px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-low/40">
+    <div
+      className={`flex items-center gap-4 px-4 py-3 rounded-xl border transition-colors ${
+        answer
+          ? 'border-primary/20 bg-primary/5'
+          : 'border-outline-variant/30 bg-surface-container-low/40'
+      }`}
+    >
       <span className="text-[11px] font-bold text-on-surface-variant/50 w-5 shrink-0 text-center">
         {String(id).padStart(2, '0')}
       </span>
@@ -19,7 +25,13 @@ export function SentencePreviewRow({ id, sentence, answer }: SentencePreviewRowP
       <div className="flex-1 min-w-0">
         <span className="text-sm text-on-surface leading-relaxed">
           {parts[0]}
-          <span className="font-bold text-primary mx-1 border-b border-primary pb-px">
+          <span
+            className={`inline-block font-bold mx-1 border-b min-w-16 text-center ${
+              answer
+                ? 'text-primary border-primary'
+                : 'text-on-surface-variant/40 border-on-surface-variant/30'
+            }`}
+          >
             {answer}
           </span>
           {parts[1]}

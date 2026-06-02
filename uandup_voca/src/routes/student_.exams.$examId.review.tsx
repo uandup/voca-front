@@ -16,20 +16,19 @@ function isExamType(v: unknown): v is ExamType {
   return typeof v === 'string' && (EXAM_TYPES as readonly string[]).includes(v);
 }
 
-// 학생 응시·결과 통합 페이지. examType은 invalidation 분기 + sentence/vocab variant 결정에 사용.
+// 학생 시험 결과 확인 페이지.
 // returnTo: Exit 시 history.replace로 돌아갈 학생 리스트 페이지 URL.
 // allExamIds: comma-separated examId 목록. 복수 시도가 있을 때 상단 탭 전환 UI를 활성화한다.
-interface ExamTakeSearch {
+interface ExamReviewSearch {
   returnTo?: string;
   examType?: ExamType;
   allExamIds?: string;
 }
 
-export const Route = createFileRoute('/student_/exams/$examId/take')({
-  // /student 레이아웃을 우회하는 라우트라 가드를 명시적으로 적용한다.
+export const Route = createFileRoute('/student_/exams/$examId/review')({
   beforeLoad: requireStudentArea,
-  component: lazyRouteComponent(() => import('@/pages/student/exam-take/ExamTakePage')),
-  validateSearch: (search: Record<string, unknown>): ExamTakeSearch => ({
+  component: lazyRouteComponent(() => import('@/pages/student/exam-review/ExamReviewPage')),
+  validateSearch: (search: Record<string, unknown>): ExamReviewSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,
     examType: isExamType(search.examType) ? search.examType : undefined,
     allExamIds: typeof search.allExamIds === 'string' ? search.allExamIds : undefined,

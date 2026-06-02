@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
+import { WordFlashcard } from '@/widgets/word-flashcard';
+
+type ViewMode = 'list' | 'flashcard';
 
 interface Props {
   studySetId: number;
@@ -21,14 +25,51 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
   const words = data?.words ?? [];
   const exampleVisible = data?.exampleVisible ?? false;
 
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+
   return (
     <main>
-      <BreadcrumbPageTitle parents={parents} title={title} />
+      <div className="flex items-center justify-between mb-6">
+        <BreadcrumbPageTitle parents={parents} title={title} />
+
+        {words.length > 0 && (
+          <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                viewMode === 'list'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                list
+              </span>
+              List
+            </button>
+            <button
+              onClick={() => setViewMode('flashcard')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                viewMode === 'flashcard'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                style
+              </span>
+              Flashcard
+            </button>
+          </div>
+        )}
+      </div>
 
       {isLoading ? (
         <LoadingSpinner />
       ) : words.length === 0 ? (
         <EmptyState title="No words assigned." />
+      ) : viewMode === 'flashcard' ? (
+        <WordFlashcard words={words} />
       ) : (
         <div className="space-y-5">
           {words.map((word) => (

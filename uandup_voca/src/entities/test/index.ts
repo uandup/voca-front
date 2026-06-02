@@ -14,8 +14,19 @@ export type {
   ExamDetail,
   ExamAttempt,
   StepExamHistory,
+  ExamMode,
+  ExamSource,
 } from './model/types';
-export { toWordTestType, toExamDetail, toStepExamHistory } from './model/mapper';
+export {
+  toWordTestType,
+  toExamDetail,
+  toStepExamHistory,
+  inferMode,
+  inferSource,
+  toWordTestItems,
+  toVocabReviewItems,
+  toSentenceTestItems,
+} from './model/mapper';
 export {
   getExamsByType,
   getExamDetail,

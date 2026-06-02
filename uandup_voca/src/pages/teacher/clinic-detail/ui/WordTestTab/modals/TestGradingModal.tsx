@@ -1,6 +1,7 @@
 import type { StepCardVM, ExamDetail, WordTestType } from '@/entities/test';
 import { WordGradingModal, SentenceGradingModal } from '@/widgets/test-offline';
-import { isSentenceStep, toVocabReviewItems, toESRows } from '../../../model/mapper';
+import { toVocabReviewItems } from '@/entities/test';
+import { isSentenceStep, toESRows } from '../../../model/mapper';
 
 // Grading 모달의 Word/Sentence variant 분기를 흡수한다.
 // step.name === 'Sentence'면 SentenceGradingModal, 그 외엔 WordGradingModal.
