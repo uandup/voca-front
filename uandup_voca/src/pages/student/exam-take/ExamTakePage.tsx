@@ -92,6 +92,8 @@ export default function ExamTakePage() {
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   // 제출 완료 모달 (Task 20)
   const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
+  // answer mode에서 나가기 전 확인 모달
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   // examDetail 로드 시 — 이미 제출했거나 채점 완료된 시험이면 기존 답안으로 시드.
   useEffect(() => {
@@ -121,11 +123,20 @@ export default function ExamTakePage() {
     setSentenceAnswers((prev) => ({ ...prev, [id]: { answer: value } }));
   }, []);
 
-  function handleExit() {
+  function doExit() {
     if (search.returnTo) {
       router.history.replace(search.returnTo);
     } else {
       router.history.back();
+    }
+  }
+
+  function handleExit() {
+    const currentMode = examDetail ? inferMode(examDetail.status) : 'review';
+    if (currentMode === 'answer' && !showAttemptTabs) {
+      setShowExitConfirm(true);
+    } else {
+      doExit();
     }
   }
 
@@ -363,6 +374,19 @@ export default function ExamTakePage() {
           onQuestionClick={setCurrentPage}
         />
       </div>
+
+      {/* 응시 중 나가기 확인 모달 */}
+      {showExitConfirm && (
+        <ConfirmDialog
+          title="Exit Exam?"
+          description="All your current answers will be lost and cannot be recovered. Are you sure you want to exit?"
+          confirmLabel="Exit"
+          cancelLabel="Stay"
+          variant="default"
+          onConfirm={doExit}
+          onCancel={() => setShowExitConfirm(false)}
+        />
+      )}
 
       {/* Task 19: 미제출 문항 확인 모달 */}
       {showSubmitConfirm && (
