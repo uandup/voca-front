@@ -4,7 +4,7 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
-import { WordFlashcard } from './WordFlashcard';
+import { WordFlashcard } from '@/widgets/word-flashcard';
 
 type ViewMode = 'list' | 'flashcard';
 
