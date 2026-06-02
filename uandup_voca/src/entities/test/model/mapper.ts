@@ -9,6 +9,7 @@ import type {
   ExamMode,
   ExamSource,
 } from './types';
+import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word/@x/test';
 
 type StudySetExamTypeResponse = components['schemas']['StudySetExamTypeResponse'];
 type ExamDetailResponse = components['schemas']['ExamDetailResponse'];
@@ -46,6 +47,36 @@ export function toExamDetail(r: ExamDetailResponse): ExamDetail {
     // itemOrder 오름차순으로 정렬해 화면 표시 순서를 보장한다.
     items: (r.items ?? []).map(toExamItem).sort((a, b) => a.itemOrder - b.itemOrder),
   };
+}
+
+// row 컴포넌트의 `id`는 화면 표시 번호 + React key + wrongIds 등 클라이언트 상태 추적용.
+// itemOrder를 사용해 시험지 상의 의도된 번호(1~)와 일치시킨다.
+export function toWordTestItems(items: ExamItem[]): WordTestItem[] {
+  return items.map((item) => ({
+    id: item.itemOrder,
+    word: item.word,
+    korMeaning: item.koreanMeaning,
+    engMeaning: item.englishMeaning,
+    synonyms: item.synonyms,
+  }));
+}
+
+export function toVocabReviewItems(items: ExamItem[]): VocabReviewItem[] {
+  return items.map((item) => ({
+    id: item.itemOrder,
+    word: item.word,
+    korMeaning: item.koreanMeaning,
+    engMeaning: item.englishMeaning,
+    // 정답 synonym은 복수 — 전부 ", "로 이어서 표시.
+    synonymAnswer: item.synonyms.join(', '),
+  }));
+}
+
+export function toSentenceTestItems(items: ExamItem[]): SentenceTestItem[] {
+  return items.map((item) => ({
+    id: item.itemOrder,
+    sentence: item.example,
+  }));
 }
 
 // examDetail.status → 렌더링 모드 변환.

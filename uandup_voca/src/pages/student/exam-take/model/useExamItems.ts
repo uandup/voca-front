@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ITEMS_PER_PAGE, type ExamDetail, type WordTestType } from '@/entities/test';
 import type { WordTestItem, SentenceTestItem } from '@/entities/word';
-import { toWordTestItems, toSentenceTestItems } from '@/pages/teacher/clinic-detail/model/mapper';
+import { toWordTestItems, toSentenceTestItems } from '@/entities/test';
 
 interface UseExamItemsParams {
   examDetail: ExamDetail | undefined;

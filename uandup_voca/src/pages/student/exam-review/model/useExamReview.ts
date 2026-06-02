@@ -9,11 +9,7 @@ import {
 } from '@/entities/test';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word';
 import type { Answer } from '@/widgets/test-online';
-import {
-  toWordTestItems,
-  toVocabReviewItems,
-  toSentenceTestItems,
-} from '@/pages/teacher/clinic-detail/model/mapper';
+import { toWordTestItems, toVocabReviewItems, toSentenceTestItems } from '@/entities/test';
 
 interface UseExamReviewParams {
   examId: number;

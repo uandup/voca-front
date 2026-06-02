@@ -9,10 +9,8 @@ import {
   SentencePreviewTable,
 } from '@/widgets/test-online';
 import { useExamDetail } from '@/entities/test';
-import {
-  toVocabReviewItems,
-  toSentencePreviewItems,
-} from '@/pages/teacher/clinic-detail/model/mapper';
+import { toVocabReviewItems } from '@/entities/test';
+import { toSentencePreviewItems } from '@/pages/teacher/clinic-detail/model/mapper';
 
 // 선생님이 학생이 풀게 될 시험을 미리 확인하는 페이지.
 // examType이 'EXAMPLE'이면 sentence preview, 그 외엔 vocab preview를 사용한다.

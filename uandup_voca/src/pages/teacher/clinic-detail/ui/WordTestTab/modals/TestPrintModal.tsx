@@ -1,6 +1,7 @@
 import type { StepCardVM, ExamDetail, WordTestType } from '@/entities/test';
 import { WordTestModal, SentenceModal } from '@/widgets/test-offline';
-import { isSentenceStep, toWordTestItems, toESRows } from '../../../model/mapper';
+import { toWordTestItems } from '@/entities/test';
+import { isSentenceStep, toESRows } from '../../../model/mapper';
 
 // Print/Preview 모달의 Word/Sentence variant 분기를 흡수한다.
 // step.name === 'Sentence'면 SentenceModal, 그 외엔 WordTestModal.

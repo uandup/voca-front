@@ -1,6 +1,7 @@
 import type { StepCardVM, ExamDetail, WordTestType } from '@/entities/test';
 import { WordResultModal, SentenceResultModal } from '@/widgets/test-offline';
-import { isSentenceStep, toVocabReviewItems, toESRows } from '../../../model/mapper';
+import { toVocabReviewItems } from '@/entities/test';
+import { isSentenceStep, toESRows } from '../../../model/mapper';
 
 // Result 모달의 Word/Sentence variant 분기를 흡수한다.
 // wrongIndices(채점된 결과에서 오답 인덱스) 계산도 이 컴포넌트가 책임진다.
