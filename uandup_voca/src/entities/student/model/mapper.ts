@@ -492,15 +492,21 @@ function toAveragedReviewPoints(points: ExamScorePointDto[]): ExamScorePoint[] {
 // LearnedWords: 일별 count를 월별로 합산한다. x축 라벨은 'May'처럼 월 이름만 표시.
 // 서버 응답이 날짜 ASC이면 Map 삽입 순서가 월 오름차순을 보장한다.
 function toMonthlyLearnedCounts(points: DailyCountDto[]): LearnedCountPoint[] {
-  const byMonth = new Map<string, number>();
+  const byMonth = new Map<string, { total: number; days: { date: string; count: number }[] }>();
   for (const p of points) {
     const iso = p.date ?? '';
     const monthKey = iso.substring(0, 7); // 'YYYY-MM'
-    byMonth.set(monthKey, (byMonth.get(monthKey) ?? 0) + (p.count ?? 0));
+    const [, month = '01', day = '01'] = iso.split('-');
+    const dayLabel = `${month}.${day}`;
+    const entry = byMonth.get(monthKey) ?? { total: 0, days: [] };
+    entry.total += p.count ?? 0;
+    if (p.count) entry.days.push({ date: dayLabel, count: p.count });
+    byMonth.set(monthKey, entry);
   }
-  return [...byMonth.entries()].map(([monthKey, count]) => ({
+  return [...byMonth.entries()].map(([monthKey, { total, days }]) => ({
     date: toMonthLabel(monthKey),
-    count,
+    count: total,
+    dailyDetails: days,
   }));
 }
 

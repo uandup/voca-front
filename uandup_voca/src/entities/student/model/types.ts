@@ -209,6 +209,8 @@ export interface ExamScorePoint {
 export interface LearnedCountPoint {
   date: string;
   count: number;
+  // 월별 집계를 구성하는 일별 상세. tooltip에서 DD.MM 단위로 표시.
+  dailyDetails: { date: string; count: number }[];
 }
 
 /** 학생 대시보드 차트 데이터 — /api/v1/students/{id}/dashboard/charts */

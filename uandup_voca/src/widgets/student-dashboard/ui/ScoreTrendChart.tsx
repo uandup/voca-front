@@ -21,8 +21,10 @@ interface ChartPoint {
   value: number; // y값 (점수 0~100 또는 단어 수)
   // dot 색상 / 선 연결 규칙: true=합격(pass끼리만 연결), false=빨간 단독 점, null=중립(학습량 차트, 전부 연결)
   pass: boolean | null;
-  // 툴팁 상세 — 시험 차트는 exam 목록, 학습량 차트는 단어 수.
-  tooltip: { kind: 'exam'; exams: ExamScoreDetail[] } | { kind: 'count'; count: number };
+  // 툴팁 상세 — 시험 차트는 exam 목록, 학습량 차트는 월 합계 + 일별 상세.
+  tooltip:
+    | { kind: 'exam'; exams: ExamScoreDetail[] }
+    | { kind: 'count'; count: number; dailyDetails: { date: string; count: number }[] };
 }
 
 const EXAM_TYPE_LABEL: Record<ExamScoreDetail['examType'], string> = {
@@ -50,7 +52,7 @@ function countPointToChartPoint(p: LearnedCountPoint, index: number): ChartPoint
     dateIndex: index,
     value: p.count,
     pass: null,
-    tooltip: { kind: 'count', count: p.count },
+    tooltip: { kind: 'count', count: p.count, dailyDetails: p.dailyDetails },
   };
 }
 
@@ -113,9 +115,20 @@ function YAxis({
 function PointTooltip({ point }: { point: ChartPoint }) {
   return (
     <div className="rounded-lg bg-on-surface px-3 py-2 shadow-lg text-white min-w-48">
-      <p className="text-[11px] font-bold text-white/70 mb-1.5">{point.label}</p>
       {point.tooltip.kind === 'count' ? (
-        <p className="text-sm font-bold">{point.tooltip.count} words learned</p>
+        <div className="flex flex-col gap-1.5">
+          <p className="text-sm font-bold">{point.tooltip.count} words learned</p>
+          {point.tooltip.dailyDetails.length > 0 && (
+            <div className="border-t border-white/15 pt-1.5 flex flex-col gap-0.5">
+              {point.tooltip.dailyDetails.map((d) => (
+                <div key={d.date} className="flex justify-between gap-4 text-xs text-white/70">
+                  <span>{d.date}</span>
+                  <span className="font-semibold text-white/90">{d.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       ) : (
         <div className="flex flex-col gap-2 [&>div+div]:border-t [&>div+div]:border-white/15 [&>div+div]:pt-2">
           {point.tooltip.exams.map((e) => (
