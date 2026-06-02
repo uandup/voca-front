@@ -43,7 +43,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
         <span className="text-sm font-bold leading-tight text-on-surface">{name}</span>
         {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때만 name 오른쪽에 표시 */}
         {scheduledDate && (
-          <span className="text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-2 py-0.5">
+          <span className="text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-2">
             Due {formatScheduledDate(scheduledDate)}
           </span>
         )}
@@ -81,7 +81,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
           <>
             <button
               disabled
-              className="w-full py-2.5 rounded-xl border text-gray-400 border-outline/20 text-md font-medium"
+              className={`w-full rounded-xl border text-gray-400 border-outline/20 font-semibold ${lastScore !== null ? 'py-1.5 text-xs' : 'py-2.5 text-md font-medium'}`}
             >
               Pending Test
             </button>
@@ -99,7 +99,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
           <>
             <button
               onClick={onAction}
-              className="w-full py-2.5 rounded-xl bg-primary text-white text-md hover:opacity-90 transition-opacity font-medium"
+              className={`w-full rounded-xl bg-primary text-white hover:opacity-90 transition-opacity font-medium ${lastScore !== null ? 'py-1.5 text-xs' : 'py-2.5 text-md'}`}
             >
               Start Online Test
             </button>
@@ -115,22 +115,13 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
         )}
         {status === 'grading' && (
           // 제출 완료 → 채점 대기 중. 클릭 시 제출 답안을 read-only로 확인할 수 있다.
-          <>
-            <button
-              onClick={onAction}
-              className="w-full py-2.5 rounded-xl border border-primary/30 text-primary text-md font-medium hover:bg-primary/5 transition-colors"
-            >
-              Awaiting Grading
-            </button>
-            {lastScore !== null && onViewResults && (
-              <button
-                onClick={onViewResults}
-                className="w-full py-1.5 rounded-xl border border-outline/30 text-xs font-semibold text-on-surface-variant hover:bg-slate-100 transition-colors"
-              >
-                View Results
-              </button>
-            )}
-          </>
+          // 과거 기록이 있으면 탭 전환으로 접근 가능하므로 View Results 버튼은 표시하지 않는다.
+          <button
+            onClick={onAction}
+            className="w-full py-2.5 rounded-xl border border-primary/30 text-primary text-md font-medium hover:bg-primary/5 transition-colors"
+          >
+            Awaiting Grading
+          </button>
         )}
         {status === 'passed' && (
           <button

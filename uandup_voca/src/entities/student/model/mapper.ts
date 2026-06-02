@@ -162,7 +162,16 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, completedAt, correctCount, totalCount, scheduledDate } = exam;
+  const {
+    examId,
+    status,
+    isPassed,
+    createdAt,
+    completedAt,
+    correctCount,
+    totalCount,
+    scheduledDate,
+  } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -181,7 +190,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     retakeCount: exams.length - 1,
     examId,
     lastCompletedExamId: null,
-    allExamIds: [],
+    examAttempts: [],
     scheduledDate: scheduledDate ?? null,
   };
 }
@@ -225,7 +234,16 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       scheduledDate: null,
     };
   }
-  const { examId, status, isPassed, createdAt, completedAt, correctCount, totalCount, scheduledDate } = exam;
+  const {
+    examId,
+    status,
+    isPassed,
+    createdAt,
+    completedAt,
+    correctCount,
+    totalCount,
+    scheduledDate,
+  } = exam;
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
@@ -256,14 +274,17 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     retakeCount: Math.max(0, completedExams.length - 1),
     examId,
     lastCompletedExamId: lastCompleted?.examId ?? null,
-    // oldest → newest 순 전체 시도 목록. examId + 점수 레이블. 탭 전환 UI에 사용.
-    examAttempts: [...exams].reverse().map((e) => ({
-      examId: e.examId,
-      score:
-        e.correctCount !== null && e.totalCount !== null
-          ? `${e.correctCount}/${e.totalCount}`
-          : '-',
-    })),
+    // oldest → newest 순. COMPLETED/SUBMITTED 시험만 포함 — READY/ONLINE_STARTED는 미제출이므로 제외.
+    examAttempts: [...exams]
+      .filter((e) => e.status === 'COMPLETED' || e.status === 'SUBMITTED')
+      .reverse()
+      .map((e) => ({
+        examId: e.examId,
+        score:
+          e.correctCount !== null && e.totalCount !== null
+            ? `${e.correctCount}/${e.totalCount}`
+            : '-',
+      })),
     scheduledDate: scheduledDate ?? null,
   };
 }
