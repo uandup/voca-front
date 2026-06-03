@@ -84,6 +84,7 @@ export function TodoList({ studentId }: Props) {
   };
 
   // actionable(ONLINE_STARTED) → 바로 시험 응시 페이지로 이동.
+  // 학부모 세션이면 라우트 가드(/take beforeLoad)가 /review로 리다이렉트한다.
   // returnTo는 대시보드가 아닌 시험 유형에 맞는 탭으로 설정한다.
   function goTake(todo: TodoItem) {
     navigate({
