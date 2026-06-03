@@ -23,6 +23,7 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
     const examType = STEP_EXAM_TYPES[idx];
     if (step.status === 'active') {
       // 응시 중인 시험은 /take로 이동.
+      // 학부모 세션이면 라우트 가드(/take beforeLoad)가 /review로 리다이렉트한다.
       navigate({
         to: '/student/exams/$examId/take',
         params: { examId: String(step.examId) },

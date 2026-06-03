@@ -27,7 +27,7 @@ export function CurriculumSection({ t }: Props) {
             <img
               src="/voca.png"
               alt=""
-              className="w-full max-w-sm object-contain rounded-xl shadow-lg"
+              className="w-full max-w-2xl object-contain rounded-xl shadow-lg"
             />
           </FadeIn>
         </div>
