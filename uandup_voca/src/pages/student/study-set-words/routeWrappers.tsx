@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useRouter } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useStudentOverview } from '@/entities/student';
 import { StudySetWordsPage } from './StudySetWordsPage';
 
@@ -8,34 +8,34 @@ import { StudySetWordsPage } from './StudySetWordsPage';
 // 컴포넌트 정의가 없게 되어 only-export-components 경고가 뜬지 않는다.
 
 export function WordTestStudySetWordsRoute() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { id } = useParams({ from: '/student/word-test/$id/words' });
   return (
     <StudySetWordsPage
       studySetId={Number(id)}
-      parents={[{ label: 'Word Test', onClick: () => router.history.back() }]}
+      parents={[{ label: 'Word Test', onClick: () => navigate({ to: '/student/word-test' }) }]}
     />
   );
 }
 
 export function LevelTestStudySetWordsRoute() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { studySetId } = useParams({ from: '/student/level-test/$studySetId/words' });
   return (
     <StudySetWordsPage
       studySetId={Number(studySetId)}
-      parents={[{ label: 'Level Test', onClick: () => router.history.back() }]}
+      parents={[{ label: 'Level Test', onClick: () => navigate({ to: '/student/level-test' }) }]}
     />
   );
 }
 
 export function ReviewDeckStudySetWordsRoute() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { studySetId } = useParams({ from: '/student/review-deck/$studySetId/words' });
   return (
     <StudySetWordsPage
       studySetId={Number(studySetId)}
-      parents={[{ label: 'Review Deck', onClick: () => router.history.back() }]}
+      parents={[{ label: 'Review Deck', onClick: () => navigate({ to: '/student/review-deck' }) }]}
     />
   );
 }
