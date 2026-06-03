@@ -25,6 +25,8 @@ export function useSubmitExam({ examId, studentId, source }: UseSubmitExamParams
     onSuccess: () => {
       // 제출 직후 examDetail은 SUBMITTED 상태로 바뀌므로 항상 invalidate.
       queryClient.invalidateQueries({ queryKey: testKeys.examDetail(examId) });
+      // 제출 후 TodoList에서 완료된 항목이 즉시 사라지도록 항상 invalidate.
+      queryClient.invalidateQueries({ queryKey: studentKeys.todos(studentId) });
 
       if (source === 'review-deck') {
         queryClient.invalidateQueries({ queryKey: reviewDeckKeys.exams(studentId) });

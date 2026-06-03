@@ -37,6 +37,14 @@ export function LevelTestPage() {
     });
   }
 
+  function goReview(examId: number) {
+    navigate({
+      to: '/student/exams/$examId/review',
+      params: { examId: String(examId) },
+      search: { returnTo: returnToCurrent(), examType: 'LEVEL_TEST' },
+    });
+  }
+
   function goWords(studySetId: number) {
     navigate({
       to: '/student/level-test/$studySetId/words',
@@ -89,7 +97,7 @@ export function LevelTestPage() {
                   const scoreText =
                     row.correctCount !== null && row.totalCount !== null
                       ? `${row.correctCount}/${row.totalCount}`
-                      : '--';
+                      : `-/${row.questionCount}`;
                   const scoreClass = isCompleted
                     ? row.status === 'PASSED'
                       ? 'text-success'
@@ -127,7 +135,14 @@ export function LevelTestPage() {
                             </button>
                           ) : isCompleted ? (
                             <button
-                              onClick={() => goTake(row.examId)}
+                              onClick={() => goReview(row.examId)}
+                              className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
+                            >
+                              View Results
+                            </button>
+                          ) : row.status === 'SUBMITTED' ? (
+                            <button
+                              onClick={() => goReview(row.examId)}
                               className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
                             >
                               View Results

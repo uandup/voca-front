@@ -1,5 +1,7 @@
+import { useNavigate } from '@tanstack/react-router';
 import { useTodos } from '@/entities/student';
 import type { TodoItem } from '@/entities/student';
+import type { ExamType } from '@/entities/test';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 
 interface Props {
@@ -13,7 +15,7 @@ const TODO_TYPE_LABEL: Record<TodoItem['type'], string> = {
   REVIEW1: 'Review 1',
   REVIEW2: 'Review 2',
   REVIEW3: 'Review 3',
-  WRONG_BANK: 'Wrong Bank Test',
+  WRONG_BANK: 'Review Deck',
   LEVEL: 'Level Test',
 };
 
@@ -26,6 +28,17 @@ const TODO_TYPE_ICON: Record<TodoItem['type'], string> = {
   REVIEW3: 'replay',
   WRONG_BANK: 'build',
   LEVEL: 'bar_chart',
+};
+
+// TodoItem type → ExamType search param 매핑
+const TODO_EXAM_TYPE: Record<TodoItem['type'], ExamType> = {
+  WORD: 'WORD',
+  EXAMPLE: 'EXAMPLE',
+  REVIEW1: 'REVIEW1',
+  REVIEW2: 'REVIEW2',
+  REVIEW3: 'REVIEW3',
+  WRONG_BANK: 'REVIEW_DECK',
+  LEVEL: 'LEVEL_TEST',
 };
 
 // 'YYYY-MM-DD' → 오늘 기준 상대 표시. 반환값에 isOverdue 포함.
@@ -45,6 +58,7 @@ function formatScheduledDate(iso: string): { label: string; isOverdue: boolean }
 }
 
 export function TodoList({ studentId }: Props) {
+  const navigate = useNavigate();
   const { data: todos, isLoading } = useTodos(studentId);
 
   // actionable 우선, 그 다음 scheduledDate 오름차순(없으면 마지막).
@@ -57,6 +71,51 @@ export function TodoList({ studentId }: Props) {
         return a.scheduledDate.localeCompare(b.scheduledDate);
       })
     : [];
+
+  // 시험 유형 → 시험 완료 후 돌아갈 탭 경로
+  const TODO_RETURN_PATH: Record<TodoItem['type'], string> = {
+    WORD: '/student/word-test',
+    EXAMPLE: '/student/word-test',
+    REVIEW1: '/student/word-test',
+    REVIEW2: '/student/word-test',
+    REVIEW3: '/student/word-test',
+    WRONG_BANK: '/student/review-deck',
+    LEVEL: '/student/level-test',
+  };
+
+  // actionable(ONLINE_STARTED) → 바로 시험 응시 페이지로 이동.
+  // returnTo는 대시보드가 아닌 시험 유형에 맞는 탭으로 설정한다.
+  function goTake(todo: TodoItem) {
+    navigate({
+      to: '/student/exams/$examId/take',
+      params: { examId: String(todo.examId) },
+      search: {
+        returnTo: TODO_RETURN_PATH[todo.type],
+        examType: TODO_EXAM_TYPE[todo.type],
+      },
+    });
+  }
+
+  // 비활성(READY) + studySetId 존재 → 단어장으로 이동해 미리 학습.
+  function goWords(todo: TodoItem) {
+    if (todo.studySetId === null) return;
+    if (todo.type === 'WRONG_BANK') {
+      navigate({
+        to: '/student/review-deck/$studySetId/words',
+        params: { studySetId: String(todo.studySetId) },
+      });
+    } else if (todo.type === 'LEVEL') {
+      navigate({
+        to: '/student/level-test/$studySetId/words',
+        params: { studySetId: String(todo.studySetId) },
+      });
+    } else {
+      navigate({
+        to: '/student/word-test/$id/words',
+        params: { id: String(todo.studySetId) },
+      });
+    }
+  }
 
   return (
     <aside className="h-full">
@@ -87,18 +146,24 @@ export function TodoList({ studentId }: Props) {
         ) : (
           <ul className="flex flex-col gap-2 overflow-y-auto [scrollbar-width:thin]">
             {sorted.map((todo) => {
-              const dateFmt = todo.scheduledDate
-                ? formatScheduledDate(todo.scheduledDate)
-                : null;
+              const dateFmt = todo.scheduledDate ? formatScheduledDate(todo.scheduledDate) : null;
+              // studySetId가 있으면 단어장 이동 가능.
+              const canGoWords = !todo.actionable && todo.studySetId !== null;
 
               return (
                 <li
                   key={todo.examId}
+                  onClick={() => {
+                    if (todo.actionable) goTake(todo);
+                    else if (canGoWords) goWords(todo);
+                  }}
                   className={`rounded-xl px-3.5 py-3 flex items-center gap-3 border transition-colors
                     ${
                       todo.actionable
-                        ? 'bg-primary/8 border-primary/20'
-                        : 'bg-surface-container border-transparent'
+                        ? 'bg-primary/8 border-primary/20 cursor-pointer hover:bg-primary/12'
+                        : canGoWords
+                          ? 'bg-surface-container border-transparent cursor-pointer hover:bg-surface-container-high'
+                          : 'bg-surface-container border-transparent'
                     }`}
                 >
                   {/* 유형 아이콘 */}
@@ -131,15 +196,21 @@ export function TodoList({ studentId }: Props) {
                     )}
                   </div>
 
-                  {/* 실행 가능 표시 */}
-                  {todo.actionable && (
-                    <span
-                      className="material-symbols-outlined text-primary shrink-0"
-                      style={{ fontSize: '20px', fontVariationSettings: "'FILL' 1" }}
-                    >
-                      play_circle
+                  {/* 우측 액션 힌트 */}
+                  {todo.actionable ? (
+                    // actionable: Start 뱃지로 즉시 응시 가능함을 표시
+                    <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-bold text-white bg-primary rounded-full px-2 py-0.5">
+                      Start
+                      <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                        arrow_forward
+                      </span>
                     </span>
-                  )}
+                  ) : canGoWords ? (
+                    // 비활성이지만 단어장 이동 가능 — 텍스트 힌트 제공
+                    <span className="shrink-0 text-[10px] font-bold text-on-surface-variant/50">
+                      View Words
+                    </span>
+                  ) : null}
                 </li>
               );
             })}
