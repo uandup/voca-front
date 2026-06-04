@@ -208,8 +208,8 @@ export function TodoList({ studentId, readOnly = false }: Props) {
                   </div>
 
                   {/* 우측 액션 힌트 — readOnly(선생님 열람)이면 표시 안 함 */}
-                  {!readOnly && (
-                    todo.actionable ? (
+                  {!readOnly &&
+                    (todo.actionable ? (
                       // actionable: Start 뱃지로 즉시 응시 가능함을 표시
                       <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-bold text-white bg-primary rounded-full px-2 py-0.5">
                         Start
@@ -222,8 +222,7 @@ export function TodoList({ studentId, readOnly = false }: Props) {
                       <span className="shrink-0 text-[10px] font-bold text-on-surface-variant/50">
                         View Words
                       </span>
-                    ) : null
-                  )}
+                    ) : null)}
                 </li>
               );
             })}

@@ -158,10 +158,10 @@ const COLUMNS: ColumnDef[] = [
             e.stopPropagation();
             actions.onMemo(s);
           }}
-          className="shrink-0 p-1 rounded-md leading-none text-on-surface-variant hover:text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+          className="shrink-0 bg-primary/10 text-primary px-1.5 py-1.5 rounded-md cursor-pointer text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
           title="메모 보기"
         >
-          <span className="material-symbols-outlined text-base">sticky_note_2</span>
+          <span className="material-symbols-outlined text-sm">sticky_note_2</span>
         </button>
       </div>
     ),
@@ -192,7 +192,7 @@ function ActionButtons({
           e.stopPropagation();
           actions.onEdit(student);
         }}
-        className="bg-primary/10 text-primary px-1 py-1 rounded-md cursor-pointer text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
+        className="bg-primary/10 text-primary px-1.5 py-1.5 rounded-md cursor-pointer text-xs font-bold hover:bg-primary hover:text-white transition-all flex items-center gap-1"
       >
         <span className="material-symbols-outlined text-sm">edit</span>
       </button>
