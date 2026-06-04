@@ -156,7 +156,7 @@ export default function StudentDashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList studentId={studentId} />
+          <TodoList studentId={studentId} readOnly />
         </div>
       </div>
     </main>
