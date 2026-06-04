@@ -51,7 +51,7 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
         </span>
       )}
 
-      {(isPassed || isFail) && step.lastScore !== null && (
+      {step.lastScore !== null && (
         <div className="flex items-baseline gap-1.5 flex-wrap">
           <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
             {step.lastScore} / {step.maxScore ?? 'N'}
