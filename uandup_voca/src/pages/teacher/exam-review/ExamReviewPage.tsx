@@ -26,7 +26,27 @@ export default function ExamReviewPage() {
   const search = useSearch({ from: '/teacher_/exams/$examId/review' });
   const router = useRouter();
 
-  const examId = Number(examIdParam);
+  const routeExamId = Number(examIdParam);
+
+  // allExamIds가 있으면 탭 전환 뷰. "examId:score:P/F,..." 형식 → { examId, score, isPassed }[].
+  const examAttempts: { examId: number; score: string; isPassed: boolean }[] = useMemo(() => {
+    if (!search.allExamIds) return [];
+    return search.allExamIds
+      .split(',')
+      .map((part) => {
+        const parts = part.split(':');
+        const examId = Number(parts[0]);
+        const score = parts[1] ?? '-';
+        const isPassed = parts[2] === 'P';
+        return { examId, score, isPassed };
+      })
+      .filter((a) => !isNaN(a.examId) && a.examId > 0);
+  }, [search.allExamIds]);
+
+  const showAttemptTabs = examAttempts.length > 1;
+  const [selectedExamId, setSelectedExamId] = useState(routeExamId);
+  const examId = showAttemptTabs ? selectedExamId : routeExamId;
+
   const { data: examDetail, isLoading } = useExamDetail(examId);
 
   const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
@@ -150,7 +170,7 @@ export default function ExamReviewPage() {
   return (
     <div className="min-h-screen bg-surface flex flex-col">
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
-        <div className="w-24">
+        <div className="flex-1 flex justify-start">
           <button
             onClick={handleExit}
             className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
@@ -162,31 +182,64 @@ export default function ExamReviewPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
-          {mode === 'result' ? (
-            <>
-              <span className="text-sm font-bold text-on-surface">
-                {correctCount} / {totalItems} correct
-              </span>
-              <span className="text-on-surface-variant/30">·</span>
-              <span
-                className={`text-sm font-bold ${outcome === 'pass' ? 'text-success' : 'text-error'}`}
+        {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시 */}
+        {showAttemptTabs ? (
+          <div className="flex items-center gap-2">
+            {examAttempts.map((attempt) => (
+              <button
+                key={attempt.examId}
+                onClick={() => setSelectedExamId(attempt.examId)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                  selectedExamId === attempt.examId
+                    ? 'bg-primary text-white'
+                    : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
+                }`}
               >
-                {outcome === 'pass' ? 'Passed' : 'Failed'}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="text-sm font-semibold text-on-surface">
-                {correctCount} / {totalItems}
-              </span>
-              <span className="text-on-surface-variant/30">·</span>
-              <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
-            </>
-          )}
-        </div>
+                {attempt.score}
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                    selectedExamId === attempt.examId
+                      ? attempt.isPassed
+                        ? 'bg-white/20 text-white'
+                        : 'bg-white/20 text-white'
+                      : attempt.isPassed
+                        ? 'bg-success/10 text-success'
+                        : 'bg-error/10 text-error'
+                  }`}
+                >
+                  {attempt.isPassed ? 'P' : 'F'}
+                </span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          /* 단일 시도 — 점수/결과 텍스트 표시 */
+          <div className="flex items-center gap-2">
+            {mode === 'result' ? (
+              <>
+                <span className="text-sm font-bold text-on-surface">
+                  {correctCount} / {totalItems} correct
+                </span>
+                <span className="text-on-surface-variant/30">·</span>
+                <span
+                  className={`text-sm font-bold ${outcome === 'pass' ? 'text-success' : 'text-error'}`}
+                >
+                  {outcome === 'pass' ? 'Passed' : 'Failed'}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-sm font-semibold text-on-surface">
+                  {correctCount} / {totalItems}
+                </span>
+                <span className="text-on-surface-variant/30">·</span>
+                <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
+              </>
+            )}
+          </div>
+        )}
 
-        <div className="flex justify-end items-center gap-3">
+        <div className="flex-1 flex justify-end items-center gap-3">
           {mode === 'grading' && (
             // Pass/Fail segmented toggle — isPassed로 mutation에 전달된다.
             <div
@@ -233,18 +286,21 @@ export default function ExamReviewPage() {
               {isEditing ? 'Save' : 'Grade'}
             </button>
           ) : (
-            <button
-              onClick={() => {
-                setMode('grading');
-                setIsEditing(true);
-              }}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                edit
-              </span>
-              Edit
-            </button>
+            // 과거 시도(selectedExamId !== routeExamId)는 수정 불가 — Edit 버튼 숨김.
+            selectedExamId === routeExamId && (
+              <button
+                onClick={() => {
+                  setMode('grading');
+                  setIsEditing(true);
+                }}
+                className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  edit
+                </span>
+                Edit
+              </button>
+            )
           )}
         </div>
       </header>
