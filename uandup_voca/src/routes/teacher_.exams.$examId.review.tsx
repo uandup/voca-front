@@ -24,6 +24,8 @@ interface ExamReviewSearch {
   studentId?: number;
   studySetId?: number;
   examType?: ExamType;
+  // comma-separated "examId:score" pairs. 복수 시도가 있을 때 상단 탭 전환 UI를 활성화한다.
+  allExamIds?: string;
 }
 
 export const Route = createFileRoute('/teacher_/exams/$examId/review')({
@@ -35,5 +37,6 @@ export const Route = createFileRoute('/teacher_/exams/$examId/review')({
     studentId: typeof search.studentId === 'number' ? search.studentId : undefined,
     studySetId: typeof search.studySetId === 'number' ? search.studySetId : undefined,
     examType: isExamType(search.examType) ? search.examType : undefined,
+    allExamIds: typeof search.allExamIds === 'string' ? search.allExamIds : undefined,
   }),
 });

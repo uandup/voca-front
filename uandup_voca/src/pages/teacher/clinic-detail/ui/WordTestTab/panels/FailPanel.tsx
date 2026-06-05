@@ -65,13 +65,38 @@ export function FailPanel({
   const viewResultsExamId =
     currentExamId ?? failedAttempts[failedAttempts.length - 1]?.examId ?? null;
 
+  // 포맷: "examId:score:F" — FailPanel의 모든 시도는 실패이므로 항상 F.
+  function serializeAttempts(): string | undefined {
+    const all = [
+      ...failedAttempts.map((a) => ({
+        examId: a.examId,
+        score:
+          a.correctCount !== null && a.totalCount !== null
+            ? `${a.correctCount}/${a.totalCount}`
+            : '-',
+      })),
+      ...(currentExamId !== null
+        ? [
+            {
+              examId: currentExamId,
+              score:
+                step.lastScore !== null && step.maxScore !== null
+                  ? `${step.lastScore}/${step.maxScore}`
+                  : '-',
+            },
+          ]
+        : []),
+    ];
+    return all.length > 1 ? all.map((a) => `${a.examId}:${a.score}:F`).join(',') : undefined;
+  }
+
   function goReview() {
     if (viewResultsExamId === null) return;
     const returnTo = window.location.pathname + window.location.search;
     navigate({
       to: '/teacher/exams/$examId/review',
       params: { examId: String(viewResultsExamId) },
-      search: { returnTo, studentId, studySetId, examType },
+      search: { returnTo, studentId, studySetId, examType, allExamIds: serializeAttempts() },
     });
   }
 

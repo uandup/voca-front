@@ -51,10 +51,15 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
         </span>
       )}
 
-      {(isPassed || isFail) && step.lastScore !== null && (
-        <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
-          {step.lastScore} / {step.maxScore ?? 'N'}
-        </span>
+      {step.lastScore !== null && (
+        <div className="flex items-baseline gap-1.5 flex-wrap">
+          <span className={`text-sm font-bold ${isPassed ? 'text-primary' : 'text-error'}`}>
+            {step.lastScore} / {step.maxScore ?? 'N'}
+          </span>
+          {step.retakeCount > 0 && (
+            <span className="text-xs font-bold text-error/70">( +{step.retakeCount} retake )</span>
+          )}
+        </div>
       )}
 
       {step.status === 'locked' && (

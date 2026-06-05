@@ -88,22 +88,40 @@ export default function StudentDashboardPage() {
           title={overview.nameKo}
         />
 
-        {/* Todo Button */}
-        <button
-          ref={buttonRef}
-          onClick={() => setTodoOpen((v) => !v)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all
-            ${
-              todoOpen
-                ? 'bg-primary text-white shadow-md'
-                : 'bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary'
-            }`}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-            {todoOpen ? 'close' : 'checklist'}
-          </span>
-          To-Do
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Clinic Detail Button */}
+          <button
+            onClick={() =>
+              navigate({
+                to: '/teacher/clinics/students/$studentId',
+                params: { studentId: String(studentId) },
+              })
+            }
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+              school
+            </span>
+            Go Clinic
+          </button>
+
+          {/* Todo Button */}
+          <button
+            ref={buttonRef}
+            onClick={() => setTodoOpen((v) => !v)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all
+              ${
+                todoOpen
+                  ? 'bg-primary text-white shadow-md'
+                  : 'bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary'
+              }`}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+              {todoOpen ? 'close' : 'checklist'}
+            </span>
+            To-Do
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-4 items-stretch mb-8">
@@ -156,7 +174,7 @@ export default function StudentDashboardPage() {
           ${todoOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="h-full ">
-          <TodoList studentId={studentId} />
+          <TodoList studentId={studentId} readOnly />
         </div>
       </div>
     </main>

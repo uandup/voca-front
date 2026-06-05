@@ -35,6 +35,8 @@ export function useRecordOnlineResults({ examId, studentId, studySetId, examType
       } else {
         queryClient.invalidateQueries({ queryKey: testKeys.history(studySetId, examType) });
         queryClient.invalidateQueries({ queryKey: studentKeys.studySets(studentId) });
+        // 채점 후 alreadyAssigned 상태가 바뀔 수 있으므로 overview도 갱신 — QuickAssignmentCard 반영.
+        queryClient.invalidateQueries({ queryKey: studentKeys.overview(studentId) });
       }
     },
   });

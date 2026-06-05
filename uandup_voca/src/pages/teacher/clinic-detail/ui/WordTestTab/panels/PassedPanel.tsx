@@ -39,13 +39,38 @@ export function PassedPanel({
   // const { data: examDetail } = useExamDetail(showResult ? currentExamId : null);
 
   // 통합: View Results는 /review 페이지로 이동(online 양식 + result 모드).
+  // 이전 실패 시도들 + 현재 통과 시험을 직렬화해 탭으로 표시한다.
+  // 포맷: "examId:score:P" 또는 "examId:score:F" — 선생님 탭 Pass/Fail 뱃지 표시에 사용.
+  function serializeAttempts(): string | undefined {
+    if (currentExamId === null) return undefined;
+    const all = [
+      ...failedAttempts.map((a) => ({
+        examId: a.examId,
+        score:
+          a.correctCount !== null && a.totalCount !== null
+            ? `${a.correctCount}/${a.totalCount}`
+            : '-',
+        pf: 'F',
+      })),
+      {
+        examId: currentExamId,
+        score:
+          step.lastScore !== null && step.maxScore !== null
+            ? `${step.lastScore}/${step.maxScore}`
+            : '-',
+        pf: 'P',
+      },
+    ];
+    return all.length > 1 ? all.map((a) => `${a.examId}:${a.score}:${a.pf}`).join(',') : undefined;
+  }
+
   function goViewResults() {
     if (currentExamId === null) return;
     const returnTo = window.location.pathname + window.location.search;
     navigate({
       to: '/teacher/exams/$examId/review',
       params: { examId: String(currentExamId) },
-      search: { returnTo, studentId, studySetId, examType },
+      search: { returnTo, studentId, studySetId, examType, allExamIds: serializeAttempts() },
     });
   }
 

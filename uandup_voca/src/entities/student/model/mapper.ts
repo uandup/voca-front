@@ -180,17 +180,32 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
   } else {
     stepStatus = 'active';
   }
+
+  // active/grading 상태이면 현재 시험엔 점수가 없다.
+  // 이전 fail 시도가 있으면 가장 최근 완료 시험에서 점수를 가져와 표시한다.
+  const completedExams = exams.filter((e) => e.status === 'COMPLETED');
+  const lastCompleted = status !== 'COMPLETED' ? (completedExams[0] ?? null) : null;
+
   return {
     name: 'Word',
     status: stepStatus,
     createdAt: createdAt ?? null,
-    completedAt: completedAt ?? null,
-    lastScore: correctCount ?? null,
-    maxScore: totalCount ?? null,
-    retakeCount: exams.length - 1,
+    completedAt: lastCompleted ? (lastCompleted.completedAt ?? null) : (completedAt ?? null),
+    lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
+    maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
+    retakeCount: Math.max(0, completedExams.length - 1),
     examId,
-    lastCompletedExamId: null,
-    examAttempts: [],
+    lastCompletedExamId: lastCompleted?.examId ?? null,
+    examAttempts: [...exams]
+      .filter((e) => e.status === 'COMPLETED' || e.status === 'SUBMITTED')
+      .reverse()
+      .map((e) => ({
+        examId: e.examId,
+        score:
+          e.correctCount !== null && e.totalCount !== null
+            ? `${e.correctCount}/${e.totalCount}`
+            : '-',
+      })),
     scheduledDate: scheduledDate ?? null,
   };
 }

@@ -6,6 +6,8 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 
 interface Props {
   studentId: number;
+  // true이면 클릭 비활성화 — 선생님이 학생 대시보드를 열람할 때 사용.
+  readOnly?: boolean;
 }
 
 // 시험 유형 → 표시 레이블
@@ -57,7 +59,7 @@ function formatScheduledDate(iso: string): { label: string; isOverdue: boolean }
   };
 }
 
-export function TodoList({ studentId }: Props) {
+export function TodoList({ studentId, readOnly = false }: Props) {
   const navigate = useNavigate();
   const { data: todos, isLoading } = useTodos(studentId);
 
@@ -154,17 +156,25 @@ export function TodoList({ studentId }: Props) {
               return (
                 <li
                   key={todo.examId}
-                  onClick={() => {
-                    if (todo.actionable) goTake(todo);
-                    else if (canGoWords) goWords(todo);
-                  }}
+                  onClick={
+                    readOnly
+                      ? undefined
+                      : () => {
+                          if (todo.actionable) goTake(todo);
+                          else if (canGoWords) goWords(todo);
+                        }
+                  }
                   className={`rounded-xl px-3.5 py-3 flex items-center gap-3 border transition-colors
                     ${
-                      todo.actionable
-                        ? 'bg-primary/8 border-primary/20 cursor-pointer hover:bg-primary/12'
-                        : canGoWords
-                          ? 'bg-surface-container border-transparent cursor-pointer hover:bg-surface-container-high'
+                      readOnly
+                        ? todo.actionable
+                          ? 'bg-primary/8 border-primary/20'
                           : 'bg-surface-container border-transparent'
+                        : todo.actionable
+                          ? 'bg-primary/8 border-primary/20 cursor-pointer hover:bg-primary/12'
+                          : canGoWords
+                            ? 'bg-surface-container border-transparent cursor-pointer hover:bg-surface-container-high'
+                            : 'bg-surface-container border-transparent'
                     }`}
                 >
                   {/* 유형 아이콘 */}
@@ -197,21 +207,22 @@ export function TodoList({ studentId }: Props) {
                     )}
                   </div>
 
-                  {/* 우측 액션 힌트 */}
-                  {todo.actionable ? (
-                    // actionable: Start 뱃지로 즉시 응시 가능함을 표시
-                    <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-bold text-white bg-primary rounded-full px-2 py-0.5">
-                      Start
-                      <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
-                        arrow_forward
+                  {/* 우측 액션 힌트 — readOnly(선생님 열람)이면 표시 안 함 */}
+                  {!readOnly &&
+                    (todo.actionable ? (
+                      // actionable: Start 뱃지로 즉시 응시 가능함을 표시
+                      <span className="shrink-0 flex items-center gap-0.5 text-[10px] font-bold text-white bg-primary rounded-full px-2 py-0.5">
+                        Start
+                        <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                          arrow_forward
+                        </span>
                       </span>
-                    </span>
-                  ) : canGoWords ? (
-                    // 비활성이지만 단어장 이동 가능 — 텍스트 힌트 제공
-                    <span className="shrink-0 text-[10px] font-bold text-on-surface-variant/50">
-                      View Words
-                    </span>
-                  ) : null}
+                    ) : canGoWords ? (
+                      // 비활성이지만 단어장 이동 가능 — 텍스트 힌트 제공
+                      <span className="shrink-0 text-[10px] font-bold text-on-surface-variant/50">
+                        View Words
+                      </span>
+                    ) : null)}
                 </li>
               );
             })}
