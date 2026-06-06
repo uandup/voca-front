@@ -54,10 +54,7 @@ function SentenceSheet({
     >
       <PrintSheetHeader name={studentName} englishName={studentEnglishName} />
       <section className="grow" style={{ overflow: 'visible' }}>
-        <table
-          className="w-full"
-          style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}
-        >
+        <table className="w-full" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
           <colgroup>
             <col style={{ width: '44px' }} />
             <col />
@@ -117,7 +114,7 @@ function SentenceSheet({
                       padding: '8px 12px',
                       fontSize: '11px',
                       fontWeight: showAnswer ? 600 : undefined,
-                      color: showAnswer ? '#1d4ed8' : undefined,
+                      // color: showAnswer ? '#1d4ed8' : undefined,
                     }}
                   >
                     {showAnswer ? answer : null}
@@ -139,7 +136,12 @@ interface TestESPrintModalProps {
   studentEnglishName?: string;
 }
 
-export function SentenceModal({ onClose, rows, studentName, studentEnglishName }: TestESPrintModalProps) {
+export function SentenceModal({
+  onClose,
+  rows,
+  studentName,
+  studentEnglishName,
+}: TestESPrintModalProps) {
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const [pages, setPages] = useState<ESRow[][]>([]);
   const [page, setPage] = useState(1);
