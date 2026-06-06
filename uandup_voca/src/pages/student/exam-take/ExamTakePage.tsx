@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter, useParams, useSearch, useNavigate } from '@tanstack/react-router';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { ConfirmDialog } from '@/shared/ui/Modal/ConfirmDialog';
+import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
 import { type ExamType, inferSource } from '@/entities/test';
 import {
   TestHeader,
@@ -30,6 +31,7 @@ export default function ExamTakePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
 
   const {
     examDetail,
@@ -54,15 +56,8 @@ export default function ExamTakePage() {
     isSentence,
     source,
     currentPage,
-    // 제출 완료 후 /review로 교체 이동. replace로 히스토리에서 /take를 제거해
-    // 뒤로가기 시 WordTest(returnTo)로 돌아가도록 한다.
-    onSubmitSuccess: () =>
-      navigate({
-        to: '/student/exams/$examId/review',
-        params: { examId: examIdParam },
-        search: { returnTo: search.returnTo, examType: search.examType },
-        replace: true,
-      }),
+    // 제출 완료 후 성공 모달을 먼저 표시하고, 확인 클릭 시 /review로 교체 이동한다.
+    onSubmitSuccess: () => setShowSubmitSuccess(true),
   });
 
   function doExit() {
@@ -179,6 +174,25 @@ export default function ExamTakePage() {
           cancelLabel="Go Back"
           onConfirm={doSubmit}
           onCancel={() => setShowSubmitConfirm(false)}
+        />
+      )}
+
+      {/* 제출 완료 모달 — 확인 클릭 시 /review로 교체 이동 */}
+      {showSubmitSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Submission Complete"
+          description="Your answers have been submitted successfully."
+          okLabel="OK"
+          onClose={() => {
+            setShowSubmitSuccess(false);
+            navigate({
+              to: '/student/exams/$examId/review',
+              params: { examId: examIdParam },
+              search: { returnTo: search.returnTo, examType: search.examType },
+              replace: true,
+            });
+          }}
         />
       )}
     </div>
