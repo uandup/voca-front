@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter, useParams, useSearch } from '@tanstack/react-router';
+import { useRouter, useParams, useSearch, useNavigate } from '@tanstack/react-router';
 import { ITEMS_PER_PAGE, type ExamType, type WordTestType } from '@/entities/test';
 import { AlertDialog } from '@/shared/ui/Modal';
 import {
@@ -25,6 +25,7 @@ export default function ExamReviewPage() {
   const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/review' });
   const search = useSearch({ from: '/teacher_/exams/$examId/review' });
   const router = useRouter();
+  const navigate = useNavigate();
 
   const routeExamId = Number(examIdParam);
 
@@ -116,6 +117,24 @@ export default function ExamReviewPage() {
           setMode('result');
           setIsEditing(false);
           setShowGradingSuccess(true);
+          // 탭이 있으면 URL의 allExamIds를 새 점수로 갱신 — 탭 전환 후에도 최신 점수 유지.
+          if (showAttemptTabs) {
+            const newScore = `${totalItems - wrongIds.size}/${totalItems}`;
+            const pf = outcome === 'pass' ? 'P' : 'F';
+            const updatedAllExamIds = examAttempts
+              .map((a) =>
+                a.examId === selectedExamId
+                  ? `${a.examId}:${newScore}:${pf}`
+                  : `${a.examId}:${a.score}:${a.isPassed ? 'P' : 'F'}`,
+              )
+              .join(',');
+            navigate({
+              to: '/teacher/exams/$examId/review',
+              params: { examId: examIdParam },
+              search: { ...search, allExamIds: updatedAllExamIds },
+              replace: true,
+            });
+          }
         },
       },
     );
@@ -182,35 +201,43 @@ export default function ExamReviewPage() {
           </button>
         </div>
 
-        {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시 */}
+        {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시.
+            선택된 탭은 URL 고정값 대신 examDetail 실시간 데이터로 오버라이드한다. */}
         {showAttemptTabs ? (
           <div className="flex items-center gap-2">
-            {examAttempts.map((attempt) => (
-              <button
-                key={attempt.examId}
-                onClick={() => setSelectedExamId(attempt.examId)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                  selectedExamId === attempt.examId
-                    ? 'bg-primary text-white'
-                    : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
-                }`}
-              >
-                {attempt.score}
-                <span
-                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                    selectedExamId === attempt.examId
-                      ? attempt.isPassed
-                        ? 'bg-white/20 text-white'
-                        : 'bg-white/20 text-white'
-                      : attempt.isPassed
-                        ? 'bg-success/10 text-success'
-                        : 'bg-error/10 text-error'
+            {examAttempts.map((attempt) => {
+              const isSelected = selectedExamId === attempt.examId;
+              // 선택된 탭이 result 모드이면 live 데이터 사용 — 채점 수정 후 즉시 반영.
+              const liveScore =
+                isSelected && mode === 'result' ? `${correctCount}/${totalItems}` : attempt.score;
+              const liveIsPassed =
+                isSelected && mode === 'result' ? outcome === 'pass' : attempt.isPassed;
+
+              return (
+                <button
+                  key={attempt.examId}
+                  onClick={() => setSelectedExamId(attempt.examId)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                    isSelected
+                      ? 'bg-primary text-white'
+                      : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
                   }`}
                 >
-                  {attempt.isPassed ? 'P' : 'F'}
-                </span>
-              </button>
-            ))}
+                  {liveScore}
+                  <span
+                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                      isSelected
+                        ? 'bg-white/20 text-white'
+                        : liveIsPassed
+                          ? 'bg-success/10 text-success'
+                          : 'bg-error/10 text-error'
+                    }`}
+                  >
+                    {liveIsPassed ? 'P' : 'F'}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         ) : (
           /* 단일 시도 — 점수/결과 텍스트 표시 */
