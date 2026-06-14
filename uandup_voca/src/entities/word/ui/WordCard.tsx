@@ -110,7 +110,7 @@ export function WordCard({
         </div>
       </div>
 
-      {showSentence && (
+      {showSentence && sentence && (
         <div className="px-8 py-5 bg-surface-container-low border-t border-outline-variant/10">
           <div className="flex gap-3 items-baseline">
             <span className="text-md uppercase tracking-wider text-outline font-bold shrink-0">
