@@ -143,8 +143,7 @@ export function TestConfigSection({
               onClick={handleToggleEdit}
               // 편집 중일 때 Quantity가 0이거나 배정 단어 수를 초과하면 Apply 불가.
               disabled={
-                isEditing &&
-                (config.testQty === 0 || (maxQty != null && config.testQty > maxQty))
+                isEditing && (config.testQty === 0 || (maxQty != null && config.testQty > maxQty))
               }
               className="w-14.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-primary hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >

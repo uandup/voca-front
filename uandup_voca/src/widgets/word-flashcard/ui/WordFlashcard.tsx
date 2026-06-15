@@ -177,7 +177,7 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
         </div>
         <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
           <div
-            className="h-full bg-primary rounded-full"
+            className="h-full bg-primary rounded-full transition-all duration-300"
             style={{ width: `${((index + 1) / total) * 100}%` }}
           />
         </div>

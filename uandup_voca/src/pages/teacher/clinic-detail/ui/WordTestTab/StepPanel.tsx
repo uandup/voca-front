@@ -81,7 +81,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         key={configKey}
         studentId={studentId}
         initialConfig={initialConfig}
-        showEditButton={phase === 'pending'}
+        showEditButton={phase === 'pending' || phase === 'fail'}
         onEditingChange={setIsConfigEditing}
         // 배정 단어 수를 시험 문항 수의 상한으로 전달한다.
         maxQty={student.assignmentCount}
@@ -127,6 +127,7 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           failedAttempts={examHistory?.failedAttempts ?? []}
           testType={initialConfig.testType}
           includeSynonyms={initialConfig.includeSynonyms}
+          isConfigEditing={isConfigEditing}
           create={create}
           onGradeOnline={handleGradeOnline}
           onGradeOffline={handleGradeOffline}
