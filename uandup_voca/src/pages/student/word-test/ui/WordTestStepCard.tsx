@@ -74,7 +74,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
         {status === 'locked' && (
           <button
             disabled
-            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/20 text-xs xl:text-md font-medium"
+            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/20 text-xs xl:text-base font-medium"
           >
             Locked
           </button>
@@ -120,7 +120,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
           // 과거 기록이 있으면 탭 전환으로 접근 가능하므로 View Results 버튼은 표시하지 않는다.
           <button
             onClick={onAction}
-            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-primary/30 text-primary text-xs xl:text-md font-medium hover:bg-primary/5 transition-colors"
+            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-primary/30 text-primary text-xs xl:text-base font-medium hover:bg-primary/5 transition-colors"
           >
             Awaiting Grading
           </button>
@@ -128,7 +128,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
         {status === 'passed' && (
           <button
             onClick={onAction}
-            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/30 text-xs xl:text-md text-on-surface-variant hover:bg-slate-100 transition-colors font-medium"
+            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/30 text-xs xl:text-base text-on-surface-variant hover:bg-slate-100 transition-colors font-medium"
           >
             View Results
           </button>

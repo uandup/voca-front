@@ -79,19 +79,19 @@ export function LevelProgress({
               Test Configuration
             </p>
             <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap">
-              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs font-medium text-on-surface">
+              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs xl:text-sm font-medium text-on-surface">
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                   translate
                 </span>
                 {testTypeLabel}
               </span>
-              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs font-medium text-on-surface">
+              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs xl:text-sm font-medium text-on-surface">
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                   edit_note
                 </span>
                 {examQuestionCount} words / test
               </span>
-              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs font-medium text-on-surface">
+              <span className="flex items-center gap-1.5 xl:gap-2 px-2 xl:px-3 py-1.5 xl:py-2 rounded-lg bg-surface-container text-xs xl:text-sm font-medium text-on-surface">
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                   assignment
                 </span>
