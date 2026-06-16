@@ -184,23 +184,49 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
       </div>
 
       {/* Card */}
-      <div
-        className="w-full max-w-3xl cursor-pointer"
-        style={{ perspective: '1200px' }}
-        onClick={() => setFlipped((f) => !f)}
-      >
-        <div
-          className={`relative w-full ${animated ? 'transition-transform duration-300' : ''}`}
-          style={{
-            transformStyle: 'preserve-3d',
-            transform: flipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
-            height: '320px',
-            willChange: 'transform',
-          }}
+      {/* 태블릿 전용 버튼을 카드 바깥에 배치 — 버튼 너비가 상단 progress 영역에 영향을 주지 않도록
+          카드는 max-w-3xl 고정, 버튼은 카드 외부에서 absolute로 세로 중앙 정렬. */}
+      <div className="w-full max-w-3xl relative">
+        {/* 태블릿 전용 좌측 버튼 */}
+        <button
+          onClick={goPrev}
+          disabled={index === 0}
+          className="xl:hidden absolute top-0 bottom-0 -left-22 w-20 flex items-center justify-center rounded-xl bg-white border border-outline-variant/40 shadow-sm text-on-surface-variant disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
-          <FrontPanel isBack={false} />
-          <BackPanel isBack={true} />
+          <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
+            arrow_back
+          </span>
+        </button>
+
+        <div
+          className="w-full cursor-pointer"
+          style={{ perspective: '1200px' }}
+          onClick={() => setFlipped((f) => !f)}
+        >
+          <div
+            className={`relative w-full ${animated ? 'transition-transform duration-300' : ''}`}
+            style={{
+              transformStyle: 'preserve-3d',
+              transform: flipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
+              height: '320px',
+              willChange: 'transform',
+            }}
+          >
+            <FrontPanel isBack={false} />
+            <BackPanel isBack={true} />
+          </div>
         </div>
+
+        {/* 태블릿 전용 우측 버튼 */}
+        <button
+          onClick={goNext}
+          disabled={index === total - 1}
+          className="xl:hidden absolute top-0 bottom-0 -right-22 w-20 flex items-center justify-center rounded-xl bg-white border border-outline-variant/40 shadow-sm text-on-surface-variant disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
+            arrow_forward
+          </span>
+        </button>
       </div>
 
       {/* Navigation */}
