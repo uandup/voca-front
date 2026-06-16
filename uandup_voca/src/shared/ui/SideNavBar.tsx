@@ -12,6 +12,8 @@ interface SideNavBarProps {
   navItems: NavItem[];
   collapsed: boolean;
   onToggle: () => void;
+  // true이면 토글 버튼을 숨긴다 — 태블릿처럼 collapse를 강제 고정할 때 사용.
+  toggleDisabled?: boolean;
   // 로고와 메뉴 사이에 들어가는 선택적 영역(예: 학부모의 자녀 전환 드롭다운).
   // 표시 위치만 제공하고 내용은 사용처가 결정한다 — collapsed 상태 대응도 슬롯 쪽 책임.
   topSlot?: ReactNode;
@@ -24,6 +26,7 @@ export function SideNavBar({
   navItems,
   collapsed,
   onToggle,
+  toggleDisabled = false,
   topSlot,
   onSignOut,
 }: SideNavBarProps) {
@@ -39,16 +42,18 @@ export function SideNavBar({
           높이를 고정해 로고 유무에 따라 아래 메뉴가 위아래로 밀리지 않게 한다. */}
       <div className={`flex items-center h-16 ${collapsed ? 'justify-center' : 'justify-between'}`}>
         {!collapsed && <img src="/logo.png" alt="Logo" className="h-12 w-auto" />}
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="flex items-center justify-center py-1 rounded-lg text-slate-600 hover:bg-slate-200/50 transition-colors"
-        >
-          <span className="material-symbols-outlined leading-none">
-            {collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'}
-          </span>
-        </button>
+        {!toggleDisabled && (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="flex items-center justify-center py-1 rounded-lg text-slate-600 hover:bg-slate-200/50 transition-colors"
+          >
+            <span className="material-symbols-outlined leading-none">
+              {collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'}
+            </span>
+          </button>
+        )}
       </div>
 
       {/* topSlot은 항상 truthy인 엘리먼트일 수 있어(예: 학생 세션에서 null을 반환하는 ChildSwitcher),

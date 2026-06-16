@@ -27,15 +27,17 @@ const navItems = [
 interface StudentSideNavBarProps {
   collapsed: boolean;
   onToggle: () => void;
+  toggleDisabled?: boolean;
 }
 
-export function StudentSideNavBar({ collapsed, onToggle }: StudentSideNavBarProps) {
+export function StudentSideNavBar({ collapsed, onToggle, toggleDisabled }: StudentSideNavBarProps) {
   const onSignOut = useSignOut();
   return (
     <SideNavBar
       navItems={[...navItems]}
       collapsed={collapsed}
       onToggle={onToggle}
+      toggleDisabled={toggleDisabled}
       // 학부모 열람 세션이면 자녀 전환 드롭다운이 뜬다. 학생 본인 세션이면 ChildSwitcher가 null을 반환.
       topSlot={<ChildSwitcher collapsed={collapsed} />}
       onSignOut={onSignOut}
