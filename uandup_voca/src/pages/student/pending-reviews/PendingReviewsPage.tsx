@@ -4,6 +4,9 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { WordCard } from '@/entities/word';
 import { usePendingReviews } from '@/entities/student';
+import { WordFlashcard } from '@/widgets/word-flashcard';
+
+type ViewMode = 'list' | 'flashcard';
 
 // 'YYYY-MM-DD' → 'MMM DD, YYYY' (예: May 28, 2026)
 function formatDate(iso: string): string {
@@ -23,6 +26,7 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
   // 드롭다운에서 선택된 날짜 — 초기값은 첫 번째 날짜
   const dates = [...new Set((reviews ?? []).map((r) => r.scheduledDate))];
   const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   // selectedDate가 없으면(초기) 첫 번째 날짜를 사용
   const activeDate = selectedDate ?? dates[0];
@@ -32,7 +36,40 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
 
   return (
     <main>
-      <BreadcrumbPageTitle parents={parents} title="Words to Review" />
+      <div className="flex items-center justify-between mb-6">
+        <BreadcrumbPageTitle parents={parents} title="Words to Review" />
+
+        {!isLoading && activeWords.length > 0 && (
+          <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                viewMode === 'list'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                list
+              </span>
+              List
+            </button>
+            <button
+              onClick={() => setViewMode('flashcard')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                viewMode === 'flashcard'
+                  ? 'bg-white text-primary shadow-sm'
+                  : 'text-on-surface-variant hover:text-on-surface'
+              }`}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                style
+              </span>
+              Flashcard
+            </button>
+          </div>
+        )}
+      </div>
 
       {isLoading ? (
         <LoadingSpinner />
@@ -49,7 +86,10 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
               <select
                 className="appearance-none bg-surface-container-lowest border border-outline-variant/30 rounded-xl px-4 py-2 pr-9 text-sm font-semibold text-on-surface focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
                 value={activeDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setViewMode('list');
+                }}
               >
                 {dates.map((d) => (
                   <option key={d} value={d}>
@@ -66,9 +106,11 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
             </span>
           </div>
 
-          {/* 단어 목록 */}
+          {/* 단어 목록 / 플래시카드 */}
           {activeWords.length === 0 ? (
             <EmptyState title="No words for this date." />
+          ) : viewMode === 'flashcard' ? (
+            <WordFlashcard words={activeWords} />
           ) : (
             <div className="space-y-5">
               {activeWords.map((word) => (
