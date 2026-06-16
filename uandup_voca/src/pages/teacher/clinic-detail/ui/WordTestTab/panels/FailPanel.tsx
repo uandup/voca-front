@@ -25,6 +25,8 @@ interface Props {
   // 통합 후 미사용 — StepPanel 시그니처와의 호환 유지를 위해 props는 보존.
   testType: WordTestType;
   includeSynonyms: boolean;
+  // 설정 편집 중일 때 Retake를 막는다 — Apply 먼저 완료해야 수정된 설정으로 재생성된다.
+  isConfigEditing: boolean;
   create: UseMutationResult<unknown, Error, void>;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
@@ -39,6 +41,7 @@ export function FailPanel({
   failedAttempts,
   testType: _testType,
   includeSynonyms: _includeSynonyms,
+  isConfigEditing,
   create,
   onGradeOnline: _onGradeOnline,
   onGradeOffline: _onGradeOffline,
@@ -155,7 +158,7 @@ export function FailPanel({
       <div className="flex items-center gap-2">
         <button
           onClick={() => create.mutate()}
-          disabled={create.isPending}
+          disabled={create.isPending || isConfigEditing}
           className="px-4 py-2 rounded-xl bg-error text-white text-xs font-bold hover:opacity-90 transition-opacity shadow-sm shadow-error/20 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Retake Test
@@ -166,7 +169,10 @@ export function FailPanel({
           className="px-4 py-2 rounded-xl border border-outline/30 text-xs font-bold text-on-surface-variant hover:bg-slate-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           View Results
-        </button>
+        </button>{' '}
+        {isConfigEditing && (
+          <p className="text-xs text-error">Please apply the configuration before retaking.</p>
+        )}
         {/* 통합 이전 modal 기반 결과 화면 — 보존용 주석. */}
         {/*
         <button

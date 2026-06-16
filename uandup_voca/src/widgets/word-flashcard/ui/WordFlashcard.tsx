@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { WordCardData } from '@/entities/word';
 
 interface WordFlashcardProps {
   words: WordCardData[];
+}
+
+type FrontFace = 'word' | 'meaning';
+
+const FRONT_FACE_KEY = 'flashcard:frontFace';
+
+function loadFrontFace(): FrontFace {
+  const stored = localStorage.getItem(FRONT_FACE_KEY);
+  return stored === 'meaning' ? 'meaning' : 'word';
 }
 
 export function WordFlashcard({ words }: WordFlashcardProps) {
@@ -10,13 +19,19 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   // transition을 일시적으로 비활성화하는 플래그. 카드 전환 시 flip-back 애니메이션 없이 즉시 스냅.
   const [animated, setAnimated] = useState(true);
+  const [frontFace, setFrontFace] = useState<FrontFace>(loadFrontFace);
 
   const word = words[index];
   const total = words.length;
 
-  function navigateTo(newIndex: number) {
-    if (flipped) {
-      // transition 끄기 → 즉시 앞면으로 스냅 + 단어 교체
+  // 키보드 이벤트 핸들러에서 최신 상태를 참조하기 위한 ref
+  const stateRef = useRef({ index, flipped, total });
+  useEffect(() => {
+    stateRef.current = { index, flipped, total };
+  });
+
+  const navigateTo = useCallback((newIndex: number) => {
+    if (stateRef.current.flipped) {
       setAnimated(false);
       setFlipped(false);
       setIndex(newIndex);
@@ -25,25 +40,140 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
     } else {
       setIndex(newIndex);
     }
+  }, []);
+
+  const goPrev = useCallback(() => {
+    navigateTo(Math.max(0, stateRef.current.index - 1));
+  }, [navigateTo]);
+
+  const goNext = useCallback(() => {
+    navigateTo(Math.min(stateRef.current.total - 1, stateRef.current.index + 1));
+  }, [navigateTo]);
+
+  function toggleFrontFace(face: FrontFace) {
+    setFrontFace(face);
+    localStorage.setItem(FRONT_FACE_KEY, face);
+    // 설정 변경 시 현재 카드를 앞면으로 리셋
+    setAnimated(false);
+    setFlipped(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
   }
 
-  function goPrev() {
-    navigateTo(Math.max(0, index - 1));
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      // input/textarea 포커스 중에는 무시
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        setFlipped((f) => !f);
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [goPrev, goNext]);
+
+  function faceStyle(isBack: boolean): React.CSSProperties {
+    return isBack
+      ? { backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }
+      : { backfaceVisibility: 'hidden' };
   }
 
-  function goNext() {
-    navigateTo(Math.min(total - 1, index + 1));
+  function WordPanel({ isBack }: { isBack: boolean }) {
+    return (
+      <div
+        className="absolute inset-0 bg-white border border-outline-variant/40 rounded-2xl shadow-md flex flex-col items-center justify-center gap-3 px-10 select-none"
+        style={faceStyle(isBack)}
+      >
+        <h2 className="font-bold text-4xl text-primary text-center">{word.word}</h2>
+      </div>
+    );
   }
+
+  function MeaningPanel({ isBack }: { isBack: boolean }) {
+    return (
+      <div
+        className="absolute inset-0 bg-white border border-outline-variant/40 rounded-2xl shadow-md flex flex-col justify-center gap-5 px-12 select-none"
+        style={faceStyle(isBack)}
+      >
+        <div>
+          <p className="text-[10px] uppercase tracking-wider text-outline font-bold mb-1.5">
+            Meaning
+          </p>
+          <p className="text-primary font-bold text-2xl leading-snug">{word.korMeaning}</p>
+          <p className="text-on-surface-variant text-sm mt-1.5 leading-relaxed">
+            {word.engMeaning}
+          </p>
+        </div>
+        {word.synonyms.length > 0 && (
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
+              Synonyms
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {word.synonyms.map((syn) => (
+                <span
+                  key={syn}
+                  className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  {syn}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // frontFace 설정에 따라 앞/뒷면 할당
+  const [FrontPanel, BackPanel] =
+    frontFace === 'word' ? [WordPanel, MeaningPanel] : [MeaningPanel, WordPanel];
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Progress bar */}
+      {/* Progress bar + front face toggle */}
       <div className="w-full max-w-3xl">
-        <div className="flex justify-between text-xs text-on-surface-variant mb-1.5">
-          <span className="font-semibold">
-            {index + 1} / {total}
+        <div className="flex justify-between items-end mb-1.5">
+          <div className="flex flex-col gap-1">
+            <div className="flex mb-3 items-center gap-1 p-0.5 bg-surface-container rounded-lg border border-outline-variant/30 w-fit">
+              <button
+                onClick={() => toggleFrontFace('word')}
+                className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
+                  frontFace === 'word'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                Word first
+              </button>
+              <button
+                onClick={() => toggleFrontFace('meaning')}
+                className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${
+                  frontFace === 'meaning'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                Meaning first
+              </button>
+            </div>
+            <span className="text-xs font-semibold text-on-surface-variant">
+              {index + 1} / {total}
+            </span>
+          </div>
+
+          <span className="text-xs text-on-surface-variant/60">
+            Space to flip · ← → to navigate
           </span>
-          <span className="text-on-surface-variant/60">Click card to flip</span>
         </div>
         <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
           <div
@@ -65,49 +195,11 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
             transformStyle: 'preserve-3d',
             transform: flipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
             height: '320px',
+            willChange: 'transform',
           }}
         >
-          {/* Front — word */}
-          <div
-            className="absolute inset-0 bg-white border border-outline-variant/40 rounded-2xl shadow-md flex flex-col items-center justify-center gap-3 px-10 select-none"
-            style={{ backfaceVisibility: 'hidden' }}
-          >
-            <h2 className="font-bold text-4xl text-primary text-center">{word.word}</h2>
-          </div>
-
-          {/* Back — meaning + synonyms */}
-          <div
-            className="absolute inset-0 bg-primary/5 border border-primary/20 rounded-2xl shadow-md flex flex-col justify-center gap-5 px-12 select-none"
-            style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-          >
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-outline font-bold mb-1.5">
-                Meaning
-              </p>
-              <p className="text-primary font-bold text-2xl leading-snug">{word.korMeaning}</p>
-              <p className="text-on-surface-variant text-sm mt-1.5 leading-relaxed">
-                {word.engMeaning}
-              </p>
-            </div>
-
-            {word.synonyms.length > 0 && (
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
-                  Synonyms
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {word.synonyms.map((syn) => (
-                    <span
-                      key={syn}
-                      className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-medium"
-                    >
-                      {syn}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <FrontPanel isBack={false} />
+          <BackPanel isBack={true} />
         </div>
       </div>
 
