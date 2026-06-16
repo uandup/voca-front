@@ -20,14 +20,14 @@ export function StatCards({
   onReviewClick,
 }: Props) {
   return (
-    <div className="lg:col-span-4 flex flex-col gap-6">
+    <div className="lg:col-span-4 flex flex-col gap-4 xl:gap-6">
       {/* Overall Accuracy */}
-      <div className="bg-linear-to-br from-primary to-primary-container p-6 rounded-xl shadow-lg text-white flex-1 flex flex-col justify-center">
+      <div className="bg-linear-to-br from-primary to-primary-container p-4 xl:p-6 rounded-xl shadow-lg text-white flex-1 flex flex-col justify-center">
         <p className="text-xs font-bold text-white/70 mb-2 uppercase tracking-widest">
           Overall Accuracy
         </p>
         <div className="flex items-center gap-4">
-          <span className="text-4xl font-black font-headline">{accuracy ?? '—'}</span>
+          <span className="text-2xl xl:text-4xl font-black font-headline">{accuracy ?? '—'}</span>
         </div>
       </div>
 
@@ -46,7 +46,7 @@ export function StatCards({
               }
             : undefined
         }
-        className={`bg-surface-container-lowest border border-outline-variant/10 shadow-sm p-6 rounded-xl flex-1 flex flex-col justify-center transition-all ${
+        className={`bg-surface-container-lowest border border-outline-variant/10 shadow-sm p-4 xl:p-6 rounded-xl flex-1 flex flex-col justify-center transition-all ${
           onAssignedClick ? 'cursor-pointer hover:border-primary/30 hover:shadow-md' : 'opacity-50'
         }`}
       >
@@ -56,7 +56,7 @@ export function StatCards({
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-4xl font-black text-primary font-headline">
+            <span className="text-2xl xl:text-4xl font-black text-primary font-headline">
               {assignedWordCount}
             </span>
             {!onAssignedClick && (
@@ -64,9 +64,9 @@ export function StatCards({
             )}
           </div>
           {onAssignedClick && (
-            <div className="flex items-center -mr-3">
-              <span className="text-lg font-bold text-primary/60">View words</span>
-              <span className="material-symbols-outlined text-primary" style={{ fontSize: '40px' }}>
+            <div className="flex items-center -mr-2 xl:-mr-3">
+              <span className="text-sm xl:text-lg font-bold text-primary/60">View words</span>
+              <span className="material-symbols-outlined text-primary" style={{ fontSize: '28px' }}>
                 chevron_right
               </span>
             </div>
@@ -90,7 +90,7 @@ export function StatCards({
               }
             : undefined
         }
-        className={`bg-surface-container-lowest border border-outline-variant/10 shadow-sm p-6 rounded-xl flex-1 flex flex-col justify-center transition-all ${
+        className={`bg-surface-container-lowest border border-outline-variant/10 shadow-sm p-4 xl:p-6 rounded-xl flex-1 flex flex-col justify-center transition-all ${
           onReviewClick ? 'cursor-pointer hover:border-green-600/30 hover:shadow-md' : 'opacity-50'
         }`}
       >
@@ -109,7 +109,7 @@ export function StatCards({
         <div className="flex items-center justify-between">
           <div>
             <span
-              className={`text-4xl font-black font-headline ${onReviewClick ? 'text-green-600' : 'text-outline'}`}
+              className={`text-2xl xl:text-4xl font-black font-headline ${onReviewClick ? 'text-green-600' : 'text-outline'}`}
             >
               {pendingReviewWordCount}
             </span>
@@ -118,11 +118,11 @@ export function StatCards({
             )}
           </div>
           {onReviewClick && (
-            <div className="flex items-center -mr-3">
-              <span className="text-lg font-bold text-green-600/60">View words</span>
+            <div className="flex items-center -mr-2 xl:-mr-3">
+              <span className="text-sm xl:text-lg font-bold text-green-600/60">View words</span>
               <span
                 className="material-symbols-outlined text-green-600"
-                style={{ fontSize: '40px' }}
+                style={{ fontSize: '28px' }}
               >
                 chevron_right
               </span>

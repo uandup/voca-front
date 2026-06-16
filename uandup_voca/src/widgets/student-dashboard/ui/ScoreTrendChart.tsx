@@ -378,9 +378,9 @@ export function ScoreTrendChart({ charts }: Props) {
   const chartWidth = size.width > 0 ? size.width - Y_AXIS_WIDTH : 0;
 
   return (
-    <section className="col-span-8 bg-surface-container-lowest p-8 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold font-headline">Score Trend</h2>
+    <section className="col-span-8 bg-surface-container-lowest p-5 xl:p-8 rounded-2xl border border-outline-variant/10 shadow-sm flex flex-col">
+      <div className="flex justify-between items-center mb-4 xl:mb-6">
+        <h2 className="text-base xl:text-xl font-bold font-headline">Score Trend</h2>
         <div className="flex gap-1 bg-surface-container rounded-lg p-1">
           {tabs.map((tab) => (
             <button
@@ -399,7 +399,7 @@ export function ScoreTrendChart({ charts }: Props) {
         </div>
       </div>
 
-      <div ref={wrapperRef} className="h-84 flex">
+      <div ref={wrapperRef} className="h-64 xl:h-84 flex">
         {size.height > 0 && <YAxis height={size.height} yMin={0} yMax={yMax} yTicks={yTicks} />}
         <div ref={scrollRef} className="flex-1 overflow-x-auto">
           {points.length === 0 ? (
