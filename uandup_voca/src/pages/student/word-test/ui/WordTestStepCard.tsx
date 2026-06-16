@@ -39,20 +39,18 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
     <div
       className={`flex-1 min-w-0 h-36 xl:h-44 rounded-2xl p-3 xl:p-4 flex flex-col gap-1.5 xl:gap-2 ${containerClass[status]}`}
     >
-      <div className="flex items-center gap-1.5 xl:gap-2 flex-wrap">
+      <div className="flex items-center gap-1 xl:gap-2 flex-wrap">
         <span className="text-xs xl:text-sm font-bold leading-tight text-on-surface">{name}</span>
         {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때만 name 오른쪽에 표시 */}
         {scheduledDate && (
-          <span className="text-[10px] xl:text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-1.5 xl:px-2">
+          <span className="text-[9px] xl:text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-1 xl:px-2">
             Due {formatScheduledDate(scheduledDate)}
           </span>
         )}
       </div>
 
       {completedAt && (
-        <span className="text-[11px] xl:text-xs text-on-surface-variant">
-          Graded At {completedAt}
-        </span>
+        <span className="text-[11px] xl:text-xs text-on-surface-variant">Grade: {completedAt}</span>
       )}
 
       {lastScore !== null && (
@@ -83,7 +81,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
           <>
             <button
               disabled
-              className={`w-full rounded-xl border text-gray-400 border-outline/20 font-medium text-xs ${lastScore !== null ? 'py-1 xl:py-1.5' : 'py-1.5 xl:py-2.5'}`}
+              className={`w-full rounded-xl border text-gray-400 border-outline/20 font-medium text-xs ${lastScore !== null ? 'py-1 xl:py-1.5' : 'xl:text-base py-1.5 xl:py-2.5'}`}
             >
               Pending Test
             </button>
@@ -101,7 +99,7 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
           <>
             <button
               onClick={onAction}
-              className={`w-full rounded-xl bg-primary text-white hover:opacity-90 transition-opacity font-medium text-xs ${lastScore !== null ? 'py-1 xl:py-1.5' : 'py-1.5 xl:py-2.5'}`}
+              className={`w-full rounded-xl bg-primary text-white hover:opacity-90 transition-opacity font-medium text-xs ${lastScore !== null ? 'py-1 xl:py-1.5' : 'xl:text-base py-1.5 xl:py-2.5'}`}
             >
               Start Online Test
             </button>
