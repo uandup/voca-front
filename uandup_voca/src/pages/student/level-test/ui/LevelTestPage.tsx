@@ -74,7 +74,7 @@ export function LevelTestPage() {
                 {COLUMNS.map((col, i) => (
                   <th
                     key={col}
-                    className={`px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < COLUMNS.length - 1 ? 'border-r border-outline-variant/20' : ''} ${col === 'Actions' ? 'text-right' : ''}`}
+                    className={`px-3 xl:px-4 py-3 xl:py-4 text-[10px] xl:text-xs font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap ${i < COLUMNS.length - 1 ? 'border-r border-outline-variant/20' : ''} ${col === 'Actions' ? 'text-right' : ''}`}
                   >
                     {col}
                   </th>
@@ -106,51 +106,51 @@ export function LevelTestPage() {
 
                   return (
                     <tr key={row.examId}>
-                      <td className="px-4 py-4 text-sm text-on-surface border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 text-xs xl:text-sm text-on-surface border-r border-outline-variant/20">
                         {formatDate(row.createdAt)}
                       </td>
-                      <td className="px-4 py-4 border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 border-r border-outline-variant/20">
                         <LevelBlock level={row.level} />
                       </td>
-                      <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 text-xs xl:text-sm text-on-surface-variant border-r border-outline-variant/20">
                         {row.wordCount}
                       </td>
-                      <td className="px-4 py-4 text-sm text-on-surface-variant border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 text-xs xl:text-sm text-on-surface-variant border-r border-outline-variant/20">
                         {row.questionCount}
                       </td>
-                      <td className="px-4 py-4 text-sm font-bold border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 text-xs xl:text-sm font-bold border-r border-outline-variant/20">
                         <span className={scoreClass}>{scoreText}</span>
                       </td>
-                      <td className="px-4 py-4 border-r border-outline-variant/20">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4 border-r border-outline-variant/20">
                         <StatusBadge status={row.status} />
                       </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-2 justify-end">
+                      <td className="px-3 xl:px-4 py-3 xl:py-4">
+                        <div className="flex items-center gap-1.5 xl:gap-2 justify-end">
                           {isStartable(row.status) ? (
                             <button
                               onClick={() => goTake(row.examId)}
-                              className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
+                              className="px-3 xl:px-4 py-1 xl:py-1.5 bg-primary text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
                             >
                               Start Test
                             </button>
                           ) : isCompleted ? (
                             <button
                               onClick={() => goReview(row.examId)}
-                              className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
+                              className="px-3 xl:px-4 py-1 xl:py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
                             >
                               View Results
                             </button>
                           ) : row.status === 'SUBMITTED' ? (
                             <button
                               onClick={() => goReview(row.examId)}
-                              className="px-4 py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
+                              className="px-3 xl:px-4 py-1 xl:py-1.5 border border-slate-200 text-on-surface-variant text-xs font-bold rounded-full hover:border-primary/40 transition-colors"
                             >
                               View Results
                             </button>
                           ) : null}
                           <button
                             onClick={() => goWords(row.studySetId)}
-                            className="px-4 py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
+                            className="px-3 xl:px-4 py-1 xl:py-1.5 border bg-primary border-outline-variant/30 text-white text-xs font-bold rounded-full hover:opacity-90 transition-opacity"
                           >
                             View Words
                           </button>

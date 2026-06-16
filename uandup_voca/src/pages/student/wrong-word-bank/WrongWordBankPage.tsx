@@ -95,7 +95,7 @@ export function WrongWordBankPage() {
                 {COLUMNS.map((col, i) => (
                   <th
                     key={col}
-                    className={`px-4 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest ${i < COLUMNS.length - 1 ? 'border-r border-outline-variant/20' : ''} ${col === 'Actions' ? 'text-right' : ''}`}
+                    className={`px-3 xl:px-4 py-3 xl:py-4 text-[10px] xl:text-xs font-bold text-on-surface-variant uppercase tracking-widest whitespace-nowrap ${i < COLUMNS.length - 1 ? 'border-r border-outline-variant/20' : ''} ${col === 'Actions' ? 'text-right' : ''}`}
                   >
                     {col}
                   </th>
