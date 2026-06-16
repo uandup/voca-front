@@ -21,7 +21,7 @@ export function TestPagination({ currentPage, totalPages, onPageChange }: TestPa
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold transition-colors ${
+          className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-bold  ${
             page === currentPage
               ? 'bg-primary text-white'
               : 'border border-outline-variant/30 text-on-surface-variant hover:border-primary/40'

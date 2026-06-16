@@ -74,7 +74,7 @@ export default function WrongWordListPage() {
                   <span className="text-[8px] uppercase tracking-widest font-bold text-error/60">
                     Wrong
                   </span>
-                  <span className="text-md font-bold text-error">{word.wrongCount}</span>
+                  <span className="text-base font-bold text-error">{word.wrongCount}</span>
                 </div>
               }
             />

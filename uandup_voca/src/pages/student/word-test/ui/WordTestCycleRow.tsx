@@ -106,7 +106,7 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
           const isInactive = step.status === 'locked'; // || step.status === 'grading';
           return (
             <Fragment key={step.name}>
-              <div className="relative flex-1 min-w-0 h-44">
+              <div className="relative flex-1 min-w-0 h-36 xl:h-44">
                 <WordTestStepCard
                   step={step}
                   onAction={() => handleStepAction(step, idx)}
