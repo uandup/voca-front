@@ -87,7 +87,7 @@ export default function ExamReviewPage() {
 
   if (isLoading || !examDetail) {
     return (
-      <div className="min-h-screen bg-surface flex flex-col">
+      <div className="min-h-dvh bg-surface flex flex-col">
         <TestHeader onExit={handleExit} />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
@@ -97,7 +97,7 @@ export default function ExamReviewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col">
+    <div className="min-h-dvh bg-surface flex flex-col">
       <TestHeader onExit={handleExit} center={headerCenter} />
 
       <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-6">

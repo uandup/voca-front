@@ -7,7 +7,7 @@ export default function OnboardingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen primary-gradient flex flex-col">
+    <div className="min-h-dvh primary-gradient flex flex-col">
       <OnboardingNav onLogoClick={() => navigate({ to: '/' })} />
 
       <div className="flex-1 flex relative overflow-hidden">

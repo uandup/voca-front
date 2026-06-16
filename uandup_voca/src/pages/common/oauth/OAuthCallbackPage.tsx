@@ -50,7 +50,7 @@ export default function OAuthCallbackPage() {
   }, [navigate, router]);
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center">
+    <div className="min-h-dvh bg-surface flex items-center justify-center">
       <span className="material-symbols-outlined text-primary text-4xl">progress_activity</span>
     </div>
   );

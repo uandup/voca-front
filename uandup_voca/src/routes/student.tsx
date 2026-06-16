@@ -15,7 +15,7 @@ export const Route = createFileRoute('/student')({
     const tablet = isTablet();
 
     return (
-      <div className="bg-surface font-body text-on-surface min-h-screen">
+      <div className="bg-surface font-body text-on-surface min-h-dvh">
         <StudentSideNavBar
           collapsed={tablet ? true : collapsed}
           onToggle={() => setCollapsed((v) => !v)}
