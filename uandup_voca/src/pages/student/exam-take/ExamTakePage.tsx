@@ -87,11 +87,11 @@ export default function ExamTakePage() {
   }
 
   const headerCenter = isAnswerMode ? (
-    <div className="flex items-center gap-1.5 text-on-surface-variant">
-      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+    <div className="flex items-center gap-1.5 text-on-surface-variant min-w-0">
+      <span className="material-symbols-outlined shrink-0" style={{ fontSize: '16px' }}>
         warning
       </span>
-      <p className="text-sm font-semibold">
+      <p className="text-xs xl:text-sm font-semibold leading-tight line-clamp-2">
         Your answers are not saved automatically. Refreshing or exiting this page will discard all
         progress.
       </p>
@@ -113,8 +113,8 @@ export default function ExamTakePage() {
     <div className="min-h-screen bg-surface flex flex-col">
       <TestHeader onExit={handleExit} onSubmit={handleSubmit} center={headerCenter} />
 
-      <div className="relative flex flex-1 justify-center px-6 py-6">
-        <div className="w-240 flex flex-col gap-4">
+      <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-6">
+        <div className="w-full max-w-240 flex flex-col gap-4">
           {isSentence ? (
             <SentenceAnswerTable
               items={sentencePageItems}

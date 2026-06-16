@@ -23,7 +23,7 @@ export function ProgressPanel({
   const isReview = mode === 'review';
 
   return (
-    <aside className="absolute left-[calc(50%+500px)] top-6 w-56">
+    <aside className="hidden xl:block absolute left-[calc(50%+500px)] top-6 w-56">
       <div className="bg-white border border-outline-variant/30 rounded-2xl p-4 flex flex-col gap-4 sticky top-18.25">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">

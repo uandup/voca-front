@@ -10,8 +10,8 @@ interface TestHeaderProps {
 
 export function TestHeader({ onExit, onSubmit, center }: TestHeaderProps) {
   return (
-    <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-4 xl:px-6 h-14 xl:h-16 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-4 shrink-0">
         <button
           onClick={onExit}
           className="flex items-center gap-1.5 text-on-surface-variant text-sm font-medium hover:text-on-surface transition-colors"
@@ -23,13 +23,13 @@ export function TestHeader({ onExit, onSubmit, center }: TestHeaderProps) {
         </button>
       </div>
 
-      <div className="flex items-center gap-2">{center}</div>
+      <div className="flex items-center gap-2 flex-1 justify-center min-w-0">{center}</div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         {onSubmit && (
           <button
             onClick={onSubmit}
-            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+            className="flex items-center gap-1.5 xl:gap-2 bg-primary text-white px-4 xl:px-5 py-2 xl:py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
               task_alt

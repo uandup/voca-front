@@ -100,8 +100,8 @@ export default function ExamReviewPage() {
     <div className="min-h-screen bg-surface flex flex-col">
       <TestHeader onExit={handleExit} center={headerCenter} />
 
-      <div className="relative flex flex-1 justify-center px-6 py-6">
-        <div className="w-240 flex flex-col gap-4">
+      <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-6">
+        <div className="w-full max-w-240 flex flex-col gap-4">
           <ExamReviewTable
             mode={mode}
             isSentence={isSentence}
