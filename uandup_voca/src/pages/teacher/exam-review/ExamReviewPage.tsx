@@ -187,7 +187,7 @@ export default function ExamReviewPage() {
   );
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col">
+    <div className="min-h-dvh bg-surface flex flex-col">
       <header className="sticky top-0 z-10 bg-white border-b border-outline-variant/30 px-6 h-16 flex items-center justify-between">
         <div className="flex-1 flex justify-start">
           <button

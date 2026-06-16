@@ -34,7 +34,7 @@ export function SideNavBar({
 
   return (
     <aside
-      className={`h-screen fixed left-0 top-0 flex flex-col gap-2 py-4 px-3 bg-slate-50 border-r border-slate-200 z-40 overflow-hidden transition-all duration-200 ${
+      className={`h-dvh fixed left-0 top-0 flex flex-col gap-2 py-4 px-3 bg-slate-50 border-r border-slate-200 z-40 overflow-hidden transition-all duration-200 ${
         collapsed ? 'w-18' : 'w-64'
       }`}
     >

@@ -30,7 +30,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface font-body text-on-surface overflow-x-hidden">
+    <div className="min-h-dvh bg-surface font-body text-on-surface overflow-x-hidden">
       <LandingNav
         lang={lang}
         t={t.nav}

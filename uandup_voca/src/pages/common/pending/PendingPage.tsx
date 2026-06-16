@@ -64,7 +64,7 @@ export default function PendingPage() {
   const isParentNoChild = variant === 'parentNoChild';
 
   return (
-    <div className="min-h-screen primary-gradient flex flex-col">
+    <div className="min-h-dvh primary-gradient flex flex-col">
       <OnboardingNav onLogoClick={() => navigate({ to: '/' })} />
 
       <div className="flex-1 flex items-center justify-center px-6 relative overflow-hidden">

@@ -10,7 +10,7 @@ export const Route = createFileRoute('/teacher')({
     const [collapsed, setCollapsed] = useState(false);
 
     return (
-      <div className="bg-surface font-body text-on-surface min-h-screen">
+      <div className="bg-surface font-body text-on-surface min-h-dvh">
         <TeacherSideNavBar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
         <div className={`p-10 transition-all duration-200 ${collapsed ? 'ml-18' : 'ml-64'}`}>
           <Outlet />
