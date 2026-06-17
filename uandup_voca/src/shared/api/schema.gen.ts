@@ -168,7 +168,7 @@ export interface paths {
         post?: never;
         /**
          * 반 삭제
-         * @description 반을 삭제합니다. 선생님만 접근 가능합니다.
+         * @description 반을 삭제합니다. 관리자만 접근 가능합니다.
          */
         delete: operations["deleteClassroom"];
         options?: never;
@@ -405,7 +405,7 @@ export interface paths {
         put?: never;
         /**
          * 온라인 시험 채점
-         * @description 학생이 앱에서 치러진 시험의 정오답, 학생이 작성한 답안(userAnswer), 합격 여부를 저장합니다. 정오답은 클라이언트가 판정합니다. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가).
+         * @description 학생이 앱에서 치러진 시험의 정오답, 학생이 작성한 답안(userAnswer), 합격 여부를 저장합니다. 정오답은 클라이언트가 판정합니다. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가). 재채점은 isPassed·정오답·WrongBank만 보정하나, 예문시험이 합격이고 StudySet이 아직 CREATED면 WORD_COMP로 보정합니다. 반대로 예문시험을 합격→불합격으로 정정하면 WORD_COMP를 다시 CREATED로 되돌립니다. 단, 이미 다음 NORMAL 배정을 받은 경우엔 되돌리지 않고 WORD_COMP를 유지합니다(배정은 학생당 1개 불변식 보호).
          */
         post: operations["recordOnlineResults"];
         delete?: never;
@@ -425,7 +425,7 @@ export interface paths {
         put?: never;
         /**
          * 오프라인 시험 채점
-         * @description 선생님이 종이 시험지로 치러진 시험의 정오답과 합격 여부를 입력합니다. 모든 문항의 examItemId와 isCorrect를 리스트로 전달해야 하며, 누락 시 400 에러. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가).
+         * @description 선생님이 종이 시험지로 치러진 시험의 정오답과 합격 여부를 입력합니다. 모든 문항의 examItemId와 isCorrect를 리스트로 전달해야 하며, 누락 시 400 에러. 예문시험 채점이면 StudySet이 CREATED → WORD_COMP로, REVIEW3 채점이면 WORD_COMP → REVIEW_COMP로 자동 전이됩니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다 (CANCELLED 시험은 채점 불가). 재채점은 isPassed·정오답·WrongBank만 보정하나, 예문시험이 합격이고 StudySet이 아직 CREATED면 WORD_COMP로 보정합니다. 반대로 예문시험을 합격→불합격으로 정정하면 WORD_COMP를 다시 CREATED로 되돌립니다. 단, 이미 다음 NORMAL 배정을 받은 경우엔 되돌리지 않고 WORD_COMP를 유지합니다(배정은 학생당 1개 불변식 보호).
          */
         post: operations["recordOfflineResults"];
         delete?: never;
@@ -469,7 +469,7 @@ export interface paths {
         put?: never;
         /**
          * 반 생성
-         * @description 새로운 반을 생성합니다. 선생님만 접근 가능합니다.
+         * @description 새로운 반을 생성합니다. 관리자만 접근 가능합니다.
          */
         post: operations["createClassroom"];
         delete?: never;
@@ -666,26 +666,6 @@ export interface paths {
         patch: operations["demoteAllStudentsGrade"];
         trace?: never;
     };
-    "/api/v1/auth/promote/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * [테스트용] 선생님으로 역할 변경
-         * @description 특정 회원을 선생님(TEACHER) 역할로 변경하고 ACTIVE 상태로 설정합니다.
-         */
-        patch: operations["promoteToTeacher"];
-        trace?: never;
-    };
     "/api/v1/auth/profile": {
         parameters: {
             query?: never;
@@ -760,6 +740,7 @@ export interface paths {
          *     - `lastWrongAt` 오름차순 정렬 — 오래전에 틀린 단어가 먼저
          *     - 오답 뱅크 시험에서 또 틀리면 lastWrongAt이 갱신되어 목록 뒤로 이동
          *     - 단어 정보(뜻, 예문, 동의어) + 누적 오답 횟수(wrongCount) 포함
+         *     - **예문(example)은 해당 단어의 예문 시험(EXAMPLE)을 통과한(NORMAL StudySet이 WORD_COMP+) 경우에만 내려가고, 그 전에는 null** — 예문 시험 치팅 방지
          *     - 선생님·학생 접근 가능
          */
         get: operations["getActiveWrongBankWords"];
@@ -1134,7 +1115,7 @@ export interface paths {
         };
         /**
          * 학부모 전체 목록 조회
-         * @description ACTIVE 상태인 학부모 전체 목록을 조회합니다. 연결된 학생의 이름·학년 정보를 포함합니다. 관리자만 접근 가능합니다.
+         * @description ACTIVE 상태인 학부모 전체 목록을 조회합니다. 연결된 학생의 이름·학년 정보를 포함합니다. 학생 수정 시 학부모 연결 드롭다운용으로 선생님이 접근할 수 있습니다.
          */
         get: operations["getAllActiveParents"];
         put?: never;
@@ -1209,46 +1190,6 @@ export interface paths {
          * @description 클리닉 슬롯 편집 화면용 조회. 전체 ACTIVE 학생 목록(allStudents)과 현재 해당 슬롯에 배정되어 있는 학생의 ID 목록(clinicStudentIds)을 함께 반환합니다. 프론트는 allStudents로 선택 가능한 전체 학생을 그리고 clinicStudentIds로 체크 상태를 표시합니다. allStudents 각 항목의 필드는 최소 구성입니다: studentId, name, englishName, classrooms(소속 반 목록, 없으면 빈 배열). 시험 설정/메모/레벨 등 상세 정보는 일반 조회 API(GET /{dayOfWeek}/{hour}/students)에서 제공합니다. 선생님만 접근 가능합니다.
          */
         get: operations["getSlotStudentsForEdit"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/google": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [테스트용] Google 로그인 URL 조회
-         * @description 반환된 URL을 브라우저 주소창에 붙여넣으세요. Google 로그인 후 콜백으로 토큰이 바로 JSON 응답됩니다.
-         */
-        get: operations["getGoogleLoginUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * [테스트용] Google OAuth 콜백
-         * @description Google 로그인 후 자동 호출됩니다. 토큰을 JSON으로 반환합니다.
-         */
-        get: operations["callback"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2112,7 +2053,7 @@ export interface components {
             difficulty?: number;
             /** @description 동의어 목록 */
             synonyms?: string[];
-            /** @description 예문 */
+            /** @description 예문 — 해당 단어의 예문 시험(EXAMPLE) 통과 전에는 null (치팅 방지) */
             example?: string;
             /**
              * Format: int32
@@ -3010,12 +2951,6 @@ export interface components {
             status?: number;
             message?: string;
             data?: components["schemas"]["ClassroomSummary"][];
-        };
-        ApiResponseString: {
-            /** Format: int32 */
-            status?: number;
-            message?: string;
-            data?: string;
         };
     };
     responses: never;
@@ -5064,41 +4999,6 @@ export interface operations {
             };
         };
     };
-    promoteToTeacher: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /**
-                 * @description 회원 ID
-                 * @example 1
-                 */
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 변경 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
-                };
-            };
-            /** @description 회원을 찾을 수 없음 (MEMBER_NOT_FOUND) */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseMemberResponse"];
-                };
-            };
-        };
-    };
     completeProfile: {
         parameters: {
             query?: never;
@@ -6059,67 +5959,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseClinicStudentEditResponse"];
-                };
-            };
-        };
-    };
-    getGoogleLoginUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseString"];
-                };
-            };
-        };
-    };
-    callback: {
-        parameters: {
-            query: {
-                /** @description Google 인증 코드 */
-                code: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 로그인 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
-                };
-            };
-            /** @description Google 인증 실패 (GOOGLE_AUTH_FAILED) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
-                };
-            };
-            /** @description 승인 대기(PENDING_APPROVAL) 상태에서는 로그인 불가 (MEMBER_PENDING_APPROVAL) */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
                 };
             };
         };
