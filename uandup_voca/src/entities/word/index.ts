@@ -1,3 +1,4 @@
+export { useWordBookmarks } from './lib/useWordBookmarks';
 export { DIFFICULTY_LEVELS } from './model/types';
 export type {
   PartOfSpeech,
@@ -10,6 +11,8 @@ export type {
 export { toWordCardData } from './model/mapper';
 export { LevelBlock } from './ui/LevelBlock';
 export { WordCard } from './ui/WordCard';
+export { WordBookmarkButton } from './ui/WordBookmarkButton';
+export { WordBookmarkFilterButton } from './ui/WordBookmarkFilterButton';
 export { getWords, createWord, updateWord, deleteWord } from './api/wordApi';
 export { toWordCreateRequest, toWordUpdateRequest } from './api/mapper';
 export { wordKeys } from './api/queryKeys';
