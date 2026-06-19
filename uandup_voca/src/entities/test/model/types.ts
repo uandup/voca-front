@@ -24,7 +24,8 @@ export type StepStatus =
   | 'locked' // "Locked" 버튼, 비활성
   | 'pending' // "Pending Release" 버튼, 비활성
   | 'active' // "Start Online Test" 버튼, 활성
-  | 'grading' // "Awaiting Grading" 버튼, 비활성
+  | 'grading' // ONLINE_STARTED — 학생이 응시 중, 채점 흐름 진입 가능
+  | 'submitted' // SUBMITTED — 학생이 제출 완료, 선생님 채점 대기
   | 'fail' // 점수(빨간색) + "Pending Re-Test" + "View Results"
   | 'passed'; // 점수(초록색) + "View Results"
 

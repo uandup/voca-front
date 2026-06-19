@@ -16,19 +16,22 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
   const isPassed = step.status === 'passed';
   const isFail = step.status === 'fail';
   const isLocked = step.status === 'locked';
+  const isSubmitted = step.status === 'submitted';
 
   return (
     <button
       onClick={onClick}
       disabled={isLocked}
       className={`relative flex-1 min-w-0 h-full min-h-30 rounded-2xl p-4 flex flex-col gap-2 overflow-hidden transition-all text-left
-        ${isSelected ? `ring-2 ring-inset ${isFail ? 'ring-error' : 'ring-primary'}` : ''}
+        ${isSelected ? `ring-2 ring-inset ${isFail ? 'ring-error' : isSubmitted ? 'ring-amber-400' : 'ring-primary'}` : ''}
         ${
           isFail
             ? 'bg-error/5 border border-error/20 cursor-pointer hover:border-error/40'
             : isLocked
               ? 'border border-outline/10 bg-slate-50/80'
-              : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
+              : isSubmitted
+                ? 'bg-amber-50 border border-amber-300 cursor-pointer hover:border-amber-400 hover:shadow-sm'
+                : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
         }`}
     >
       {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때 name 오른쪽에 표시 */}
