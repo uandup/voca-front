@@ -64,8 +64,8 @@ export default function ExamPreviewPage() {
     <div className="min-h-dvh bg-surface flex flex-col">
       <TestHeader onExit={handleExit} />
 
-      <div className="flex flex-1 justify-center px-6 py-6">
-        <div className="w-240 flex flex-col gap-4">
+      <div className="flex-1 overflow-x-auto px-6 py-6">
+        <div className="w-240 mx-auto flex flex-col gap-4">
           {isSentence ? (
             <SentencePreviewTable items={sentencePageItems} />
           ) : (

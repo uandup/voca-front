@@ -7,7 +7,7 @@ export function WordBookmarkButton({ bookmarked, onToggle }: Props) {
   return (
     <button
       onClick={onToggle}
-      className="p-1 rounded-lg hover:bg-surface-container transition-colors"
+      className="p-1 rounded-lg leading-none hover:bg-surface-container transition-colors"
       aria-label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
     >
       <span

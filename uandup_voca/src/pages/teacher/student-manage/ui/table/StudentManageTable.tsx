@@ -260,7 +260,7 @@ export function StudentManageTable({ students, actions, hiddenColumns }: Student
   return (
     <TableContainer>
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse table-fixed">
+        <table className="w-full min-w-250 text-left border-collapse table-fixed">
           <colgroup>
             {visibleColumns.map((c) => (
               <col key={c.key} style={{ width: c.width }} />
