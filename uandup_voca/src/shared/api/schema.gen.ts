@@ -329,17 +329,11 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 배정 이력 및 시험 현황 조회
-         * @description 학생의 전체 배정 이력을 최신순으로 조회합니다.
-         *
-         *     각 배정 항목(StudySet)에 포함되는 정보:
-         *     - `wordCount` — StudySet에 배정된 단어 수
-         *     - `levels` — 레벨별 단어 개수 배열 (레벨 경계를 넘어 배정되면 여러 항목)
-         *     - `exams.{word|example|review1|review2|review3}` — 시험 타입별 현황. 미생성·취소된 시험은 null
-         *
-         *     각 시험 칸(ExamSummaryDto)의 수치:
-         *     - `questionCount`(문항 수)는 시험이 존재하는 한 상태와 무관하게 항상 포함됩니다.
-         *     - `correctCount`(맞은 수)·`isPassed`·`completedAt`은 COMPLETED 시험에만 포함되며, 그 외에는 null입니다.
+         * [deprecated] 배정 이력 및 시험 현황 전체 조회
+         * @deprecated
+         * @description **deprecated** — active/history 분리 전환 전까지의 호환용입니다.
+         *     진행 중(CREATED·WORD_COMP) + 암기 완료(REVIEW_COMP) NORMAL 배정을 최신순으로 모두 반환합니다.
+         *     신규 작업은 `/active`(진행 중)·`/history`(암기 완료, 페이지네이션)를 사용하세요. 전환 완료 후 제거 예정입니다.
          */
         get: operations["getStudySetExamList"];
         put?: never;
@@ -906,6 +900,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/normal-study-sets/students/{studentId}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 암기 완료 배정 이력 조회 (history, 페이지네이션)
+         * @description 학생의 **암기 완료** NORMAL 배정 이력을 최신순으로 조회합니다.
+         *     리뷰3까지 통과한 배정(StudySet status = REVIEW_COMP)만 포함하며, 매일 누적되므로
+         *     오프셋 페이지네이션으로 반환합니다 (무한 스크롤용).
+         *
+         *     응답 `data`는 `PageResponse` 형태로 `content`(배정 배열) 외에
+         *     `page`·`size`·`totalElements`·`totalPages`·`hasNext`를 포함합니다.
+         *     `hasNext`가 false면 더 불러올 페이지가 없습니다.
+         *     각 배정 항목·시험 칸의 필드 의미는 active 엔드포인트와 동일합니다.
+         */
+        get: operations["getStudySetHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/normal-study-sets/students/{studentId}/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 진행 중 배정 및 시험 현황 조회 (active)
+         * @description 학생의 **진행 중** NORMAL 배정을 최신순으로 조회합니다.
+         *     아직 암기가 끝나지 않은 배정(StudySet status = CREATED 또는 WORD_COMP)만 포함하며,
+         *     리뷰3까지 통과해 암기 완료된 배정(REVIEW_COMP)은 history 엔드포인트에서 조회합니다.
+         *     진행 중 배정은 개수가 적게 유지되므로 페이지네이션 없이 전체를 배열로 반환합니다.
+         *
+         *     각 배정 항목(StudySet)에 포함되는 정보:
+         *     - `wordCount` — StudySet에 배정된 단어 수
+         *     - `levels` — 레벨별 단어 개수 배열 (레벨 경계를 넘어 배정되면 여러 항목)
+         *     - `exams.{word|example|review1|review2|review3}` — 시험 타입별 현황. 미생성·취소된 시험은 null
+         *
+         *     각 시험 칸(ExamSummaryDto)의 수치:
+         *     - `questionCount`(문항 수)는 시험이 존재하는 한 상태와 무관하게 항상 포함됩니다.
+         *     - `correctCount`(맞은 수)·`isPassed`·`completedAt`은 COMPLETED 시험에만 포함되며, 그 외에는 null입니다.
+         */
+        get: operations["getActiveStudySetExamList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/members/teachers": {
         parameters: {
             query?: never;
@@ -1190,6 +1243,26 @@ export interface paths {
          * @description 클리닉 슬롯 편집 화면용 조회. 전체 ACTIVE 학생 목록(allStudents)과 현재 해당 슬롯에 배정되어 있는 학생의 ID 목록(clinicStudentIds)을 함께 반환합니다. 프론트는 allStudents로 선택 가능한 전체 학생을 그리고 clinicStudentIds로 체크 상태를 표시합니다. allStudents 각 항목의 필드는 최소 구성입니다: studentId, name, englishName, classrooms(소속 반 목록, 없으면 빈 배열). 시험 설정/메모/레벨 등 상세 정보는 일반 조회 API(GET /{dayOfWeek}/{hour}/students)에서 제공합니다. 선생님만 접근 가능합니다.
          */
         get: operations["getSlotStudentsForEdit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * [임시] Google 콜백 — 브라우저 직접 로그인 테스트용
+         * @description 구글 OAuth redirect_uri로 받은 code를 그대로 로그인 처리합니다. 프론트 연동 전 테스트 전용이며 추후 제거 예정입니다.
+         */
+        get: operations["callback"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1975,6 +2048,7 @@ export interface components {
             totalElements?: number;
             /** Format: int32 */
             totalPages?: number;
+            hasNext?: boolean;
         };
         ApiResponseWordStatsResponse: {
             /** Format: int32 */
@@ -2663,6 +2737,24 @@ export interface components {
             lastAssignedWordId?: number;
             /** Format: int32 */
             assignmentCount?: number;
+        };
+        ApiResponsePageResponseStudySetExamListResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PageResponseStudySetExamListResponse"];
+        };
+        PageResponseStudySetExamListResponse: {
+            content?: components["schemas"]["StudySetExamListResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            hasNext?: boolean;
         };
         ApiResponseListTeacherListResponse: {
             /** Format: int32 */
@@ -5489,6 +5581,105 @@ export interface operations {
             };
         };
     };
+    getStudySetHistory: {
+        parameters: {
+            query?: {
+                /**
+                 * @description 페이지 번호 (0부터)
+                 * @example 0
+                 */
+                page?: number;
+                /**
+                 * @description 페이지 크기
+                 * @example 20
+                 */
+                size?: number;
+            };
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageResponseStudySetExamListResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageResponseStudySetExamListResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageResponseStudySetExamListResponse"];
+                };
+            };
+        };
+    };
+    getActiveStudySetExamList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudySetExamListResponse"];
+                };
+            };
+            /** @description 본인/담당이 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudySetExamListResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStudySetExamListResponse"];
+                };
+            };
+        };
+    };
     getAllActiveTeachers: {
         parameters: {
             query?: never;
@@ -5959,6 +6150,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseClinicStudentEditResponse"];
+                };
+            };
+        };
+    };
+    callback: {
+        parameters: {
+            query: {
+                code: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseLoginResponse"];
                 };
             };
         };
