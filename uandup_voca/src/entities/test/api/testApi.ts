@@ -56,10 +56,5 @@ export const recordOfflineResults = (
 
 // 학생이 자신의 답안을 제출 — ONLINE_STARTED → SUBMITTED 상태 전이.
 // 이후 채점은 선생님이 recordOnlineResults로 수행.
-export const submitExam = (
-  examId: number,
-  body: SubmitExamRequest,
-): Promise<ApiResponse<void>> =>
-  axiosInstance
-    .post<ApiResponse<void>>(`/api/v1/exams/${examId}/submit`, body)
-    .then((r) => r.data);
+export const submitExam = (examId: number, body: SubmitExamRequest): Promise<ApiResponse<void>> =>
+  axiosInstance.post<ApiResponse<void>>(`/api/v1/exams/${examId}/submit`, body).then((r) => r.data);

@@ -43,7 +43,6 @@ export {
   updateStudent,
   deleteStudent,
   getStudentOverview,
-  getStudySetList,
   getAssignedWords,
   updateAssignmentCount,
   assignWords,
@@ -58,7 +57,8 @@ export { studentKeys } from './api/queryKeys';
 export { invalidateStudentCascade } from './api/invalidate';
 export { useStudentOverview } from './api/useStudentOverview';
 export { useStudentDashboard, useStudentDashboardCharts } from './api/useStudentDashboard';
-export { useStudySetList } from './api/useStudySetList';
+export { useActiveStudySetList } from './api/useStudySetList';
+export { useStudySetHistory } from './api/useStudySetHistory';
 export { useAssignedWords } from './api/useAssignedWords';
 export { usePendingReviews } from './api/usePendingReviews';
 export { useTodos } from './api/useTodos';

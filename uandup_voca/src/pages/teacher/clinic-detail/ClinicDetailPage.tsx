@@ -9,7 +9,6 @@ import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
 import { useStudentOverview } from '@/entities/student';
-import { useStudySetList } from '@/entities/student';
 
 type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
 
@@ -21,7 +20,6 @@ export function ClinicDetailPage() {
   const navigate = useNavigate();
 
   const { data: student, isLoading: overviewLoading } = useStudentOverview(studentId);
-  const { data: studySets = [], isLoading: setsLoading } = useStudySetList(studentId);
 
   const [isMemoOpen, setIsMemoOpen] = useState(false);
 
@@ -37,7 +35,7 @@ export function ClinicDetailPage() {
     });
   };
 
-  if (overviewLoading || setsLoading || !student) {
+  if (overviewLoading || !student) {
     return (
       <main className="p-8">
         <LoadingSpinner />
@@ -63,7 +61,7 @@ export function ClinicDetailPage() {
               latestMemo={student.latestMemo ?? undefined}
               onMemoClick={() => setIsMemoOpen(true)}
             />
-            <QuickAssignmentCard studentId={studentId} studySets={studySets} />
+            <QuickAssignmentCard studentId={studentId} />
           </div>
 
           {/* Bottom Section: Tab System */}
@@ -96,7 +94,7 @@ export function ClinicDetailPage() {
               </div>
             </div>
 
-            {mainTab === 'wordTest' && <WordTestTab studySets={studySets} studentId={studentId} />}
+            {mainTab === 'wordTest' && <WordTestTab studentId={studentId} />}
 
             {mainTab === 'reviewDeck' && <WrongWordBankTab studentId={studentId} />}
 
