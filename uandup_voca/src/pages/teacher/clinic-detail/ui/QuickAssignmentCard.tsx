@@ -1,28 +1,25 @@
 import { useMemo, useState } from 'react';
 import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordDifficultyLevel as DifficultyLevel } from '@/entities/word';
-import type { StudySetRow } from '@/entities/student';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { useAssignmentActions } from '../model/useAssignmentActions';
-import { useStudentOverview } from '@/entities/student';
+import { useStudentOverview, useActiveStudySetList } from '@/entities/student';
 import { AssignedWordsModal } from './WordTestTab/AssignedWordsModal';
 
 interface Props {
   studentId: number;
-  // 학생의 모든 cycle. "Already assigned" 상태에서 진행 중인 cycle의 studySetId를
-  // 추출하기 위해 ClinicDetailPage가 이미 보유한 목록을 그대로 내려받는다 —
-  // 별도 API 호출 없이 동일 캐시를 재사용한다.
-  studySets: StudySetRow[];
 }
 
 const disabledCls =
   'disabled:bg-slate-100 disabled:text-slate-500 disabled:border-slate-200 disabled:cursor-not-allowed';
 
-export function QuickAssignmentCard({ studentId, studySets }: Props) {
+export function QuickAssignmentCard({ studentId }: Props) {
   // 학생 데이터의 single source of truth는 서버 캐시(useStudentOverview).
   // invalidate가 일어나면 즉시 새 값이 반영되도록 prop drilling 대신 직접 구독한다 —
   // 학생 수정 모달에서 변경한 배정 수/레벨이 캐시 갱신과 동시에 여기에 비치도록.
   const { data: student } = useStudentOverview(studentId);
+  // useActiveStudySetList는 WordTestTab과 동일한 queryKey를 사용 — 캐시 공유로 네트워크 요청 없음.
+  const { data: activeSets = [] } = useActiveStudySetList(studentId);
   const { assign, updateSettings } = useAssignmentActions(studentId);
 
   // 편집 중에만 사용되는 임시 값. null이면 view 모드(서버 값 그대로 표시).
@@ -37,8 +34,8 @@ export function QuickAssignmentCard({ studentId, studySets }: Props) {
   // 배정 후 생성된 cycle은 단어/예문 시험이 끝나기 전까지 재생성될 수 없으므로,
   // alreadyAssigned가 true일 때 최신 cycle이 곧 진행 중인 그 cycle이다.
   const activeStudySet = useMemo(
-    () => [...studySets].sort((a, b) => b.assignedDate.localeCompare(a.assignedDate))[0] ?? null,
-    [studySets],
+    () => [...activeSets].sort((a, b) => b.assignedDate.localeCompare(a.assignedDate))[0] ?? null,
+    [activeSets],
   );
 
   const isEditing = draft !== null;

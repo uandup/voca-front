@@ -125,9 +125,9 @@ function toExamSummary(dto: ExamSummaryDto): ExamSummary {
 }
 
 // teacher 시점 status 해석:
-//   READY            → 'active'  (선생님이 시작 가능)
-//   ONLINE_STARTED   → 'grading' (응시·채점 흐름 진입 가능)
-//   SUBMITTED        → 'grading' (채점 대기)
+//   READY            → 'active'    (선생님이 시작 가능)
+//   ONLINE_STARTED   → 'grading'   (학생 응시 중, 채점 흐름 진입 가능)
+//   SUBMITTED        → 'submitted' (학생 제출 완료, 선생님 채점 대기)
 //   COMPLETED        → 'passed' / 'fail'
 // exams[0]이 가장 최근 시도. retakeCount = 이전 시도 수(= exams.length - 1).
 function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
@@ -175,8 +175,10 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
   let stepStatus: StepCardVM['status'];
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
-  } else if (status === 'ONLINE_STARTED' || status === 'SUBMITTED') {
+  } else if (status === 'ONLINE_STARTED') {
     stepStatus = 'grading';
+  } else if (status === 'SUBMITTED') {
+    stepStatus = 'submitted';
   } else {
     stepStatus = 'active';
   }

@@ -60,10 +60,10 @@ export function SessionPanel({
                 className="w-full flex items-center justify-between px-4 py-2.5 bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <span className="text-xs font-black uppercase tracking-widest text-on-surface">
+                  <span className="text-[11px] xl:text-xs font-black uppercase tracking-widest text-on-surface">
                     {group.label}
                   </span>
-                  <span className="text-xs font-normal text-on-surface-variant/60">
+                  <span className="text-[11px] xl:text-xs font-normal text-on-surface-variant/60">
                     {group.range}
                   </span>
                 </span>

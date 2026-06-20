@@ -9,8 +9,9 @@ import { TestPrintModal } from '../modals/TestPrintModal';
 
 // 시험이 생성되었고 아직 채점이 완료되지 않은 단계에서 렌더링된다.
 // inferPhase가 'created'를 반환하는 경우 — 구체적으로 step.status가
-//   - 'active'   (서버 상태 READY)                  : 시험 생성 직후, 응시 전
-//   - 'grading'  (서버 상태 ONLINE_STARTED | SUBMITTED) : 응시/제출 완료, 채점 대기
+//   - 'active'    (서버 상태 READY)          : 시험 생성 직후, 응시 전
+//   - 'grading'   (서버 상태 ONLINE_STARTED) : 학생 응시 중
+//   - 'submitted' (서버 상태 SUBMITTED)      : 학생 제출 완료, 선생님 채점 대기
 // 주된 액션:
 //   - Preview        → /teacher/exams/:examId/preview 라우트 이동 (online 전용, read-only)
 //   - Print(아이콘)   → TestPrintModal (offline 전용, 빈칸 인쇄)

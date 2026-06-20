@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
-import { WordCard } from '@/entities/word';
+import {
+  WordCard,
+  WordBookmarkButton,
+  WordBookmarkFilterButton,
+  useWordBookmarks,
+} from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
 import { WordFlashcard } from '@/widgets/word-flashcard';
 
@@ -26,6 +31,10 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
   const exampleVisible = data?.exampleVisible ?? false;
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`studyset_${studySetId}`);
+
+  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedIds.has(w.id)) : words;
 
   return (
     <main>
@@ -33,33 +42,43 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
         <BreadcrumbPageTitle parents={parents} title={title} />
 
         {words.length > 0 && (
-          <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30">
-            <button
-              onClick={() => setViewMode('list')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                list
-              </span>
-              List
-            </button>
-            <button
-              onClick={() => setViewMode('flashcard')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
-                viewMode === 'flashcard'
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-on-surface-variant hover:text-on-surface'
-              }`}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                style
-              </span>
-              Flashcard
-            </button>
+          <div className="flex items-center gap-3">
+            {/* 북마크 필터 토글 */}
+            <WordBookmarkFilterButton
+              active={showBookmarkedOnly}
+              count={bookmarkedIds.size}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            />
+
+            {/* List / Flashcard 전환 */}
+            <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                  viewMode === 'list'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  list
+                </span>
+                List
+              </button>
+              <button
+                onClick={() => setViewMode('flashcard')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                  viewMode === 'flashcard'
+                    ? 'bg-white text-primary shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  style
+                </span>
+                Flashcard
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -69,11 +88,23 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
       ) : words.length === 0 ? (
         <EmptyState title="No words assigned." />
       ) : viewMode === 'flashcard' ? (
-        <WordFlashcard words={words} />
+        <WordFlashcard words={visibleWords} />
+      ) : visibleWords.length === 0 ? (
+        <EmptyState title="No bookmarked words yet." />
       ) : (
         <div className="space-y-5">
-          {words.map((word) => (
-            <WordCard key={word.id} {...word} showSentence={exampleVisible} />
+          {visibleWords.map((word) => (
+            <WordCard
+              key={word.id}
+              {...word}
+              showSentence={exampleVisible}
+              extraInfo={
+                <WordBookmarkButton
+                  bookmarked={bookmarkedIds.has(word.id)}
+                  onToggle={() => toggleBookmark(word.id)}
+                />
+              }
+            />
           ))}
         </div>
       )}

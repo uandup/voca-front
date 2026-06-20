@@ -8,6 +8,8 @@ type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
 type StudentUpdateRequest = components['schemas']['StudentUpdateRequest'];
 type StudentOverviewResponse = components['schemas']['StudentOverviewResponse'];
 type StudySetExamListResponse = components['schemas']['StudySetExamListResponse'];
+type PageResponseStudySetExamListResponse =
+  components['schemas']['PageResponseStudySetExamListResponse'];
 type StudySetWordsResponse = components['schemas']['StudySetWordsResponse'];
 type DashboardResponse = components['schemas']['DashboardResponse'];
 type DashboardChartResponse = components['schemas']['DashboardChartResponse'];
@@ -66,11 +68,24 @@ export const getDashboardCharts = (
     .get<ApiResponse<DashboardChartResponse>>(`/api/v1/students/${studentId}/dashboard/charts`)
     .then((r) => r.data);
 
-export const getStudySetList = (
+export const getActiveStudySetList = (
   studentId: number,
 ): Promise<ApiResponse<StudySetExamListResponse[]>> =>
   axiosInstance
-    .get<ApiResponse<StudySetExamListResponse[]>>(`/api/v1/normal-study-sets/students/${studentId}`)
+    .get<
+      ApiResponse<StudySetExamListResponse[]>
+    >(`/api/v1/normal-study-sets/students/${studentId}/active`)
+    .then((r) => r.data);
+
+export const getStudySetHistory = (
+  studentId: number,
+  page: number,
+  size: number = 20,
+): Promise<ApiResponse<PageResponseStudySetExamListResponse>> =>
+  axiosInstance
+    .get<
+      ApiResponse<PageResponseStudySetExamListResponse>
+    >(`/api/v1/normal-study-sets/students/${studentId}/history`, { params: { page, size } })
     .then((r) => r.data);
 
 export const getAssignedWords = (studySetId: number): Promise<ApiResponse<StudySetWordsResponse>> =>

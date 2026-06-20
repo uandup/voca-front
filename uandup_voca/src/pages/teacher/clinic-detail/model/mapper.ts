@@ -6,7 +6,8 @@ export type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
 export function inferPhase(step: StepCardVM): PanelPhase {
   if (step.status === 'passed') return 'passed';
   if (step.status === 'fail') return 'fail';
-  if (step.status === 'active' || step.status === 'grading') return 'created';
+  if (step.status === 'active' || step.status === 'grading' || step.status === 'submitted')
+    return 'created';
   return 'pending';
 }
 

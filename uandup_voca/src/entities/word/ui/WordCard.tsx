@@ -74,7 +74,7 @@ export function WordCard({
             )}
           </div>
 
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 min-w-0 space-y-4">
             <div>
               <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
                 Meaning
@@ -106,7 +106,7 @@ export function WordCard({
             </div>
           </div>
 
-          {extraInfo && <div className="shrink-0">{extraInfo}</div>}
+          {extraInfo && <div className="shrink-0 self-start">{extraInfo}</div>}
         </div>
       </div>
 

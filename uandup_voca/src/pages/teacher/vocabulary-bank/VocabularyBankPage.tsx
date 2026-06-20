@@ -101,8 +101,7 @@ export default function VocabularyBankPage() {
             {...word}
             showSentence
             extraInfo={
-              // 카드 자체가 relative이므로 우상단 absolute 배치를 그대로 유지한다.
-              <div className="absolute top-6 right-6 flex gap-2 z-10">
+              <div className="flex gap-2">
                 <button
                   onClick={() => setEditTarget(word)}
                   className="p-2 bg-surface-container-low rounded-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-xs font-bold"

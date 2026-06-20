@@ -17,11 +17,13 @@ function formatScheduledDate(iso: string): string {
 
 const containerClass: Record<StepStatus, string> = {
   locked: 'border border-primary/30 bg-primary/5',
+  pending: 'border border-primary/30 bg-primary/5',
+  active: 'border border-primary/30 bg-primary/5',
   grading: 'border border-primary/30 bg-primary/5',
+  // 학생 side에서 SUBMITTED는 toStudentStepCardVM에 의해 'grading'으로 매핑되어 이 케이스에 도달하지 않음
+  submitted: 'border border-primary/30 bg-primary/5',
   fail: 'border border-error/20 bg-error/5',
   passed: 'border border-success/30 bg-success/5',
-  active: 'border border-primary/30 bg-primary/5',
-  pending: 'border border-primary/30 bg-primary/5',
 };
 
 export default function WordTestStepCard({ step, onAction, onViewResults }: StepCardProps) {

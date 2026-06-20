@@ -50,22 +50,24 @@ export default function ClinicsPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-14 gap-8 items-start">
-        <SessionPanel
-          selectedSlot={selectedSlot}
-          expandedGroups={expandedGroups}
-          onPrevDay={handlePrevDay}
-          onNextDay={handleNextDay}
-          onSelectHour={(hour) => setSelectedSlot((prev) => ({ ...prev, hour }))}
-          onToggleGroup={(group) =>
-            setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }))
-          }
-        />
-        <ClinicStudentTable
-          students={students}
-          onMemoClick={setMemoStudent}
-          onEditMembersClick={() => setIsEditMembersOpen(true)}
-        />
+      <div className="overflow-x-auto">
+        <div className="grid grid-cols-14 gap-8 items-start min-w-250">
+          <SessionPanel
+            selectedSlot={selectedSlot}
+            expandedGroups={expandedGroups}
+            onPrevDay={handlePrevDay}
+            onNextDay={handleNextDay}
+            onSelectHour={(hour) => setSelectedSlot((prev) => ({ ...prev, hour }))}
+            onToggleGroup={(group) =>
+              setExpandedGroups((prev) => ({ ...prev, [group]: !prev[group] }))
+            }
+          />
+          <ClinicStudentTable
+            students={students}
+            onMemoClick={setMemoStudent}
+            onEditMembersClick={() => setIsEditMembersOpen(true)}
+          />
+        </div>
       </div>
 
       {isEditMembersOpen && (

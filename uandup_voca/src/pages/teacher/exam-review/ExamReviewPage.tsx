@@ -332,8 +332,8 @@ export default function ExamReviewPage() {
         </div>
       </header>
 
-      <div className="relative flex flex-1 justify-center px-6 py-6">
-        <div className="w-240 flex flex-col gap-4">
+      <div className="relative flex-1 overflow-x-auto px-6 py-6">
+        <div className="w-240 mx-auto flex flex-col gap-4">
           {isSentence ? (
             <SentenceReviewTable
               items={sentencePageItems}

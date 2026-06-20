@@ -79,95 +79,103 @@ export default function StudentDashboardPage() {
 
   return (
     <main className="relative">
-      {/* Title row with todo toggle */}
-      <div className="flex items-center justify-between">
-        <BreadcrumbPageTitle
-          parents={[
-            { label: 'Student Management', onClick: () => navigate({ to: '/teacher/students' }) },
-          ]}
-          title={overview.nameKo}
-        />
+      <div className="overflow-x-auto">
+        <div className="min-w-300 space-y-8">
+          {/* Title row with todo toggle */}
+          <div className="flex items-center justify-between">
+            <BreadcrumbPageTitle
+              parents={[
+                {
+                  label: 'Student Management',
+                  onClick: () => navigate({ to: '/teacher/students' }),
+                },
+              ]}
+              title={overview.nameKo}
+            />
 
-        <div className="flex items-center gap-2">
-          {/* Clinic Detail Button */}
-          <button
-            onClick={() =>
-              navigate({
-                to: '/teacher/clinics/students/$studentId',
-                params: { studentId: String(studentId) },
-              })
-            }
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary"
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-              school
-            </span>
-            Go Clinic
-          </button>
-
-          {/* Todo Button */}
-          <button
-            ref={buttonRef}
-            onClick={() => setTodoOpen((v) => !v)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all
-              ${
-                todoOpen
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary'
-              }`}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-              {todoOpen ? 'close' : 'checklist'}
-            </span>
-            To-Do
-          </button>
-        </div>
-      </div>
-
-      <div className="flex gap-4 items-stretch mb-8">
-        <div className="flex-1">
-          <LevelProgress
-            level={dashboard.currentLevel}
-            progressPercent={dashboard.levelProgressPercent}
-            testTypeLabel={TEST_TYPE_LABEL[overview.testType] ?? '—'}
-            includeSynonyms={overview.includeSynonyms}
-            examQuestionCount={overview.testQuestionCount}
-            assignmentCount={overview.assignmentCount}
-          />
-        </div>
-        <WordsLearnedCard count={dashboard.memorizedWordCount} />
-      </div>
-      <div className="grid grid-cols-12 gap-8 items-stretch">
-        <ScoreTrendChart charts={charts} />
-        <StatCards
-          accuracy={dashboard.overallAccuracy}
-          assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0}
-          pendingReviewWordCount={dashboard.pendingReviewWordCount}
-          onAssignedClick={
-            dashboard.activeAssignment
-              ? () =>
+            <div className="flex items-center gap-2">
+              {/* Clinic Detail Button */}
+              <button
+                onClick={() =>
                   navigate({
-                    to: '/teacher/students/$studentId/assigned-words/$studySetId',
-                    params: {
-                      studentId: String(studentId),
-                      studySetId: String(dashboard.activeAssignment!.studySetId),
-                    },
-                  })
-              : undefined
-          }
-          onReviewClick={
-            dashboard.pendingReviewWordCount > 0
-              ? () =>
-                  navigate({
-                    to: '/teacher/students/$studentId/pending-reviews',
+                    to: '/teacher/clinics/students/$studentId',
                     params: { studentId: String(studentId) },
                   })
-              : undefined
-          }
-        />
+                }
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  school
+                </span>
+                Go Clinic
+              </button>
+
+              {/* Todo Button */}
+              <button
+                ref={buttonRef}
+                onClick={() => setTodoOpen((v) => !v)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all
+                  ${
+                    todoOpen
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary'
+                  }`}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  {todoOpen ? 'close' : 'checklist'}
+                </span>
+                To-Do
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-4 items-stretch">
+            <div className="flex-1">
+              <LevelProgress
+                level={dashboard.currentLevel}
+                progressPercent={dashboard.levelProgressPercent}
+                testTypeLabel={TEST_TYPE_LABEL[overview.testType] ?? '—'}
+                includeSynonyms={overview.includeSynonyms}
+                examQuestionCount={overview.testQuestionCount}
+                assignmentCount={overview.assignmentCount}
+              />
+            </div>
+            <WordsLearnedCard count={dashboard.memorizedWordCount} />
+          </div>
+
+          <div className="grid grid-cols-12 gap-8 items-stretch">
+            <ScoreTrendChart charts={charts} />
+            <StatCards
+              accuracy={dashboard.overallAccuracy}
+              assignedWordCount={dashboard.activeAssignment?.wordCount ?? 0}
+              pendingReviewWordCount={dashboard.pendingReviewWordCount}
+              onAssignedClick={
+                dashboard.activeAssignment
+                  ? () =>
+                      navigate({
+                        to: '/teacher/students/$studentId/assigned-words/$studySetId',
+                        params: {
+                          studentId: String(studentId),
+                          studySetId: String(dashboard.activeAssignment!.studySetId),
+                        },
+                      })
+                  : undefined
+              }
+              onReviewClick={
+                dashboard.pendingReviewWordCount > 0
+                  ? () =>
+                      navigate({
+                        to: '/teacher/students/$studentId/pending-reviews',
+                        params: { studentId: String(studentId) },
+                      })
+                  : undefined
+              }
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Slide-in drawer from right edge */}
+      {/* Slide-in drawer from right edge — fixed 포지셔닝이므로 overflow 래퍼 바깥에 둔다. */}
       <div
         ref={drawerRef}
         className={`fixed top-24 right-0 bottom-20 w-76 z-50 transition-transform duration-300 ease-in-out
