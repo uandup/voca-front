@@ -132,12 +132,10 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
           </div>
 
           {/* 단어 목록 / 플래시카드 */}
-          {activeWords.length === 0 ? (
-            <EmptyState title="No words for this date." />
+          {visibleWords.length === 0 ? (
+            <EmptyState title="No words yet." />
           ) : viewMode === 'flashcard' ? (
             <WordFlashcard words={visibleWords} />
-          ) : visibleWords.length === 0 ? (
-            <EmptyState title="No bookmarked words yet." />
           ) : (
             <div className="space-y-5">
               {visibleWords.map((word) => (
