@@ -85,12 +85,10 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
 
       {isLoading ? (
         <LoadingSpinner />
-      ) : words.length === 0 ? (
-        <EmptyState title="No words assigned." />
+      ) : visibleWords.length === 0 ? (
+        <EmptyState title="No words yet." />
       ) : viewMode === 'flashcard' ? (
         <WordFlashcard words={visibleWords} />
-      ) : visibleWords.length === 0 ? (
-        <EmptyState title="No bookmarked words yet." />
       ) : (
         <div className="space-y-5">
           {visibleWords.map((word) => (

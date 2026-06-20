@@ -3,7 +3,12 @@ import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { useRouter } from '@tanstack/react-router';
-import { WordCard, WordBookmarkButton, WordBookmarkFilterButton, useWordBookmarks } from '@/entities/word';
+import {
+  WordCard,
+  WordBookmarkButton,
+  WordBookmarkFilterButton,
+  useWordBookmarks,
+} from '@/entities/word';
 import { useReviewDeckWords } from '@/entities/review-deck';
 import { useCurrentStudentId } from '@/entities/auth';
 import { WordFlashcard } from '@/widgets/word-flashcard';
@@ -72,12 +77,10 @@ export default function WrongWordListPage() {
 
       {isLoading ? (
         <LoadingSpinner />
-      ) : words.length === 0 ? (
-        <EmptyState title="No active incorrect words." />
+      ) : visibleWords.length === 0 ? (
+        <EmptyState title="No words yet." />
       ) : viewMode === 'flashcard' ? (
         <WordFlashcard words={visibleWords} />
-      ) : visibleWords.length === 0 ? (
-        <EmptyState title="No bookmarked words yet." />
       ) : (
         <div className="space-y-5">
           {visibleWords.map((word) => (
