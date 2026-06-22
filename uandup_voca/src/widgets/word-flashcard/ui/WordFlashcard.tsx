@@ -3,6 +3,8 @@ import type { WordCardData } from '@/entities/word';
 
 interface WordFlashcardProps {
   words: WordCardData[];
+  bookmarkedIds?: Set<number>;
+  onToggleBookmark?: (wordId: number) => void;
 }
 
 type FrontFace = 'word' | 'meaning';
@@ -14,7 +16,7 @@ function loadFrontFace(): FrontFace {
   return stored === 'meaning' ? 'meaning' : 'word';
 }
 
-export function WordFlashcard({ words }: WordFlashcardProps) {
+export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFlashcardProps) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   // transition을 일시적으로 비활성화하는 플래그. 카드 전환 시 flip-back 애니메이션 없이 즉시 스냅.
@@ -214,6 +216,26 @@ export function WordFlashcard({ words }: WordFlashcardProps) {
           >
             <FrontPanel isBack={false} />
             <BackPanel isBack={true} />
+            {bookmarkedIds && onToggleBookmark && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleBookmark(word.id);
+                }}
+                className="absolute top-3 right-3 z-10 p-1 rounded-lg leading-none hover:bg-surface-container transition-colors"
+                aria-label={bookmarkedIds.has(word.id) ? 'Remove bookmark' : 'Add bookmark'}
+              >
+                <span
+                  className={`material-symbols-outlined ${bookmarkedIds.has(word.id) ? 'text-amber-400' : 'text-outline/40 hover:text-outline'}`}
+                  style={{
+                    fontSize: '30px',
+                    fontVariationSettings: bookmarkedIds.has(word.id) ? "'FILL' 1" : "'FILL' 0",
+                  }}
+                >
+                  bookmark
+                </span>
+              </button>
+            )}
           </div>
         </div>
 
