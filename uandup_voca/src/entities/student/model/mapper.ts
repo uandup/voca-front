@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { StudentGrade } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member/@x/student';
 import { toWordTestType } from '@/entities/test/@x/student';
 import {
   toWordCardData,
@@ -26,7 +26,7 @@ import type {
   TodoItem,
   TodoType,
 } from './types';
-import type { StepCardVM, TestBundleRow } from '@/entities/test';
+import type { StepCardVM, TestBundleRow } from '@/entities/test/@x/student';
 
 type StudentListResponse = components['schemas']['StudentListResponse'];
 type StudentDetailResponse = components['schemas']['StudentDetailResponse'];

@@ -1,5 +1,4 @@
-import type { StepCardVM, ExamItem, SentenceTestAnswer, ESRow } from '@/entities/test';
-import type { SentencePreviewItem } from '@/widgets/test-online';
+import type { StepCardVM, ExamItem, ESRow } from '@/entities/test';
 
 export type PanelPhase = 'pending' | 'created' | 'fail' | 'passed';
 
@@ -20,20 +19,6 @@ export function toESRows(items: ExamItem[]): ESRow[] {
     no: String(item.itemOrder),
     sentence: item.example,
     // sentence 시험의 빈칸은 영어 word를 채우는 것 — koreanMeaning이 아님.
-    answer: item.word,
-  }));
-}
-
-export function toSentenceAnswers(items: ExamItem[]): Record<number, SentenceTestAnswer> {
-  return Object.fromEntries(
-    items.map((item) => [item.itemOrder, { answer: item.userAnswer ?? '' }]),
-  );
-}
-
-export function toSentencePreviewItems(items: ExamItem[]): SentencePreviewItem[] {
-  return items.map((item) => ({
-    id: item.itemOrder,
-    sentence: item.example,
     answer: item.word,
   }));
 }

@@ -1,7 +1,7 @@
 import type { Memo } from '@/entities/memo/@x/student';
 import type { WordDifficultyLevel, WordCardData } from '@/entities/word/@x/student';
 import type { TestConfig, WordTestType } from '@/entities/test/@x/student';
-import type { StudentGrade } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member/@x/student';
 import type { ParentIdentity } from '@/entities/parent/@x/student';
 
 // ── Shared Base ─────────────────────────────────────────────────────────────

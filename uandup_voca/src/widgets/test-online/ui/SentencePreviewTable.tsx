@@ -1,10 +1,5 @@
+import type { SentencePreviewItem } from '@/entities/test';
 import { SentencePreviewRow } from './SentencePreviewRow';
-
-export interface SentencePreviewItem {
-  id: number;
-  sentence: string;
-  answer: string;
-}
 
 interface SentencePreviewTableProps {
   items: SentencePreviewItem[];
