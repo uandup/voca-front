@@ -80,7 +80,7 @@ export const getActiveStudySetList = (
 export const getStudySetHistory = (
   studentId: number,
   page: number,
-  size: number = 20,
+  size: number = 5,
 ): Promise<ApiResponse<PageResponseStudySetExamListResponse>> =>
   axiosInstance
     .get<

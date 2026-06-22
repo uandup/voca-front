@@ -6,6 +6,7 @@ type WordCreateRequest = components['schemas']['WordCreateRequest'];
 type WordUpdateRequest = components['schemas']['WordUpdateRequest'];
 type WordResponse = components['schemas']['WordResponse'];
 type PageResponseWordResponse = components['schemas']['PageResponseWordResponse'];
+type WordLevelCountResponse = components['schemas']['WordLevelCountResponse'];
 
 interface GetWordsParams {
   keyword?: string;
@@ -30,3 +31,10 @@ export const updateWord = (
 
 export const deleteWord = (id: number): Promise<ApiResponse<void>> =>
   axiosInstance.delete<ApiResponse<void>>(`/api/v1/words/${id}`).then((r) => r.data);
+
+export const getWordCountByLevel = (
+  level: number,
+): Promise<ApiResponse<WordLevelCountResponse>> =>
+  axiosInstance
+    .get<ApiResponse<WordLevelCountResponse>>(`/api/v1/words/levels/${level}/count`)
+    .then((r) => r.data);

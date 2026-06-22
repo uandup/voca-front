@@ -700,6 +700,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/words/levels/{level}/count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 특정 레벨 단어 수 조회
+         * @description 지정한 레벨(1~10)의 단어 수를 조회합니다. 선생님·학생 모두 접근 가능.
+         */
+        get: operations["getWordCountByLevel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/study-sets/{studySetId}/words": {
         parameters: {
             query?: never;
@@ -2077,6 +2097,27 @@ export interface components {
             level9Count?: number;
             /** Format: int64 */
             level10Count?: number;
+        };
+        ApiResponseWordLevelCountResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["WordLevelCountResponse"];
+        };
+        /** @description 특정 레벨의 단어 수 응답 */
+        WordLevelCountResponse: {
+            /**
+             * Format: int32
+             * @description 레벨
+             * @example 3
+             */
+            level?: number;
+            /**
+             * Format: int64
+             * @description 단어 수
+             * @example 120
+             */
+            count?: number;
         };
         ApiResponseStudySetWordsResponse: {
             /** Format: int32 */
@@ -5149,6 +5190,41 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseWordStatsResponse"];
+                };
+            };
+        };
+    };
+    getWordCountByLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 레벨 (1~10)
+                 * @example 3
+                 */
+                level: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseWordLevelCountResponse"];
+                };
+            };
+            /** @description 유효하지 않은 레벨 (INVALID_DIFFICULTY) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseWordLevelCountResponse"];
                 };
             };
         };

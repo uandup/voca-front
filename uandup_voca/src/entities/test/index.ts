@@ -7,6 +7,7 @@ export type {
   TestBundleRow,
   BundleLevelCount,
   SentenceTestAnswer,
+  SentencePreviewItem,
   ESRow,
   ExamType,
   StudySetExamType,
@@ -26,6 +27,8 @@ export {
   toWordTestItems,
   toVocabReviewItems,
   toSentenceTestItems,
+  toSentenceAnswers,
+  toSentencePreviewItems,
 } from './model/mapper';
 export {
   getExamsByType,

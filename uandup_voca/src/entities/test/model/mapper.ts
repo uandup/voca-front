@@ -8,6 +8,8 @@ import type {
   ExamAttempt,
   ExamMode,
   ExamSource,
+  SentenceTestAnswer,
+  SentencePreviewItem,
 } from './types';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word/@x/test';
 
@@ -76,6 +78,21 @@ export function toSentenceTestItems(items: ExamItem[]): SentenceTestItem[] {
   return items.map((item) => ({
     id: item.itemOrder,
     sentence: item.example,
+  }));
+}
+
+// sentence 시험의 초기 답변 map — itemOrder를 키로 하여 SentenceReviewTable에 주입한다.
+export function toSentenceAnswers(items: ExamItem[]): Record<number, SentenceTestAnswer> {
+  return Object.fromEntries(
+    items.map((item) => [item.itemOrder, { answer: item.userAnswer ?? '' }]),
+  );
+}
+
+export function toSentencePreviewItems(items: ExamItem[]): SentencePreviewItem[] {
+  return items.map((item) => ({
+    id: item.itemOrder,
+    sentence: item.example,
+    answer: item.word,
   }));
 }
 
