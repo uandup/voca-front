@@ -1,4 +1,4 @@
-import type { StudentGrade } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member/@x/parent';
 
 // ── Shared Base ──────────────────────────────────────────────────────────────
 

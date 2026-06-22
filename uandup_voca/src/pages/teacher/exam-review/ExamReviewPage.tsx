@@ -10,8 +10,7 @@ import {
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
 import { useExamDetail } from '@/entities/test';
-import { toVocabReviewItems, toSentenceTestItems } from '@/entities/test';
-import { toSentenceAnswers } from '@/pages/teacher/clinic-detail/model/mapper';
+import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
 
 // 선생님이 학생의 시험을 채점하거나 채점 결과를 확인하는 페이지(grading + result 통합).

@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { StudentGrade } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member/@x/parent';
 import type { ParentManageRow } from './types';
 
 type ParentListResponse = components['schemas']['ParentListResponse'];

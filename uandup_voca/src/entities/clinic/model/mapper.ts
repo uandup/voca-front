@@ -1,5 +1,5 @@
 import type { components } from '@/shared/api/schema.gen';
-import type { StudentGrade } from '@/entities/member';
+import type { StudentGrade } from '@/entities/member/@x/clinic';
 import type { WordDifficultyLevel } from '@/entities/word/@x/clinic';
 import { toWordTestType } from '@/entities/test/@x/clinic';
 import type { ClinicStudentRow } from './types';

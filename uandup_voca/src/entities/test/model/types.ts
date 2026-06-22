@@ -74,6 +74,13 @@ export interface SentenceTestAnswer {
   answer: string;
 }
 
+/** 문장 시험 preview row — SentencePreviewTable에 주입되는 데이터 단위. */
+export interface SentencePreviewItem {
+  id: number;
+  sentence: string;
+  answer: string;
+}
+
 /** 문장 시험 인쇄·채점용 row — 시험지/채점지의 한 줄. widgets/test-offline 출력 + clinic-detail mapper에서 공유. */
 export interface ESRow {
   no: string;

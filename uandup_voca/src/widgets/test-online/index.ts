@@ -12,6 +12,5 @@ export { VocabPreviewTable } from './ui/VocabPreviewTable';
 export { VocabPreviewRow } from './ui/VocabPreviewRow';
 export { SentencePreviewTable } from './ui/SentencePreviewTable';
 export { SentencePreviewRow } from './ui/SentencePreviewRow';
-export type { SentencePreviewItem } from './ui/SentencePreviewTable';
 export { SentenceReviewTable } from './ui/SentenceReviewTable';
 export { SentenceReviewRow } from './ui/SentenceReviewRow';
