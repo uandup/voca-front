@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
-import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
+import { LevelBlock, DIFFICULTY_LEVELS, useWordCountByLevel } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
 import type { LevelTestExamRow, LevelTestExamStatus } from '@/entities/level-test';
@@ -69,6 +69,9 @@ export function LevelTestTab({ studentId }: Props) {
     });
     setInitialized(true);
   }
+
+  // 선택된 레벨의 전체 단어 수 — 레벨 변경 시 자동 재조회/캐싱.
+  const { data: levelWordCount } = useWordCountByLevel(config.selectedLevel);
 
   const [showCreateSuccess, setShowCreateSuccess] = useState(false);
 
@@ -156,7 +159,18 @@ export function LevelTestTab({ studentId }: Props) {
         {/* Test Configuration Section — 항상 편집 가능, 학생 설정으로 초기화 */}
         <div className="px-8 py-5 flex flex-col gap-3">
           <div className="flex items-end gap-3">
-            <div className="grid grid-cols-4 gap-4 flex-1 max-w-2xl">
+            <div className="grid grid-cols-5 gap-4 flex-1 max-w-3xl">
+              <div>
+                <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
+                  Available Words
+                </label>
+                {/* 선택 레벨의 전체 단어 수 — 읽기 전용 (입력 불가) */}
+                <div
+                  className={`${inputClass} bg-surface-container-highest/40 text-on-surface-variant flex items-center`}
+                >
+                  {levelWordCount !== undefined && levelWordCount !== null ? levelWordCount : '—'}
+                </div>
+              </div>
               <div>
                 <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
                   Test Type
