@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
 import { NumberInput } from '@/shared/ui/NumberInput';
 import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
-import { LevelBlock, DIFFICULTY_LEVELS } from '@/entities/word';
+import { LevelBlock, DIFFICULTY_LEVELS, useWordLevelCounts } from '@/entities/word';
 import type { WordDifficultyLevel } from '@/entities/word';
 import type { WordTestType } from '@/entities/test';
 import type { LevelTestExamRow, LevelTestExamStatus } from '@/entities/level-test';
@@ -46,6 +46,7 @@ export function LevelTestTab({ studentId }: Props) {
 
   const { data: student } = useStudentOverview(studentId);
   const { data: rows = [] } = useLevelTestExamList(studentId);
+  const { data: wordStats } = useWordLevelCounts();
 
   const activeRow = rows.find(isActive) ?? null;
   const currentExamId = activeRow?.examId ?? null;
@@ -136,20 +137,27 @@ export function LevelTestTab({ studentId }: Props) {
           <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-3">
             Select Level
           </p>
-          <div className="flex gap-4">
-            {DIFFICULTY_LEVELS.map((lv) => (
-              <button
-                key={lv}
-                onClick={() => setConfig((prev) => ({ ...prev, selectedLevel: lv }))}
-                className={`w-16 h-11 rounded-xl text-sm font-bold border-2 transition-all ${
-                  config.selectedLevel === lv
-                    ? 'border-primary bg-primary/5 text-primary'
-                    : 'border-slate-200 bg-white text-on-surface-variant hover:border-primary/40'
-                }`}
-              >
-                {lv}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2">
+            {DIFFICULTY_LEVELS.map((lv) => {
+              const key = `level${lv}Count` as keyof typeof wordStats;
+              const count = wordStats ? (wordStats[key] ?? 0) : null;
+              return (
+                <button
+                  key={lv}
+                  onClick={() => setConfig((prev) => ({ ...prev, selectedLevel: lv }))}
+                  className={`flex flex-col items-center justify-center min-w-[60px] px-3 py-2 rounded-xl border-2 transition-all ${
+                    config.selectedLevel === lv
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-slate-200 bg-white text-on-surface-variant hover:border-primary/40'
+                  }`}
+                >
+                  <span className="text-sm font-bold">Level {lv}</span>
+                  <span className="text-xs font-semibold mt-0.5 opacity-70">
+                    {count !== null ? count : '—'}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
