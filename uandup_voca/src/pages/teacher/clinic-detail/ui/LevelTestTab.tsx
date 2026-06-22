@@ -162,7 +162,7 @@ export function LevelTestTab({ studentId }: Props) {
             <div className="grid grid-cols-5 gap-4 flex-1 max-w-3xl">
               <div>
                 <label className="text-[10px] font-semibold text-on-surface-variant mb-1 block">
-                  Available Words
+                  Total Word Count
                 </label>
                 {/* 선택 레벨의 전체 단어 수 — 읽기 전용 (입력 불가) */}
                 <div
