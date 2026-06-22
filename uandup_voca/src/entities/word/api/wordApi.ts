@@ -6,7 +6,6 @@ type WordCreateRequest = components['schemas']['WordCreateRequest'];
 type WordUpdateRequest = components['schemas']['WordUpdateRequest'];
 type WordResponse = components['schemas']['WordResponse'];
 type PageResponseWordResponse = components['schemas']['PageResponseWordResponse'];
-type WordStatsResponse = components['schemas']['WordStatsResponse'];
 
 interface GetWordsParams {
   keyword?: string;
@@ -31,6 +30,3 @@ export const updateWord = (
 
 export const deleteWord = (id: number): Promise<ApiResponse<void>> =>
   axiosInstance.delete<ApiResponse<void>>(`/api/v1/words/${id}`).then((r) => r.data);
-
-export const getWordStats = (): Promise<ApiResponse<WordStatsResponse>> =>
-  axiosInstance.get<ApiResponse<WordStatsResponse>>('/api/v1/words/stats').then((r) => r.data);
