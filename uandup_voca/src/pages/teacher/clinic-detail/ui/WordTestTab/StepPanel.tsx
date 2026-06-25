@@ -16,9 +16,17 @@ interface StepPanelProps {
   studySetId: number;
   studentId: number;
   examType: StudySetExamType;
+  // 이 StudySet에 실제 배정된 단어 수 — 시험 문항 수의 상한.
+  wordCount: number;
 }
 
-export default function StepPanel({ step, studySetId, studentId, examType }: StepPanelProps) {
+export default function StepPanel({
+  step,
+  studySetId,
+  studentId,
+  examType,
+  wordCount,
+}: StepPanelProps) {
   const phase = inferPhase(step);
 
   const { data: student } = useStudentOverview(studentId);
@@ -83,8 +91,9 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
         initialConfig={initialConfig}
         showEditButton={phase === 'pending' || phase === 'fail'}
         onEditingChange={setIsConfigEditing}
-        // 배정 단어 수를 시험 문항 수의 상한으로 전달한다.
-        maxQty={student.assignmentCount}
+        // 이 StudySet에 실제 배정된 단어 수를 시험 문항 수의 상한으로 전달한다.
+        // (학생의 현재 글로벌 설정값이 아니라 해당 StudySet 고유의 단어 수여야 한다.)
+        maxQty={wordCount}
       />
 
       {phase === 'pending' && (
@@ -92,8 +101,8 @@ export default function StepPanel({ step, studySetId, studentId, examType }: Ste
           isEditing={isConfigEditing}
           // 저장된 Quantity가 0이면 Generate Test 자체를 막는다.
           testQtyIsZero={initialConfig.testQty === 0}
-          // 저장된 Quantity가 배정 단어 수를 초과하면 Generate Test를 막는다.
-          testQtyExceedsMax={initialConfig.testQty > student.assignmentCount}
+          // 저장된 Quantity가 이 StudySet의 배정 단어 수를 초과하면 Generate Test를 막는다.
+          testQtyExceedsMax={initialConfig.testQty > wordCount}
           create={create}
           onCreateSuccess={() => setShowCreateSuccess(true)}
         />
