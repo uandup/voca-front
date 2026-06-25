@@ -113,6 +113,7 @@ export default function ClinicCycleRow({ levels, wordCount, steps, studySetId, s
           studySetId={studySetId}
           studentId={studentId}
           examType={selectedExamType}
+          wordCount={wordCount}
         />
       )}
 
