@@ -23,13 +23,15 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
   const [animated, setAnimated] = useState(true);
   const [frontFace, setFrontFace] = useState<FrontFace>(loadFrontFace);
 
-  const word = words[index];
   const total = words.length;
+  // words prop이 줄어들어 index가 범위를 벗어날 수 있으므로 렌더 시점에 clamp
+  const safeIndex = total > 0 ? Math.min(index, total - 1) : 0;
+  const word = words[safeIndex];
 
   // 키보드 이벤트 핸들러에서 최신 상태를 참조하기 위한 ref
-  const stateRef = useRef({ index, flipped, total });
+  const stateRef = useRef({ index: safeIndex, flipped, total });
   useEffect(() => {
-    stateRef.current = { index, flipped, total };
+    stateRef.current = { index: safeIndex, flipped, total };
   });
 
   const navigateTo = useCallback((newIndex: number) => {
@@ -82,6 +84,9 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [goPrev, goNext]);
+
+  // 모든 hook 이후 — words가 빈 배열인 경우 방어 (부모에서 통상 막지만 안전망)
+  if (!word) return null;
 
   function faceStyle(isBack: boolean): React.CSSProperties {
     return isBack
@@ -169,7 +174,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
               </button>
             </div>
             <span className="text-xs font-semibold text-on-surface-variant">
-              {index + 1} / {total}
+              {safeIndex + 1} / {total}
             </span>
           </div>
 
@@ -180,7 +185,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
         <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
           <div
             className="h-full bg-primary rounded-full transition-all duration-300"
-            style={{ width: `${((index + 1) / total) * 100}%` }}
+            style={{ width: `${((safeIndex + 1) / total) * 100}%` }}
           />
         </div>
       </div>
@@ -192,7 +197,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
         {/* 태블릿 전용 좌측 버튼 */}
         <button
           onClick={goPrev}
-          disabled={index === 0}
+          disabled={safeIndex === 0}
           className="xl:hidden absolute top-0 bottom-0 -left-22 w-20 flex items-center justify-center rounded-xl bg-white border border-outline-variant/40 shadow-sm text-on-surface-variant disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
@@ -243,7 +248,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
         {/* 태블릿 전용 우측 버튼 */}
         <button
           onClick={goNext}
-          disabled={index === total - 1}
+          disabled={safeIndex === total - 1}
           className="xl:hidden absolute top-0 bottom-0 -right-22 w-20 flex items-center justify-center rounded-xl bg-white border border-outline-variant/40 shadow-sm text-on-surface-variant disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
@@ -256,7 +261,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
       <div className="flex items-center gap-2">
         <button
           onClick={() => navigateTo(0)}
-          disabled={index === 0}
+          disabled={safeIndex === 0}
           className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant/40 text-on-surface-variant hover:bg-surface-container disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
@@ -266,7 +271,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
 
         <button
           onClick={goPrev}
-          disabled={index === 0}
+          disabled={safeIndex === 0}
           className="w-11 h-11 flex items-center justify-center rounded-full border border-outline-variant/40 text-on-surface-variant hover:bg-surface-container disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
@@ -275,13 +280,13 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
         </button>
 
         <div className="flex items-baseline gap-1 px-4 py-1.5 bg-surface-container rounded-xl border border-outline-variant/30 tabular-nums">
-          <span className="text-lg font-bold text-primary">{index + 1}</span>
+          <span className="text-lg font-bold text-primary">{safeIndex + 1}</span>
           <span className="text-xs font-medium text-on-surface-variant/50">/ {total}</span>
         </div>
 
         <button
           onClick={goNext}
-          disabled={index === total - 1}
+          disabled={safeIndex === total - 1}
           className="w-11 h-11 flex items-center justify-center rounded-full border border-outline-variant/40 text-on-surface-variant hover:bg-surface-container disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
@@ -291,7 +296,7 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
 
         <button
           onClick={() => navigateTo(total - 1)}
-          disabled={index === total - 1}
+          disabled={safeIndex === total - 1}
           className="w-9 h-9 flex items-center justify-center rounded-full border border-outline-variant/40 text-on-surface-variant hover:bg-surface-container disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
