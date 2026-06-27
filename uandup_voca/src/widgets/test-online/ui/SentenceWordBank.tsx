@@ -26,7 +26,10 @@ export function SentenceWordBank({ items }: SentenceWordBankProps) {
   }, []);
 
   return (
-    <div className="sticky top-14 xl:top-16 z-5 bg-white border border-outline-variant/30 rounded-2xl p-4 shadow-sm">
+    <div className="sticky top-14 xl:top-16 z-5 bg-white border border-outline-variant/30 rounded-2xl p-3 shadow-sm">
+      <p className="text-[10px] text-on-surface-variant/80 mb-1.5 ml-1">
+        Click a word to mark it as used.
+      </p>
       <div className="flex flex-wrap gap-2.5">
         {sorted.map((item) => {
           const dimmed = dimmedIds.has(item.id);
