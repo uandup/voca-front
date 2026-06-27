@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface WordBankItem {
   id: number;
@@ -10,8 +10,18 @@ interface SentenceWordBankProps {
 }
 
 export function SentenceWordBank({ items }: SentenceWordBankProps) {
-  // 알파벳 순 정렬 — 문제 순서와 무관하게 단어를 찾기 쉽게.
-  const sorted = useMemo(() => [...items].sort((a, b) => a.word.localeCompare(b.word)), [items]);
+  // items 로드 후 1회 셔플 — Math.random은 비순수 함수라 useEffect 안에서 실행.
+  const [shuffled, setShuffled] = useState<WordBankItem[]>([]);
+
+  useEffect(() => {
+    const arr = [...items];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShuffled(arr);
+  }, [items]);
 
   // 클릭으로 토글되는 dim 상태 — 학생이 사용한 단어를 직접 표시하는 용도.
   const [dimmedIds, setDimmedIds] = useState<Set<number>>(new Set());
@@ -31,7 +41,7 @@ export function SentenceWordBank({ items }: SentenceWordBankProps) {
         Click a word to mark it as used.
       </p>
       <div className="flex flex-wrap gap-2.5">
-        {sorted.map((item) => {
+        {shuffled.map((item: WordBankItem) => {
           const dimmed = dimmedIds.has(item.id);
           return (
             <button
