@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams, useSearch, useNavigate } from '@tanstack/react-router';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { ConfirmDialog } from '@/shared/ui/Modal/ConfirmDialog';
@@ -10,6 +10,7 @@ import {
   ProgressPanel,
   VocabAnswerTable,
   SentenceAnswerTable,
+  SentenceWordBank,
 } from '@/widgets/test-online';
 import { useExamTake, inferMode } from './model/useExamTake';
 
@@ -46,6 +47,7 @@ export default function ExamTakePage() {
     completedIds,
     vocabPageItems,
     sentencePageItems,
+    sentenceWordBankItems,
     allIds,
     totalItems,
     totalPages,
@@ -59,6 +61,11 @@ export default function ExamTakePage() {
     // 제출 완료 후 성공 모달을 먼저 표시하고, 확인 클릭 시 /review로 교체 이동한다.
     onSubmitSuccess: () => setShowSubmitSuccess(true),
   });
+
+  // 페이지 전환 시 스크롤을 최상단으로 초기화한다.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [currentPage]);
 
   function doExit() {
     if (search.returnTo) {
@@ -113,16 +120,19 @@ export default function ExamTakePage() {
     <div className="min-h-dvh bg-surface flex flex-col">
       <TestHeader onExit={handleExit} onSubmit={handleSubmit} center={headerCenter} />
 
-      <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-6">
+      <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-4">
         <div className="w-full max-w-240 flex flex-col gap-4">
           {isSentence ? (
-            <SentenceAnswerTable
-              items={sentencePageItems}
-              answers={sentenceAnswers}
-              onAnswerChange={handleSentenceChange}
-              currentPage={currentPage}
-              totalPages={totalPages}
-            />
+            <>
+              <SentenceWordBank items={sentenceWordBankItems} />
+              <SentenceAnswerTable
+                items={sentencePageItems}
+                answers={sentenceAnswers}
+                onAnswerChange={handleSentenceChange}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+            </>
           ) : (
             <VocabAnswerTable
               items={vocabPageItems}

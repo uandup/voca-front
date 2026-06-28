@@ -23,6 +23,15 @@ export function useExamItems({ examDetail, isSentence, currentPage }: UseExamIte
     [examDetail, isSentence],
   );
 
+  // Word Bank용 — 전체 페이지에 걸쳐 동일하게 표시되는 정답 단어 목록.
+  const sentenceWordBankItems = useMemo(
+    () =>
+      isSentence && examDetail
+        ? examDetail.items.map((item) => ({ id: item.itemOrder, word: item.word }))
+        : [],
+    [examDetail, isSentence],
+  );
+
   const totalItems = isSentence ? sentenceItems.length : vocabItems.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
 
@@ -37,5 +46,13 @@ export function useExamItems({ examDetail, isSentence, currentPage }: UseExamIte
 
   const allIds = isSentence ? sentenceItems.map((i) => i.id) : vocabItems.map((i) => i.id);
 
-  return { testType, vocabPageItems, sentencePageItems, allIds, totalItems, totalPages };
+  return {
+    testType,
+    vocabPageItems,
+    sentencePageItems,
+    sentenceWordBankItems,
+    allIds,
+    totalItems,
+    totalPages,
+  };
 }
