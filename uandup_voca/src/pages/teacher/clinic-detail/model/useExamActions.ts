@@ -8,7 +8,7 @@ import {
   testKeys,
 } from '@/entities/test';
 import type { StudySetExamType } from '@/entities/test';
-import { studentKeys } from '@/entities/student';
+import { studentKeys, skipStudySetStage, invalidateStudentCascade } from '@/entities/student';
 import type { ApiResponse } from '@/shared/api';
 import type { components } from '@/shared/api/schema.gen';
 
@@ -80,5 +80,13 @@ export function useExamActions({
     onSuccess: invalidateAfterGrade,
   });
 
-  return { create, startOnline, cancel, gradeOnline, gradeOffline };
+  // 시험 없이 단계를 스킵 — StudySet 상태 전이(예: EXAMPLE→WORD_COMP)가 단어 배정/대시보드/할 일까지
+  // 영향을 주므로, 응답을 수동 반영하는 대신 학생 도메인 캐시 전체를 무효화해 재fetch한다.
+  // (목록 재요청 시 skippedTypes가 반영되어 내려와 step이 'skipped'로, 다음 단계 잠금이 해제된다.)
+  const skip = useMutation({
+    mutationFn: () => skipStudySetStage(studySetId, { examType }),
+    onSuccess: () => invalidateStudentCascade(queryClient),
+  });
+
+  return { create, startOnline, cancel, gradeOnline, gradeOffline, skip };
 }

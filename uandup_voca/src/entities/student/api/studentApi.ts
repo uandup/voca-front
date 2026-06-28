@@ -20,6 +20,8 @@ type AssignmentCountResponse = components['schemas']['AssignmentCountResponse'];
 type ExamSettingsResponse = components['schemas']['ExamSettingsResponse'];
 type UpdateAssignmentCountRequest = components['schemas']['UpdateAssignmentCountRequest'];
 type UpdateExamSettingsRequest = components['schemas']['UpdateExamSettingsRequest'];
+type SkipStageRequest = components['schemas']['SkipStageRequest'];
+type SkipStageResponse = components['schemas']['SkipStageResponse'];
 
 export const getStudents = (): Promise<ApiResponse<StudentListResponse[]>> =>
   axiosInstance
@@ -86,6 +88,15 @@ export const getStudySetHistory = (
     .get<
       ApiResponse<PageResponseStudySetExamListResponse>
     >(`/api/v1/normal-study-sets/students/${studentId}/history`, { params: { page, size } })
+    .then((r) => r.data);
+
+// 선생님이 한 학습 단계를 시험 없이 스킵한다 — 시험 객체를 만들지 않고 StudySet에 표식만 기록한다.
+export const skipStudySetStage = (
+  studySetId: number,
+  body: SkipStageRequest,
+): Promise<ApiResponse<SkipStageResponse>> =>
+  axiosInstance
+    .post<ApiResponse<SkipStageResponse>>(`/api/v1/normal-study-sets/${studySetId}/skip`, body)
     .then((r) => r.data);
 
 export const getAssignedWords = (studySetId: number): Promise<ApiResponse<StudySetWordsResponse>> =>

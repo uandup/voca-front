@@ -6,6 +6,7 @@ import { useStudySetDetail } from '../../model/useStudySetDetail';
 import { useExamActions } from '../../model/useExamActions';
 import { inferPhase } from '../../model/mapper';
 import { TestConfigSection } from './TestConfigSection';
+import { SkipStepButton } from './SkipStepButton';
 import { PendingPanel } from './panels/PendingPanel';
 import { CreatedPanel } from './panels/CreatedPanel';
 import { FailPanel } from './panels/FailPanel';
@@ -28,6 +29,9 @@ export default function StepPanel({
   wordCount,
 }: StepPanelProps) {
   const phase = inferPhase(step);
+  // 스킵된 단계는 시험이 없으므로 phase 패널(Generate Test 등) 대신 안내만 노출한다.
+  // inferPhase는 'skipped'를 모르고 'pending'을 반환하므로 이 플래그로 분기를 가른다.
+  const isSkipped = step.status === 'skipped';
 
   const { data: student } = useStudentOverview(studentId);
   const { data: examHistory } = useStudySetDetail(studySetId, examType, phase !== 'pending');
@@ -39,7 +43,7 @@ export default function StepPanel({
   // 모달이 깜빡이고 사라지는 문제를 방지하기 위함. StepPanel은 phase와 무관하게 마운트가 유지된다.
   const [showCreateSuccess, setShowCreateSuccess] = useState(false);
 
-  const { create, startOnline, cancel, gradeOnline, gradeOffline } = useExamActions({
+  const { create, startOnline, cancel, gradeOnline, gradeOffline, skip } = useExamActions({
     studySetId,
     studentId,
     examType,
@@ -89,14 +93,22 @@ export default function StepPanel({
         key={configKey}
         studentId={studentId}
         initialConfig={initialConfig}
-        showEditButton={phase === 'pending' || phase === 'fail'}
+        showEditButton={!isSkipped && (phase === 'pending' || phase === 'fail')}
         onEditingChange={setIsConfigEditing}
         // 이 StudySet에 실제 배정된 단어 수를 시험 문항 수의 상한으로 전달한다.
         // (학생의 현재 글로벌 설정값이 아니라 해당 StudySet 고유의 단어 수여야 한다.)
         maxQty={wordCount}
       />
 
-      {phase === 'pending' && (
+      {isSkipped && (
+        <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+          <span className="material-symbols-outlined text-slate-400" style={{ fontSize: '18px' }}>
+            redo
+          </span>
+          <span>This step was skipped. The next step is unlocked.</span>
+        </div>
+      )}
+      {!isSkipped && phase === 'pending' && (
         <PendingPanel
           isEditing={isConfigEditing}
           // 저장된 Quantity가 0이면 Generate Test 자체를 막는다.
@@ -105,9 +117,11 @@ export default function StepPanel({
           testQtyExceedsMax={initialConfig.testQty > wordCount}
           create={create}
           onCreateSuccess={() => setShowCreateSuccess(true)}
+          // 잠긴 단계가 아니면 Generate Test와 같은 행 우측에 Skip step 버튼을 함께 노출한다.
+          skipSlot={step.status !== 'locked' ? <SkipStepButton skip={skip} /> : undefined}
         />
       )}
-      {phase === 'created' && (
+      {!isSkipped && phase === 'created' && (
         <CreatedPanel
           step={step}
           currentExamId={currentExamId}
@@ -126,7 +140,7 @@ export default function StepPanel({
           onGradeOffline={handleGradeOffline}
         />
       )}
-      {phase === 'fail' && (
+      {!isSkipped && phase === 'fail' && (
         <FailPanel
           step={step}
           currentExamId={currentExamId}
@@ -140,9 +154,11 @@ export default function StepPanel({
           create={create}
           onGradeOnline={handleGradeOnline}
           onGradeOffline={handleGradeOffline}
+          // Retake Test와 같은 행 우측에 Skip step 버튼을 함께 노출한다.
+          skipSlot={<SkipStepButton skip={skip} />}
         />
       )}
-      {phase === 'passed' && (
+      {!isSkipped && phase === 'passed' && (
         <PassedPanel
           step={step}
           currentExamId={currentExamId}

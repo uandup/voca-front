@@ -301,6 +301,37 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/normal-study-sets/{studySetId}/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 학습 단계 스킵
+         * @description 선생님이 특정 배정(StudySet)의 한 시험 단계(WORD/EXAMPLE/REVIEW1/REVIEW2/REVIEW3)를 시험 없이 스킵합니다.
+         *     프론트는 앞 단계 시험이 합격돼야 다음 단계 화면을 여는데, 시험을 통과하지 못해 막힌 학생을 위해
+         *     해당 단계를 '스킵됨'으로 기록하여 다음 단계 잠금을 풉니다.
+         *
+         *     스킵된 단계가 게이트면 StudySet 상태도 함께 전이됩니다:
+         *     - 예문(EXAMPLE) 스킵 → CREATED → WORD_COMP (다음 단어 배정도 풀림)
+         *     - 복습3(REVIEW3) 스킵 → WORD_COMP → REVIEW_COMP
+         *     - 단어·복습1·복습2 스킵 → 표식만 기록, StudySet 상태는 그대로
+         *
+         *     스킵은 시험 레코드·오답뱅크·정답률 통계에 영향을 주지 않습니다.
+         *     진행 중(READY/ONLINE_STARTED/SUBMITTED)인 해당 타입 시험이 있으면 스킵할 수 없으며, 먼저 취소해야 합니다.
+         *     응답으로 갱신된 StudySet 상태와 현재 스킵된 단계 목록을 반환합니다. 선생님만 가능.
+         */
+        post: operations["skipStage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/normal-study-sets/{studySetId}/exams": {
         parameters: {
             query?: never;
@@ -1736,6 +1767,38 @@ export interface components {
             /** Format: int32 */
             questionCount?: number;
         };
+        /** @description 학습 단계 스킵 요청 */
+        SkipStageRequest: {
+            /**
+             * @description 스킵할 시험 단계 — NORMAL 흐름의 5단계만 허용 (WRONG_BANK/LEVEL 불가)
+             * @example EXAMPLE
+             * @enum {string}
+             */
+            examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3";
+        };
+        ApiResponseSkipStageResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["SkipStageResponse"];
+        };
+        /** @description 학습 단계 스킵 결과 */
+        SkipStageResponse: {
+            /**
+             * @description 스킵 반영 후 StudySet 상태 (예문 스킵 시 WORD_COMP, 리뷰3 스킵 시 REVIEW_COMP, 그 외 변동 없음)
+             * @example WORD_COMP
+             * @enum {string}
+             */
+            status?: "CREATED" | "WORD_COMP" | "REVIEW_COMP" | "CANCELLED";
+            /**
+             * @description 현재 이 배정에서 스킵된 시험 단계 목록
+             * @example [
+             *       "WORD",
+             *       "EXAMPLE"
+             *     ]
+             */
+            skippedTypes?: string[];
+        };
         CreateExamRequest: {
             /** @enum {string} */
             examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
@@ -2764,6 +2827,14 @@ export interface components {
             assignedDate?: string;
             /** @description 단어·예문·복습 시험 시도 이력. 각 타입은 시도 배열(최신순)이며, 시험이 없거나 모두 취소되면 빈 배열 */
             exams?: components["schemas"]["ExamsByType"];
+            /**
+             * @description 선생님이 스킵한 시험 단계 목록. 해당 타입의 시험 칸이 비어 있어도(미생성) 이 목록에 있으면 '스킵됨'으로 표시하고 다음 단계 잠금을 해제한다
+             * @example [
+             *       "WORD",
+             *       "EXAMPLE"
+             *     ]
+             */
+            skippedTypes?: string[];
         };
         ApiResponseAssignmentSettingsResponse: {
             /** Format: int32 */
@@ -4171,6 +4242,63 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+        };
+    };
+    skipStage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학습 세트 ID
+                 * @example 1
+                 */
+                studySetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SkipStageRequest"];
+            };
+        };
+        responses: {
+            /** @description 스킵 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSkipStageResponse"];
+                };
+            };
+            /** @description NORMAL이 아닌 StudySet 또는 지원하지 않는 단계(WRONG_BANK/LEVEL) — INVALID_INPUT / 진행 중 시험이 있어 스킵 불가 — STUDY_STAGE_HAS_ACTIVE_EXAM */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSkipStageResponse"];
+                };
+            };
+            /** @description 선생님만 스킵 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSkipStageResponse"];
+                };
+            };
+            /** @description 학습 세트를 찾을 수 없음 (STUDY_SET_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseSkipStageResponse"];
                 };
             };
         };

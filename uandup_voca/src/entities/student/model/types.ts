@@ -1,6 +1,6 @@
 import type { Memo } from '@/entities/memo/@x/student';
 import type { WordDifficultyLevel, WordCardData } from '@/entities/word/@x/student';
-import type { TestConfig, WordTestType } from '@/entities/test/@x/student';
+import type { TestConfig, WordTestType, StudySetExamType } from '@/entities/test/@x/student';
 import type { StudentGrade } from '@/entities/member/@x/student';
 import type { ParentIdentity } from '@/entities/parent/@x/student';
 
@@ -112,6 +112,9 @@ export interface StudySetRow {
   review1: ExamSummary[];
   review2: ExamSummary[];
   review3: ExamSummary[];
+  // 선생님이 시험 없이 스킵한 단계 목록. 스킵은 시험 객체를 만들지 않으므로 exams로는 알 수 없고
+  // 이 배열로만 판별한다 — 포함된 단계는 "스킵됨"으로 표시하고 다음 단계 잠금을 해제한다.
+  skippedTypes: StudySetExamType[];
 }
 
 /** EditStudentModal */

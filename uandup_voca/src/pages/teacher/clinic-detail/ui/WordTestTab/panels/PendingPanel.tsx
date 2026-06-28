@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 // 시험이 아직 생성되지 않은 단계에서 렌더링된다.
@@ -16,6 +17,8 @@ interface Props {
   testQtyExceedsMax: boolean;
   create: UseMutationResult<unknown, Error, void>;
   onCreateSuccess: () => void;
+  // Generate Test와 같은 행 우측에 함께 노출할 보조 액션(Skip step). 없으면 표시 안 함.
+  skipSlot?: ReactNode;
 }
 
 export function PendingPanel({
@@ -24,6 +27,7 @@ export function PendingPanel({
   testQtyExceedsMax,
   create,
   onCreateSuccess,
+  skipSlot,
 }: Props) {
   function handleGenerate() {
     create.mutate(undefined, {
@@ -49,6 +53,7 @@ export function PendingPanel({
       {!isEditing && !testQtyIsZero && testQtyExceedsMax && (
         <p className="text-xs text-error">Quantity exceeds the assigned word count.</p>
       )}
+      {skipSlot && <div className="ml-auto">{skipSlot}</div>}
     </div>
   );
 }
