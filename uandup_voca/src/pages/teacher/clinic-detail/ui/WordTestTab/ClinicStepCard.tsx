@@ -17,6 +17,7 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
   const isFail = step.status === 'fail';
   const isLocked = step.status === 'locked';
   const isSubmitted = step.status === 'submitted';
+  const isSkipped = step.status === 'skipped';
 
   return (
     <button
@@ -31,7 +32,9 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
               ? 'border border-outline/10 bg-slate-50/80'
               : isSubmitted
                 ? 'bg-amber-50 border border-amber-300 cursor-pointer hover:border-amber-400 hover:shadow-sm'
-                : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
+                : isSkipped
+                  ? 'border border-outline/20 bg-slate-50 cursor-pointer hover:border-outline/40 hover:shadow-sm'
+                  : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
         }`}
     >
       {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때 name 오른쪽에 표시 */}
@@ -68,6 +71,15 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
       {step.status === 'locked' && (
         <span className={`text-xs font-medium ${isLocked ? 'text-slate-400' : 'text-slate-500'}`}>
           Locked
+        </span>
+      )}
+
+      {isSkipped && (
+        <span className="inline-flex w-fit items-center gap-1 rounded-md bg-slate-200 px-2 py-0.5 text-xs font-bold text-slate-500">
+          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+            redo
+          </span>
+          Skipped
         </span>
       )}
     </button>

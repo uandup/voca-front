@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { StepCardVM, WordTestType, ExamType, ExamAttempt } from '@/entities/test';
@@ -30,6 +31,8 @@ interface Props {
   create: UseMutationResult<unknown, Error, void>;
   onGradeOnline: () => void;
   onGradeOffline: () => void;
+  // Retake Test와 같은 행 우측에 함께 노출할 보조 액션(Skip step). 없으면 표시 안 함.
+  skipSlot?: ReactNode;
 }
 
 export function FailPanel({
@@ -45,6 +48,7 @@ export function FailPanel({
   create,
   onGradeOnline: _onGradeOnline,
   onGradeOffline: _onGradeOffline,
+  skipSlot,
 }: Props) {
   const navigate = useNavigate();
   // const [showGrading, setShowGrading] = useState(false);  // 통합 후 미사용
@@ -173,6 +177,7 @@ export function FailPanel({
         {isConfigEditing && (
           <p className="text-xs text-error">Please apply the configuration before retaking.</p>
         )}
+        {skipSlot && <div className="ml-auto">{skipSlot}</div>}
         {/* 통합 이전 modal 기반 결과 화면 — 보존용 주석. */}
         {/*
         <button

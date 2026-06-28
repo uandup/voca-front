@@ -44,6 +44,7 @@ export {
   deleteStudent,
   getStudentOverview,
   getAssignedWords,
+  skipStudySetStage,
   updateAssignmentCount,
   assignWords,
   updateExamSettings,

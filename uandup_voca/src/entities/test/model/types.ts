@@ -27,7 +27,8 @@ export type StepStatus =
   | 'grading' // ONLINE_STARTED — 학생이 응시 중, 채점 흐름 진입 가능
   | 'submitted' // SUBMITTED — 학생이 제출 완료, 선생님 채점 대기
   | 'fail' // 점수(빨간색) + "Pending Re-Test" + "View Results"
-  | 'passed'; // 점수(초록색) + "View Results"
+  | 'passed' // 점수(초록색) + "View Results"
+  | 'skipped'; // 선생님이 시험 없이 스킵한 단계 — "Skipped" 표시, 다음 단계 잠금 해제
 
 /** StepCard — WordTestPage CycleRow, ClinicDetailPage WordTestTab */
 export interface StepCardVM {

@@ -26,7 +26,7 @@ import type {
   TodoItem,
   TodoType,
 } from './types';
-import type { StepCardVM, TestBundleRow } from '@/entities/test/@x/student';
+import type { StepCardVM, TestBundleRow, StudySetExamType } from '@/entities/test/@x/student';
 
 type StudentListResponse = components['schemas']['StudentListResponse'];
 type StudentDetailResponse = components['schemas']['StudentDetailResponse'];
@@ -346,19 +346,29 @@ export function toStudySetRow(r: StudySetExamListResponse): StudySetRow {
     review1: (r.exams?.review1 ?? []).map(toExamSummary),
     review2: (r.exams?.review2 ?? []).map(toExamSummary),
     review3: (r.exams?.review3 ?? []).map(toExamSummary),
+    skippedTypes: (r.skippedTypes ?? []) as StudySetExamType[],
   };
 }
 
 const STEP_NAMES: StepCardVM['name'][] = ['Word', 'Sentence', 'Review 1', 'Review 2', 'Review 3'];
+// STEP_NAMES와 같은 순서로 매핑되는 서버 examType — skippedTypes 판별에 사용.
+const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
 
 export function toTestBundleRow(row: StudySetRow): TestBundleRow {
   const exams = [row.word, row.example, row.review1, row.review2, row.review3];
   let prevPassed = true;
   const steps: StepCardVM[] = exams.map((exam, i) => {
+    // 스킵은 시험을 만들지 않으므로 exams로는 알 수 없다 — skippedTypes로만 판별.
+    const skipped = row.skippedTypes.includes(STEP_EXAM_TYPES[i]);
     const isLocked = !prevPassed;
     const vm = toStepCardVM(exam, isLocked);
-    const named = { ...vm, name: STEP_NAMES[i] };
-    prevPassed = !isLocked && named.status === 'passed';
+    const named: StepCardVM = {
+      ...vm,
+      name: STEP_NAMES[i],
+      status: skipped && !isLocked ? 'skipped' : vm.status,
+    };
+    // 스킵된 단계도 통과처럼 다음 단계 잠금을 해제한다.
+    prevPassed = !isLocked && (named.status === 'passed' || named.status === 'skipped');
     return named;
   });
   return {
@@ -375,10 +385,17 @@ export function toStudentTestBundleRow(row: StudySetRow): TestBundleRow {
   const exams = [row.word, row.example, row.review1, row.review2, row.review3];
   let prevPassed = true;
   const steps: StepCardVM[] = exams.map((exam, i) => {
+    // 스킵은 시험을 만들지 않으므로 exams로는 알 수 없다 — skippedTypes로만 판별.
+    const skipped = row.skippedTypes.includes(STEP_EXAM_TYPES[i]);
     const isLocked = !prevPassed;
     const vm = toStudentStepCardVM(exam, isLocked);
-    const named = { ...vm, name: STEP_NAMES[i] };
-    prevPassed = !isLocked && named.status === 'passed';
+    const named: StepCardVM = {
+      ...vm,
+      name: STEP_NAMES[i],
+      status: skipped && !isLocked ? 'skipped' : vm.status,
+    };
+    // 스킵된 단계도 통과처럼 다음 단계 잠금을 해제한다.
+    prevPassed = !isLocked && (named.status === 'passed' || named.status === 'skipped');
     return named;
   });
   return {

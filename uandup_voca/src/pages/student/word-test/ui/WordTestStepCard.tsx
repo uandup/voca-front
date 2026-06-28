@@ -24,6 +24,8 @@ const containerClass: Record<StepStatus, string> = {
   submitted: 'border border-primary/30 bg-primary/5',
   fail: 'border border-error/20 bg-error/5',
   passed: 'border border-success/30 bg-success/5',
+  // 선생님이 시험 없이 스킵한 단계 — 중립색, 학생 액션 없음.
+  skipped: 'border border-outline/20 bg-slate-50',
 };
 
 export default function WordTestStepCard({ step, onAction, onViewResults }: StepCardProps) {
@@ -131,6 +133,14 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
             className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/30 text-xs xl:text-base text-on-surface-variant hover:bg-slate-100 transition-colors font-medium"
           >
             View Results
+          </button>
+        )}
+        {status === 'skipped' && (
+          <button
+            disabled
+            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/20 text-gray-400 text-xs xl:text-base font-medium"
+          >
+            Skipped
           </button>
         )}
         {status === 'fail' && (
