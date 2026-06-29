@@ -67,16 +67,23 @@ export default function ExamTakePage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentPage]);
 
-  // 응시 중 MacBook 트랙패드 두 손가락 좌우 스와이프로 인한 실수 "뒤로가기"를 막는다.
-  // overscroll-behavior-x: none 은 가로 오버스크롤을 페이지 내비게이션으로 해석하지 않게 한다.
-  // 페이지를 벗어나면(cleanup) 원래 값으로 복원해 앱 전역 동작은 그대로 둔다.
+  // 응시 중 보호 장치 (모두 페이지를 벗어나면 cleanup으로 원복):
+  // 1) 트랙패드 두 손가락 좌우 스와이프로 인한 실수 "뒤로가기" 차단 (overscroll-behavior-x: none).
+  // 2) 문제 텍스트 드래그 선택 차단 → macOS 사전/번역(Look Up)을 무력화 (.exam-no-select).
+  //    답 입력 칸(input/textarea)은 .exam-no-select 예외 규칙으로 정상 동작한다.
+  // 3) 우클릭/두 손가락 탭 컨텍스트 메뉴 차단 → 메뉴의 "Look Up/Translate" 진입 차단.
   useEffect(() => {
     if (!isAnswerMode) return;
     const root = document.documentElement;
-    const prev = root.style.overscrollBehaviorX;
+    const prevOverscroll = root.style.overscrollBehaviorX;
     root.style.overscrollBehaviorX = 'none';
+    root.classList.add('exam-no-select');
+    const blockContextMenu = (e: MouseEvent) => e.preventDefault();
+    document.addEventListener('contextmenu', blockContextMenu);
     return () => {
-      root.style.overscrollBehaviorX = prev;
+      root.style.overscrollBehaviorX = prevOverscroll;
+      root.classList.remove('exam-no-select');
+      document.removeEventListener('contextmenu', blockContextMenu);
     };
   }, [isAnswerMode]);
 

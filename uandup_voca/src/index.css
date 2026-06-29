@@ -95,3 +95,16 @@ body {
 @utility primary-gradient {
   background: linear-gradient(135deg, #001b5f 0%, #002d8f 100%);
 }
+
+/* 시험 응시 중 컨닝 방지 — 문제 텍스트 드래그 선택을 막아 macOS 사전/번역(Look Up)을 무력화한다.
+   ExamTakePage가 응시 모드일 때 <html>에 .exam-no-select 클래스를 토글한다.
+   학생이 답을 입력·편집하는 칸(input·textarea)은 선택을 허용하도록 예외로 둔다. */
+.exam-no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.exam-no-select input,
+.exam-no-select textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
