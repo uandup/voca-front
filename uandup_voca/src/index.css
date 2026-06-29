@@ -102,6 +102,8 @@ body {
 .exam-no-select {
   -webkit-user-select: none;
   user-select: none;
+  /* iPad/iPhone에서 단어를 길게 눌렀을 때 뜨는 사전·복사 메뉴(callout)를 차단한다. */
+  -webkit-touch-callout: none;
 }
 .exam-no-select input,
 .exam-no-select textarea {
