@@ -67,6 +67,19 @@ export default function ExamTakePage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentPage]);
 
+  // 응시 중 MacBook 트랙패드 두 손가락 좌우 스와이프로 인한 실수 "뒤로가기"를 막는다.
+  // overscroll-behavior-x: none 은 가로 오버스크롤을 페이지 내비게이션으로 해석하지 않게 한다.
+  // 페이지를 벗어나면(cleanup) 원래 값으로 복원해 앱 전역 동작은 그대로 둔다.
+  useEffect(() => {
+    if (!isAnswerMode) return;
+    const root = document.documentElement;
+    const prev = root.style.overscrollBehaviorX;
+    root.style.overscrollBehaviorX = 'none';
+    return () => {
+      root.style.overscrollBehaviorX = prev;
+    };
+  }, [isAnswerMode]);
+
   function doExit() {
     if (search.returnTo) {
       router.history.replace(search.returnTo);
