@@ -37,6 +37,9 @@ export interface StepCardVM {
   createdAt: string | null;
   // 채점 완료 일시. 학생 StepCard의 "Graded At" 표시에 사용. null이면 표시 안 함.
   completedAt: string | null;
+  // 학생이 시험을 제출한 일시 'YYYY-MM-DD HH:mm'. 선생님 채점 화면에서 "Submitted On" 표시에 사용.
+  // 제출 전(active/pending) 및 배포 이전 과거 시험은 null.
+  submittedAt: string | null;
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;

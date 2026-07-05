@@ -118,6 +118,9 @@ function toExamSummary(dto: ExamSummaryDto): ExamSummary {
     isPassed: dto.isPassed ?? null,
     createdAt: dto.createdAt ?? null,
     completedAt: dto.completedAt ?? null,
+    // date-time(ISO, 예 '2026-07-05T14:30:00.123456')을 'YYYY-MM-DD HH:mm'로 잘라 표시용으로 저장.
+    // Date 파싱 없이 서버 벽시계 시각을 그대로 노출한다(타임존 모호성 회피).
+    submittedAt: dto.submittedAt ? dto.submittedAt.slice(0, 16).replace('T', ' ') : null,
     correctCount: dto.correctCount ?? null,
     totalCount: dto.questionCount ?? null,
     scheduledDate: dto.scheduledDate ?? null,
@@ -137,6 +140,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       status: 'locked',
       createdAt: null,
       completedAt: null,
+      submittedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -153,6 +157,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       status: 'pending',
       createdAt: null,
       completedAt: null,
+      submittedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -168,6 +173,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     isPassed,
     createdAt,
     completedAt,
+    submittedAt,
     correctCount,
     totalCount,
     scheduledDate,
@@ -193,6 +199,9 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     status: stepStatus,
     createdAt: createdAt ?? null,
     completedAt: lastCompleted ? (lastCompleted.completedAt ?? null) : (completedAt ?? null),
+    // 제출일은 "현재 시험(exams[0])" 기준 — 채점 대기(SUBMITTED)인 현재 시험의 제출일을 보여준다.
+    // (completedAt처럼 lastCompleted로 우회하면 이전 완료 시험의 제출일이 잘못 표시됨.)
+    submittedAt: submittedAt ?? null,
     lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
     maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
     retakeCount: Math.max(0, completedExams.length - 1),
@@ -226,6 +235,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       status: 'locked',
       createdAt: null,
       completedAt: null,
+      submittedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -242,6 +252,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       status: 'pending',
       createdAt: null,
       completedAt: null,
+      submittedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -257,6 +268,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     isPassed,
     createdAt,
     completedAt,
+    submittedAt,
     correctCount,
     totalCount,
     scheduledDate,
@@ -285,6 +297,9 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     status: stepStatus,
     createdAt: createdAt ?? null,
     completedAt: lastCompleted ? (lastCompleted.completedAt ?? null) : (completedAt ?? null),
+    // 제출일은 "현재 시험(exams[0])" 기준 — 채점 대기(SUBMITTED)인 현재 시험의 제출일을 보여준다.
+    // (completedAt처럼 lastCompleted로 우회하면 이전 완료 시험의 제출일이 잘못 표시됨.)
+    submittedAt: submittedAt ?? null,
     lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
     maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
     // COMPLETED 시험 수만으로 retakeCount 산정 — READY/SUBMITTED 시험은 제외.
