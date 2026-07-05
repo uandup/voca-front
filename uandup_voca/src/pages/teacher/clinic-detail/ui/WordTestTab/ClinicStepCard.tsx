@@ -55,7 +55,7 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
           제출 일시는 값이 없으면(제출 전/과거 시험) '-'로 표시. */}
       {step.createdAt && (
         <div
-          className={`flex flex-col gap-0.5 text-[10px] leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}
+          className={`flex flex-col gap-0.5 text-[11px] leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}
         >
           <span>Created On {step.createdAt}</span>
           <span>Submitted On {step.submittedAt ?? '-'}</span>
