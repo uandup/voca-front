@@ -51,10 +51,15 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
         )}
       </div>
 
+      {/* Created On / Submitted On — 두 줄을 묶어 줄간격을 좁히고 글자를 살짝 줄여 카드 여백 확보.
+          제출 일시는 값이 없으면(제출 전/과거 시험) '-'로 표시. */}
       {step.createdAt && (
-        <span className={`text-xs ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}>
-          Created At {step.createdAt}
-        </span>
+        <div
+          className={`flex flex-col gap-0.5 text-[10px] leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}
+        >
+          <span>Created On {step.createdAt}</span>
+          <span>Submitted On {step.submittedAt ?? '-'}</span>
+        </div>
       )}
 
       {step.lastScore !== null && (

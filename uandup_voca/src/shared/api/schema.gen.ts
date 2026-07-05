@@ -2774,6 +2774,12 @@ export interface components {
              * @example 2026-05-29
              */
             scheduledDate?: string;
+            /**
+             * Format: date-time
+             * @description 학생이 온라인 시험을 제출한 일시. SUBMITTED 상태에서 기록되며 채점(COMPLETED) 후에도 보존됨. 제출 전(READY/ONLINE_STARTED) 및 이 기능 배포 이전 시험은 null
+             * @example 2026-07-05T14:30:00
+             */
+            submittedAt?: string;
         };
         /** @description 시험 타입별 시도 이력. 각 필드는 해당 타입의 모든 시도를 최신순으로 담은 배열 (취소 제외, 없으면 빈 배열) */
         ExamsByType: {

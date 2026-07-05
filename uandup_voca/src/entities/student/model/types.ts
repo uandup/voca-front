@@ -88,6 +88,9 @@ export interface ExamSummary {
   isPassed: boolean | null;
   createdAt: string | null;
   completedAt: string | null;
+  // 학생이 온라인 시험을 제출한 일시 'YYYY-MM-DD HH:mm'. SUBMITTED 이후 기록, 채점 후에도 보존.
+  // 제출 전(READY/ONLINE_STARTED) 및 이 기능 배포 이전 과거 시험은 null.
+  submittedAt: string | null;
   correctCount: number | null;
   totalCount: number | null;
   // REVIEW1/2/3 시험에만 존재. 복습 예정일 'YYYY-MM-DD'.

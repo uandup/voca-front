@@ -115,7 +115,16 @@ export function FailPanel({
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
               calendar_today
             </span>
-            <span>Created At : {step.createdAt}</span>
+            <span>Created On : {step.createdAt}</span>
+          </div>
+        )}
+        {/* 학생 제출 일시. 값이 없으면(제출 전/과거 시험) '-'로 표시. */}
+        {step.createdAt && (
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+              schedule
+            </span>
+            <span>Submitted On : {step.submittedAt ?? '-'}</span>
           </div>
         )}
         <div className="flex items-center gap-1.5 flex-wrap">
