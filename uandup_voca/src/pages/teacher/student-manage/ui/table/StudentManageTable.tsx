@@ -219,9 +219,16 @@ function sortStudents(
   return [...data].sort((a, b) => {
     const av = key === 'accuracy' ? parseFloat(a[key] ?? '0') : (a[key] as number | string);
     const bv = key === 'accuracy' ? parseFloat(b[key] ?? '0') : (b[key] as number | string);
-    if (av < bv) return dir === 'asc' ? -1 : 1;
-    if (av > bv) return dir === 'asc' ? 1 : -1;
-    return 0;
+    // 문자열(이름 등)은 한글 가나다 순을 위해 ko 로케일 비교. 숫자 컬럼은 숫자 크기 비교 유지.
+    const cmp =
+      typeof av === 'string' && typeof bv === 'string'
+        ? av.localeCompare(bv, 'ko')
+        : av < bv
+          ? -1
+          : av > bv
+            ? 1
+            : 0;
+    return dir === 'asc' ? cmp : -cmp;
   });
 }
 
@@ -234,7 +241,8 @@ interface StudentTableProps {
 
 export function StudentManageTable({ students, actions, hiddenColumns }: StudentTableProps) {
   const navigate = useNavigate();
-  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  // 기본 정렬: 이름(nameKo) 가나다 오름차순. 헤더 클릭으로 asc→desc→해제 토글은 기존과 동일.
+  const [sortKey, setSortKey] = useState<SortKey | null>('nameKo');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
 
   const hidden = new Set(hiddenColumns);
