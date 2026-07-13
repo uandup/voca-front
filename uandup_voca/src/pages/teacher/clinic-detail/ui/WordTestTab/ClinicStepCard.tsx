@@ -56,15 +56,16 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
         )}
       </div>
 
-      {/* Created On / Submitted On — 두 줄을 묶어 줄간격을 좁히고 글자를 살짝 줄여 카드 여백 확보.
-          제출 일시는 값이 없으면(제출 전/과거 시험) '-'로 표시. */}
+      {/* Created On / Started On / Submitted On — 세 줄을 묶어 줄간격을 좁히고 글자를 살짝 줄여 카드 여백 확보.
+          응시 시작·제출 일시는 값이 없으면 '-'로 표시해 항상 같은 줄 수를 유지한다(카드 높이 균일 → 비교 용이).
+          Started On이 '-'면 학생이 아직 시험을 열지 않은 것. 값이 있는데 Submitted On이 '-'면
+          응시 중이거나 제출 없이 나간 포기 상태. */}
       {step.createdAt && (
         <div
           className={`flex flex-col gap-0.5 text-[11px] leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}
         >
           <span>Created On {step.createdAt}</span>
-          {/* 응시 시작 시각 — 있으면 학생이 시험을 열었다는 뜻. 시작 후 한참 미제출이면 포기로 판단. */}
-          {step.attemptStartedAt && <span>Attempt Started On {step.attemptStartedAt}</span>}
+          <span>Started On {step.attemptStartedAt ?? '-'}</span>
           <span>Submitted On {step.submittedAt ?? '-'}</span>
         </div>
       )}
