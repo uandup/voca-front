@@ -12,10 +12,28 @@ import {
   SentenceAnswerTable,
   SentenceWordBank,
 } from '@/widgets/test-online';
-import { useExamTake, inferMode } from './model/useExamTake';
+import { useExamTake } from './model/useExamTake';
 
-// 학생 시험 응시 페이지 — answer 모드(ONLINE_STARTED)만 처리한다.
+// 학생 시험 응시 페이지 — 응시용 attempt API로 문제(정답 제외)를 받아 응시만 처리한다.
 // 채점 완료(review) / 채점 대기(submitted) 결과 확인은 ExamReviewPage(/review)가 담당한다.
+// 나가기·새로고침·재진입 = 포기(attempt 재호출 시 서버가 400) — 작성 답안은 저장되지 않는다.
+
+// attempt 실패 코드를 안내 문구로 변환. 어떤 경우든 목록으로 돌려보낸다.
+function getAttemptErrorMessage(error: unknown): string {
+  const code = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+  switch (code) {
+    case 'EXAM_ALREADY_ATTEMPTED':
+      return 'You have already taken this exam. It cannot be retaken.';
+    case 'TEST_NOT_ONLINE_STARTED':
+      return "This exam hasn't been started by your teacher yet.";
+    case 'TEST_CANCELLED':
+      return 'This exam has been cancelled.';
+    case 'ACCESS_DENIED':
+      return "You don't have access to this exam.";
+    default:
+      return 'This exam is no longer available.';
+  }
+}
 
 export default function ExamTakePage() {
   const { examId: examIdParam } = useParams({ from: '/student_/exams/$examId/take' });
@@ -35,9 +53,9 @@ export default function ExamTakePage() {
   const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
 
   const {
-    examDetail,
+    attempt,
     isLoading,
-    isAnswerMode,
+    error,
     showSynonym,
     doSubmit,
     vocabAnswers,
@@ -54,7 +72,6 @@ export default function ExamTakePage() {
     testType,
   } = useExamTake({
     routeExamId,
-    examId: routeExamId,
     isSentence,
     source,
     currentPage,
@@ -73,7 +90,7 @@ export default function ExamTakePage() {
   //    답 입력 칸(input/textarea)은 .exam-no-select 예외 규칙으로 정상 동작한다.
   // 3) 우클릭/두 손가락 탭 컨텍스트 메뉴 차단 → 메뉴의 "Look Up/Translate" 진입 차단.
   useEffect(() => {
-    if (!isAnswerMode) return;
+    if (!attempt) return;
     const root = document.documentElement;
     const prevOverscroll = root.style.overscrollBehaviorX;
     root.style.overscrollBehaviorX = 'none';
@@ -85,7 +102,7 @@ export default function ExamTakePage() {
       root.classList.remove('exam-no-select');
       document.removeEventListener('contextmenu', blockContextMenu);
     };
-  }, [isAnswerMode]);
+  }, [attempt]);
 
   function doExit() {
     if (search.returnTo) {
@@ -96,8 +113,7 @@ export default function ExamTakePage() {
   }
 
   function handleExit() {
-    const currentMode = examDetail ? inferMode(examDetail.status) : 'review';
-    if (currentMode === 'answer') {
+    if (attempt) {
       setShowExitConfirm(true);
     } else {
       doExit();
@@ -113,19 +129,34 @@ export default function ExamTakePage() {
     doSubmit();
   }
 
-  const headerCenter = isAnswerMode ? (
+  const headerCenter = attempt ? (
     <div className="flex items-center gap-1.5 text-on-surface-variant min-w-0">
       <span className="material-symbols-outlined shrink-0" style={{ fontSize: '16px' }}>
         warning
       </span>
       <p className="text-xs xl:text-sm font-semibold leading-tight line-clamp-2">
-        Your answers are not saved automatically. Refreshing or exiting this page will discard all
-        progress.
+        Leaving or refreshing this page will forfeit the exam. You cannot retake it.
       </p>
     </div>
   ) : undefined;
 
-  if (isLoading || !examDetail) {
+  // attempt 실패(이미 응시함 / 시작 전 / 취소됨 / 권한 없음) → 안내 후 목록으로.
+  if (error) {
+    return (
+      <div className="min-h-dvh bg-surface flex flex-col">
+        <TestHeader onExit={doExit} />
+        <AlertDialog
+          variant="warning"
+          title="Exam Unavailable"
+          description={getAttemptErrorMessage(error)}
+          okLabel="Go Back"
+          onClose={doExit}
+        />
+      </div>
+    );
+  }
+
+  if (isLoading || !attempt) {
     return (
       <div className="min-h-dvh bg-surface flex flex-col">
         <TestHeader onExit={handleExit} />
@@ -182,11 +213,11 @@ export default function ExamTakePage() {
         />
       </div>
 
-      {/* 응시 중 나가기 확인 모달 */}
+      {/* 응시 중 나가기 확인 모달 — 나가기 = 포기(재응시 불가) */}
       {showExitConfirm && (
         <ConfirmDialog
           title="Exit Exam?"
-          description="All your current answers will be lost and cannot be recovered. Are you sure you want to exit?"
+          description="Leaving will forfeit this exam and you won't be able to retake it. Your current answers will not be saved. Are you sure?"
           confirmLabel="Exit"
           cancelLabel="Stay"
           variant="danger"

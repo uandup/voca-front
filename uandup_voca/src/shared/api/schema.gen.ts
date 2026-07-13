@@ -391,6 +391,8 @@ export interface paths {
         /**
          * 온라인 시험 제출
          * @description 학생이 답안을 입력하고 제출합니다. ONLINE_STARTED → SUBMITTED 상태로 전이됩니다. 선생님이 온라인 시험을 시작한(ONLINE_STARTED) 시험만 제출할 수 있으며, READY 상태에서는 제출할 수 없습니다. 동의어 포함 시험(includeSynonym=true)은 wordAnswer + synonymAnswers 모두 전달해야 합니다. 제출 후 선생님이 온라인 채점 API로 채점합니다.
+         *
+         *     문항 매칭은 `POST /api/v1/exams/{examId}/attempt` 응답의 `examItemId`로 합니다(wordId 불필요). **응시 화면을 벗어나면 답안은 저장되지 않습니다(나가면 포기)** — 제출은 학생이 명시적으로 이 API를 호출할 때만 이뤄지며, 한 번 제출한 시험은 다시 제출할 수 없습니다(TEST_ALREADY_SUBMITTED).
          */
         post: operations["submitExam"];
         delete?: never;
@@ -471,8 +473,37 @@ export interface paths {
         /**
          * 시험 취소
          * @description READY / ONLINE_STARTED / SUBMITTED 상태인 시험을 취소합니다. 취소된 시험은 조회·채점이 불가합니다. 선생님만 가능.
+         *
+         *     **재응시를 허용하는 유일한 경로입니다.** 학생이 응시 후 제출하지 않고 나간(포기한) 시험은 다시 열 수 없으므로, 기회를 다시 주려면 이 API로 취소한 뒤 같은 타입의 시험을 새로 생성하고 온라인 시작을 눌러야 합니다. (응시만 하고 제출하지 않은 시험도 취소 가능 — 상태가 ONLINE_STARTED로 남아 있기 때문. 포기로 기록만 남길 거면 취소 대신 `/results/online`으로 전부 오답 채점해 0점 처리해도 됩니다.)
          */
         post: operations["cancelExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/exams/{examId}/attempt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 학생 시험 응시 (1회 제한)
+         * @description 학생이 시험에 응시합니다. 응시 시작을 서버에 기록하고, 정답이 빠진 문제만 반환합니다. **한 번 응시하면 재응시할 수 없습니다** — 화면을 나갔다 다시 들어와도 400(EXAM_ALREADY_ATTEMPTED)이며, 작성 중이던 답안은 살아나지 않습니다(나가면 포기). 다시 기회를 주려면 선생님이 시험을 취소하고 재생성해야 합니다.
+         *
+         *     응답에는 정답 필드가 포함되지 않습니다 — `synonyms`·`wordId`는 어떤 유형에서도 내려가지 않고, 유형별 프롬프트만 채워집니다.
+         *     - `subType=WORD_TO_MEANING`: `word`만
+         *     - `subType=MEANING_TO_WORD`: `koreanMeaning`·`englishMeaning`만
+         *     - 예문 시험(`type=EXAMPLE`): 문항엔 빈칸 `example`만, 보기 단어는 최상위 `wordChoices`에 섞어서 별도 제공
+         *
+         *     동의어 입력칸 노출 여부는 `includeSynonym` 플래그로 판단합니다. 시험 상태(ExamStatus)는 응시로 바뀌지 않습니다.
+         */
+        post: operations["attemptExam"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1272,6 +1303,8 @@ export interface paths {
         /**
          * 시험 조회
          * @description 시험 정보와 문항 목록(단어 정보 포함)을 조회합니다. 채점 완료된 시험은 문항별 정답 여부도 포함됩니다. 취소된(CANCELLED) 시험은 조회할 수 없습니다.
+         *
+         *     **주의: 응답에 정답(word·koreanMeaning·englishMeaning·synonyms)이 포함되므로 학생 응시 화면에 사용하지 마세요.** 학생이 시험을 푸는 용도는 `POST /api/v1/exams/{examId}/attempt`(정답 제외 + 재응시 차단)입니다. 이 API는 선생님의 문제지·결과 확인, 학생·학부모의 채점 결과 확인용입니다.
          */
         get: operations["getExam"];
         put?: never;
@@ -2004,6 +2037,95 @@ export interface components {
              */
             isPassed: boolean;
         };
+        ApiResponseExamAttemptResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["ExamAttemptResponse"];
+        };
+        /** @description 응시용 문항 — 유형별로 프롬프트 필드만 채워지고 나머지는 null */
+        AttemptItem: {
+            /**
+             * Format: int64
+             * @description 문항 ID — 제출(POST /exams/{examId}/submit) 시 이 값으로 답안을 매칭한다
+             * @example 101
+             */
+            examItemId?: number;
+            /**
+             * Format: int32
+             * @description 문항 순서
+             * @example 1
+             */
+            itemOrder?: number;
+            /**
+             * @description 영어 단어 — subType이 WORD_TO_MEANING일 때만 존재
+             * @example diligent
+             */
+            word?: string;
+            /**
+             * @description 한글 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @example 근면한
+             */
+            koreanMeaning?: string;
+            /**
+             * @description 영어 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @example hard-working
+             */
+            englishMeaning?: string;
+            /**
+             * @description 빈칸 예문 — 예문(EXAMPLE) 시험일 때만 존재
+             * @example She is a _____ student.
+             */
+            example?: string;
+        };
+        /** @description 응시용 시험 정보 — 학생이 풀어야 할 문제만 담는다. 정답(word/koreanMeaning/englishMeaning 중 답에 해당하는 것)과 synonyms·wordId는 포함되지 않는다 */
+        ExamAttemptResponse: {
+            /**
+             * Format: int64
+             * @description 시험 ID
+             * @example 12
+             */
+            examId?: number;
+            /**
+             * Format: int64
+             * @description 학습 세트 ID
+             * @example 7
+             */
+            studySetId?: number;
+            /**
+             * @description 시험 유형
+             * @example WORD
+             * @enum {string}
+             */
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            /**
+             * @description 시험 세부 유형 — 예문(EXAMPLE) 시험은 null
+             * @example MEANING_TO_WORD
+             * @enum {string}
+             */
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            /**
+             * @description 동의어 포함 여부 — true이면 동의어 입력칸을 노출한다. 정답 동의어는 내려주지 않는다
+             * @example false
+             */
+            includeSynonym?: boolean;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 20
+             */
+            totalCount?: number;
+            /** @description 문항 목록 (itemOrder 오름차순) */
+            items?: components["schemas"]["AttemptItem"][];
+            /**
+             * @description 보기 단어 목록 — 예문(EXAMPLE) 시험에만 존재하며, 문항 순서와 무관하게 섞여 있다. 그 외 유형은 null
+             * @example [
+             *       "vault",
+             *       "diligent"
+             *     ]
+             */
+            wordChoices?: string[];
+        };
         ClassroomCreateRequest: {
             name: string;
         };
@@ -2334,7 +2456,7 @@ export interface components {
              */
             studySetId?: number;
             /**
-             * @description 학생이 지금 바로 행동 가능 여부. true = ONLINE_STARTED 상태(앱에서 답안 제출 가능). false = READY 상태(선생님이 시험을 켜줘야 진행 가능).
+             * @description 학생이 지금 바로 행동 가능 여부. true = ONLINE_STARTED 상태이면서 아직 응시하지 않음(앱에서 응시·제출 가능). false = READY 상태(선생님이 시험을 켜줘야 진행 가능) 또는 이미 응시한 시험(재응시 불가).
              * @example false
              */
             actionable?: boolean;
@@ -2780,6 +2902,12 @@ export interface components {
              * @example 2026-07-05T14:30:00
              */
             submittedAt?: string;
+            /**
+             * Format: date-time
+             * @description 학생이 응시를 시작한 일시. 값이 있으면 이미 응시한 시험이라 재응시할 수 없다(POST /exams/{examId}/attempt가 400). status가 ONLINE_STARTED인데 이 값이 있고 submittedAt이 없으면 = 응시 중이거나 응시 후 포기한 상태. 미응시 시험 및 이 기능 배포 이전 시험은 null
+             * @example 2026-07-12T14:02:00
+             */
+            attemptStartedAt?: string;
         };
         /** @description 시험 타입별 시도 이력. 각 필드는 해당 타입의 모든 시도를 최신순으로 담은 배열 (취소 제외, 없으면 빈 배열) */
         ExamsByType: {
@@ -4700,6 +4828,59 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    attemptExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 시험 ID
+                 * @example 1
+                 */
+                examId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 응시 시작 — 문제 반환 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamAttemptResponse"];
+                };
+            };
+            /** @description 이미 응시한 시험(EXAM_ALREADY_ATTEMPTED) / 선생님이 온라인 시험을 시작하지 않음(TEST_NOT_ONLINE_STARTED) / 취소된 시험(TEST_CANCELLED) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamAttemptResponse"];
+                };
+            };
+            /** @description 본인 시험이 아님 — 학생 본인만 응시 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamAttemptResponse"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExamAttemptResponse"];
                 };
             };
         };

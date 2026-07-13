@@ -24,6 +24,7 @@ export type StepStatus =
   | 'locked' // "Locked" 버튼, 비활성
   | 'pending' // "Pending Release" 버튼, 비활성
   | 'active' // "Start Online Test" 버튼, 활성
+  | 'attempted' // ONLINE_STARTED + 이미 응시함(attemptStarted 있음) — "Attempted" 비활성, 재응시 불가
   | 'grading' // ONLINE_STARTED — 학생이 응시 중, 채점 흐름 진입 가능
   | 'submitted' // SUBMITTED — 학생이 제출 완료, 선생님 채점 대기
   | 'fail' // 점수(빨간색) + "Pending Re-Test" + "View Results"
@@ -40,6 +41,10 @@ export interface StepCardVM {
   // 학생이 시험을 제출한 일시 'YYYY-MM-DD HH:mm'. 선생님 채점 화면에서 "Submitted On" 표시에 사용.
   // 제출 전(active/pending) 및 배포 이전 과거 시험은 null.
   submittedAt: string | null;
+  // 학생이 응시를 시작한 일시 'YYYY-MM-DD HH:mm'. 값이 있으면 학생이 시험을 열었다는 뜻(진행 중 또는
+  // 제출 없이 나간 포기 상태). 선생님 카드가 "응시 시작함" 색·"Attempt Started On" 표시에 사용.
+  // 미응시(선생님만 켠 상태)·배포 이전 시험은 null.
+  attemptStartedAt: string | null;
   lastScore: number | null;
   maxScore: number | null;
   retakeCount: number;
@@ -132,6 +137,30 @@ export interface ExamDetail {
   status: string;
   isPassed: boolean | null;
   items: ExamItem[];
+}
+
+// ── Exam Attempt (응시 전용) ──────────────────────────────────────────────────
+// POST /exams/{examId}/attempt 응답. 정답(뜻/단어/동의어)은 내려오지 않고 프롬프트만 담긴다.
+// 유형별로 채워지는 필드가 다르며 나머지는 빈 문자열이다.
+//   WORD_TO_MEANING → word / MEANING_TO_WORD → koreanMeaning·englishMeaning / EXAMPLE → example
+export interface ExamAttemptItem {
+  examItemId: number;
+  itemOrder: number;
+  word: string;
+  koreanMeaning: string;
+  englishMeaning: string;
+  example: string;
+}
+
+export interface ExamAttemptData {
+  examId: number;
+  type: ExamType;
+  subType: WordTestType | null;
+  includeSynonym: boolean;
+  totalCount: number;
+  items: ExamAttemptItem[];
+  // 예문(EXAMPLE) 시험의 보기 단어 목록(서버에서 섞음, 문항 순서와 무관). 그 외 유형은 null.
+  wordChoices: string[] | null;
 }
 
 export interface ExamAttempt {

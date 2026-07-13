@@ -19,6 +19,8 @@ const containerClass: Record<StepStatus, string> = {
   locked: 'border border-primary/30 bg-primary/5',
   pending: 'border border-primary/30 bg-primary/5',
   active: 'border border-primary/30 bg-primary/5',
+  // 이미 응시함(재응시 불가) — 중립색, 학생 액션 없음.
+  attempted: 'border border-outline/20 bg-slate-50',
   grading: 'border border-primary/30 bg-primary/5',
   // 학생 side에서 SUBMITTED는 toStudentStepCardVM에 의해 'grading'으로 매핑되어 이 케이스에 도달하지 않음
   submitted: 'border border-primary/30 bg-primary/5',
@@ -116,6 +118,15 @@ export default function WordTestStepCard({ step, onAction, onViewResults }: Step
               </button>
             )}
           </>
+        )}
+        {status === 'attempted' && (
+          // 이미 응시(또는 응시 후 포기)한 시험 — 재응시 불가. 비활성 표시.
+          <button
+            disabled
+            className="w-full py-1.5 xl:py-2.5 rounded-xl border border-outline/20 text-gray-400 text-xs xl:text-base font-medium"
+          >
+            Attempted
+          </button>
         )}
         {status === 'grading' && (
           // 제출 완료 → 채점 대기 중. 클릭 시 제출 답안을 read-only로 확인할 수 있다.

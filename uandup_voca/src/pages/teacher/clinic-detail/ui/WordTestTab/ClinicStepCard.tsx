@@ -18,13 +18,16 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
   const isLocked = step.status === 'locked';
   const isSubmitted = step.status === 'submitted';
   const isSkipped = step.status === 'skipped';
+  // ONLINE_STARTED(=teacher 'grading') 중 학생이 응시를 시작한 시험 — 진행 중이거나 제출 없이 나간 포기 상태.
+  // (제출되면 status가 'submitted'로 바뀌므로 여기 안 걸린다.) 색·시각으로 "학생이 열었음"을 구분한다.
+  const isAttempted = step.status === 'grading' && !!step.attemptStartedAt;
 
   return (
     <button
       onClick={onClick}
       disabled={isLocked}
       className={`relative flex-1 min-w-0 h-full min-h-30 rounded-2xl p-4 flex flex-col gap-2 overflow-hidden transition-all text-left
-        ${isSelected ? `ring-2 ring-inset ${isFail ? 'ring-error' : isSubmitted ? 'ring-amber-400' : 'ring-primary'}` : ''}
+        ${isSelected ? `ring-2 ring-inset ${isFail ? 'ring-error' : isSubmitted ? 'ring-amber-400' : isAttempted ? 'ring-sky-400' : 'ring-primary'}` : ''}
         ${
           isFail
             ? 'bg-error/5 border border-error/20 cursor-pointer hover:border-error/40'
@@ -32,9 +35,11 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
               ? 'border border-outline/10 bg-slate-50/80'
               : isSubmitted
                 ? 'bg-amber-50 border border-amber-300 cursor-pointer hover:border-amber-400 hover:shadow-sm'
-                : isSkipped
-                  ? 'border border-outline/20 bg-slate-50 cursor-pointer hover:border-outline/40 hover:shadow-sm'
-                  : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
+                : isAttempted
+                  ? 'bg-sky-50 border border-sky-300 cursor-pointer hover:border-sky-400 hover:shadow-sm'
+                  : isSkipped
+                    ? 'border border-outline/20 bg-slate-50 cursor-pointer hover:border-outline/40 hover:shadow-sm'
+                    : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
         }`}
     >
       {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때 name 오른쪽에 표시 */}
@@ -58,6 +63,8 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
           className={`flex flex-col gap-0.5 text-[11px] leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface-variant'}`}
         >
           <span>Created On {step.createdAt}</span>
+          {/* 응시 시작 시각 — 있으면 학생이 시험을 열었다는 뜻. 시작 후 한참 미제출이면 포기로 판단. */}
+          {step.attemptStartedAt && <span>Attempt Started On {step.attemptStartedAt}</span>}
           <span>Submitted On {step.submittedAt ?? '-'}</span>
         </div>
       )}
