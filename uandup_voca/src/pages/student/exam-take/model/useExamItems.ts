@@ -1,35 +1,47 @@
 import { useMemo } from 'react';
-import { ITEMS_PER_PAGE, type ExamDetail, type WordTestType } from '@/entities/test';
+import { ITEMS_PER_PAGE, type ExamAttemptData, type WordTestType } from '@/entities/test';
 import type { WordTestItem, SentenceTestItem } from '@/entities/word';
-import { toWordTestItems, toSentenceTestItems } from '@/entities/test';
 
 interface UseExamItemsParams {
-  examDetail: ExamDetail | undefined;
+  attempt: ExamAttemptData | undefined;
   isSentence: boolean;
   currentPage: number;
 }
 
 // answer 모드에서 필요한 아이템 변환·페이지네이션 훅.
 // review 전용 데이터(wrongIds, correctAnswers 등)는 useExamReview에서 처리한다.
-export function useExamItems({ examDetail, isSentence, currentPage }: UseExamItemsParams) {
-  const testType: WordTestType = examDetail?.subType ?? 'word-to-meaning';
+export function useExamItems({ attempt, isSentence, currentPage }: UseExamItemsParams) {
+  const testType: WordTestType = attempt?.subType ?? 'word-to-meaning';
 
+  // 응시용 문항은 유형별 프롬프트 필드만 채워져 있다(정답 없음). synonyms는 학생이 입력하므로 빈 배열.
   const vocabItems: WordTestItem[] = useMemo(
-    () => (!isSentence && examDetail ? toWordTestItems(examDetail.items) : []),
-    [examDetail, isSentence],
+    () =>
+      !isSentence && attempt
+        ? attempt.items.map((item) => ({
+            id: item.itemOrder,
+            word: item.word,
+            korMeaning: item.koreanMeaning,
+            engMeaning: item.englishMeaning,
+            synonyms: [],
+          }))
+        : [],
+    [attempt, isSentence],
   );
   const sentenceItems: SentenceTestItem[] = useMemo(
-    () => (isSentence && examDetail ? toSentenceTestItems(examDetail.items) : []),
-    [examDetail, isSentence],
+    () =>
+      isSentence && attempt
+        ? attempt.items.map((item) => ({ id: item.itemOrder, sentence: item.example }))
+        : [],
+    [attempt, isSentence],
   );
 
-  // Word Bank용 — 전체 페이지에 걸쳐 동일하게 표시되는 정답 단어 목록.
+  // Word Bank용 — 서버가 섞어 내려준 보기 단어(wordChoices). 문항 순서와 무관하다.
   const sentenceWordBankItems = useMemo(
     () =>
-      isSentence && examDetail
-        ? examDetail.items.map((item) => ({ id: item.itemOrder, word: item.word }))
+      isSentence && attempt?.wordChoices
+        ? attempt.wordChoices.map((word, i) => ({ id: i, word }))
         : [],
-    [examDetail, isSentence],
+    [attempt, isSentence],
   );
 
   const totalItems = isSentence ? sentenceItems.length : vocabItems.length;

@@ -14,6 +14,8 @@ export type {
   ExamItem,
   ExamDetail,
   ExamAttempt,
+  ExamAttemptData,
+  ExamAttemptItem,
   StepExamHistory,
   ExamMode,
   ExamSource,
@@ -21,6 +23,7 @@ export type {
 export {
   toWordTestType,
   toExamDetail,
+  toExamAttemptData,
   toStepExamHistory,
   inferMode,
   inferSource,
@@ -35,6 +38,7 @@ export {
   getExamDetail,
   createExam,
   startOnlineExam,
+  attemptExam,
   cancelExam,
   recordOnlineResults,
   recordOfflineResults,
@@ -42,5 +46,6 @@ export {
 } from './api/testApi';
 export { testKeys } from './api/queryKeys';
 export { useExamDetail } from './api/useExamDetail';
+export { useExamAttempt } from './api/useExamAttempt';
 export { TestConfigBadges } from './ui/TestConfigBadges';
 export { ITEMS_PER_PAGE } from './model/constants';

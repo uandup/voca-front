@@ -121,6 +121,8 @@ function toExamSummary(dto: ExamSummaryDto): ExamSummary {
     // date-time(ISO, 예 '2026-07-05T14:30:00.123456')을 'YYYY-MM-DD HH:mm'로 잘라 표시용으로 저장.
     // Date 파싱 없이 서버 벽시계 시각을 그대로 노출한다(타임존 모호성 회피).
     submittedAt: dto.submittedAt ? dto.submittedAt.slice(0, 16).replace('T', ' ') : null,
+    // submittedAt과 동일하게 'YYYY-MM-DD HH:mm'로 잘라 표시용으로 저장(선생님 카드에서 노출).
+    attemptStartedAt: dto.attemptStartedAt ? dto.attemptStartedAt.slice(0, 16).replace('T', ' ') : null,
     correctCount: dto.correctCount ?? null,
     totalCount: dto.questionCount ?? null,
     scheduledDate: dto.scheduledDate ?? null,
@@ -141,6 +143,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       createdAt: null,
       completedAt: null,
       submittedAt: null,
+      attemptStartedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -158,6 +161,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
       createdAt: null,
       completedAt: null,
       submittedAt: null,
+      attemptStartedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -174,6 +178,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     createdAt,
     completedAt,
     submittedAt,
+    attemptStartedAt,
     correctCount,
     totalCount,
     scheduledDate,
@@ -182,6 +187,8 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
   } else if (status === 'ONLINE_STARTED') {
+    // 선생님 관점에선 응시 시작 여부와 무관하게 CreatedPanel로 진입하므로 status는 'grading' 유지.
+    // 학생이 응시를 시작했는지는 attemptStartedAt(아래)로 카드가 색·시각만 구분한다.
     stepStatus = 'grading';
   } else if (status === 'SUBMITTED') {
     stepStatus = 'submitted';
@@ -202,6 +209,7 @@ function toStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardVM {
     // 제출일은 "현재 시험(exams[0])" 기준 — 채점 대기(SUBMITTED)인 현재 시험의 제출일을 보여준다.
     // (completedAt처럼 lastCompleted로 우회하면 이전 완료 시험의 제출일이 잘못 표시됨.)
     submittedAt: submittedAt ?? null,
+    attemptStartedAt: attemptStartedAt ?? null,
     lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
     maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
     retakeCount: Math.max(0, completedExams.length - 1),
@@ -236,6 +244,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       createdAt: null,
       completedAt: null,
       submittedAt: null,
+      attemptStartedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -253,6 +262,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
       createdAt: null,
       completedAt: null,
       submittedAt: null,
+      attemptStartedAt: null,
       lastScore: null,
       maxScore: null,
       retakeCount: 0,
@@ -269,6 +279,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     createdAt,
     completedAt,
     submittedAt,
+    attemptStartedAt,
     correctCount,
     totalCount,
     scheduledDate,
@@ -277,7 +288,9 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
   if (status === 'COMPLETED') {
     stepStatus = isPassed ? 'passed' : 'fail';
   } else if (status === 'ONLINE_STARTED') {
-    stepStatus = 'active';
+    // 이미 응시했으면(attemptStartedAt 있음) 재응시 불가 → 'attempted'로 버튼을 잠근다.
+    // 아직 미응시면 'active'(Start Online Test).
+    stepStatus = attemptStartedAt ? 'attempted' : 'active';
   } else if (status === 'SUBMITTED') {
     stepStatus = 'grading';
   } else {
@@ -300,6 +313,7 @@ function toStudentStepCardVM(exams: ExamSummary[], isLocked: boolean): StepCardV
     // 제출일은 "현재 시험(exams[0])" 기준 — 채점 대기(SUBMITTED)인 현재 시험의 제출일을 보여준다.
     // (completedAt처럼 lastCompleted로 우회하면 이전 완료 시험의 제출일이 잘못 표시됨.)
     submittedAt: submittedAt ?? null,
+    attemptStartedAt: attemptStartedAt ?? null,
     lastScore: lastCompleted ? (lastCompleted.correctCount ?? null) : (correctCount ?? null),
     maxScore: lastCompleted ? (lastCompleted.totalCount ?? null) : (totalCount ?? null),
     // COMPLETED 시험 수만으로 retakeCount 산정 — READY/SUBMITTED 시험은 제외.

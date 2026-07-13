@@ -10,6 +10,7 @@ type RecordOnlineResultsRequest = components['schemas']['RecordOnlineResultsRequ
 type RecordOfflineResultsRequest = components['schemas']['RecordOfflineResultsRequest'];
 type RecordResultsResponse = components['schemas']['RecordResultsResponse'];
 type SubmitExamRequest = components['schemas']['SubmitExamRequest'];
+type ExamAttemptResponse = components['schemas']['ExamAttemptResponse'];
 
 export const getExamsByType = (
   studySetId: number,
@@ -34,6 +35,13 @@ export const createExam = (
 
 export const startOnlineExam = (examId: number): Promise<ApiResponse<void>> =>
   axiosInstance.post<ApiResponse<void>>(`/api/v1/exams/${examId}/start-online`).then((r) => r.data);
+
+// 학생 응시용 — 정답이 제거된 문항을 받아온다. 한 번 호출하면 재응시가 차단되는(POST) 엔드포인트라
+// 페이지 진입 시 정확히 1회만 호출해야 한다 (useExamAttempt 참고).
+export const attemptExam = (examId: number): Promise<ApiResponse<ExamAttemptResponse>> =>
+  axiosInstance
+    .post<ApiResponse<ExamAttemptResponse>>(`/api/v1/exams/${examId}/attempt`)
+    .then((r) => r.data);
 
 export const cancelExam = (examId: number): Promise<ApiResponse<void>> =>
   axiosInstance.post<ApiResponse<void>>(`/api/v1/exams/${examId}/cancel`).then((r) => r.data);

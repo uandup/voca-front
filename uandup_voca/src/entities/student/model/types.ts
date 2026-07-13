@@ -91,6 +91,9 @@ export interface ExamSummary {
   // 학생이 온라인 시험을 제출한 일시 'YYYY-MM-DD HH:mm'. SUBMITTED 이후 기록, 채점 후에도 보존.
   // 제출 전(READY/ONLINE_STARTED) 및 이 기능 배포 이전 과거 시험은 null.
   submittedAt: string | null;
+  // 학생이 응시를 시작한 일시 'YYYY-MM-DD HH:mm'. 값이 있으면 이미 응시한 시험이라 재응시 불가.
+  // status가 ONLINE_STARTED인데 이 값이 있으면 = 응시 중이거나 응시 후 포기한 상태.
+  attemptStartedAt: string | null;
   correctCount: number | null;
   totalCount: number | null;
   // REVIEW1/2/3 시험에만 존재. 복습 예정일 'YYYY-MM-DD'.

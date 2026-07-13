@@ -3,6 +3,7 @@ import type {
   WordTestType,
   ExamDetail,
   ExamItem,
+  ExamAttemptData,
   StepExamHistory,
   ExamType,
   ExamAttempt,
@@ -16,6 +17,37 @@ import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities
 type StudySetExamTypeResponse = components['schemas']['StudySetExamTypeResponse'];
 type ExamDetailResponse = components['schemas']['ExamDetailResponse'];
 type ExamItemDetail = components['schemas']['ExamItemDetail'];
+type ExamAttemptResponse = components['schemas']['ExamAttemptResponse'];
+
+// 서버 시험 유형(enum) → 클라이언트 ExamType. WRONG_BANK/LEVEL만 명칭이 다르다.
+function toClientExamType(t: ExamAttemptResponse['type']): ExamType {
+  if (t === 'WRONG_BANK') return 'REVIEW_DECK';
+  if (t === 'LEVEL') return 'LEVEL_TEST';
+  return (t ?? 'WORD') as ExamType;
+}
+
+// 응시용 응답 → 클라이언트 타입. 정답 필드는 애초에 없으므로 프롬프트만 정리한다.
+export function toExamAttemptData(r: ExamAttemptResponse): ExamAttemptData {
+  return {
+    examId: r.examId!,
+    type: toClientExamType(r.type),
+    subType: r.subType ? toWordTestType(r.subType) : null,
+    includeSynonym: r.includeSynonym ?? false,
+    totalCount: r.totalCount ?? 0,
+    // itemOrder 오름차순으로 정렬해 화면 표시 순서를 보장한다.
+    items: (r.items ?? [])
+      .map((it) => ({
+        examItemId: it.examItemId!,
+        itemOrder: it.itemOrder!,
+        word: it.word ?? '',
+        koreanMeaning: it.koreanMeaning ?? '',
+        englishMeaning: it.englishMeaning ?? '',
+        example: it.example ?? '',
+      }))
+      .sort((a, b) => a.itemOrder - b.itemOrder),
+    wordChoices: r.wordChoices ?? null,
+  };
+}
 
 export function toWordTestType(
   subType: 'WORD_TO_MEANING' | 'MEANING_TO_WORD' | string | undefined,

@@ -1,38 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
-import type { ExamDetail, SentenceTestAnswer } from '@/entities/test';
+import { useCallback, useState } from 'react';
+import type { SentenceTestAnswer } from '@/entities/test';
 import type { Answer } from '@/widgets/test-online';
 
 interface UseExamAnswersParams {
-  examDetail: ExamDetail | undefined;
   isSentence: boolean;
   showSynonym: boolean;
 }
 
 // 시험 답안 상태를 관리하는 훅.
-// examDetail 로드 시 기존 답안으로 시드하고, 답안 변경 핸들러와 completedIds를 제공한다.
-export function useExamAnswers({ examDetail, isSentence, showSynonym }: UseExamAnswersParams) {
+// 응시용(attempt)은 이전 답안이 없으므로 빈 상태로 시작하고, 답안 변경 핸들러와 completedIds를 제공한다.
+export function useExamAnswers({ isSentence, showSynonym }: UseExamAnswersParams) {
   const [vocabAnswers, setVocabAnswers] = useState<Record<number, Answer>>({});
   const [sentenceAnswers, setSentenceAnswers] = useState<Record<number, SentenceTestAnswer>>({});
-
-  // examDetail 로드 시 — 이미 제출했거나 채점 완료된 시험이면 기존 답안으로 시드.
-  useEffect(() => {
-    if (!examDetail) return;
-    if (isSentence) {
-      const seeded: Record<number, SentenceTestAnswer> = Object.fromEntries(
-        examDetail.items.map((it) => [it.itemOrder, { answer: it.userAnswer ?? '' }]),
-      );
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSentenceAnswers(seeded);
-    } else {
-      const seeded: Record<number, Answer> = Object.fromEntries(
-        examDetail.items.map((it) => [
-          it.itemOrder,
-          { answer: it.userAnswer ?? '', synonym: it.synonymUserAnswers.join(', ') },
-        ]),
-      );
-      setVocabAnswers(seeded);
-    }
-  }, [examDetail, isSentence]);
 
   const handleVocabChange = useCallback((id: number, field: keyof Answer, value: string) => {
     setVocabAnswers((prev) => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
