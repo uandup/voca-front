@@ -78,6 +78,8 @@ export function toExamDetail(r: ExamDetailResponse): ExamDetail {
     includeSynonym: r.includeSynonym ?? false,
     status: r.status ?? '',
     isPassed: r.isPassed ?? null,
+    // 미측정(키 없음)을 0으로 뭉개면 안 된다 — null(감독 안 함)과 0(감독했고 이탈 없음)은 다른 의미다.
+    violationCount: r.violationCount ?? null,
     // itemOrder 오름차순으로 정렬해 화면 표시 순서를 보장한다.
     items: (r.items ?? []).map(toExamItem).sort((a, b) => a.itemOrder - b.itemOrder),
   };

@@ -9,7 +9,7 @@ import {
   SentenceReviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail } from '@/entities/test';
+import { useExamDetail, ExamViolationBadge } from '@/entities/test';
 import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
 
@@ -200,70 +200,78 @@ export default function ExamReviewPage() {
           </button>
         </div>
 
-        {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시.
-            선택된 탭은 URL 고정값 대신 examDetail 실시간 데이터로 오버라이드한다. */}
-        {showAttemptTabs ? (
-          <div className="flex items-center gap-2">
-            {examAttempts.map((attempt) => {
-              const isSelected = selectedExamId === attempt.examId;
-              // 선택된 탭이 result 모드이면 live 데이터 사용 — 채점 수정 후 즉시 반영.
-              const liveScore =
-                isSelected && mode === 'result' ? `${correctCount}/${totalItems}` : attempt.score;
-              const liveIsPassed =
-                isSelected && mode === 'result' ? outcome === 'pass' : attempt.isPassed;
+        {/* 헤더 중앙 그룹 — (복수 시도 탭 | 점수 텍스트) + 위반 횟수 뱃지.
+            좌우가 flex-1이라 이 그룹 전체가 헤더 정중앙에 정렬된다. */}
+        <div className="flex items-center gap-2">
+          {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시.
+              선택된 탭은 URL 고정값 대신 examDetail 실시간 데이터로 오버라이드한다. */}
+          {showAttemptTabs ? (
+            <div className="flex items-center gap-2">
+              {examAttempts.map((attempt) => {
+                const isSelected = selectedExamId === attempt.examId;
+                // 선택된 탭이 result 모드이면 live 데이터 사용 — 채점 수정 후 즉시 반영.
+                const liveScore =
+                  isSelected && mode === 'result' ? `${correctCount}/${totalItems}` : attempt.score;
+                const liveIsPassed =
+                  isSelected && mode === 'result' ? outcome === 'pass' : attempt.isPassed;
 
-              return (
-                <button
-                  key={attempt.examId}
-                  onClick={() => setSelectedExamId(attempt.examId)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
-                    isSelected
-                      ? 'bg-primary text-white'
-                      : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
-                  }`}
-                >
-                  {liveScore}
-                  <span
-                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                return (
+                  <button
+                    key={attempt.examId}
+                    onClick={() => setSelectedExamId(attempt.examId)}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
                       isSelected
-                        ? 'bg-white/20 text-white'
-                        : liveIsPassed
-                          ? 'bg-success/10 text-success'
-                          : 'bg-error/10 text-error'
+                        ? 'bg-primary text-white'
+                        : 'text-on-surface-variant border border-outline-variant/40 hover:bg-surface-container'
                     }`}
                   >
-                    {liveIsPassed ? 'P' : 'F'}
+                    {liveScore}
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                        isSelected
+                          ? 'bg-white/20 text-white'
+                          : liveIsPassed
+                            ? 'bg-success/10 text-success'
+                            : 'bg-error/10 text-error'
+                      }`}
+                    >
+                      {liveIsPassed ? 'P' : 'F'}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            /* 단일 시도 — 점수/결과 텍스트 표시 */
+            <div className="flex items-center gap-2">
+              {mode === 'result' ? (
+                <>
+                  <span className="text-sm font-bold text-on-surface">
+                    {correctCount} / {totalItems} correct
                   </span>
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          /* 단일 시도 — 점수/결과 텍스트 표시 */
-          <div className="flex items-center gap-2">
-            {mode === 'result' ? (
-              <>
-                <span className="text-sm font-bold text-on-surface">
-                  {correctCount} / {totalItems} correct
-                </span>
-                <span className="text-on-surface-variant/30">·</span>
-                <span
-                  className={`text-sm font-bold ${outcome === 'pass' ? 'text-success' : 'text-error'}`}
-                >
-                  {outcome === 'pass' ? 'Passed' : 'Failed'}
-                </span>
-              </>
-            ) : (
-              <>
-                <span className="text-sm font-semibold text-on-surface">
-                  {correctCount} / {totalItems}
-                </span>
-                <span className="text-on-surface-variant/30">·</span>
-                <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
-              </>
-            )}
-          </div>
-        )}
+                  <span className="text-on-surface-variant/30">·</span>
+                  <span
+                    className={`text-sm font-bold ${outcome === 'pass' ? 'text-success' : 'text-error'}`}
+                  >
+                    {outcome === 'pass' ? 'Passed' : 'Failed'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-sm font-semibold text-on-surface">
+                    {correctCount} / {totalItems}
+                  </span>
+                  <span className="text-on-surface-variant/30">·</span>
+                  <span className="text-sm text-error font-semibold">{wrongIds.size} wrong</span>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* 응시 중 화면 이탈 횟수. 복수 시도일 땐 선택된 탭(examDetail)의 값을 따라간다.
+              탭 분기 바깥에 두어야 복수 시도에서도 사라지지 않는다. */}
+          <ExamViolationBadge count={examDetail.violationCount} />
+        </div>
 
         <div className="flex-1 flex justify-end items-center gap-3">
           {mode === 'grading' && (

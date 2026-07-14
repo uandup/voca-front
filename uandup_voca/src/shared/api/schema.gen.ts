@@ -393,6 +393,8 @@ export interface paths {
          * @description 학생이 답안을 입력하고 제출합니다. ONLINE_STARTED → SUBMITTED 상태로 전이됩니다. 선생님이 온라인 시험을 시작한(ONLINE_STARTED) 시험만 제출할 수 있으며, READY 상태에서는 제출할 수 없습니다. 동의어 포함 시험(includeSynonym=true)은 wordAnswer + synonymAnswers 모두 전달해야 합니다. 제출 후 선생님이 온라인 채점 API로 채점합니다.
          *
          *     문항 매칭은 `POST /api/v1/exams/{examId}/attempt` 응답의 `examItemId`로 합니다(wordId 불필요). **응시 화면을 벗어나면 답안은 저장되지 않습니다(나가면 포기)** — 제출은 학생이 명시적으로 이 API를 호출할 때만 이뤄지며, 한 번 제출한 시험은 다시 제출할 수 없습니다(TEST_ALREADY_SUBMITTED).
+         *
+         *     치팅 방지를 위해 응시 중 화면 이탈 횟수를 `violationCount`(0 이상)로 함께 전달할 수 있습니다. 시험 1건당 1개 값이며, 감독 미지원 기기·구버전 클라이언트는 생략할 수 있습니다(생략 시 null = 미측정으로 저장되며, 측정 결과 0회와 구분됩니다). 저장된 값은 `GET /api/v1/exams/{examId}` 응답으로 선생님이 확인하며, 서버는 이 값으로 합격 여부를 판단하지 않습니다.
          */
         post: operations["submitExam"];
         delete?: never;
@@ -891,7 +893,7 @@ export interface paths {
         };
         /**
          * 풀어야 할 리뷰 단어 일괄 조회
-         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. 응답 reviews는 scheduledDate ASC, studySetId ASC 정렬. 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. words는 시험에 출제된 문항이 아니라 해당 배정(StudySet)의 배정 단어 전체입니다 — 시험은 이 중 일부만 랜덤 출제됩니다. 응답 reviews는 scheduledDate ASC, studySetId ASC 정렬. 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getPendingReviews"];
         put?: never;
@@ -1305,6 +1307,8 @@ export interface paths {
          * @description 시험 정보와 문항 목록(단어 정보 포함)을 조회합니다. 채점 완료된 시험은 문항별 정답 여부도 포함됩니다. 취소된(CANCELLED) 시험은 조회할 수 없습니다.
          *
          *     **주의: 응답에 정답(word·koreanMeaning·englishMeaning·synonyms)이 포함되므로 학생 응시 화면에 사용하지 마세요.** 학생이 시험을 푸는 용도는 `POST /api/v1/exams/{examId}/attempt`(정답 제외 + 재응시 차단)입니다. 이 API는 선생님의 문제지·결과 확인, 학생·학부모의 채점 결과 확인용입니다.
+         *
+         *     온라인 제출된 시험은 응시 중 화면 이탈 횟수(`violationCount`)가 함께 내려갑니다 — 감독 미지원 기기로 제출했거나 제출 전이면 null(미측정).
          */
         get: operations["getExam"];
         put?: never;
@@ -1916,6 +1920,12 @@ export interface components {
         SubmitExamRequest: {
             /** @description 문항별 답안 목록 */
             results: components["schemas"]["SubmitItemResult"][];
+            /**
+             * Format: int32
+             * @description 응시 중 누적된 화면 이탈 횟수. 감독 미지원 기기·구버전 클라이언트는 생략할 수 있으며(null 허용), 생략하면 미측정(null)으로 저장된다 — 측정 결과 0회인 것과 구분된다. 시험 1건당 1개 값
+             * @example 3
+             */
+            violationCount?: number;
         };
         /** @description 개별 문항 답안 */
         SubmitItemResult: {
@@ -2479,7 +2489,7 @@ export interface components {
             message?: string;
             data?: components["schemas"]["PendingReviewsResponse"];
         };
-        /** @description 한 리뷰 시험의 단어 묶음 */
+        /** @description 한 리뷰 시험의 복습 단어 묶음 */
         PendingReviewItem: {
             /**
              * Format: int64
@@ -2499,7 +2509,7 @@ export interface components {
              * @example 2026-05-28
              */
             scheduledDate?: string;
-            /** @description 리뷰 대상 단어 (difficulty·wordId 오름차순) */
+            /** @description 복습 대상 단어 — 해당 배정(StudySet)에 배정된 단어 전체 (시험에 출제된 문항이 아니다. 시험은 이 중 일부만 랜덤 출제된다). difficulty·wordId 오름차순 */
             words?: components["schemas"]["AssignedWordResponse"][];
         };
         /** @description 풀어야 할 리뷰 단어 일괄 조회 응답 — 활성 REVIEW1/2/3 시험 1건당 한 항목 */
@@ -2627,8 +2637,8 @@ export interface components {
             activeAssignment?: components["schemas"]["ActiveAssignment"];
             /**
              * Format: int32
-             * @description 풀어야 할 리뷰 시험 단어 수 (없으면 0)
-             * @example 20
+             * @description 풀어야 할 리뷰 단어 수 — 활성(READY / ONLINE_STARTED) REVIEW 시험이 걸린 배정들의 배정 단어 수 합 (시험 문항 수가 아니다). 없으면 0
+             * @example 30
              */
             pendingReviewWordCount?: number;
         };
@@ -3224,6 +3234,12 @@ export interface components {
             isPassed?: boolean;
             /** Format: date */
             scheduledDate?: string;
+            /**
+             * Format: int32
+             * @description 응시 중 학생이 화면을 벗어난 누적 횟수. 온라인 제출 시 클라이언트가 전달한 값을 그대로 저장한다. 감독 미지원 기기·구버전 클라이언트가 제출했거나 아직 제출 전인 시험은 null(미측정) — 측정 결과 0회인 것과 다르다. 합격 여부에는 영향을 주지 않으며, 선생님이 채점 시 참고하는 값
+             * @example 3
+             */
+            violationCount?: number;
             items?: components["schemas"]["ExamItemDetail"][];
         };
         ExamItemDetail: {
@@ -4601,7 +4617,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
-            /** @description ONLINE_STARTED 상태가 아닌 시험(READY/SUBMITTED/COMPLETED 등 — TEST_NOT_ONLINE_STARTED) 또는 문항 누락(TEST_ITEMS_INCOMPLETE) */
+            /** @description ONLINE_STARTED 상태가 아닌 시험(READY/SUBMITTED/COMPLETED 등 — TEST_NOT_ONLINE_STARTED) / 문항 누락(TEST_ITEMS_INCOMPLETE) / violationCount가 음수 */
             400: {
                 headers: {
                     [name: string]: unknown;

@@ -13,6 +13,8 @@ import {
   SentenceWordBank,
 } from '@/widgets/test-online';
 import { useExamTake } from './model/useExamTake';
+import { useExamProctor } from './model/useExamProctor';
+import { ExamFullscreenGate } from './ui/ExamFullscreenGate';
 
 // 학생 시험 응시 페이지 — 응시용 attempt API로 문제(정답 제외)를 받아 응시만 처리한다.
 // 채점 완료(review) / 채점 대기(submitted) 결과 확인은 ExamReviewPage(/review)가 담당한다.
@@ -79,6 +81,10 @@ export default function ExamTakePage() {
     onSubmitSuccess: () => setShowSubmitSuccess(true),
   });
 
+  // 응시 중 화면 이탈 감독 — 탭 전환·최소화 감지, 전체화면 이탈 시 문항 가림막.
+  // attempt가 로드된(=실제 응시 중인) 동안에만 켠다.
+  const proctor = useExamProctor({ active: Boolean(attempt) });
+
   // 페이지 전환 시 스크롤을 최상단으로 초기화한다.
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -120,23 +126,41 @@ export default function ExamTakePage() {
     }
   }
 
+  // 제출 시 감독 결과(이탈 횟수)를 함께 보낸다. 감독이 꺼진 세션이면 undefined —
+  // 서버는 null(미측정)과 0(측정했고 이탈 0회)을 구분해 저장하므로 0으로 대체하면 안 된다.
+  function submitAnswers() {
+    doSubmit(proctor.reportedViolationCount);
+  }
+
   // 미제출 문항이 있으면 확인 모달을 먼저 표시한다 (Task 19).
   function handleSubmit() {
     if (completedIds.size < totalItems) {
       setShowSubmitConfirm(true);
       return;
     }
-    doSubmit();
+    submitAnswers();
   }
 
   const headerCenter = attempt ? (
-    <div className="flex items-center gap-1.5 text-on-surface-variant min-w-0">
-      <span className="material-symbols-outlined shrink-0" style={{ fontSize: '16px' }}>
-        warning
-      </span>
-      <p className="text-xs xl:text-sm font-semibold leading-tight line-clamp-2">
-        Leaving or refreshing this page will forfeit the exam. You cannot retake it.
-      </p>
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="flex items-center gap-1.5 text-on-surface-variant min-w-0">
+        <span className="material-symbols-outlined shrink-0" style={{ fontSize: '16px' }}>
+          warning
+        </span>
+        <p className="text-xs xl:text-sm font-semibold leading-tight line-clamp-2">
+          Leaving or refreshing this page will forfeit the exam. You cannot retake it.
+        </p>
+      </div>
+
+      {/* 이탈이 감지된 뒤에는 누적 횟수를 계속 노출해 압박한다 — 이 값은 제출 시 선생님에게 전달된다. */}
+      {proctor.violationCount > 0 && (
+        <span className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg bg-error/10 text-error text-xs font-bold">
+          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+            visibility_off
+          </span>
+          Warnings: {proctor.violationCount}
+        </span>
+      )}
     </div>
   ) : undefined;
 
@@ -233,8 +257,25 @@ export default function ExamTakePage() {
           description={`${totalItems - completedIds.size} question(s) are still unanswered.\nSubmit anyway?`}
           confirmLabel="Submit"
           cancelLabel="Go Back"
-          onConfirm={doSubmit}
+          onConfirm={submitAnswers}
           onCancel={() => setShowSubmitConfirm(false)}
+        />
+      )}
+
+      {/* 전체화면을 벗어난 동안 문항을 덮는 가림막 (z-40 — 모달 z-50 아래).
+          헤더까지 덮으므로 가림막이 떠 있는 동안은 Submit도 누를 수 없다. */}
+      {proctor.isBlocked && (
+        <ExamFullscreenGate onEnterFullscreen={proctor.enterFullscreen} onExit={handleExit} />
+      )}
+
+      {/* 이탈 감지 경고 — 탭 전환·최소화·전체화면 이탈 시 표시 */}
+      {proctor.showWarning && (
+        <AlertDialog
+          variant="warning"
+          title="You Left the Exam Screen"
+          description={`Switching tabs, minimizing the window, or leaving fullscreen is not allowed during the exam.\nThis has been recorded and will be shared with your teacher. (Warnings: ${proctor.violationCount})`}
+          okLabel="Back to Exam"
+          onClose={proctor.dismissWarning}
         />
       )}
 
