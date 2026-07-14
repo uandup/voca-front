@@ -136,6 +136,9 @@ export interface ExamDetail {
   includeSynonym: boolean;
   status: string;
   isPassed: boolean | null;
+  // 응시 중 화면을 벗어난 누적 횟수. null = 미측정(오프라인 시험 / 감독 미지원 기기 / 감독 배포 이전
+  // 시험)이며, 0(감독했고 이탈 0회)과 의미가 다르다 — 둘을 뭉개면 감독한 적 없는 시험이 "결백"으로 보인다.
+  violationCount: number | null;
   items: ExamItem[];
 }
 

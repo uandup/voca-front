@@ -63,7 +63,11 @@ export function useExamTake({
 
   // itemOrder(클라이언트 키) → examItemId(서버 식별자)로 매핑하여 제출 페이로드 구성.
   // /submit은 멱등이 아니라 중복 시 400이므로, 제출 중(isPending)이면 재호출하지 않는다.
-  function doSubmit() {
+  //
+  // violationCount = 응시 중 화면 이탈 횟수(useExamProctor). 감독이 꺼진 세션(태블릿 등 미지원
+  // 기기)에서는 undefined로 넘어와 페이로드에서 키가 빠진다 — 서버는 키 없음(null=미측정)과
+  // 0(측정했고 이탈 0회)을 다르게 저장하므로 undefined를 0으로 대체하면 안 된다.
+  function doSubmit(violationCount?: number) {
     if (!attempt || submit.isPending) return;
     const results = attempt.items.map((item) => {
       const order = item.itemOrder;
@@ -80,7 +84,7 @@ export function useExamTake({
         synonymAnswer: a?.synonym ?? '',
       };
     });
-    submit.mutate({ results }, { onSuccess: onSubmitSuccess });
+    submit.mutate({ results, violationCount }, { onSuccess: onSubmitSuccess });
   }
 
   return {

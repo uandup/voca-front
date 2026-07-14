@@ -48,4 +48,5 @@ export { testKeys } from './api/queryKeys';
 export { useExamDetail } from './api/useExamDetail';
 export { useExamAttempt } from './api/useExamAttempt';
 export { TestConfigBadges } from './ui/TestConfigBadges';
+export { ExamViolationBadge } from './ui/ExamViolationBadge';
 export { ITEMS_PER_PAGE } from './model/constants';
