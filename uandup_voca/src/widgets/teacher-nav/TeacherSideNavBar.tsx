@@ -3,6 +3,7 @@ import { isAdmin, useSignOut } from '@/entities/auth';
 
 const BASE_NAV_ITEMS = [
   { icon: 'people', label: 'Students', to: '/teacher/students' },
+  { icon: 'grading', label: 'Grading', to: '/teacher/grading' },
   { icon: 'clinical_notes', label: 'Clinics', to: '/teacher/clinics' },
   { icon: 'book_2', label: 'Vocabulary Bank', to: '/teacher/vocabulary-bank' },
 ] as const;

@@ -18,6 +18,7 @@ import { Route as TeacherIndexRouteImport } from './../routes/teacher/index'
 import { Route as StudentIndexRouteImport } from './../routes/student/index'
 import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
 import { Route as TeacherStudentsRouteImport } from './../routes/teacher/students'
+import { Route as TeacherGradingRouteImport } from './../routes/teacher/grading'
 import { Route as TeacherClinicsRouteImport } from './../routes/teacher/clinics'
 import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
@@ -83,6 +84,11 @@ const TeacherVocabularyBankRoute = TeacherVocabularyBankRouteImport.update({
 const TeacherStudentsRoute = TeacherStudentsRouteImport.update({
   id: '/students',
   path: '/students',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherGradingRoute = TeacherGradingRouteImport.update({
+  id: '/grading',
+  path: '/grading',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherClinicsRoute = TeacherClinicsRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
+  '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/student/word-test': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
+  '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student': typeof StudentIndexRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/student/word-test_': typeof StudentWordTestRoute
   '/teacher/admin': typeof TeacherAdminRoute
   '/teacher/clinics': typeof TeacherClinicsRoute
+  '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
   '/student/': typeof StudentIndexRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
+    | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student/'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/student/word-test'
     | '/teacher/admin'
     | '/teacher/clinics'
+    | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student'
@@ -372,6 +383,7 @@ export interface FileRouteTypes {
     | '/student/word-test_'
     | '/teacher/admin'
     | '/teacher/clinics'
+    | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
     | '/student/'
@@ -470,6 +482,13 @@ declare module '@tanstack/react-router' {
       path: '/students'
       fullPath: '/teacher/students'
       preLoaderRoute: typeof TeacherStudentsRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/grading': {
+      id: '/teacher/grading'
+      path: '/grading'
+      fullPath: '/teacher/grading'
+      preLoaderRoute: typeof TeacherGradingRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/clinics': {
@@ -657,6 +676,7 @@ const StudentRouteWithChildren =
 interface TeacherRouteChildren {
   TeacherAdminRoute: typeof TeacherAdminRoute
   TeacherClinicsRoute: typeof TeacherClinicsRoute
+  TeacherGradingRoute: typeof TeacherGradingRoute
   TeacherStudentsRoute: typeof TeacherStudentsRoute
   TeacherVocabularyBankRoute: typeof TeacherVocabularyBankRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -669,6 +689,7 @@ interface TeacherRouteChildren {
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherAdminRoute: TeacherAdminRoute,
   TeacherClinicsRoute: TeacherClinicsRoute,
+  TeacherGradingRoute: TeacherGradingRoute,
   TeacherStudentsRoute: TeacherStudentsRoute,
   TeacherVocabularyBankRoute: TeacherVocabularyBankRoute,
   TeacherIndexRoute: TeacherIndexRoute,
