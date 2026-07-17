@@ -3316,6 +3316,17 @@ export interface components {
              */
             type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
             /**
+             * @description 출제 방향 — WORD_TO_MEANING(영어 단어→뜻), MEANING_TO_WORD(뜻→영어 단어). 예문 시험(EXAMPLE)은 null
+             * @example WORD_TO_MEANING
+             * @enum {string}
+             */
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            /**
+             * @description 동의어 포함 여부. 예문 시험(EXAMPLE)은 null
+             * @example false
+             */
+            includeSynonym?: boolean;
+            /**
              * Format: int32
              * @description 총 문항 수
              * @example 20
@@ -3329,7 +3340,13 @@ export interface components {
             violationCount?: number;
             /**
              * Format: date-time
-             * @description 학생이 응시를 시작한 시각
+             * @description 시험이 생성된 시각
+             * @example 2026-07-17T13:50:00
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description 학생이 응시를 시작한 시각. 소요 시간 = submittedAt − attemptStartedAt
              * @example 2026-07-17T14:03:00
              */
             attemptStartedAt?: string;
