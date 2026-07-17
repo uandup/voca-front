@@ -1319,6 +1319,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/exams/submitted": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 채점 대기 큐 조회
+         * @description 학원 전체에서 학생이 온라인 제출했으나 아직 채점되지 않은(SUBMITTED) 시험 목록을 반환합니다. 선생님의 채점 화면에서 새로고침 시 호출하는 용도입니다. NORMAL·WRONG_BANK·LEVEL 온라인 제출을 모두 포함하며, 제출 시각(submittedAt) 오름차순으로 정렬됩니다(먼저 제출한 학생이 위). 채점(POST /api/v1/exams/{examId}/results/online)하면 COMPLETED로 전이돼 목록에서 자동으로 빠집니다. 목록엔 학생 답안·문항을 담지 않으며, 항목 클릭 시 GET /api/v1/exams/{examId}로 상세를 조회합니다.
+         */
+        get: operations["getSubmittedExams"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/clinics/{dayOfWeek}/{hour}/students/edit": {
         parameters: {
             query?: never;
@@ -3257,6 +3277,68 @@ export interface components {
             isCorrect?: boolean;
             userAnswer?: string;
             synonymUserAnswers?: string[];
+        };
+        ApiResponseListSubmittedExamResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["SubmittedExamResponse"][];
+        };
+        /** @description 채점 대기 큐 항목 — 학생이 온라인 제출했으나 아직 채점되지 않은(SUBMITTED) 시험 하나 */
+        SubmittedExamResponse: {
+            /**
+             * Format: int64
+             * @description 시험 ID — 클릭 시 GET /api/v1/exams/{examId}로 상세(문항·답안) 조회
+             * @example 1
+             */
+            examId?: number;
+            /**
+             * Format: int64
+             * @description 시험이 속한 학습 세트 ID
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: int64
+             * @description 응시한 학생 ID
+             * @example 12
+             */
+            studentId?: number;
+            /**
+             * @description 응시한 학생 이름 — 목록 표시용
+             * @example 김민준
+             */
+            studentName?: string;
+            /**
+             * @description 시험 유형
+             * @example WORD
+             * @enum {string}
+             */
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 20
+             */
+            totalCount?: number;
+            /**
+             * Format: int32
+             * @description 응시 중 학생이 화면을 벗어난 누적 횟수. 감독 미지원 기기·구버전 클라이언트가 제출했으면 null(미측정) — 측정 결과 0회와 다르다
+             * @example 3
+             */
+            violationCount?: number;
+            /**
+             * Format: date-time
+             * @description 학생이 응시를 시작한 시각
+             * @example 2026-07-17T14:03:00
+             */
+            attemptStartedAt?: string;
+            /**
+             * Format: date-time
+             * @description 학생이 답안을 제출한 시각 — 목록 정렬 기준(오래 기다린 순 위로)
+             * @example 2026-07-17T14:20:00
+             */
+            submittedAt?: string;
         };
         ApiResponseListClinicStudentListResponse: {
             /** Format: int32 */
@@ -6508,6 +6590,35 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseExamDetailResponse"];
+                };
+            };
+        };
+    };
+    getSubmittedExams: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 (대기 시험이 없으면 빈 배열) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListSubmittedExamResponse"];
+                };
+            };
+            /** @description 선생님만 조회 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListSubmittedExamResponse"];
                 };
             };
         };
