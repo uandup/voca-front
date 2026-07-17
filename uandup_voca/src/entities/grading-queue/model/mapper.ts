@@ -1,5 +1,6 @@
 import type { components } from '@/shared/api/schema.gen';
 import type { ExamType } from '@/entities/test/@x/grading-queue';
+import { toWordTestType } from '@/entities/test/@x/grading-queue';
 import type { GradingQueueItem } from './types';
 
 type SubmittedExamResponse = components['schemas']['SubmittedExamResponse'];
@@ -29,10 +30,15 @@ export function toGradingQueueItem(r: SubmittedExamResponse): GradingQueueItem {
     studentId: r.studentId ?? 0,
     studentName: r.studentName ?? '',
     examType: toExamType(r.type),
+    // EXAMPLE 시험은 subType이 null이다. toWordTestType은 비-WORD_TO_MEANING을 모두
+    // meaning-to-word로 떨구므로, null을 그대로 null로 보존하도록 여기서 먼저 가른다.
+    subType: r.subType == null ? null : toWordTestType(r.subType),
+    includeSynonym: r.includeSynonym ?? false,
     totalCount: r.totalCount ?? 0,
     // 미측정(null)과 0회를 구분해야 하므로 nullish 병합으로 0을 덮지 않는다.
     violationCount: r.violationCount ?? null,
     attemptStartedAt: r.attemptStartedAt ?? null,
     submittedAt: r.submittedAt ?? '',
+    createdAt: r.createdAt ?? '',
   };
 }
