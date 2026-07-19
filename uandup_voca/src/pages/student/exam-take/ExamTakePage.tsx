@@ -53,6 +53,9 @@ export default function ExamTakePage() {
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
+  // 학생이 시작 게이트에서 "Start Exam"을 눌러야 true — 그전까지는 attempt(응시 확정) POST를
+  // 발사하지 않는다. 페이지에 실수로 진입해도 시작 전이면 시험이 소진되지 않고 그냥 나갈 수 있다.
+  const [started, setStarted] = useState(false);
 
   const {
     attempt,
@@ -77,6 +80,7 @@ export default function ExamTakePage() {
     isSentence,
     source,
     currentPage,
+    started,
     // 제출 완료 후 성공 모달을 먼저 표시하고, 확인 클릭 시 /review로 교체 이동한다.
     onSubmitSuccess: () => setShowSubmitSuccess(true),
   });
@@ -126,6 +130,16 @@ export default function ExamTakePage() {
     }
   }
 
+  // 시작 게이트의 "Start Exam" 클릭 핸들러.
+  // 전체화면 진입은 사용자 제스처(클릭) 안에서만 허용되므로 여기서 요청한다(requestFullscreen은
+  // enterFullscreen 내부에서 동기적으로 발사되어 이 클릭 제스처를 소비한다).
+  // 그 뒤 started=true로 attempt(응시 확정) POST를 발사한다 — 시작과 전체화면 진입이 한 클릭에 묶인다.
+  // 전체화면 미지원 기기는 enterFullscreen이 내부에서 감독을 끄고, 시험은 그대로 시작된다.
+  async function handleStart() {
+    await proctor.enterFullscreen();
+    setStarted(true);
+  }
+
   // 제출 시 감독 결과(이탈 횟수)를 함께 보낸다. 감독이 꺼진 세션이면 undefined —
   // 서버는 null(미측정)과 0(측정했고 이탈 0회)을 구분해 저장하므로 0으로 대체하면 안 된다.
   function submitAnswers() {
@@ -163,6 +177,12 @@ export default function ExamTakePage() {
       )}
     </div>
   ) : undefined;
+
+  // 시작 전 — 응시 확정 POST를 아직 발사하지 않은 상태. 시작 게이트만 보여준다.
+  // 여기서 Exit하면 시험이 소진되지 않으므로 나가기 확인 없이 바로 목록으로 돌려보낸다.
+  if (!started) {
+    return <ExamFullscreenGate mode="start" onEnterFullscreen={handleStart} onExit={doExit} />;
+  }
 
   // attempt 실패(이미 응시함 / 시작 전 / 취소됨 / 권한 없음) → 안내 후 목록으로.
   if (error) {

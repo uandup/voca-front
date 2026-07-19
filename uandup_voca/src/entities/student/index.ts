@@ -45,6 +45,7 @@ export {
   getStudentOverview,
   getAssignedWords,
   skipStudySetStage,
+  cancelAssignment,
   updateAssignmentCount,
   assignWords,
   updateExamSettings,
