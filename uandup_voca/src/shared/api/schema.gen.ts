@@ -352,6 +352,34 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/normal-study-sets/{studySetId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 단어 배정 취소
+         * @description 선생님이 잘못 배정한 NORMAL 단어 배정(StudySet)을 통째로 취소합니다. **진행 전(CREATED) 상태만** 취소할 수 있습니다.
+         *     (예문까지 통과한 WORD_COMP·암기 완료 REVIEW_COMP·이미 취소된 배정은 취소 불가.)
+         *
+         *     취소 시 처리:
+         *     - 이 배정에 걸린 **모든 시험(채점 완료 포함)을 취소**합니다. 학생 답안·채점 기록도 함께 사라지며, Todo·리뷰·채점 대기 큐·정답률·차트에서 모두 제외됩니다.
+         *     - 배정 커서를 이 배치 직전으로 되돌려, 같은 단어를 다시 배정할 수 있게 합니다. (단, 배정 후 레벨 변경 등으로 커서가 이동한 경우엔 되돌리지 않습니다.)
+         *     - 오답 뱅크(WrongBank)에 이미 쌓인 오답은 유지됩니다.
+         *
+         *     취소 후 같은 학생에게 곧바로 새 배정이 가능합니다. WRONG_BANK·LEVEL 배정은 이 API 대상이 아니며 시험 취소 API를 사용하세요.
+         */
+        post: operations["cancelAssignment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/normal-study-sets/students/{studentId}": {
         parameters: {
             query?: never;
@@ -4596,6 +4624,59 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+        };
+    };
+    cancelAssignment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학습 세트 ID
+                 * @example 1
+                 */
+                studySetId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 취소 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description NORMAL이 아닌 배정 — INVALID_INPUT / CREATED가 아닌 배정(WORD_COMP·REVIEW_COMP·CANCELLED) — STUDY_SET_CANNOT_CANCEL */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 선생님만 취소 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 학습 세트를 찾을 수 없음 (STUDY_SET_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
                 };
             };
         };

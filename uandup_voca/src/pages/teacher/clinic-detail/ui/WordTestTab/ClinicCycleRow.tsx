@@ -3,6 +3,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router';
 import ClinicStepCard from './ClinicStepCard';
 import StepPanel from './StepPanel';
 import { AssignedWordsModal } from './AssignedWordsModal';
+import { CancelAssignmentButton } from './CancelAssignmentButton';
 import type { TestBundleRow, StepCardVM, StudySetExamType } from '@/entities/test';
 
 const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
@@ -10,9 +11,18 @@ const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVI
 interface Props extends TestBundleRow {
   studySetId: number;
   studentId: number;
+  // 배정 취소 가능 여부 — Active 탭 & 아직 시험 진행 전(CREATED)일 때만 true.
+  canCancel: boolean;
 }
 
-export default function ClinicCycleRow({ levels, wordCount, steps, studySetId, studentId }: Props) {
+export default function ClinicCycleRow({
+  levels,
+  wordCount,
+  steps,
+  studySetId,
+  studentId,
+  canCancel,
+}: Props) {
   // URL의 openSet/openStep을 단일 진실로 사용한다.
   // Preview/Grade Online 페이지 이동 후 돌아와도 같은 step이 다시 열리도록 한다.
   const search = useSearch({ from: '/teacher/clinics_/students/$studentId' });
@@ -40,7 +50,7 @@ export default function ClinicCycleRow({ levels, wordCount, steps, studySetId, s
 
   return (
     <div className="bg-white border border-outline/20 rounded-2xl px-5 py-4 flex flex-col gap-4">
-      <div className="flex items-center justify-start">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
             <span className="text-sm text-on-surface-variant">Words</span>
@@ -86,6 +96,8 @@ export default function ClinicCycleRow({ levels, wordCount, steps, studySetId, s
             View Words
           </button>
         </div>
+
+        {canCancel && <CancelAssignmentButton studySetId={studySetId} />}
       </div>
 
       <div className="flex items-stretch">

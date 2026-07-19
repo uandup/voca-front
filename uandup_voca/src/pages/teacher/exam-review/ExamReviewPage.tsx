@@ -10,6 +10,7 @@ import {
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
 import { useExamDetail, ExamViolationBadge } from '@/entities/test';
+import { useStudentOverview } from '@/entities/student';
 import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
 
@@ -49,12 +50,17 @@ export default function ExamReviewPage() {
 
   const { data: examDetail, isLoading } = useExamDetail(examId);
 
+  // ExamDetail에는 학생 식별 정보가 없다 — 헤더에 이름/학년을 띄우려면 별도로 overview를 가져온다.
+  // studentId가 없는 URL(북마크/수기 입력)에서는 hook 내부의 enabled 가드가 요청을 막는다.
+  const studentId = search.studentId ?? 0;
+  const { data: student } = useStudentOverview(studentId);
+
   const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
   const isSentence = examType === 'EXAMPLE';
 
   const recordResults = useRecordOnlineResults({
     examId,
-    studentId: search.studentId ?? 0,
+    studentId,
     studySetId: search.studySetId ?? 0,
     examType,
   });
@@ -99,6 +105,17 @@ export default function ExamReviewPage() {
     } else {
       router.history.back();
     }
+  }
+
+  // 채점 후 해당 학생의 단어 번들 화면으로 이동. Exit(returnTo)은 채점 큐에서 진입했을 때
+  // 큐로만 돌아가므로, 학생 진도를 바로 확인할 경로를 별도로 연다.
+  // replace로 채점 화면을 스택에서 치운다 — push면 뒤로가기가 방금 나온 채점 화면으로 되돌아간다.
+  function handleGoToStudentSets() {
+    navigate({
+      to: '/teacher/clinics/students/$studentId',
+      params: { studentId: String(studentId) },
+      replace: true,
+    });
   }
 
   function handleSaveResults() {
@@ -200,9 +217,19 @@ export default function ExamReviewPage() {
           </button>
         </div>
 
-        {/* 헤더 중앙 그룹 — (복수 시도 탭 | 점수 텍스트) + 위반 횟수 뱃지.
+        {/* 헤더 중앙 그룹 — 채점 대상 학생 + (복수 시도 탭 | 점수 텍스트) + 위반 횟수 뱃지.
             좌우가 flex-1이라 이 그룹 전체가 헤더 정중앙에 정렬된다. */}
         <div className="flex items-center gap-2">
+          {/* 채점 대상 학생. 로딩 중이거나 studentId가 없으면 통째로 생략한다. */}
+          {student && (
+            <>
+              <span className="text-sm font-bold text-on-surface whitespace-nowrap">
+                {student.nameKo} · G{student.grade}
+              </span>
+              <span className="w-px h-4 bg-outline-variant/40 mx-1" />
+            </>
+          )}
+
           {/* 복수 시도 탭 — 각 탭에 점수 + Pass/Fail 뱃지 표시.
               선택된 탭은 URL 고정값 대신 examDetail 실시간 데이터로 오버라이드한다. */}
           {showAttemptTabs ? (
@@ -320,21 +347,37 @@ export default function ExamReviewPage() {
               {isEditing ? 'Save' : 'Grade'}
             </button>
           ) : (
-            // 과거 시도(selectedExamId !== routeExamId)는 수정 불가 — Edit 버튼 숨김.
-            selectedExamId === routeExamId && (
-              <button
-                onClick={() => {
-                  setMode('grading');
-                  setIsEditing(true);
-                }}
-                className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                  edit
-                </span>
-                Edit
-              </button>
-            )
+            <>
+              {/* 학생 단어 번들 바로가기. studentId 없는 URL이면 /students/0으로 깨지므로 렌더 안 함.
+                  Edit과 형제로 두어 과거 시도 탭(Edit 숨김) 상태에서도 남아 있게 한다. */}
+              {studentId > 0 && (
+                <button
+                  onClick={handleGoToStudentSets}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-surface-container-lowest shadow-sm border border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:text-primary"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                    library_books
+                  </span>
+                  Go to Clinic
+                </button>
+              )}
+
+              {/* 과거 시도(selectedExamId !== routeExamId)는 수정 불가 — Edit 버튼 숨김. */}
+              {selectedExamId === routeExamId && (
+                <button
+                  onClick={() => {
+                    setMode('grading');
+                    setIsEditing(true);
+                  }}
+                  className="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                    edit
+                  </span>
+                  Edit
+                </button>
+              )}
+            </>
           )}
         </div>
       </header>

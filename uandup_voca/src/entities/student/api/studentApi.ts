@@ -99,7 +99,15 @@ export const skipStudySetStage = (
     .post<ApiResponse<SkipStageResponse>>(`/api/v1/normal-study-sets/${studySetId}/skip`, body)
     .then((r) => r.data);
 
-export const getAssignedWords = (studySetId: number): Promise<ApiResponse<StudySetWordsResponse>> =>
+// 선생님이 NORMAL 배정을 통째로 취소한다 — 배정에 속한 모든 시험(채점 완료분 포함)이 함께 취소되고
+// 단어 배정 커서가 되돌려져 같은 단어가 다시 배정 대기로 돌아간다. CREATED 상태에서만 가능.
+// (오답뱅크에 이미 쌓인 오답은 유지된다.)
+export const cancelAssignment = (studySetId: number): Promise<ApiResponse<void>> =>
+  axiosInstance
+    .post<ApiResponse<void>>(`/api/v1/normal-study-sets/${studySetId}/cancel`)
+    .then((r) => r.data);
+
+export const getAssignedWords =(studySetId: number): Promise<ApiResponse<StudySetWordsResponse>> =>
   axiosInstance
     .get<ApiResponse<StudySetWordsResponse>>(`/api/v1/study-sets/${studySetId}/words`)
     .then((r) => r.data);

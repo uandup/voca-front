@@ -7,6 +7,7 @@ import {
   useActiveStudySetList,
   useStudySetHistory,
 } from '@/entities/student';
+import { isAssignmentCancelable } from '../../model/useCancelAssignment';
 
 const TABS = ['Active', 'History'] as const;
 type Tab = (typeof TABS)[number];
@@ -75,6 +76,8 @@ export default function WordTestTab({ studentId }: Props) {
                 key={cycle.id}
                 studySetId={set.studySetId}
                 studentId={studentId}
+                // History의 배정은 이미 완료/취소된 것이므로 Active 탭에서만 취소를 노출한다.
+                canCancel={activeTab === 'Active' && isAssignmentCancelable(cycle.steps)}
                 {...cycle}
               />
             );

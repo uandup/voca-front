@@ -20,6 +20,8 @@ interface UseExamTakeParams {
   isSentence: boolean;
   source: ExamSource;
   currentPage: number;
+  // 학생이 시작 게이트에서 "Start Exam"을 누르면 true — 이때만 attempt(응시 확정) POST가 발사된다.
+  started: boolean;
   onSubmitSuccess: () => void;
 }
 
@@ -31,11 +33,12 @@ export function useExamTake({
   isSentence,
   source,
   currentPage,
+  started,
   onSubmitSuccess,
 }: UseExamTakeParams) {
   const studentId = useCurrentStudentId() ?? 0;
   const queryClient = useQueryClient();
-  const { data: attempt, loading, error } = useExamAttempt(routeExamId);
+  const { data: attempt, loading, error } = useExamAttempt(routeExamId, started);
 
   // 응시를 시작하면(attempt 성공) 서버에 attemptStartedAt이 기록되어 시험이 재응시 불가로 잠긴다.
   // 목록/할일 캐시는 응시 시작 전 데이터라, 나가서 돌아올 때 stale한 'active'를 보여준다 → 무효화해
