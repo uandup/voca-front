@@ -10,9 +10,10 @@ import {
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
 import { useExamDetail, ExamViolationBadge } from '@/entities/test';
-import { useStudentOverview } from '@/entities/student';
+import { useStudentOverview, useActiveStudySetList, toTestBundleRow } from '@/entities/student';
 import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
+import { useAssignSentenceExam } from './model/useAssignSentenceExam';
 
 // 선생님이 학생의 시험을 채점하거나 채점 결과를 확인하는 페이지(grading + result 통합).
 // COMPLETED 상태로 진입 시 'result' 모드 — 채점 결과 표시. Edit 클릭으로 grading 재진입.
@@ -58,12 +59,31 @@ export default function ExamReviewPage() {
   const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
   const isSentence = examType === 'EXAMPLE';
 
+  const studySetId = search.studySetId ?? 0;
+
   const recordResults = useRecordOnlineResults({
     examId,
     studentId,
-    studySetId: search.studySetId ?? 0,
+    studySetId,
     examType,
   });
+
+  // 예문(EXAMPLE) 시험 배정 — WORD를 통과 처리한 직후 다음 단계를 바로 열기 위한 것.
+  const assignSentence = useAssignSentenceExam({ studentId, studySetId });
+
+  // 이 StudySet의 배정 단어 수(문항 수 상한)와 Sentence step 상태를 얻기 위해 active 목록을 조회한다.
+  // 채점 직후 studentKeys.studySets가 invalidate되므로 캐시가 대체로 따뜻하다.
+  const { data: studySets } = useActiveStudySetList(studentId);
+  const studySetRow = useMemo(
+    () => studySets?.find((r) => r.studySetId === studySetId),
+    [studySets, studySetId],
+  );
+  // Sentence(EXAMPLE) step. lock/pending 계산은 toTestBundleRow의 prevPassed 체인을 그대로 재사용.
+  // 배열 인덱스 대신 name으로 찾아 step 순서 변경에 견디게 한다.
+  const sentenceStep = useMemo(() => {
+    if (!studySetRow) return null;
+    return toTestBundleRow(studySetRow).steps.find((s) => s.name === 'Sentence') ?? null;
+  }, [studySetRow]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [wrongIds, setWrongIds] = useState<Set<number>>(new Set());
@@ -72,6 +92,7 @@ export default function ExamReviewPage() {
   // 합격 여부는 선생님이 명시적으로 선택. 채점 완료된 시험으로 재진입 시 기존 값으로 초기화.
   const [outcome, setOutcome] = useState<'pass' | 'fail'>('pass');
   const [showGradingSuccess, setShowGradingSuccess] = useState(false);
+  const [showAssignSuccess, setShowAssignSuccess] = useState(false);
 
   // examDetail 로드 시 초기 상태 동기화 — 이미 채점된 시험이면 result 모드 + 기존 오답/합격 표시.
   // wrongIds는 itemOrder를 키로 추적한다(row id와 일치). 채점 mutation을 보낼 땐 examItemId로 다시 매핑.
@@ -115,6 +136,13 @@ export default function ExamReviewPage() {
       to: '/teacher/clinics/students/$studentId',
       params: { studentId: String(studentId) },
       replace: true,
+    });
+  }
+
+  // 예문 시험 생성+응시개시. 성공 시 알림만 띄우고 머무른다(버튼은 step 상태 변화로 저절로 사라짐).
+  function handleAssignSentence() {
+    assignSentence.mutate(undefined, {
+      onSuccess: () => setShowAssignSuccess(true),
     });
   }
 
@@ -196,6 +224,30 @@ export default function ExamReviewPage() {
   const checkedIds = new Set<number>(allIds);
   const correctCount = totalItems - wrongIds.size;
   const hideCheckbox = mode === 'result';
+
+  // ── 예문 시험 배정 버튼 노출 판정 ─────────────────────────────────────────
+  // 서버는 "단어 시험 미통과" 상태에서 EXAMPLE 생성을 막지 않으므로(잠금은 클라이언트 계산)
+  // outcome === 'pass' 가드가 잘못된 배정을 막는 유일한 방어선이다.
+  const sentenceStatus = sentenceStep?.status;
+  const canAssignSentence =
+    examType === 'WORD' &&
+    mode === 'result' &&
+    outcome === 'pass' &&
+    selectedExamId === routeExamId &&
+    // 'pending' = 배정 가능. 'locked'도 허용하는 이유: 채점 직후 studySets refetch 전 낡은 캐시는
+    // 아직 WORD 미통과 상태라 Sentence를 locked로 계산한다. outcome==='pass'로 이미 걸렀으므로
+    // 이 locked는 stale일 뿐 — 허용하지 않으면 버튼이 잠깐 사라졌다 나타나며 깜빡인다.
+    (sentenceStatus === 'pending' || sentenceStatus === 'locked');
+
+  // 문항 수 가드 — 서버가 EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED로 거부하는 케이스를 미리 막는다.
+  // testQty는 학생 프로필 값, 상한은 이 StudySet의 배정 단어 수.
+  const sentenceTestQty = student?.testQuestionCount ?? 0;
+  const sentenceMaxQty = studySetRow?.wordCount ?? 0;
+  const sentenceQtyInvalid = sentenceTestQty === 0 || sentenceTestQty > sentenceMaxQty;
+  const sentenceQtyReason =
+    sentenceTestQty === 0
+      ? 'Set the question count in the student settings first.'
+      : `Question count (${sentenceTestQty}) exceeds this set's assigned words (${sentenceMaxQty}).`;
 
   // sentence review용 정답 단어 map — examItem.word가 빈칸을 채울 정답.
   const sentenceCorrectAnswers: Record<number, string> = Object.fromEntries(
@@ -348,6 +400,22 @@ export default function ExamReviewPage() {
             </button>
           ) : (
             <>
+              {/* 예문 시험 바로 배정 — WORD를 Pass로 채점한 직후에만 노출(canAssignSentence).
+                  문항 수 가드에 걸리면 비활성 + 사유 툴팁. 성공하면 step 상태 전환으로 저절로 사라진다. */}
+              {canAssignSentence && (
+                <button
+                  onClick={handleAssignSentence}
+                  disabled={assignSentence.isPending || sentenceQtyInvalid}
+                  title={sentenceQtyInvalid ? sentenceQtyReason : undefined}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-colors bg-primary/10 text-primary border border-primary/30 hover:bg-primary/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                    assignment_add
+                  </span>
+                  {assignSentence.isPending ? 'Assigning...' : 'Assign Sentence Test'}
+                </button>
+              )}
+
               {/* 학생 단어 번들 바로가기. studentId 없는 URL이면 /students/0으로 깨지므로 렌더 안 함.
                   Edit과 형제로 두어 과거 시도 탭(Edit 숨김) 상태에서도 남아 있게 한다. */}
               {studentId > 0 && (
@@ -432,6 +500,16 @@ export default function ExamReviewPage() {
           title="Grading Complete!"
           description={`${correctCount} / ${totalItems} correct · ${outcome === 'pass' ? 'Passed' : 'Failed'}`}
           onClose={() => setShowGradingSuccess(false)}
+        />
+      )}
+
+      {/* 예문 시험 배정 완료 알림 — 생성+응시개시까지 끝나 학생이 바로 응시할 수 있음을 안내. */}
+      {showAssignSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Sentence Test Assigned"
+          description="The sentence test is now live — the student can start it right away."
+          onClose={() => setShowAssignSuccess(false)}
         />
       )}
     </div>
