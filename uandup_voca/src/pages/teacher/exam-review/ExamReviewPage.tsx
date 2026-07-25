@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch, useNavigate } from '@tanstack/react-router';
-import { ITEMS_PER_PAGE, type ExamType, type WordTestType } from '@/entities/test';
+import {
+  ITEMS_PER_PAGE,
+  type ExamType,
+  type WordTestType,
+  type StudySetExamType,
+} from '@/entities/test';
 import { AlertDialog } from '@/shared/ui/Modal';
 import {
   TestPagination,
@@ -13,7 +18,7 @@ import { useExamDetail, ExamViolationBadge } from '@/entities/test';
 import { useStudentOverview, useActiveStudySetList, toTestBundleRow } from '@/entities/student';
 import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
-import { useAssignSentenceExam } from './model/useAssignSentenceExam';
+import { useCreateAndStartStepExam } from './model/useCreateAndStartStepExam';
 
 // 선생님이 학생의 시험을 채점하거나 채점 결과를 확인하는 페이지(grading + result 통합).
 // COMPLETED 상태로 진입 시 'result' 모드 — 채점 결과 표시. Edit 클릭으로 grading 재진입.
@@ -21,6 +26,11 @@ import { useAssignSentenceExam } from './model/useAssignSentenceExam';
 // examType === 'EXAMPLE'은 문장 시험, 그 외는 단어 시험.
 
 type ReviewMode = 'grading' | 'result';
+
+// step 시험 타입 순서 — toTestBundleRow의 steps 순서와 일치(도메인이 순서로 examType↔step을 잇는다).
+// examType으로 해당 step을 인덱싱하는 데 쓴다. entities mapper의 STEP_EXAM_TYPES가 export되지 않아
+// 페이지에서 복제한다(ClinicCycleRow/WordTestCycleRow의 기존 관례와 동일).
+const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
 
 export default function ExamReviewPage() {
   const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/review' });
@@ -68,22 +78,34 @@ export default function ExamReviewPage() {
     examType,
   });
 
-  // 예문(EXAMPLE) 시험 배정 — WORD를 통과 처리한 직후 다음 단계를 바로 열기 위한 것.
-  const assignSentence = useAssignSentenceExam({ studentId, studySetId });
+  // 현재 채점 중인 시험이 step 시험(WORD/EXAMPLE/REVIEW1~3)인지. REVIEW_DECK/LEVEL_TEST면 -1/null.
+  const stepIndex = STEP_EXAM_TYPES.indexOf(examType as StudySetExamType);
+  const stepExamType: StudySetExamType | null =
+    stepIndex >= 0 ? (examType as StudySetExamType) : null;
 
-  // 이 StudySet의 배정 단어 수(문항 수 상한)와 Sentence step 상태를 얻기 위해 active 목록을 조회한다.
+  // 예문 배정(WORD Pass 후 EXAMPLE) / 재시험(현재 단계 Fail 후 같은 단계) — 둘 다 생성+응시개시.
+  const assignSentence = useCreateAndStartStepExam({ studentId, studySetId, examType: 'EXAMPLE' });
+  const retake = useCreateAndStartStepExam({
+    studentId,
+    studySetId,
+    examType: stepExamType ?? 'WORD', // stepExamType null이면 버튼이 렌더되지 않아 실제로 쓰이지 않음
+  });
+
+  // 이 StudySet의 배정 단어 수(문항 수 상한)와 step 상태를 얻기 위해 active 목록을 조회한다.
   // 채점 직후 studentKeys.studySets가 invalidate되므로 캐시가 대체로 따뜻하다.
   const { data: studySets } = useActiveStudySetList(studentId);
   const studySetRow = useMemo(
     () => studySets?.find((r) => r.studySetId === studySetId),
     [studySets, studySetId],
   );
-  // Sentence(EXAMPLE) step. lock/pending 계산은 toTestBundleRow의 prevPassed 체인을 그대로 재사용.
-  // 배열 인덱스 대신 name으로 찾아 step 순서 변경에 견디게 한다.
-  const sentenceStep = useMemo(() => {
-    if (!studySetRow) return null;
-    return toTestBundleRow(studySetRow).steps.find((s) => s.name === 'Sentence') ?? null;
-  }, [studySetRow]);
+  // lock/pending/fail 계산은 toTestBundleRow의 prevPassed 체인을 그대로 재사용.
+  // examType↔step은 순서로 대응하므로 STEP_EXAM_TYPES 인덱스로 조회한다.
+  const bundleSteps = useMemo(
+    () => (studySetRow ? toTestBundleRow(studySetRow).steps : null),
+    [studySetRow],
+  );
+  const sentenceStep = bundleSteps?.[STEP_EXAM_TYPES.indexOf('EXAMPLE')] ?? null; // 다음 단계(예문)
+  const gradedStep = stepIndex >= 0 ? (bundleSteps?.[stepIndex] ?? null) : null; // 현재 채점 중인 단계
 
   const [currentPage, setCurrentPage] = useState(1);
   const [wrongIds, setWrongIds] = useState<Set<number>>(new Set());
@@ -93,6 +115,7 @@ export default function ExamReviewPage() {
   const [outcome, setOutcome] = useState<'pass' | 'fail'>('pass');
   const [showGradingSuccess, setShowGradingSuccess] = useState(false);
   const [showAssignSuccess, setShowAssignSuccess] = useState(false);
+  const [showRetakeSuccess, setShowRetakeSuccess] = useState(false);
 
   // examDetail 로드 시 초기 상태 동기화 — 이미 채점된 시험이면 result 모드 + 기존 오답/합격 표시.
   // wrongIds는 itemOrder를 키로 추적한다(row id와 일치). 채점 mutation을 보낼 땐 examItemId로 다시 매핑.
@@ -143,6 +166,13 @@ export default function ExamReviewPage() {
   function handleAssignSentence() {
     assignSentence.mutate(undefined, {
       onSuccess: () => setShowAssignSuccess(true),
+    });
+  }
+
+  // 재시험 생성+응시개시. 성공 시 알림만 띄우고 머무른다(버튼은 gradedStep 상태 변화로 저절로 사라짐).
+  function handleRetake() {
+    retake.mutate(undefined, {
+      onSuccess: () => setShowRetakeSuccess(true),
     });
   }
 
@@ -239,15 +269,26 @@ export default function ExamReviewPage() {
     // 이 locked는 stale일 뿐 — 허용하지 않으면 버튼이 잠깐 사라졌다 나타나며 깜빡인다.
     (sentenceStatus === 'pending' || sentenceStatus === 'locked');
 
+  // ── 재시험 버튼 노출 판정 ─────────────────────────────────────────────────
+  // 예문(Pass)과 달리 서버 상태(gradedStep.status === 'fail')를 유일 신호로 쓴다.
+  // create+start 후 단계가 fail→grading으로 바뀌므로 === 'fail'만 보면 (i) 재시험 생성 즉시 버튼이
+  // 사라지고 (ii) 이미 재시험이 있는 fail 시험을 재방문해도 안 뜬다(중복 생성/EXAM_ALREADY_ACTIVE 방지).
+  // 채점 직후 stale 구간은 "Grading Complete!" 성공 모달이 가려 깜빡임이 없다.
+  const canRetake =
+    stepExamType !== null &&
+    mode === 'result' &&
+    selectedExamId === routeExamId &&
+    gradedStep?.status === 'fail';
+
   // 문항 수 가드 — 서버가 EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED로 거부하는 케이스를 미리 막는다.
-  // testQty는 학생 프로필 값, 상한은 이 StudySet의 배정 단어 수.
-  const sentenceTestQty = student?.testQuestionCount ?? 0;
-  const sentenceMaxQty = studySetRow?.wordCount ?? 0;
-  const sentenceQtyInvalid = sentenceTestQty === 0 || sentenceTestQty > sentenceMaxQty;
-  const sentenceQtyReason =
-    sentenceTestQty === 0
+  // testQty는 학생 프로필 값, 상한은 이 StudySet의 배정 단어 수. 예문 배정·재시험이 공유한다.
+  const assignableTestQty = student?.testQuestionCount ?? 0;
+  const assignableMaxQty = studySetRow?.wordCount ?? 0;
+  const assignableQtyInvalid = assignableTestQty === 0 || assignableTestQty > assignableMaxQty;
+  const assignableQtyReason =
+    assignableTestQty === 0
       ? 'Set the question count in the student settings first.'
-      : `Question count (${sentenceTestQty}) exceeds this set's assigned words (${sentenceMaxQty}).`;
+      : `Question count (${assignableTestQty}) exceeds this set's assigned words (${assignableMaxQty}).`;
 
   // sentence review용 정답 단어 map — examItem.word가 빈칸을 채울 정답.
   const sentenceCorrectAnswers: Record<number, string> = Object.fromEntries(
@@ -405,14 +446,30 @@ export default function ExamReviewPage() {
               {canAssignSentence && (
                 <button
                   onClick={handleAssignSentence}
-                  disabled={assignSentence.isPending || sentenceQtyInvalid}
-                  title={sentenceQtyInvalid ? sentenceQtyReason : undefined}
+                  disabled={assignSentence.isPending || assignableQtyInvalid}
+                  title={assignableQtyInvalid ? assignableQtyReason : undefined}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-colors bg-primary/10 text-primary border border-primary/30 hover:bg-primary/15 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
                     assignment_add
                   </span>
                   {assignSentence.isPending ? 'Assigning...' : 'Assign Sentence Test'}
+                </button>
+              )}
+
+              {/* 재시험 바로 생성 — 현재 단계를 Fail로 채점한 직후에만 노출(canRetake).
+                  예문 버튼과 outcome이 반대라 동시에 뜰 일이 없다. 성공하면 저절로 사라진다. */}
+              {canRetake && (
+                <button
+                  onClick={handleRetake}
+                  disabled={retake.isPending || assignableQtyInvalid}
+                  title={assignableQtyInvalid ? assignableQtyReason : undefined}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-colors bg-error/10 text-error border border-error/30 hover:bg-error/15 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                    replay
+                  </span>
+                  {retake.isPending ? 'Assigning...' : 'Retake Test'}
                 </button>
               )}
 
@@ -510,6 +567,16 @@ export default function ExamReviewPage() {
           title="Sentence Test Assigned"
           description="The sentence test is now live — the student can start it right away."
           onClose={() => setShowAssignSuccess(false)}
+        />
+      )}
+
+      {/* 재시험 생성 완료 알림 — 생성+응시개시까지 끝나 학생이 바로 재응시할 수 있음을 안내. */}
+      {showRetakeSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Retake Assigned"
+          description="The retake is now live — the student can start it right away."
+          onClose={() => setShowRetakeSuccess(false)}
         />
       )}
     </div>
