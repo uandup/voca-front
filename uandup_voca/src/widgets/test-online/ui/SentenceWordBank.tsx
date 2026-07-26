@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { shuffle } from '@/shared/lib/shuffle';
 
 interface WordBankItem {
   id: number;
@@ -14,13 +15,8 @@ export function SentenceWordBank({ items }: SentenceWordBankProps) {
   const [shuffled, setShuffled] = useState<WordBankItem[]>([]);
 
   useEffect(() => {
-    const arr = [...items];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShuffled(arr);
+    setShuffled(shuffle(items));
   }, [items]);
 
   // 클릭으로 토글되는 dim 상태 — 학생이 사용한 단어를 직접 표시하는 용도.

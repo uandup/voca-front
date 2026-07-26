@@ -47,9 +47,17 @@ export function SentenceReviewRow({
     ? 'border-error/20 bg-error/5'
     : 'border-outline-variant/30 bg-surface-container-low/70';
 
+  // 체크박스가 보이고 읽기전용이 아닐 때만 행 전체를 클릭 가능하게 한다.
+  // 핸들러는 컨테이너에만 둔다 — 체크박스에도 두면 클릭이 버블링되어 두 번 토글돼 상쇄된다.
+  const interactive = !readOnly && !hideCheckbox;
+
   return (
     <div
-      className={`flex items-center gap-4 px-4 py-3 rounded-xl border transition-colors ${containerBg}`}
+      className={`flex items-center gap-4 px-4 py-3 rounded-xl border transition-colors ${containerBg} ${
+        interactive ? 'cursor-pointer hover:border-error/40' : ''
+      }`}
+      onClick={interactive ? () => onToggleWrong(id) : undefined}
+      role={interactive ? 'button' : undefined}
     >
       <span className="text-[11px] font-bold text-on-surface-variant/50 w-5 shrink-0 text-center">
         {String(id).padStart(2, '0')}
@@ -59,15 +67,14 @@ export function SentenceReviewRow({
         {renderSentenceWithReview(sentence, studentWord, answerWord, isWrong)}
       </div>
 
+      {/* 오답 표시 인디케이터 — 클릭은 행 전체가 받으므로 여기선 시각 표시만 한다. */}
       {!hideCheckbox && (
         <div
           className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
             isWrong
               ? 'bg-error border-error text-white'
               : 'border-outline-variant/40 text-transparent'
-          } ${readOnly ? 'cursor-default' : 'cursor-pointer'}`}
-          onClick={readOnly ? undefined : () => onToggleWrong(id)}
-          role={readOnly ? undefined : 'button'}
+          }`}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
             close
