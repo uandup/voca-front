@@ -1,4 +1,5 @@
 export { useWordBookmarks } from './lib/useWordBookmarks';
+export { useWordShuffle } from './lib/useWordShuffle';
 export { DIFFICULTY_LEVELS } from './model/types';
 export type {
   PartOfSpeech,
@@ -13,6 +14,7 @@ export { LevelBlock } from './ui/LevelBlock';
 export { WordCard } from './ui/WordCard';
 export { WordBookmarkButton } from './ui/WordBookmarkButton';
 export { WordBookmarkFilterButton } from './ui/WordBookmarkFilterButton';
+export { WordShuffleButton } from './ui/WordShuffleButton';
 export { getWords, createWord, updateWord, deleteWord, getWordCountByLevel } from './api/wordApi';
 export { useWordCountByLevel } from './api/useWordCountByLevel';
 export { toWordCreateRequest, toWordUpdateRequest } from './api/mapper';

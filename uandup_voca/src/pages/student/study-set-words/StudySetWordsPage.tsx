@@ -6,7 +6,9 @@ import {
   WordCard,
   WordBookmarkButton,
   WordBookmarkFilterButton,
+  WordShuffleButton,
   useWordBookmarks,
+  useWordShuffle,
 } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
 import { WordFlashcard } from '@/widgets/word-flashcard';
@@ -19,11 +21,18 @@ interface Props {
   parents: { label: string; onClick?: () => void }[];
   // breadcrumb의 현재 페이지 제목. 미전달 시 "Words".
   title?: string;
+  // 셔플 버튼 노출 여부. 학생 화면은 기본 true, 선생님 조회 뷰에서만 false로 숨긴다.
+  showShuffle?: boolean;
 }
 
 // 한 study-set에 배정된 단어 목록을 학생에게 보여주는 공통 페이지.
 // word-test cycle / review-deck exam / level-test exam 세 곳에서 모두 동일한 흐름이라 재사용.
-export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Props) {
+export function StudySetWordsPage({
+  studySetId,
+  parents,
+  title = 'Words',
+  showShuffle = true,
+}: Props) {
   // 학생 화면이므로 예문 노출은 서버의 exampleVisible을 따른다
   // (NORMAL 배정은 예문시험 채점 완료 후에만 true).
   const { data, isLoading } = useAssignedWords(studySetId, studySetId > 0);
@@ -33,8 +42,13 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`studyset_${studySetId}`);
+  const { orderedWords, shuffle, shuffleCount } = useWordShuffle(words);
 
-  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedIds.has(w.id)) : words;
+  // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
+  // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요).
+  const visibleWords = showBookmarkedOnly
+    ? orderedWords.filter((w) => bookmarkedIds.has(w.id))
+    : orderedWords;
 
   return (
     <main>
@@ -49,6 +63,9 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
               count={bookmarkedIds.size}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
             />
+
+            {/* 셔플 — 학생 화면만 노출. 누를 때마다 새 순서로 섞는다 */}
+            {showShuffle && <WordShuffleButton onShuffle={shuffle} />}
 
             {/* List / Flashcard 전환 */}
             <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30">
@@ -89,6 +106,7 @@ export function StudySetWordsPage({ studySetId, parents, title = 'Words' }: Prop
         <EmptyState title="No words yet." />
       ) : viewMode === 'flashcard' ? (
         <WordFlashcard
+            key={shuffleCount}
             words={visibleWords}
             bookmarkedIds={bookmarkedIds}
             onToggleBookmark={toggleBookmark}
