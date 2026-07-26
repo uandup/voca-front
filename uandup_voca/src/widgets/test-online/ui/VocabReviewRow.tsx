@@ -51,8 +51,18 @@ export function VocabReviewRow({
         ? 'text-error'
         : 'text-on-surface';
 
+  // 체크박스가 보이고 읽기전용이 아닐 때만 카드 전체를 클릭 가능하게 한다.
+  // 핸들러는 바깥 컨테이너에만 둔다 — 체크박스에도 두면 클릭이 버블링되어 두 번 토글돼 상쇄된다.
+  const interactive = !readOnly && !hideCheckbox;
+
   return (
-    <div className={`rounded-xl border overflow-hidden transition-colors ${containerBorder}`}>
+    <div
+      className={`rounded-xl border overflow-hidden transition-colors ${containerBorder} ${
+        interactive ? 'cursor-pointer hover:border-error/40' : ''
+      }`}
+      onClick={interactive ? () => onToggleWrong(id) : undefined}
+      role={interactive ? 'button' : undefined}
+    >
       {/* Student answer row */}
       <div className={`flex items-center gap-3 px-4 py-3 ${answerRowBg}`}>
         {/* Number */}
@@ -90,16 +100,14 @@ export function VocabReviewRow({
           </p>
         )}
 
-        {/* Wrong check button */}
+        {/* 오답 표시 인디케이터 — 클릭은 카드 전체가 받으므로 여기선 시각 표시만 한다. */}
         {!hideCheckbox && (
           <div
-            onClick={readOnly ? undefined : () => onToggleWrong(id)}
-            role={readOnly ? undefined : 'button'}
             className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg border-2 transition-colors ${
               isWrong
                 ? 'bg-error border-error text-white'
                 : 'border-outline-variant/40 text-transparent'
-            } ${readOnly ? 'cursor-default' : 'cursor-pointer hover:border-error/40 hover:text-error/30'}`}
+            }`}
           >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
               close
