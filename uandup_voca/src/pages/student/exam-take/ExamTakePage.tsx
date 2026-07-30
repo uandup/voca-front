@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter, useParams, useSearch, useNavigate } from '@tanstack/react-router';
+import { useRouter, useParams, useSearch, useNavigate, useBlocker } from '@tanstack/react-router';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { ConfirmDialog } from '@/shared/ui/Modal/ConfirmDialog';
 import { AlertDialog } from '@/shared/ui/Modal/AlertDialog';
@@ -37,6 +37,10 @@ function getAttemptErrorMessage(error: unknown): string {
   }
 }
 
+// 응시 중에는 목적지를 가리지 않고 모든 이탈을 일단 붙잡는다 — 통과 여부는 확인 모달이 정한다.
+// 컴포넌트 밖에 두어 참조가 매 렌더 바뀌지 않게 한다(useBlocker의 effect 의존성).
+const blockAllNavigation = () => true;
+
 export default function ExamTakePage() {
   const { examId: examIdParam } = useParams({ from: '/student_/exams/$examId/take' });
   const search = useSearch({ from: '/student_/exams/$examId/take' });
@@ -51,7 +55,6 @@ export default function ExamTakePage() {
   // --- 렌더링 상태 ---
   const [currentPage, setCurrentPage] = useState(1);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
-  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [showSubmitSuccess, setShowSubmitSuccess] = useState(false);
   // 학생이 시작 게이트에서 "Start Exam"을 눌러야 true — 그전까지는 attempt(응시 확정) POST를
   // 발사하지 않는다. 페이지에 실수로 진입해도 시작 전이면 시험이 소진되지 않고 그냥 나갈 수 있다.
@@ -89,44 +92,60 @@ export default function ExamTakePage() {
   // attempt가 로드된(=실제 응시 중인) 동안에만 켠다.
   const proctor = useExamProctor({ active: Boolean(attempt) });
 
+  // 응시 중 이탈 차단. 답안은 제출 전까지 클라이언트 메모리에만 있으므로 이탈 = 답안 소실이다.
+  // 라우터 blocker 하나로 세 갈래 이탈 경로를 모두 가로챈다:
+  //   - popstate  : 트랙패드 두 손가락 스와이프 뒤로가기, 브라우저 뒤로/앞으로 버튼
+  //   - push/replace : 앱 내 이동(헤더 Exit 버튼 포함)
+  //   - beforeunload : 새로고침·탭 닫기·주소창 이동 (브라우저 기본 확인창)
+  // CSS의 overscroll-behavior는 Chrome에서 제스처 자체를 억제할 뿐 Safari에는 통하지 않는다.
+  // 제스처가 끝내 발생했을 때 답안을 지키는 건 이 blocker다.
+  //
+  // withResolver로 blockerFn을 모달 응답까지 대기시킨다. proceed()를 호출하면 가로챘던 이동이
+  // 그대로 재개되므로, 헤더 Exit 버튼도 이 게이트를 통과시키기만 하면 된다
+  // — 별도의 확인 state를 둘 필요가 없고 "나가면 포기" 확인이 한 곳으로 모인다.
+  const exitBlocker = useBlocker({
+    shouldBlockFn: blockAllNavigation,
+    enableBeforeUnload: true,
+    // 시작 전(attempt 없음)에는 지킬 답안이 없고, 제출에 성공한 뒤에는 /review 이동을 막으면 안 된다.
+    disabled: !attempt || showSubmitSuccess,
+    withResolver: true,
+  });
+
   // 페이지 전환 시 스크롤을 최상단으로 초기화한다.
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentPage]);
 
   // 응시 중 보호 장치 (모두 페이지를 벗어나면 cleanup으로 원복):
-  // 1) 트랙패드 두 손가락 좌우 스와이프로 인한 실수 "뒤로가기" 차단 (overscroll-behavior-x: none).
+  // 1) 실수로 발생하는 브라우저 제스처 억제 (overscroll-behavior: none) — 가로축은 트랙패드
+  //    두 손가락 스와이프 "뒤로가기", 세로축은 터치 기기의 pull-to-refresh(=새로고침=포기)를 막는다.
+  //    Chrome/Edge 전용 방어선이다. Safari는 이 속성으로 스와이프 뒤로가기를 막지 못하므로,
+  //    실제 답안 보호는 위 exitBlocker가 담당한다(여기는 확인 모달이 뜨는 빈도를 줄이는 역할).
   // 2) 문제 텍스트 드래그 선택 차단 → macOS 사전/번역(Look Up)을 무력화 (.exam-no-select).
   //    답 입력 칸(input/textarea)은 .exam-no-select 예외 규칙으로 정상 동작한다.
   // 3) 우클릭/두 손가락 탭 컨텍스트 메뉴 차단 → 메뉴의 "Look Up/Translate" 진입 차단.
   useEffect(() => {
     if (!attempt) return;
     const root = document.documentElement;
-    const prevOverscroll = root.style.overscrollBehaviorX;
-    root.style.overscrollBehaviorX = 'none';
+    const prevOverscroll = root.style.overscrollBehavior;
+    root.style.overscrollBehavior = 'none';
     root.classList.add('exam-no-select');
     const blockContextMenu = (e: MouseEvent) => e.preventDefault();
     document.addEventListener('contextmenu', blockContextMenu);
     return () => {
-      root.style.overscrollBehaviorX = prevOverscroll;
+      root.style.overscrollBehavior = prevOverscroll;
       root.classList.remove('exam-no-select');
       document.removeEventListener('contextmenu', blockContextMenu);
     };
   }, [attempt]);
 
+  // 응시 중이면 exitBlocker가 이 이동을 가로채 확인 모달을 띄운다(Exit 선택 시 그대로 재개).
+  // 응시 전·attempt 실패 상태에서는 blocker가 꺼져 있어 바로 나간다.
   function doExit() {
     if (search.returnTo) {
       router.history.replace(search.returnTo);
     } else {
       router.history.back();
-    }
-  }
-
-  function handleExit() {
-    if (attempt) {
-      setShowExitConfirm(true);
-    } else {
-      doExit();
     }
   }
 
@@ -203,7 +222,7 @@ export default function ExamTakePage() {
   if (isLoading || !attempt) {
     return (
       <div className="min-h-dvh bg-surface flex flex-col">
-        <TestHeader onExit={handleExit} />
+        <TestHeader onExit={doExit} />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
         </div>
@@ -213,7 +232,7 @@ export default function ExamTakePage() {
 
   return (
     <div className="min-h-dvh bg-surface flex flex-col">
-      <TestHeader onExit={handleExit} onSubmit={handleSubmit} center={headerCenter} />
+      <TestHeader onExit={doExit} onSubmit={handleSubmit} center={headerCenter} />
 
       <div className="relative flex flex-1 justify-center px-4 xl:px-6 py-4 xl:py-4">
         <div className="w-full max-w-240 flex flex-col gap-4">
@@ -257,16 +276,18 @@ export default function ExamTakePage() {
         />
       </div>
 
-      {/* 응시 중 나가기 확인 모달 — 나가기 = 포기(재응시 불가) */}
-      {showExitConfirm && (
+      {/* 응시 중 나가기 확인 모달 — 나가기 = 포기(재응시 불가).
+          헤더 Exit 버튼 / 스와이프·브라우저 뒤로가기 / 앱 내 링크가 모두 여기로 모인다.
+          Exit → proceed()로 가로챘던 이동을 재개, Stay → reset()으로 취소(뒤로가기면 URL 복원). */}
+      {exitBlocker.status === 'blocked' && (
         <ConfirmDialog
           title="Exit Exam?"
           description="Leaving will forfeit this exam and you won't be able to retake it. Your current answers will not be saved. Are you sure?"
           confirmLabel="Exit"
           cancelLabel="Stay"
           variant="danger"
-          onConfirm={doExit}
-          onCancel={() => setShowExitConfirm(false)}
+          onConfirm={exitBlocker.proceed}
+          onCancel={exitBlocker.reset}
         />
       )}
 
@@ -285,7 +306,7 @@ export default function ExamTakePage() {
       {/* 전체화면을 벗어난 동안 문항을 덮는 가림막 (z-40 — 모달 z-50 아래).
           헤더까지 덮으므로 가림막이 떠 있는 동안은 Submit도 누를 수 없다. */}
       {proctor.isBlocked && (
-        <ExamFullscreenGate onEnterFullscreen={proctor.enterFullscreen} onExit={handleExit} />
+        <ExamFullscreenGate onEnterFullscreen={proctor.enterFullscreen} onExit={doExit} />
       )}
 
       {/* 이탈 감지 경고 — 탭 전환·최소화·전체화면 이탈 시 표시 */}
@@ -313,6 +334,9 @@ export default function ExamTakePage() {
               params: { examId: examIdParam },
               search: { returnTo: search.returnTo, examType: search.examType },
               replace: true,
+              // 제출이 끝나 blocker는 이미 해제된 상태지만, 결과 화면 이동이 확인 모달에
+              // 걸리는 일만은 없어야 한다 — 명시적으로 우회한다.
+              ignoreBlocker: true,
             });
           }}
         />
