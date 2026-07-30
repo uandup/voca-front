@@ -22,11 +22,17 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
   // transition을 일시적으로 비활성화하는 플래그. 카드 전환 시 flip-back 애니메이션 없이 즉시 스냅.
   const [animated, setAnimated] = useState(true);
   const [frontFace, setFrontFace] = useState<FrontFace>(loadFrontFace);
+  // 진행바 드래그(스크럽) 중 미리보기 인덱스. null이면 드래그 중 아님.
+  // 드래그 중에는 상단 숫자/진행바만 갱신하고, 손을 뗄 때 실제 카드로 점프한다.
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   const total = words.length;
   // words prop이 줄어들어 index가 범위를 벗어날 수 있으므로 렌더 시점에 clamp
   const safeIndex = total > 0 ? Math.min(index, total - 1) : 0;
   const word = words[safeIndex];
+  // 드래그 중이면 미리보기 인덱스를, 아니면 실제 인덱스를 표시에 사용
+  const displayIndex = dragIndex ?? safeIndex;
 
   // 키보드 이벤트 핸들러에서 최신 상태를 참조하기 위한 ref
   const stateRef = useRef({ index: safeIndex, flipped, total });
@@ -46,6 +52,18 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
     }
   }, []);
 
+  // 진행바 위 clientX 좌표를 단어 인덱스로 변환 (0 ~ total-1 균등 매핑)
+  const indexFromClientX = useCallback(
+    (clientX: number) => {
+      const el = barRef.current;
+      if (!el || total <= 1) return 0;
+      const rect = el.getBoundingClientRect();
+      const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      return Math.round(ratio * (total - 1));
+    },
+    [total],
+  );
+
   const goPrev = useCallback(() => {
     navigateTo(Math.max(0, stateRef.current.index - 1));
   }, [navigateTo]);
@@ -61,6 +79,22 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
     setAnimated(false);
     setFlipped(false);
     requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+  }
+
+  // 진행바 드래그(스크럽) 핸들러 — pointer capture로 바 밖에서도 부드럽게 추적
+  function handleBarPointerDown(e: React.PointerEvent) {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDragIndex(indexFromClientX(e.clientX));
+  }
+  function handleBarPointerMove(e: React.PointerEvent) {
+    if (dragIndex === null) return;
+    setDragIndex(indexFromClientX(e.clientX));
+  }
+  function handleBarPointerUp(e: React.PointerEvent) {
+    if (dragIndex === null) return;
+    // 손을 떼는 순간 실제 카드로 점프하고 미리보기 종료
+    navigateTo(indexFromClientX(e.clientX));
+    setDragIndex(null);
   }
 
   useEffect(() => {
@@ -173,19 +207,41 @@ export function WordFlashcard({ words, bookmarkedIds, onToggleBookmark }: WordFl
                 Meaning first
               </button>
             </div>
-            <span className="text-xs font-semibold text-on-surface-variant">
-              {safeIndex + 1} / {total}
+            <span
+              className={`text-xs font-semibold tabular-nums ${
+                dragIndex !== null ? 'text-primary' : 'text-on-surface-variant'
+              }`}
+            >
+              {displayIndex + 1} / {total}
             </span>
           </div>
 
           <span className="text-xs text-on-surface-variant/60">
-            Space to flip · ← → to navigate
+            Space to flip · ← → to navigate · drag bar to jump
           </span>
         </div>
-        <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
+        {/* 드래그 가능한 진행바(스크럽) — touch-none으로 터치 드래그 시 페이지 스크롤 방지 */}
+        <div
+          ref={barRef}
+          onPointerDown={handleBarPointerDown}
+          onPointerMove={handleBarPointerMove}
+          onPointerUp={handleBarPointerUp}
+          className="relative py-2 -my-2 cursor-pointer touch-none select-none"
+        >
+          <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
+            <div
+              className={`h-full bg-primary rounded-full ${
+                dragIndex !== null ? '' : 'transition-all duration-300'
+              }`}
+              style={{ width: `${((displayIndex + 1) / total) * 100}%` }}
+            />
+          </div>
+          {/* 드래그 중에만 나타나는 손잡이 — 진행바 끝(fill edge)에 위치 */}
           <div
-            className="h-full bg-primary rounded-full transition-all duration-300"
-            style={{ width: `${((safeIndex + 1) / total) * 100}%` }}
+            className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-primary border-2 border-white shadow transition-opacity ${
+              dragIndex !== null ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ left: `${((displayIndex + 1) / total) * 100}%` }}
           />
         </div>
       </div>
