@@ -10,13 +10,15 @@ interface ExamFullscreenGateProps {
 const COPY: Record<'start' | 'resume', { title: string; body: string; action: string }> = {
   start: {
     title: 'Ready to start this exam?',
-    body: 'The exam runs in fullscreen and starts the moment you begin. Once started it cannot be retaken, and leaving fullscreen or switching tabs is recorded and shared with your teacher.',
+    body: 'The exam runs in fullscreen and starts the moment you begin. Once started it cannot be retaken. Leaving fullscreen, switching tabs, or switching to another app or window is recorded and shared with your teacher.',
     action: 'Start Exam',
   },
+  // 'resume'은 전체화면 이탈뿐 아니라 창 포커스 상실(앱 전환·Mission Control)로도 뜬다.
+  // 두 경우 모두 자연스럽게 읽히도록 "전체화면"에 한정하지 않은 문구를 쓴다.
   resume: {
-    title: 'This exam runs in fullscreen',
-    body: 'Questions stay hidden until you return to fullscreen. Leaving fullscreen or switching tabs during the exam is recorded and shared with your teacher.',
-    action: 'Enter Fullscreen',
+    title: 'Stay on the exam screen',
+    body: 'Questions stay hidden while this window is in the background or out of fullscreen. Leaving fullscreen, switching tabs, or switching to another app or window during the exam is recorded and shared with your teacher.',
+    action: 'Return to Exam',
   },
 };
 

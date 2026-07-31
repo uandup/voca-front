@@ -314,7 +314,7 @@ export default function ExamTakePage() {
         <AlertDialog
           variant="warning"
           title="You Left the Exam Screen"
-          description={`Switching tabs, minimizing the window, or leaving fullscreen is not allowed during the exam.\nThis has been recorded and will be shared with your teacher. (Warnings: ${proctor.violationCount})`}
+          description={`Switching tabs or apps, minimizing the window, or leaving fullscreen is not allowed during the exam.\nThis has been recorded and will be shared with your teacher. (Warnings: ${proctor.violationCount})`}
           okLabel="Back to Exam"
           onClose={proctor.dismissWarning}
         />
