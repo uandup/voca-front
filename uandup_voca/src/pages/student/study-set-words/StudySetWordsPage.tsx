@@ -7,8 +7,10 @@ import {
   WordBookmarkButton,
   WordBookmarkFilterButton,
   WordShuffleButton,
+  WordMaskButtons,
   useWordBookmarks,
   useWordShuffle,
+  useWordMask,
 } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
 import { WordFlashcard } from '@/widgets/word-flashcard';
@@ -43,6 +45,7 @@ export function StudySetWordsPage({
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`studyset_${studySetId}`);
   const { orderedWords, shuffle, shuffleCount } = useWordShuffle(words);
+  const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
   // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요).
@@ -112,21 +115,32 @@ export function StudySetWordsPage({
             onToggleBookmark={toggleBookmark}
           />
       ) : (
-        <div className="space-y-5">
-          {visibleWords.map((word) => (
-            <WordCard
-              key={word.id}
-              {...word}
-              showSentence={exampleVisible}
-              extraInfo={
-                <WordBookmarkButton
-                  bookmarked={bookmarkedIds.has(word.id)}
-                  onToggle={() => toggleBookmark(word.id)}
-                />
-              }
-            />
-          ))}
-        </div>
+        <>
+          {/* 단어/뜻 가리기 — List 모드 전용. Flashcard는 자체 가리기(뒤집기)가 있어 중복이다 */}
+          <WordMaskButtons
+            hideWord={hideWord}
+            hideMeaning={hideMeaning}
+            onToggleWord={toggleHideWord}
+            onToggleMeaning={toggleHideMeaning}
+          />
+          <div className="space-y-5">
+            {visibleWords.map((word) => (
+              <WordCard
+                key={word.id}
+                {...word}
+                showSentence={exampleVisible}
+                hideWord={hideWord}
+                hideMeaning={hideMeaning}
+                extraInfo={
+                  <WordBookmarkButton
+                    bookmarked={bookmarkedIds.has(word.id)}
+                    onToggle={() => toggleBookmark(word.id)}
+                  />
+                }
+              />
+            ))}
+          </div>
+        </>
       )}
     </main>
   );

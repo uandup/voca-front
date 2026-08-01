@@ -7,7 +7,9 @@ import {
   WordCard,
   WordBookmarkButton,
   WordBookmarkFilterButton,
+  WordMaskButtons,
   useWordBookmarks,
+  useWordMask,
 } from '@/entities/word';
 import { useReviewDeckWords } from '@/entities/review-deck';
 import { useCurrentStudentId } from '@/entities/auth';
@@ -22,6 +24,7 @@ export default function WrongWordListPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`wrongwords_${studentId}`);
+  const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedIds.has(w.id)) : words;
 
@@ -86,29 +89,40 @@ export default function WrongWordListPage() {
             onToggleBookmark={toggleBookmark}
           />
       ) : (
-        <div className="space-y-5">
-          {visibleWords.map((word) => (
-            <WordCard
-              key={word.id}
-              {...word}
-              showSentence
-              extraInfo={
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col items-center justify-center px-2 py-2 bg-error/5 border border-error/20 rounded-lg">
-                    <span className="text-[8px] uppercase tracking-widest font-bold text-error/60">
-                      Wrong
-                    </span>
-                    <span className="text-base font-bold text-error">{word.wrongCount}</span>
+        <>
+          {/* 단어/뜻 가리기 — List 모드 전용. Flashcard는 자체 가리기(뒤집기)가 있어 중복이다 */}
+          <WordMaskButtons
+            hideWord={hideWord}
+            hideMeaning={hideMeaning}
+            onToggleWord={toggleHideWord}
+            onToggleMeaning={toggleHideMeaning}
+          />
+          <div className="space-y-5">
+            {visibleWords.map((word) => (
+              <WordCard
+                key={word.id}
+                {...word}
+                showSentence
+                hideWord={hideWord}
+                hideMeaning={hideMeaning}
+                extraInfo={
+                  <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-center justify-center px-2 py-2 bg-error/5 border border-error/20 rounded-lg">
+                      <span className="text-[8px] uppercase tracking-widest font-bold text-error/60">
+                        Wrong
+                      </span>
+                      <span className="text-base font-bold text-error">{word.wrongCount}</span>
+                    </div>
+                    <WordBookmarkButton
+                      bookmarked={bookmarkedIds.has(word.id)}
+                      onToggle={() => toggleBookmark(word.id)}
+                    />
                   </div>
-                  <WordBookmarkButton
-                    bookmarked={bookmarkedIds.has(word.id)}
-                    onToggle={() => toggleBookmark(word.id)}
-                  />
-                </div>
-              }
-            />
-          ))}
-        </div>
+                }
+              />
+            ))}
+          </div>
+        </>
       )}
     </main>
   );

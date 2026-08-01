@@ -6,7 +6,9 @@ import {
   WordCard,
   WordBookmarkButton,
   WordBookmarkFilterButton,
+  WordMaskButtons,
   useWordBookmarks,
+  useWordMask,
 } from '@/entities/word';
 import {
   usePendingReviews,
@@ -82,6 +84,7 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`pending_${studentId}`);
+  const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   // 선택한 배정이 목록에서 사라졌으면(복습 통과 등) 전체 보기로 되돌린다.
   const activeSetId = groups.some((g) => g.studySetId === selectedSetId) ? selectedSetId : 'all';
@@ -192,21 +195,32 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
                 onToggleBookmark={toggleBookmark}
               />
           ) : (
-            <div className="space-y-5">
-              {visibleWords.map((word) => (
-                <WordCard
-                  key={word.id}
-                  {...word}
-                  showSentence={true}
-                  extraInfo={
-                    <WordBookmarkButton
-                      bookmarked={bookmarkedIds.has(word.id)}
-                      onToggle={() => toggleBookmark(word.id)}
-                    />
-                  }
-                />
-              ))}
-            </div>
+            <>
+              {/* 단어/뜻 가리기 — List 모드 전용. Flashcard는 자체 가리기(뒤집기)가 있어 중복이다 */}
+              <WordMaskButtons
+                hideWord={hideWord}
+                hideMeaning={hideMeaning}
+                onToggleWord={toggleHideWord}
+                onToggleMeaning={toggleHideMeaning}
+              />
+              <div className="space-y-5">
+                {visibleWords.map((word) => (
+                  <WordCard
+                    key={word.id}
+                    {...word}
+                    showSentence={true}
+                    hideWord={hideWord}
+                    hideMeaning={hideMeaning}
+                    extraInfo={
+                      <WordBookmarkButton
+                        bookmarked={bookmarkedIds.has(word.id)}
+                        onToggle={() => toggleBookmark(word.id)}
+                      />
+                    }
+                  />
+                ))}
+              </div>
+            </>
           )}
         </>
       )}
