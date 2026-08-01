@@ -43,34 +43,17 @@ const TODO_EXAM_TYPE: Record<TodoItem['type'], ExamType> = {
   LEVEL: 'LEVEL_TEST',
 };
 
-// 'YYYY-MM-DD' → 오늘 기준 상대 표시. 반환값에 isOverdue 포함.
-function formatScheduledDate(iso: string): { label: string; isOverdue: boolean } {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const [y, m, d] = iso.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
-  const diffDays = Math.round((date.getTime() - today.getTime()) / 86_400_000);
-
-  if (diffDays < 0) return { label: 'Overdue', isOverdue: true };
-  if (diffDays === 0) return { label: 'Due Today', isOverdue: false };
-  return {
-    label: `Due ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
-    isOverdue: false,
-  };
-}
-
 export function TodoList({ studentId, readOnly = false }: Props) {
   const navigate = useNavigate();
   const { data: todos, isLoading } = useTodos(studentId);
 
-  // actionable 우선, 그 다음 scheduledDate 오름차순(없으면 마지막).
+  // actionable(지금 바로 응시 가능) 우선. 2차 키였던 scheduledDate 오름차순은 제거했다 —
+  // 복습이 회차 기준으로 바뀌며 서버가 항상 null을 내려주므로 정렬에 쓸 수 없다.
+  // 동순위는 서버가 준 순서를 그대로 유지한다(Array.prototype.sort는 안정 정렬).
   const sorted = todos
     ? [...todos].sort((a, b) => {
         if (a.actionable !== b.actionable) return a.actionable ? -1 : 1;
-        if (!a.scheduledDate && !b.scheduledDate) return 0;
-        if (!a.scheduledDate) return 1;
-        if (!b.scheduledDate) return -1;
-        return a.scheduledDate.localeCompare(b.scheduledDate);
+        return 0;
       })
     : [];
 
@@ -149,7 +132,6 @@ export function TodoList({ studentId, readOnly = false }: Props) {
         ) : (
           <ul className="flex flex-col gap-2 overflow-y-auto [scrollbar-width:thin]">
             {sorted.map((todo) => {
-              const dateFmt = todo.scheduledDate ? formatScheduledDate(todo.scheduledDate) : null;
               // studySetId가 있으면 단어장 이동 가능.
               const canGoWords = !todo.actionable && todo.studySetId !== null;
 
@@ -187,7 +169,7 @@ export function TodoList({ studentId, readOnly = false }: Props) {
                     {TODO_TYPE_ICON[todo.type]}
                   </span>
 
-                  {/* 레이블 + 예정일 */}
+                  {/* 레이블 — 예정일 줄은 제거했다(복습이 회차 기준으로 바뀌어 날짜가 없다). */}
                   <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                     <span
                       className={`text-xs font-semibold leading-tight truncate ${
@@ -196,15 +178,6 @@ export function TodoList({ studentId, readOnly = false }: Props) {
                     >
                       {TODO_TYPE_LABEL[todo.type]}
                     </span>
-                    {dateFmt && (
-                      <span
-                        className={`text-[11px] font-medium leading-tight ${
-                          dateFmt.isOverdue ? 'text-error' : 'text-on-surface-variant'
-                        }`}
-                      >
-                        {dateFmt.label}
-                      </span>
-                    )}
                   </div>
 
                   {/* 우측 액션 힌트 — readOnly(선생님 열람)이면 표시 안 함 */}

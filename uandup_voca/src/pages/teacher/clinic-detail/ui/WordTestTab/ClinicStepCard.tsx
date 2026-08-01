@@ -1,18 +1,15 @@
 import type { StepCardVM } from '@/entities/test';
-
-// 'YYYY-MM-DD' → 'May 30'
-function formatScheduledDate(iso: string): string {
-  const date = new Date(iso);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
+import { ReviewStepChip, type ReviewStepSignal } from '@/entities/student';
 
 interface StepCardProps {
   step: StepCardVM;
+  // 복습 회차 신호(DUE NOW / OVERDUE / Opens at #N). 날짜 칩 자리를 대체한다.
+  signal: ReviewStepSignal;
   isSelected: boolean;
   onClick: () => void;
 }
 
-export default function ClinicStepCard({ step, isSelected, onClick }: StepCardProps) {
+export default function ClinicStepCard({ step, signal, isSelected, onClick }: StepCardProps) {
   const isPassed = step.status === 'passed';
   const isFail = step.status === 'fail';
   const isLocked = step.status === 'locked';
@@ -42,18 +39,14 @@ export default function ClinicStepCard({ step, isSelected, onClick }: StepCardPr
                     : 'border border-outline/20 bg-surface cursor-pointer hover:border-outline/40 hover:shadow-sm'
         }`}
     >
-      {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때 name 오른쪽에 표시 */}
+      {/* 날짜 기반 시절의 "Due {날짜}" 칩 자리 — 이제 배정 회차 기준 신호가 들어간다. */}
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className={`text-sm font-bold leading-tight ${isLocked ? 'text-slate-400' : 'text-on-surface'}`}
         >
           {step.name}
         </span>
-        {step.scheduledDate && (
-          <span className="text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-2 py-0.5">
-            Due {formatScheduledDate(step.scheduledDate)}
-          </span>
-        )}
+        <ReviewStepChip signal={signal} />
       </div>
 
       {/* Created On / Started On / Submitted On — 세 줄을 묶어 줄간격을 좁히고 글자를 살짝 줄여 카드 여백 확보.

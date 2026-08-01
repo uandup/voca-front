@@ -54,6 +54,16 @@ export {
   getPendingReviews,
   getTodos,
 } from './api/studentApi';
+export type { ReviewCadence, ReviewCadenceStatus, ReviewStepSignal } from './model/reviewCadence';
+export {
+  REVIEW_UNLOCK_ROWS,
+  dueReviewStage,
+  reviewUnlockRow,
+  toReviewCadence,
+  toReviewStepSignal,
+} from './model/reviewCadence';
+export { ReviewCadenceBadge } from './ui/ReviewCadenceBadge';
+export { ReviewStepChip } from './ui/ReviewStepChip';
 export { toStudentUpdateRequest } from './api/mapper';
 export { studentKeys } from './api/queryKeys';
 export { invalidateStudentCascade } from './api/invalidate';

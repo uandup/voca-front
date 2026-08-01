@@ -2,11 +2,17 @@ import { Fragment } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import WordTestStepCard from './WordTestStepCard';
 import type { TestBundleRow, StepCardVM, StudySetExamType } from '@/entities/test';
+import { ReviewCadenceBadge, toReviewStepSignal, type ReviewCadence } from '@/entities/student';
 
 // step.name 순서와 1:1 매핑되는 examType. toTestBundleRow가 step을 항상 이 순서로 생성하므로 안전.
 const STEP_EXAM_TYPES: StudySetExamType[] = ['WORD', 'EXAMPLE', 'REVIEW1', 'REVIEW2', 'REVIEW3'];
 
-export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestBundleRow) {
+interface Props extends TestBundleRow {
+  // 복습 회차 판정 결과. History 탭은 회차 개념이 없어 null.
+  cadence: ReviewCadence | null;
+}
+
+export default function WordTestCycleRow({ id, levels, wordCount, steps, cadence }: Props) {
   const navigate = useNavigate();
 
   function returnToCurrent() {
@@ -49,10 +55,26 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
     });
   }
 
+  // 복습이 밀린 행은 좌측 세로줄로 목록에서 바로 골라낼 수 있게 한다.
+  const stripeClass =
+    cadence?.status === 'behind'
+      ? 'border-l-4 border-l-error'
+      : cadence?.status === 'due'
+        ? 'border-l-4 border-l-amber-400'
+        : '';
+
   return (
-    <div className="bg-white border border-outline/20 rounded-2xl px-5 py-4 flex flex-col gap-4">
+    <div
+      className={`bg-white border border-outline/20 rounded-2xl px-5 py-4 flex flex-col gap-4 ${stripeClass}`}
+    >
       <div className="flex items-center justify-start">
         <div className="flex items-center gap-2">
+          {/* 행 번호 — 복습 차례가 "몇 번째 행인가"로 정해지므로 화면에도 숫자를 드러낸다. */}
+          {cadence && (
+            <span className="shrink-0 rounded-md bg-slate-100 px-1.5 py-0.5 text-xs font-bold text-on-surface-variant">
+              #{cadence.rowNo}
+            </span>
+          )}
           <div className="flex items-center gap-1.5">
             <span className="text-sm text-on-surface-variant">Words</span>
             <span className="text-sm font-bold text-on-surface">{wordCount}</span>
@@ -96,6 +118,7 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
             </span>
             View Words
           </button>
+          {cadence && <ReviewCadenceBadge cadence={cadence} studentTone />}
         </div>
       </div>
 
@@ -109,6 +132,7 @@ export default function WordTestCycleRow({ id, levels, wordCount, steps }: TestB
               <div className="relative flex-1 min-w-0 h-36 xl:h-44">
                 <WordTestStepCard
                   step={step}
+                  signal={cadence ? toReviewStepSignal(steps, idx, cadence) : { kind: 'none' }}
                   onAction={() => handleStepAction(step, idx)}
                   onViewResults={
                     step.lastCompletedExamId !== null

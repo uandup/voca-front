@@ -921,7 +921,7 @@ export interface paths {
         };
         /**
          * 풀어야 할 리뷰 단어 일괄 조회
-         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. words는 시험에 출제된 문항이 아니라 해당 배정(StudySet)의 배정 단어 전체입니다 — 시험은 이 중 일부만 랜덤 출제됩니다. 응답 reviews는 scheduledDate ASC, studySetId ASC 정렬. 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
+         * @description 학생의 NORMAL 학습셋 중 활성(READY / ONLINE_STARTED) REVIEW1·2·3 시험을 시험 1건당 한 항목으로 반환합니다. SUBMITTED(응시 후 채점 대기)는 학생이 외울 단계가 아니므로 제외. words는 시험에 출제된 문항이 아니라 해당 배정(StudySet)의 배정 단어 전체입니다 — 시험은 이 중 일부만 랜덤 출제됩니다. 응답 reviews는 studySetId ASC, examId ASC 정렬(오래된 배정 먼저). 단어는 difficulty ASC, wordId ASC. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getPendingReviews"];
         put?: never;
@@ -2520,7 +2520,7 @@ export interface components {
             actionable?: boolean;
             /**
              * Format: date
-             * @description 복습 예정일 — REVIEW1/2/3 타입만 존재, 나머지는 null. 오늘보다 이전이면 밀린 복습.
+             * @description [deprecated] 날짜 기반 복습 시절의 예정일 — 신규 복습 시험은 항상 null. 복습 차례는 배정 현황 목록(GET /api/v1/normal-study-sets/students/{studentId}/active)의 행 순서로 판단한다. 날짜 기반 시절에 생성된 기존 시험만 값이 남아 있다.
              * @example 2026-05-29
              */
             scheduledDate?: string;
@@ -2553,7 +2553,7 @@ export interface components {
             examId?: number;
             /**
              * Format: date
-             * @description 리뷰 예정일
+             * @description [deprecated] 날짜 기반 복습 시절의 예정일 — 신규 복습 시험은 항상 null. 복습 차례는 배정 현황 목록(GET /api/v1/normal-study-sets/students/{studentId}/active)의 행 순서로 판단한다. 날짜 기반 시절에 생성된 기존 시험만 값이 남아 있다.
              * @example 2026-05-28
              */
             scheduledDate?: string;
@@ -2562,7 +2562,7 @@ export interface components {
         };
         /** @description 풀어야 할 리뷰 단어 일괄 조회 응답 — 활성 REVIEW1/2/3 시험 1건당 한 항목 */
         PendingReviewsResponse: {
-            /** @description 활성 리뷰 시험 목록 (scheduledDate ASC, studySetId ASC 정렬) */
+            /** @description 활성 리뷰 시험 목록 (studySetId ASC, examId ASC 정렬 — 오래된 배정이 먼저) */
             reviews?: components["schemas"]["PendingReviewItem"][];
         };
         ApiResponseListMemoResponse: {
@@ -2950,7 +2950,7 @@ export interface components {
             correctCount?: number;
             /**
              * Format: date
-             * @description 복습 예정일. REVIEW1/2/3 시험에만 존재, 나머지는 null. 오늘 이전이면 밀린 복습
+             * @description [deprecated] 날짜 기반 복습 시절의 예정일. 신규 복습 시험은 항상 null이며, 복습 차례는 이 배정 현황 목록에서 해당 배정이 몇 번째 행인지로 판단한다(2행부터 REVIEW1, 4행부터 REVIEW2, 7행부터 REVIEW3). 날짜 기반 시절에 생성된 기존 시험만 값이 남아 있다
              * @example 2026-05-29
              */
             scheduledDate?: string;
@@ -3280,7 +3280,11 @@ export interface components {
             includeSynonym?: boolean;
             status?: string;
             isPassed?: boolean;
-            /** Format: date */
+            /**
+             * Format: date
+             * @description [deprecated] 날짜 기반 복습 시절의 예정일. 신규 복습 시험은 항상 null이며, 복습 차례는 배정 현황 목록(GET /api/v1/normal-study-sets/students/{studentId}/active)의 행 순서로 판단한다. 날짜 기반 시절에 생성된 기존 시험만 값이 남아 있다
+             * @example 2026-05-29
+             */
             scheduledDate?: string;
             /**
              * Format: int32
