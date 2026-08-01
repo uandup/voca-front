@@ -4,6 +4,7 @@ import ClinicCycleRow from './ClinicCycleRow';
 import {
   toStudySetRow,
   toTestBundleRow,
+  toReviewCadence,
   useActiveStudySetList,
   useStudySetHistory,
 } from '@/entities/student';
@@ -66,7 +67,7 @@ export default function WordTestTab({ studentId }: Props) {
         <LoadingSpinner />
       ) : displayed.length > 0 ? (
         <>
-          {displayed.map((cycle) => {
+          {displayed.map((cycle, i) => {
             const set =
               activeTab === 'Active'
                 ? activeSets.find((s) => String(s.studySetId) === cycle.id)!
@@ -76,6 +77,10 @@ export default function WordTestTab({ studentId }: Props) {
                 key={cycle.id}
                 studySetId={set.studySetId}
                 studentId={studentId}
+                // 서버가 active 목록을 id DESC · 페이징 없이 반환하는 것을 계약으로 보장하므로
+                // 화면에 그리는 순서(index + 1)가 곧 복습 회차 판정의 행 번호다.
+                // History는 이미 복습을 다 끝낸 배정이라 회차 개념이 없다 → null.
+                cadence={activeTab === 'Active' ? toReviewCadence(cycle.steps, i + 1) : null}
                 // History의 배정은 이미 완료/취소된 것이므로 Active 탭에서만 취소를 노출한다.
                 canCancel={activeTab === 'Active' && isAssignmentCancelable(cycle.steps)}
                 {...cycle}

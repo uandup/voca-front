@@ -158,12 +158,13 @@ export interface StudentDashboard {
 
 // ── Pending Reviews (/dashboard/pending-reviews) ────────────────────────────
 
-/** 활성 REVIEW1/2/3 시험 1건의 단어 묶음 — scheduledDate·studySetId 오름차순 */
+/** 활성 REVIEW1/2/3 시험 1건의 단어 묶음 — studySetId·examId 오름차순(오래된 배정 먼저) */
 export interface PendingReviewItem {
   studySetId: number;
   examId: number;
-  // 'YYYY-MM-DD' 형식의 리뷰 예정일
-  scheduledDate: string;
+  // @deprecated 날짜 기반 복습 시절의 예정일. 신규 복습 시험은 항상 null이라 화면에서 쓰지 않는다.
+  // 복습 차례는 배정 현황 목록(active)에서 이 배정이 몇 번째인지로 판단한다.
+  scheduledDate: string | null;
   words: WordCardData[];
 }
 

@@ -589,7 +589,7 @@ export function toPendingReviewItem(dto: PendingReviewItemDto): PendingReviewIte
   return {
     studySetId: dto.studySetId ?? 0,
     examId: dto.examId ?? 0,
-    scheduledDate: dto.scheduledDate ?? '',
+    scheduledDate: dto.scheduledDate ?? null,
     words: (dto.words ?? []).map(toAssignedWordCardData),
   };
 }

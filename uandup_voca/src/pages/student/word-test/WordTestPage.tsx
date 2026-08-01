@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PageTitle } from '@/shared/ui/PageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import WordTestCycleRow from './ui/WordTestCycleRow';
-import { toStudySetRow, toStudentTestBundleRow } from '@/entities/student';
+import { toStudySetRow, toStudentTestBundleRow, toReviewCadence } from '@/entities/student';
 import { useActiveStudySetList, useStudySetHistory } from '@/entities/student';
 import { useCurrentStudentId } from '@/entities/auth';
 
@@ -59,8 +59,15 @@ export default function WordTestPage() {
         <LoadingSpinner />
       ) : displayed.length > 0 ? (
         <div className="flex flex-col gap-6">
-          {displayed.map((cycle) => (
-            <WordTestCycleRow key={cycle.id} {...cycle} />
+          {displayed.map((cycle, i) => (
+            <WordTestCycleRow
+              key={cycle.id}
+              // 서버가 active 목록을 id DESC · 페이징 없이 반환하는 것을 계약으로 보장하므로
+              // 화면에 그리는 순서(index + 1)가 곧 복습 회차 판정의 행 번호다.
+              // History는 이미 복습을 다 끝낸 배정이라 회차 개념이 없다 → null.
+              cadence={activeTab === 'Active' ? toReviewCadence(cycle.steps, i + 1) : null}
+              {...cycle}
+            />
           ))}
           {activeTab === 'History' && hasNextPage && (
             <button

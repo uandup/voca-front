@@ -1,18 +1,15 @@
 import type { StepCardVM, StepStatus } from '@/entities/test';
+import { ReviewStepChip, type ReviewStepSignal } from '@/entities/student';
 
 interface StepCardProps {
   step: StepCardVM;
+  // 복습 회차 신호(DUE NOW / OVERDUE / Opens at #N). 날짜 칩 자리를 대체한다.
+  signal: ReviewStepSignal;
   // status별 단일 액션 버튼(active=Start Online Test, passed/fail=View Results)에서 호출.
   // examId가 없는 단계(locked/pending)는 호출되지 않는다.
   onAction?: () => void;
   // pending/active/grading 상태에서 이전 fail 기록을 탭 뷰로 보여주는 버튼에서 호출.
   onViewResults?: () => void;
-}
-
-// 'YYYY-MM-DD' → 'May 30'
-function formatScheduledDate(iso: string): string {
-  const date = new Date(iso);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 const containerClass: Record<StepStatus, string> = {
@@ -30,29 +27,22 @@ const containerClass: Record<StepStatus, string> = {
   skipped: 'border border-outline/20 bg-slate-50',
 };
 
-export default function WordTestStepCard({ step, onAction, onViewResults }: StepCardProps) {
-  const {
-    status,
-    name,
-    lastScore,
-    maxScore: totalScore,
-    completedAt,
-    retakeCount,
-    scheduledDate,
-  } = step;
+export default function WordTestStepCard({
+  step,
+  signal,
+  onAction,
+  onViewResults,
+}: StepCardProps) {
+  const { status, name, lastScore, maxScore: totalScore, completedAt, retakeCount } = step;
 
   return (
     <div
       className={`flex-1 min-w-0 h-36 xl:h-44 rounded-2xl p-3 xl:p-4 flex flex-col gap-1.5 xl:gap-2 ${containerClass[status]}`}
     >
       <div className="flex items-center gap-1 xl:gap-2 flex-wrap">
+        {/* 날짜 기반 시절의 "Due {날짜}" 칩 자리 — 이제 배정 회차 기준 신호가 들어간다. */}
         <span className="text-xs xl:text-sm font-bold leading-tight text-on-surface">{name}</span>
-        {/* Review 시험의 복습 예정일 — scheduledDate가 있을 때만 name 오른쪽에 표시 */}
-        {scheduledDate && (
-          <span className="text-[9px] xl:text-[11px] font-semibold text-primary/70 bg-primary/8 rounded-md px-1 xl:px-2">
-            Due {formatScheduledDate(scheduledDate)}
-          </span>
-        )}
+        <ReviewStepChip signal={signal} compact />
       </div>
 
       {completedAt && (
