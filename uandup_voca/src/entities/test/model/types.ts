@@ -6,7 +6,9 @@ export type WordTestType = Exclude<TestType, 'sentence'>;
 // 시험 응시 페이지의 렌더링 모드. examDetail.status로부터 inferMode()로 결정.
 export type ExamMode = 'answer' | 'review' | 'submitted';
 // useSubmitExam / cache invalidation에서 사용하는 시험 출처 구분.
-export type ExamSource = 'study-set' | 'review-deck' | 'level-test';
+// 'personal'은 entities/personal-exam(PersonalExam) — useSubmitExam이 이 값일 때
+// entities/test의 submitExam이 아니라 entities/personal-exam의 submitPersonalExam으로 분기한다.
+export type ExamSource = 'study-set' | 'review-deck' | 'level-test' | 'personal';
 
 // ── Shared ──────────────────────────────────────────────────────────────────
 
@@ -103,6 +105,9 @@ export interface ESRow {
 // study-set 단계 시험이 아닌 학생-단위 독립 시험. preview/review 라우트가 examType만으로
 // invalidation 분기를 일관되게 처리할 수 있게 같은 enum에 둔다. 두 값 모두 자체 endpoint를
 // 사용하므로 서버 CreateExamRequest.examType으로 전송되는 일은 없다.
+// 'PERSONAL'은 entities/personal-exam(PersonalExam) — 위 둘과 달리 detail/attempt/submit/
+// cancel까지 전부 자체 엔드포인트(/api/v1/personal-exams/...)를 쓴다. entities/test는 응답을
+// ExamDetail/ExamAttemptData 형태로만 어댑팅해 받고, 실제 API 호출은 하지 않는다.
 export type ExamType =
   | 'WORD'
   | 'EXAMPLE'
@@ -110,11 +115,12 @@ export type ExamType =
   | 'REVIEW2'
   | 'REVIEW3'
   | 'REVIEW_DECK'
-  | 'LEVEL_TEST';
+  | 'LEVEL_TEST'
+  | 'PERSONAL';
 
 // study-set 기반 단계 시험만 다룰 때 쓰는 좁힌 타입 — createExam/getExamsByType 같이
-// 서버 enum과 직접 매핑되는 경로에서 사용. 서버 enum엔 REVIEW_DECK / LEVEL_TEST가 없다.
-export type StudySetExamType = Exclude<ExamType, 'REVIEW_DECK' | 'LEVEL_TEST'>;
+// 서버 enum과 직접 매핑되는 경로에서 사용. 서버 enum엔 REVIEW_DECK / LEVEL_TEST / PERSONAL이 없다.
+export type StudySetExamType = Exclude<ExamType, 'REVIEW_DECK' | 'LEVEL_TEST' | 'PERSONAL'>;
 
 export interface ExamItem {
   examItemId: number;
@@ -131,7 +137,10 @@ export interface ExamItem {
 
 export interface ExamDetail {
   examId: number;
-  studySetId: number;
+  // PersonalExam처럼 study-set에 속하지 않는 시험은 undefined. 코드베이스 어디서도 이 필드를
+  // 읽는 곳이 없어(2026-08-14 기준) optional 전환의 하위 호환 리스크는 없다 — study-set 링크
+  // 등을 추가할 때만 값이 있는지 가드하면 된다.
+  studySetId?: number;
   subType: WordTestType | null;
   includeSynonym: boolean;
   status: string;

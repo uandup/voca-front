@@ -25,9 +25,11 @@ import { Route as StudentWordTestRouteImport } from './../routes/student/word-te
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
+import { Route as StudentPersonalExamsIndexRouteImport } from './../routes/student/personal-exams/index'
 import { Route as StudentLevelTestIndexRouteImport } from './../routes/student/level-test/index'
 import { Route as TeacherStudentsStudentIdRouteImport } from './../routes/teacher/students_.$studentId'
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
+import { Route as StudentPersonalExamsWordsRouteImport } from './../routes/student/personal-exams/words'
 import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
@@ -121,6 +123,12 @@ const StudentReviewDeckIndexRoute = StudentReviewDeckIndexRouteImport.update({
   path: '/review-deck/',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentPersonalExamsIndexRoute =
+  StudentPersonalExamsIndexRouteImport.update({
+    id: '/personal-exams/',
+    path: '/personal-exams/',
+    getParentRoute: () => StudentRoute,
+  } as any)
 const StudentLevelTestIndexRoute = StudentLevelTestIndexRouteImport.update({
   id: '/level-test/',
   path: '/level-test/',
@@ -137,6 +145,12 @@ const StudentReviewDeckWordsRoute = StudentReviewDeckWordsRouteImport.update({
   path: '/review-deck/words',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentPersonalExamsWordsRoute =
+  StudentPersonalExamsWordsRouteImport.update({
+    id: '/personal-exams/words',
+    path: '/personal-exams/words',
+    getParentRoute: () => StudentRoute,
+  } as any)
 const StudentDashboardPendingReviewsRoute =
   StudentDashboardPendingReviewsRouteImport.update({
     id: '/dashboard_/pending-reviews',
@@ -225,9 +239,11 @@ export interface FileRoutesByFullPath {
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
+  '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
+  '/student/personal-exams/': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
   '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
@@ -256,9 +272,11 @@ export interface FileRoutesByTo {
   '/student': typeof StudentIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
+  '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test': typeof StudentLevelTestIndexRoute
+  '/student/personal-exams': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
   '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
@@ -290,9 +308,11 @@ export interface FileRoutesById {
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/student/dashboard_/pending-reviews': typeof StudentDashboardPendingReviewsRoute
+  '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
   '/teacher/students_/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
+  '/student/personal-exams/': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
   '/student/dashboard_/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
@@ -325,9 +345,11 @@ export interface FileRouteTypes {
     | '/student/'
     | '/teacher/'
     | '/student/dashboard/pending-reviews'
+    | '/student/personal-exams/words'
     | '/student/review-deck/words'
     | '/teacher/students/$studentId'
     | '/student/level-test/'
+    | '/student/personal-exams/'
     | '/student/review-deck/'
     | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
@@ -356,9 +378,11 @@ export interface FileRouteTypes {
     | '/student'
     | '/teacher'
     | '/student/dashboard/pending-reviews'
+    | '/student/personal-exams/words'
     | '/student/review-deck/words'
     | '/teacher/students/$studentId'
     | '/student/level-test'
+    | '/student/personal-exams'
     | '/student/review-deck'
     | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
@@ -389,9 +413,11 @@ export interface FileRouteTypes {
     | '/student/'
     | '/teacher/'
     | '/student/dashboard_/pending-reviews'
+    | '/student/personal-exams/words'
     | '/student/review-deck/words'
     | '/teacher/students_/$studentId'
     | '/student/level-test/'
+    | '/student/personal-exams/'
     | '/student/review-deck/'
     | '/student/dashboard_/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
@@ -533,6 +559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentReviewDeckIndexRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/personal-exams/': {
+      id: '/student/personal-exams/'
+      path: '/personal-exams'
+      fullPath: '/student/personal-exams/'
+      preLoaderRoute: typeof StudentPersonalExamsIndexRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/level-test/': {
       id: '/student/level-test/'
       path: '/level-test'
@@ -552,6 +585,13 @@ declare module '@tanstack/react-router' {
       path: '/review-deck/words'
       fullPath: '/student/review-deck/words'
       preLoaderRoute: typeof StudentReviewDeckWordsRouteImport
+      parentRoute: typeof StudentRoute
+    }
+    '/student/personal-exams/words': {
+      id: '/student/personal-exams/words'
+      path: '/personal-exams/words'
+      fullPath: '/student/personal-exams/words'
+      preLoaderRoute: typeof StudentPersonalExamsWordsRouteImport
       parentRoute: typeof StudentRoute
     }
     '/student/dashboard_/pending-reviews': {
@@ -646,8 +686,10 @@ interface StudentRouteChildren {
   StudentWordTestRoute: typeof StudentWordTestRoute
   StudentIndexRoute: typeof StudentIndexRoute
   StudentDashboardPendingReviewsRoute: typeof StudentDashboardPendingReviewsRoute
+  StudentPersonalExamsWordsRoute: typeof StudentPersonalExamsWordsRoute
   StudentReviewDeckWordsRoute: typeof StudentReviewDeckWordsRoute
   StudentLevelTestIndexRoute: typeof StudentLevelTestIndexRoute
+  StudentPersonalExamsIndexRoute: typeof StudentPersonalExamsIndexRoute
   StudentReviewDeckIndexRoute: typeof StudentReviewDeckIndexRoute
   StudentDashboardAssignedWordsStudySetIdRoute: typeof StudentDashboardAssignedWordsStudySetIdRoute
   StudentLevelTestStudySetIdWordsRoute: typeof StudentLevelTestStudySetIdWordsRoute
@@ -660,8 +702,10 @@ const StudentRouteChildren: StudentRouteChildren = {
   StudentWordTestRoute: StudentWordTestRoute,
   StudentIndexRoute: StudentIndexRoute,
   StudentDashboardPendingReviewsRoute: StudentDashboardPendingReviewsRoute,
+  StudentPersonalExamsWordsRoute: StudentPersonalExamsWordsRoute,
   StudentReviewDeckWordsRoute: StudentReviewDeckWordsRoute,
   StudentLevelTestIndexRoute: StudentLevelTestIndexRoute,
+  StudentPersonalExamsIndexRoute: StudentPersonalExamsIndexRoute,
   StudentReviewDeckIndexRoute: StudentReviewDeckIndexRoute,
   StudentDashboardAssignedWordsStudySetIdRoute:
     StudentDashboardAssignedWordsStudySetIdRoute,

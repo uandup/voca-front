@@ -28,6 +28,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/personal-words/{personalWordId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 개인 단어 수정
+         * @description 개인 단어의 단어·한글 뜻을 수정합니다.
+         */
+        put: operations["updatePersonalWord"];
+        post?: never;
+        /**
+         * 개인 단어 삭제
+         * @description 개인 단어를 소프트 삭제합니다. 이미 출제된 개인 시험의 문항에는 영향을 주지 않습니다.
+         */
+        delete: operations["deletePersonalWord"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/memos/{memoId}": {
         parameters: {
             query?: never;
@@ -241,6 +265,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/personal-words": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 개인 단어 목록 조회
+         * @description 특정 학생의 활성(비삭제) 개인 단어를 등록순으로 전체 조회합니다. 교사·본인 학생·연결된 학부모만 접근 가능.
+         */
+        get: operations["getPersonalWords"];
+        put?: never;
+        /**
+         * 개인 단어 등록
+         * @description 특정 학생에게 개인 단어를 추가합니다.
+         */
+        post: operations["createPersonalWord"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/students/{studentId}/personal-exams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 개인 단어 시험 목록 조회
+         * @description 특정 학생의 개인 단어 시험 이력을 조회합니다. 교사·본인 학생·연결된 학부모만 접근 가능.
+         */
+        get: operations["getPersonalExams"];
+        put?: never;
+        /**
+         * 개인 단어 시험 생성
+         * @description 학생의 활성 개인 단어를 등록순으로 매긴 뒤 [startIndex, endIndex] 범위를 그대로 잘라 문항으로 출제합니다. 랜덤 추출이나 개별 단어 지정은 지원하지 않습니다. 선생님만 호출 가능.
+         */
+        post: operations["createPersonalExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/memos": {
         parameters: {
             query?: never;
@@ -295,6 +367,106 @@ export interface paths {
          * @description 지정한 레벨의 단어에서 assignmentCount개를 랜덤 배정하고, 그 중 questionCount개를 시험 문항으로 생성합니다. 선생님만 가능.
          */
         post: operations["createLevelExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 개인 단어 시험 제출
+         * @description 학생이 답안을 입력하고 제출합니다. 문항 매칭은 응시 응답의 personalExamItemId로 합니다. 한 번 제출한 시험은 다시 제출할 수 없습니다(TEST_ALREADY_SUBMITTED). 학생 본인 또는 선생님이 호출 가능.
+         */
+        post: operations["submitPersonalExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}/results/online": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 개인 단어 시험 온라인 채점
+         * @description 학생이 앱에서 제출한 시험의 정오답, 학생 답안, 합격 여부를 저장합니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다(CANCELLED는 불가). 선생님만 호출 가능.
+         */
+        post: operations["gradeOnline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}/results/offline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 개인 단어 시험 오프라인 채점
+         * @description 선생님이 종이 시험지 채점 결과와 합격 여부를 입력합니다. COMPLETED 상태 시험도 같은 엔드포인트로 재채점할 수 있습니다(CANCELLED는 불가). 선생님만 호출 가능.
+         */
+        post: operations["gradeOffline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 개인 단어 시험 취소
+         * @description READY / SUBMITTED 상태인 시험을 취소합니다. 취소된 시험은 조회·채점이 불가합니다. 선생님만 호출 가능.
+         */
+        post: operations["cancelPersonalExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}/attempt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 학생 시험 응시 (1회 제한)
+         * @description 학생이 시험에 응시합니다. 응시 시작을 서버에 기록하고, 정답이 빠진 문제만 반환합니다. **한 번 응시하면 재응시할 수 없습니다**(EXAM_ALREADY_ATTEMPTED) — 화면을 나갔다 다시 들어와도 재응시 불가하며, 다시 기회를 주려면 선생님이 시험을 취소하고 재생성해야 합니다. 학생 본인만 호출 가능.
+         */
+        post: operations["attemptPersonalExam"];
         delete?: never;
         options?: never;
         head?: never;
@@ -894,7 +1066,7 @@ export interface paths {
          *     - `ONLINE_STARTED`: 선생님이 온라인 시험을 시작한 상태 — 학생이 앱에서 바로 답안을 제출할 수 있음 (`actionable: true`)
          *     - `SUBMITTED` 상태(이미 제출)는 제외됩니다.
          *
-         *     **항목 정렬**: 시험 유형(type) ASC → examId ASC
+         *     **항목 정렬**: 시험 생성 순(examId ASC) — 먼저 만들어진 시험이 위
          *
          *     **권한**:
          *     - TEACHER: 모든 학생 조회 가능
@@ -964,6 +1136,28 @@ export interface paths {
          * @description 학생의 시험 점수 추이(WORD·EXAMPLE·REVIEW)와 월간 학습량 등 차트 전용 데이터를 조회합니다. 각 배열은 시간 오름차순으로 정렬됩니다. TEACHER는 모든 학생, STUDENT는 본인, PARENT는 연결된 자녀만 접근 가능합니다.
          */
         get: operations["getDashboardCharts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/personal-exams/{personalExamId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 개인 단어 시험 조회
+         * @description 시험 정보와 문항 목록(단어 정보 포함)을 조회합니다. 채점 완료된 시험은 문항별 정답 여부도 포함됩니다.
+         *
+         *     **주의: 응답에 정답(word/koreanMeaning)이 포함되므로 학생 응시 화면에 사용하지 마세요.** 학생이 시험을 푸는 용도는 `POST /api/v1/personal-exams/{personalExamId}/attempt`(정답 제외 + 재응시 차단)입니다.
+         */
+        get: operations["getPersonalExam"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1537,6 +1731,54 @@ export interface components {
              */
             examTag?: string;
         };
+        PersonalWordUpdateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
+            word: string;
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
+            koreanMeaning: string;
+        };
+        ApiResponsePersonalWordResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalWordResponse"];
+        };
+        PersonalWordResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 ID
+             * @example 1
+             */
+            personalWordId?: number;
+            /**
+             * Format: int64
+             * @description 학생 ID
+             * @example 10
+             */
+            studentId?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
+            word?: string;
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
+            koreanMeaning?: string;
+            /**
+             * Format: date-time
+             * @description 등록 시각
+             * @example 2026-08-12T10:00:00
+             */
+            createdAt?: string;
+        };
         MemoRequest: {
             /** Format: date */
             date: string;
@@ -1841,6 +2083,74 @@ export interface components {
             /** Format: int32 */
             itemCount?: number;
         };
+        PersonalWordCreateRequest: {
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
+            word: string;
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
+            koreanMeaning: string;
+        };
+        PersonalExamCreateRequest: {
+            /**
+             * Format: int32
+             * @description 출제 범위 시작 순번 (1부터 시작 — 학생의 활성 개인 단어를 등록순으로 매긴 순번)
+             * @example 1
+             */
+            startIndex: number;
+            /**
+             * Format: int32
+             * @description 출제 범위 끝 순번 (포함) — startIndex 이상이어야 하며 활성 개인 단어 수를 넘을 수 없음
+             * @example 10
+             */
+            endIndex: number;
+            /**
+             * @description 출제 유형
+             * @example WORD_TO_MEANING
+             * @enum {string}
+             */
+            subType: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+        };
+        ApiResponsePersonalExamResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamResponse"];
+        };
+        PersonalExamResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 시험 ID
+             * @example 1
+             */
+            personalExamId?: number;
+            /**
+             * Format: int64
+             * @description 학생 ID
+             * @example 10
+             */
+            studentId?: number;
+            /**
+             * @description 출제 유형
+             * @example WORD_TO_MEANING
+             */
+            subType?: string;
+            /**
+             * @description 시험 상태
+             * @example READY
+             */
+            status?: string;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 10
+             */
+            totalCount?: number;
+        };
         CreateLevelExamRequest: {
             /** Format: int32 */
             level: number;
@@ -1851,6 +2161,181 @@ export interface components {
             assignmentCount?: number;
             /** Format: int32 */
             questionCount?: number;
+        };
+        /** @description 개인 단어 시험 제출 요청 — 학생이 입력한 답안 */
+        PersonalExamSubmitRequest: {
+            /** @description 문항별 답안 목록 */
+            results: components["schemas"]["SubmitItemResult"][];
+            /**
+             * Format: int32
+             * @description 응시 중 누적된 화면 이탈 횟수. 감독 미지원 기기·구버전 클라이언트는 생략할 수 있으며(null=미측정), 측정 결과 0회인 것과 구분된다
+             * @example 0
+             */
+            violationCount?: number;
+        };
+        /** @description 개별 문항 답안 */
+        SubmitItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            personalExamItemId: number;
+            /**
+             * @description 단어 답안
+             * @example apple
+             */
+            wordAnswer?: string;
+        };
+        /** @description 개별 문항 채점 결과 (온라인) */
+        OnlineItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            personalExamItemId: number;
+            /**
+             * @description 정답 여부 (클라이언트가 판정)
+             * @example true
+             */
+            isCorrect: boolean;
+            /**
+             * @description 학생이 작성한 답안
+             * @example apple
+             */
+            userAnswer?: string;
+        };
+        /** @description 개인 단어 시험 온라인 채점 요청 — 학생이 앱에서 제출한 결과 */
+        PersonalExamGradeOnlineRequest: {
+            /** @description 전체 문항별 채점 결과 리스트 */
+            results: components["schemas"]["OnlineItemResult"][];
+            /**
+             * @description 시험 전체 합격 여부
+             * @example true
+             */
+            isPassed: boolean;
+        };
+        ApiResponsePersonalExamGradeResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamGradeResponse"];
+        };
+        /** @description 개인 단어 시험 채점 결과 응답 */
+        PersonalExamGradeResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 시험 ID
+             * @example 1
+             */
+            personalExamId?: number;
+            /**
+             * @description 시험 상태 (채점 완료 시 COMPLETED)
+             * @example COMPLETED
+             */
+            status?: string;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 10
+             */
+            totalCount?: number;
+            /**
+             * Format: int32
+             * @description 정답 수
+             * @example 7
+             */
+            correctCount?: number;
+            /**
+             * Format: int32
+             * @description 오답 수
+             * @example 3
+             */
+            wrongCount?: number;
+            /**
+             * @description 시험 전체 합격 여부
+             * @example true
+             */
+            isPassed?: boolean;
+        };
+        /** @description 개별 문항 채점 결과 (오프라인) */
+        OfflineItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            personalExamItemId: number;
+            /**
+             * @description 정답 여부
+             * @example true
+             */
+            isCorrect: boolean;
+        };
+        /** @description 개인 단어 시험 오프라인 채점 요청 — 선생님이 종이 시험지 채점 결과를 입력 */
+        PersonalExamGradeOfflineRequest: {
+            /** @description 전체 문항별 채점 결과 리스트 */
+            results: components["schemas"]["OfflineItemResult"][];
+            /**
+             * @description 시험 전체 합격 여부
+             * @example true
+             */
+            isPassed: boolean;
+        };
+        ApiResponsePersonalExamAttemptResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamAttemptResponse"];
+        };
+        /** @description 응시용 문항 — subType에 따라 프롬프트 필드만 채워지고 나머지는 null */
+        AttemptItem: {
+            /**
+             * Format: int64
+             * @description 문항 ID — 제출 시 이 값으로 답안을 매칭한다
+             * @example 101
+             */
+            personalExamItemId?: number;
+            /**
+             * Format: int32
+             * @description 문항 순서
+             * @example 1
+             */
+            itemOrder?: number;
+            /**
+             * @description 영어 단어 — subType이 WORD_TO_MEANING일 때만 존재
+             * @example diligent
+             */
+            word?: string;
+            /**
+             * @description 한글 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @example 근면한
+             */
+            koreanMeaning?: string;
+        };
+        /** @description 응시용 개인 단어 시험 정보 — 학생이 풀어야 할 문제만 담는다. 정답(word/koreanMeaning 중 답에 해당하는 것)은 포함되지 않는다 */
+        PersonalExamAttemptResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 시험 ID
+             * @example 1
+             */
+            personalExamId?: number;
+            /**
+             * @description 출제 유형
+             * @example WORD_TO_MEANING
+             * @enum {string}
+             */
+            subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 10
+             */
+            totalCount?: number;
+            /** @description 문항 목록 (itemOrder 오름차순) */
+            items?: components["schemas"]["AttemptItem"][];
         };
         /** @description 학습 단계 스킵 요청 */
         SkipStageRequest: {
@@ -1975,44 +2460,6 @@ export interface components {
              */
             violationCount?: number;
         };
-        /** @description 개별 문항 답안 */
-        SubmitItemResult: {
-            /**
-             * Format: int64
-             * @description 문항 ID
-             * @example 1
-             */
-            examItemId: number;
-            /**
-             * @description 단어 답안 (뜻 쓰기 시험이면 뜻)
-             * @example apple
-             */
-            wordAnswer?: string;
-            /**
-             * @description 동의어 답안 (includeSynonym=false이면 null)
-             * @example fruit
-             */
-            synonymAnswer?: string;
-        };
-        /** @description 개별 문항 채점 결과 (온라인) */
-        OnlineItemResult: {
-            /**
-             * Format: int64
-             * @description 문항 ID
-             * @example 1
-             */
-            examItemId: number;
-            /**
-             * @description 정답 여부 (클라이언트가 판정)
-             * @example true
-             */
-            isCorrect: boolean;
-            /**
-             * @description 학생이 작성한 답안
-             * @example apple
-             */
-            userAnswer?: string;
-        };
         /** @description 온라인 시험 채점 요청 — 학생이 앱에서 제출한 결과 */
         RecordOnlineResultsRequest: {
             /** @description 전체 문항별 채점 결과 리스트 */
@@ -2071,20 +2518,6 @@ export interface components {
              */
             studySetStatus?: string;
         };
-        /** @description 개별 문항 채점 결과 (오프라인) */
-        OfflineItemResult: {
-            /**
-             * Format: int64
-             * @description 문항 ID
-             * @example 1
-             */
-            examItemId: number;
-            /**
-             * @description 정답 여부
-             * @example true
-             */
-            isCorrect: boolean;
-        };
         /** @description 오프라인 시험 채점 요청 — 선생님이 종이 시험지 채점 결과를 입력 */
         RecordOfflineResultsRequest: {
             /** @description 전체 문항별 채점 결과 리스트 */
@@ -2100,41 +2533,6 @@ export interface components {
             status?: number;
             message?: string;
             data?: components["schemas"]["ExamAttemptResponse"];
-        };
-        /** @description 응시용 문항 — 유형별로 프롬프트 필드만 채워지고 나머지는 null */
-        AttemptItem: {
-            /**
-             * Format: int64
-             * @description 문항 ID — 제출(POST /exams/{examId}/submit) 시 이 값으로 답안을 매칭한다
-             * @example 101
-             */
-            examItemId?: number;
-            /**
-             * Format: int32
-             * @description 문항 순서
-             * @example 1
-             */
-            itemOrder?: number;
-            /**
-             * @description 영어 단어 — subType이 WORD_TO_MEANING일 때만 존재
-             * @example diligent
-             */
-            word?: string;
-            /**
-             * @description 한글 뜻 — subType이 MEANING_TO_WORD일 때만 존재
-             * @example 근면한
-             */
-            koreanMeaning?: string;
-            /**
-             * @description 영어 뜻 — subType이 MEANING_TO_WORD일 때만 존재
-             * @example hard-working
-             */
-            englishMeaning?: string;
-            /**
-             * @description 빈칸 예문 — 예문(EXAMPLE) 시험일 때만 존재
-             * @example She is a _____ student.
-             */
-            example?: string;
         };
         /** @description 응시용 시험 정보 — 학생이 풀어야 할 문제만 담는다. 정답(word/koreanMeaning/englishMeaning 중 답에 해당하는 것)과 synonyms·wordId는 포함되지 않는다 */
         ExamAttemptResponse: {
@@ -2531,6 +2929,53 @@ export interface components {
             message?: string;
             data?: components["schemas"]["TodoItem"][];
         };
+        ApiResponseListPersonalWordResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalWordResponse"][];
+        };
+        ApiResponseListPersonalExamSummaryResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamSummaryResponse"][];
+        };
+        PersonalExamSummaryResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 시험 ID
+             * @example 1
+             */
+            personalExamId?: number;
+            /**
+             * @description 출제 유형
+             * @example WORD_TO_MEANING
+             */
+            subType?: string;
+            /**
+             * @description 시험 상태
+             * @example COMPLETED
+             */
+            status?: string;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 10
+             */
+            totalCount?: number;
+            /**
+             * Format: int32
+             * @description 정답 수 — 채점 전이면 null
+             * @example 8
+             */
+            correctCount?: number;
+            /**
+             * @description 합격 여부 — 채점 전이면 null
+             * @example true
+             */
+            isPassed?: boolean;
+        };
         ApiResponsePendingReviewsResponse: {
             /** Format: int32 */
             status?: number;
@@ -2777,6 +3222,93 @@ export interface components {
              * @example true
              */
             isPassed?: boolean;
+        };
+        ApiResponsePersonalExamDetailResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamDetailResponse"];
+        };
+        PersonalExamDetailResponse: {
+            /**
+             * Format: int64
+             * @description 개인 단어 시험 ID
+             * @example 1
+             */
+            personalExamId?: number;
+            /**
+             * Format: int64
+             * @description 학생 ID
+             * @example 10
+             */
+            studentId?: number;
+            /**
+             * @description 학생 이름
+             * @example 홍길동
+             */
+            studentName?: string;
+            /**
+             * @description 출제 유형
+             * @example WORD_TO_MEANING
+             */
+            subType?: string;
+            /**
+             * @description 시험 상태
+             * @example COMPLETED
+             */
+            status?: string;
+            /**
+             * @description 합격 여부 — 채점 전이면 null
+             * @example true
+             */
+            isPassed?: boolean;
+            /**
+             * Format: int32
+             * @description 응시 중 화면 이탈 누적 횟수 — 미측정이면 null
+             * @example 0
+             */
+            violationCount?: number;
+            items?: components["schemas"]["PersonalExamItemDetail"][];
+        };
+        PersonalExamItemDetail: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 101
+             */
+            personalExamItemId?: number;
+            /**
+             * Format: int32
+             * @description 문항 순서
+             * @example 1
+             */
+            itemOrder?: number;
+            /**
+             * Format: int64
+             * @description 개인 단어 ID
+             * @example 5
+             */
+            personalWordId?: number;
+            /**
+             * @description 영어 단어
+             * @example eloquent
+             */
+            word?: string;
+            /**
+             * @description 한글 뜻
+             * @example 유창한, 웅변적인
+             */
+            koreanMeaning?: string;
+            /**
+             * @description 정오답 — 채점 전이면 null
+             * @example true
+             */
+            isCorrect?: boolean;
+            /**
+             * @description 학생 답안 — 오프라인이거나 채점 전이면 null
+             * @example 유창한
+             */
+            userAnswer?: string;
         };
         ApiResponseStudySetExamTypeResponse: {
             /** Format: int32 */
@@ -3519,6 +4051,89 @@ export interface operations {
                 };
             };
             /** @description 단어를 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    updatePersonalWord: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 ID
+                 * @example 1
+                 */
+                personalWordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalWordUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 수정 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+            /** @description 유효성 검증 실패 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+            /** @description 개인 단어를 찾을 수 없음 (PERSONAL_WORD_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+        };
+    };
+    deletePersonalWord: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 ID
+                 * @example 1
+                 */
+                personalWordId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 삭제 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 개인 단어를 찾을 수 없음 (PERSONAL_WORD_NOT_FOUND) */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -4334,6 +4949,190 @@ export interface operations {
             };
         };
     };
+    getPersonalWords: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalWordResponse"];
+                };
+            };
+            /** @description 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalWordResponse"];
+                };
+            };
+            /** @description 본인/담당 학생·연결된 자녀가 아님 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalWordResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalWordResponse"];
+                };
+            };
+        };
+    };
+    createPersonalWord: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalWordCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 생성 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+            /** @description 유효성 검증 실패 / 대상이 학생이 아님(MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalWordResponse"];
+                };
+            };
+        };
+    };
+    getPersonalExams: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — 빈 배열 가능 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalExamSummaryResponse"];
+                };
+            };
+            /** @description 본인/담당 학생·연결된 자녀가 아님 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalExamSummaryResponse"];
+                };
+            };
+        };
+    };
+    createPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalExamCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 생성 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamResponse"];
+                };
+            };
+            /** @description 범위가 올바르지 않음(PERSONAL_EXAM_RANGE_INVALID) — 활성 개인 단어가 없거나 범위가 뒤집혔거나 보유 단어 수를 초과 / 대상이 학생이 아님 (MEMBER_NOT_STUDENT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamResponse"];
+                };
+            };
+            /** @description 학생을 찾을 수 없음 (MEMBER_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamResponse"];
+                };
+            };
+        };
+    };
     getMemos: {
         parameters: {
             query?: never;
@@ -4523,6 +5322,265 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+        };
+    };
+    submitPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalExamSubmitRequest"];
+            };
+        };
+        responses: {
+            /** @description 제출 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 취소·이미 제출·완료된 시험 / 문항 누락(TEST_ITEMS_INCOMPLETE) / violationCount가 음수 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 본인 시험이 아님 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    gradeOnline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalExamGradeOnlineRequest"];
+            };
+        };
+        responses: {
+            /** @description 채점 완료 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+            /** @description 취소된 시험(TEST_CANCELLED) 또는 문항 결과 누락(TEST_ITEMS_INCOMPLETE) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+        };
+    };
+    gradeOffline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalExamGradeOfflineRequest"];
+            };
+        };
+        responses: {
+            /** @description 채점 완료 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+            /** @description 취소된 시험(TEST_CANCELLED) 또는 문항 결과 누락(TEST_ITEMS_INCOMPLETE) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamGradeResponse"];
+                };
+            };
+        };
+    };
+    cancelPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 취소 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 취소 불가 상태(COMPLETED/CANCELLED) — TEST_CANNOT_CANCEL */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 선생님만 취소 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseVoid"];
+                };
+            };
+        };
+    };
+    attemptPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 응시 시작 — 문제 반환 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamAttemptResponse"];
+                };
+            };
+            /** @description 이미 응시함(EXAM_ALREADY_ATTEMPTED) / 취소된 시험(TEST_CANCELLED) / 이미 제출·완료(TEST_ALREADY_SUBMITTED, TEST_ALREADY_COMPLETED) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamAttemptResponse"];
+                };
+            };
+            /** @description 본인 시험이 아님 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamAttemptResponse"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamAttemptResponse"];
                 };
             };
         };
@@ -6075,6 +7133,50 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseDashboardChartResponse"];
+                };
+            };
+        };
+    };
+    getPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 개인 단어 시험 ID
+                 * @example 1
+                 */
+                personalExamId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamDetailResponse"];
+                };
+            };
+            /** @description 본인/담당 학생·연결된 자녀가 아님 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamDetailResponse"];
+                };
+            };
+            /** @description 시험을 찾을 수 없음 (PERSONAL_EXAM_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePersonalExamDetailResponse"];
                 };
             };
         };
