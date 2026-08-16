@@ -8,9 +8,10 @@ import { QuickAssignmentCard } from './ui/QuickAssignmentCard';
 import WordTestTab from './ui/WordTestTab';
 import { LevelTestTab } from './ui/LevelTestTab';
 import { WrongWordBankTab } from './ui/WrongWordBankTab';
+import { PersonalWordBankTab } from './ui/PersonalWordBankTab';
 import { useStudentOverview } from '@/entities/student';
 
-type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest';
+type MainTab = 'wordTest' | 'reviewDeck' | 'levelTest' | 'personalWords';
 
 export function ClinicDetailPage() {
   const { studentId: studentIdParam } = useParams({
@@ -74,6 +75,7 @@ export function ClinicDetailPage() {
                     { key: 'wordTest', label: 'Word Test' },
                     { key: 'reviewDeck', label: 'Review Deck' },
                     { key: 'levelTest', label: 'Level Test' },
+                    { key: 'personalWords', label: 'Personal Words' },
                   ] as { key: MainTab; label: string }[]
                 ).map((tab) => (
                   <button
@@ -99,6 +101,8 @@ export function ClinicDetailPage() {
             {mainTab === 'reviewDeck' && <WrongWordBankTab studentId={studentId} />}
 
             {mainTab === 'levelTest' && <LevelTestTab studentId={studentId} />}
+
+            {mainTab === 'personalWords' && <PersonalWordBankTab studentId={studentId} />}
           </div>
         </div>
       </div>

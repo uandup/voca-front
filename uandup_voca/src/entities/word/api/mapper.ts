@@ -21,8 +21,10 @@ function toWordRequestBody(data: Omit<WordCardData, 'id'>): WordCreateRequest {
     partsOfSpeech: data.partsOfSpeech.map((p) => POS_TO_TOKEN[p]),
     koreanMeaning: data.korMeaning,
     englishMeaning: data.engMeaning || undefined,
-    difficulty: data.difficulty,
-    synonyms: data.synonyms.length > 0 ? data.synonyms : undefined,
+    // 이 폼은 실제 Word 생성/수정 전용이라 difficulty가 항상 있지만, WordCardData 타입
+    // 자체는 PersonalWord처럼 개념이 없는 출처를 위해 optional이라 폴백을 둔다.
+    difficulty: data.difficulty ?? 1,
+    synonyms: data.synonyms && data.synonyms.length > 0 ? data.synonyms : undefined,
     example: data.sentence || undefined,
     satPriority: data.satPriority,
     // 배열 → 콤마 구분 문자열 역변환. 빈 배열이면 필드 생략.

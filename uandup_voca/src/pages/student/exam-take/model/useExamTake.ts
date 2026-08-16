@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { type ExamSource, useExamAttempt } from '@/entities/test';
+import { usePersonalExamAttempt, personalExamKeys } from '@/entities/personal-exam';
 import { useSubmitExam } from '@/features/exam';
 import { useCurrentStudentId } from '@/entities/auth';
 import { studentKeys } from '@/entities/student';
@@ -38,7 +39,18 @@ export function useExamTake({
 }: UseExamTakeParams) {
   const studentId = useCurrentStudentId() ?? 0;
   const queryClient = useQueryClient();
-  const { data: attempt, loading, error } = useExamAttempt(routeExamId, started);
+
+  // PersonalExam은 entities/test가 아니라 entities/personal-exam의 자체 attempt 엔드포인트를
+  // 쓴다. 두 훅 모두 항상 호출하되(hooks 규칙) 각자의 enabled를 source로 갈라 실제 POST는
+  // 정확히 한쪽만 나가게 한다 — 잘못된 쪽이 발사되면 routeExamId가 다른 시험 테이블의 ID와
+  // 우연히 겹칠 때 엉뚱한 시험을 건드릴 수 있어 반드시 한쪽만 활성화해야 한다.
+  const testAttempt = useExamAttempt(routeExamId, started && source !== 'personal');
+  const personalAttempt = usePersonalExamAttempt(routeExamId, started && source === 'personal');
+  const {
+    data: attempt,
+    loading,
+    error,
+  } = source === 'personal' ? personalAttempt : testAttempt;
 
   // 응시를 시작하면(attempt 성공) 서버에 attemptStartedAt이 기록되어 시험이 재응시 불가로 잠긴다.
   // 목록/할일 캐시는 응시 시작 전 데이터라, 나가서 돌아올 때 stale한 'active'를 보여준다 → 무효화해
@@ -50,6 +62,8 @@ export function useExamTake({
       queryClient.invalidateQueries({ queryKey: reviewDeckKeys.exams(studentId) });
     } else if (source === 'level-test') {
       queryClient.invalidateQueries({ queryKey: levelTestKeys.exams(studentId) });
+    } else if (source === 'personal') {
+      queryClient.invalidateQueries({ queryKey: personalExamKeys.exams(studentId) });
     } else {
       queryClient.invalidateQueries({ queryKey: studentKeys.studySets(studentId) });
     }
