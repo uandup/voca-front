@@ -14,9 +14,10 @@ import {
   SentenceReviewTable,
 } from '@/widgets/test-online';
 import type { Answer } from '@/widgets/test-online';
-import { useExamDetail, ExamViolationBadge } from '@/entities/test';
+import { useExamDetail, ExamViolationBadge, inferSource } from '@/entities/test';
 import { useStudentOverview, useActiveStudySetList, toTestBundleRow } from '@/entities/student';
 import { toVocabReviewItems, toSentenceTestItems, toSentenceAnswers } from '@/entities/test';
+import { usePersonalExamDetail } from '@/entities/personal-exam';
 import { useRecordOnlineResults } from './model/useRecordOnlineResults';
 import { useCreateAndStartStepExam } from './model/useCreateAndStartStepExam';
 
@@ -59,15 +60,20 @@ export default function ExamReviewPage() {
   const [selectedExamId, setSelectedExamId] = useState(routeExamId);
   const examId = showAttemptTabs ? selectedExamId : routeExamId;
 
-  const { data: examDetail, isLoading } = useExamDetail(examId);
+  const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
+  const isSentence = examType === 'EXAMPLE';
+
+  // PersonalExam은 entities/test가 아니라 entities/personal-exam의 자체 detail 엔드포인트를
+  // 쓴다(학생 쪽 useExamReview.ts와 동일한 source 분기 패턴).
+  const source = inferSource(examType);
+  const testDetail = useExamDetail(source !== 'personal' ? examId : null);
+  const personalDetail = usePersonalExamDetail(source === 'personal' ? examId : null);
+  const { data: examDetail, isLoading } = source === 'personal' ? personalDetail : testDetail;
 
   // ExamDetail에는 학생 식별 정보가 없다 — 헤더에 이름/학년을 띄우려면 별도로 overview를 가져온다.
   // studentId가 없는 URL(북마크/수기 입력)에서는 hook 내부의 enabled 가드가 요청을 막는다.
   const studentId = search.studentId ?? 0;
   const { data: student } = useStudentOverview(studentId);
-
-  const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
-  const isSentence = examType === 'EXAMPLE';
 
   const studySetId = search.studySetId ?? 0;
 

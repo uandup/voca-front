@@ -2162,19 +2162,8 @@ export interface components {
             /** Format: int32 */
             questionCount?: number;
         };
-        /** @description 개인 단어 시험 제출 요청 — 학생이 입력한 답안 */
-        PersonalExamSubmitRequest: {
-            /** @description 문항별 답안 목록 */
-            results: components["schemas"]["SubmitItemResult"][];
-            /**
-             * Format: int32
-             * @description 응시 중 누적된 화면 이탈 횟수. 감독 미지원 기기·구버전 클라이언트는 생략할 수 있으며(null=미측정), 측정 결과 0회인 것과 구분된다
-             * @example 0
-             */
-            violationCount?: number;
-        };
         /** @description 개별 문항 답안 */
-        SubmitItemResult: {
+        PersonalExamSubmitItemResult: {
             /**
              * Format: int64
              * @description 문항 ID
@@ -2187,8 +2176,29 @@ export interface components {
              */
             wordAnswer?: string;
         };
+        /** @description 개인 단어 시험 제출 요청 — 학생이 입력한 답안 */
+        PersonalExamSubmitRequest: {
+            /** @description 문항별 답안 목록 */
+            results: components["schemas"]["PersonalExamSubmitItemResult"][];
+            /**
+             * Format: int32
+             * @description 응시 중 누적된 화면 이탈 횟수. 감독 미지원 기기·구버전 클라이언트는 생략할 수 있으며(null=미측정), 측정 결과 0회인 것과 구분된다
+             * @example 0
+             */
+            violationCount?: number;
+        };
+        /** @description 개인 단어 시험 온라인 채점 요청 — 학생이 앱에서 제출한 결과 */
+        PersonalExamGradeOnlineRequest: {
+            /** @description 전체 문항별 채점 결과 리스트 */
+            results: components["schemas"]["PersonalExamOnlineItemResult"][];
+            /**
+             * @description 시험 전체 합격 여부
+             * @example true
+             */
+            isPassed: boolean;
+        };
         /** @description 개별 문항 채점 결과 (온라인) */
-        OnlineItemResult: {
+        PersonalExamOnlineItemResult: {
             /**
              * Format: int64
              * @description 문항 ID
@@ -2205,16 +2215,6 @@ export interface components {
              * @example apple
              */
             userAnswer?: string;
-        };
-        /** @description 개인 단어 시험 온라인 채점 요청 — 학생이 앱에서 제출한 결과 */
-        PersonalExamGradeOnlineRequest: {
-            /** @description 전체 문항별 채점 결과 리스트 */
-            results: components["schemas"]["OnlineItemResult"][];
-            /**
-             * @description 시험 전체 합격 여부
-             * @example true
-             */
-            isPassed: boolean;
         };
         ApiResponsePersonalExamGradeResponse: {
             /** Format: int32 */
@@ -2259,8 +2259,18 @@ export interface components {
              */
             isPassed?: boolean;
         };
+        /** @description 개인 단어 시험 오프라인 채점 요청 — 선생님이 종이 시험지 채점 결과를 입력 */
+        PersonalExamGradeOfflineRequest: {
+            /** @description 전체 문항별 채점 결과 리스트 */
+            results: components["schemas"]["PersonalExamOfflineItemResult"][];
+            /**
+             * @description 시험 전체 합격 여부
+             * @example true
+             */
+            isPassed: boolean;
+        };
         /** @description 개별 문항 채점 결과 (오프라인) */
-        OfflineItemResult: {
+        PersonalExamOfflineItemResult: {
             /**
              * Format: int64
              * @description 문항 ID
@@ -2273,16 +2283,6 @@ export interface components {
              */
             isCorrect: boolean;
         };
-        /** @description 개인 단어 시험 오프라인 채점 요청 — 선생님이 종이 시험지 채점 결과를 입력 */
-        PersonalExamGradeOfflineRequest: {
-            /** @description 전체 문항별 채점 결과 리스트 */
-            results: components["schemas"]["OfflineItemResult"][];
-            /**
-             * @description 시험 전체 합격 여부
-             * @example true
-             */
-            isPassed: boolean;
-        };
         ApiResponsePersonalExamAttemptResponse: {
             /** Format: int32 */
             status?: number;
@@ -2290,7 +2290,7 @@ export interface components {
             data?: components["schemas"]["PersonalExamAttemptResponse"];
         };
         /** @description 응시용 문항 — subType에 따라 프롬프트 필드만 채워지고 나머지는 null */
-        AttemptItem: {
+        PersonalExamAttemptItem: {
             /**
              * Format: int64
              * @description 문항 ID — 제출 시 이 값으로 답안을 매칭한다
@@ -2335,7 +2335,7 @@ export interface components {
              */
             totalCount?: number;
             /** @description 문항 목록 (itemOrder 오름차순) */
-            items?: components["schemas"]["AttemptItem"][];
+            items?: components["schemas"]["PersonalExamAttemptItem"][];
         };
         /** @description 학습 단계 스킵 요청 */
         SkipStageRequest: {
@@ -2449,10 +2449,29 @@ export interface components {
              */
             examTag?: string;
         };
+        /** @description 개별 문항 답안 */
+        ExamSubmitItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            examItemId: number;
+            /**
+             * @description 단어 답안 (뜻 쓰기 시험이면 뜻)
+             * @example apple
+             */
+            wordAnswer?: string;
+            /**
+             * @description 동의어 답안 (includeSynonym=false이면 null)
+             * @example fruit
+             */
+            synonymAnswer?: string;
+        };
         /** @description 온라인 시험 제출 요청 — 학생이 입력한 답안 */
         SubmitExamRequest: {
             /** @description 문항별 답안 목록 */
-            results: components["schemas"]["SubmitItemResult"][];
+            results: components["schemas"]["ExamSubmitItemResult"][];
             /**
              * Format: int32
              * @description 응시 중 누적된 화면 이탈 횟수. 감독 미지원 기기·구버전 클라이언트는 생략할 수 있으며(null 허용), 생략하면 미측정(null)으로 저장된다 — 측정 결과 0회인 것과 구분된다. 시험 1건당 1개 값
@@ -2460,10 +2479,29 @@ export interface components {
              */
             violationCount?: number;
         };
+        /** @description 개별 문항 채점 결과 (온라인) */
+        ExamOnlineItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            examItemId: number;
+            /**
+             * @description 정답 여부 (클라이언트가 판정)
+             * @example true
+             */
+            isCorrect: boolean;
+            /**
+             * @description 학생이 작성한 답안
+             * @example apple
+             */
+            userAnswer?: string;
+        };
         /** @description 온라인 시험 채점 요청 — 학생이 앱에서 제출한 결과 */
         RecordOnlineResultsRequest: {
             /** @description 전체 문항별 채점 결과 리스트 */
-            results: components["schemas"]["OnlineItemResult"][];
+            results: components["schemas"]["ExamOnlineItemResult"][];
             /**
              * @description 시험 전체 합격 여부
              * @example true
@@ -2518,10 +2556,24 @@ export interface components {
              */
             studySetStatus?: string;
         };
+        /** @description 개별 문항 채점 결과 (오프라인) */
+        ExamOfflineItemResult: {
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 1
+             */
+            examItemId: number;
+            /**
+             * @description 정답 여부
+             * @example true
+             */
+            isCorrect: boolean;
+        };
         /** @description 오프라인 시험 채점 요청 — 선생님이 종이 시험지 채점 결과를 입력 */
         RecordOfflineResultsRequest: {
             /** @description 전체 문항별 채점 결과 리스트 */
-            results: components["schemas"]["OfflineItemResult"][];
+            results: components["schemas"]["ExamOfflineItemResult"][];
             /**
              * @description 시험 전체 합격 여부
              * @example true
@@ -2533,6 +2585,41 @@ export interface components {
             status?: number;
             message?: string;
             data?: components["schemas"]["ExamAttemptResponse"];
+        };
+        /** @description 응시용 문항 — 유형별로 프롬프트 필드만 채워지고 나머지는 null */
+        ExamAttemptItem: {
+            /**
+             * Format: int64
+             * @description 문항 ID — 제출(POST /exams/{examId}/submit) 시 이 값으로 답안을 매칭한다
+             * @example 101
+             */
+            examItemId?: number;
+            /**
+             * Format: int32
+             * @description 문항 순서
+             * @example 1
+             */
+            itemOrder?: number;
+            /**
+             * @description 영어 단어 — subType이 WORD_TO_MEANING일 때만 존재
+             * @example diligent
+             */
+            word?: string;
+            /**
+             * @description 한글 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @example 근면한
+             */
+            koreanMeaning?: string;
+            /**
+             * @description 영어 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @example hard-working
+             */
+            englishMeaning?: string;
+            /**
+             * @description 빈칸 예문 — 예문(EXAMPLE) 시험일 때만 존재
+             * @example She is a _____ student.
+             */
+            example?: string;
         };
         /** @description 응시용 시험 정보 — 학생이 풀어야 할 문제만 담는다. 정답(word/koreanMeaning/englishMeaning 중 답에 해당하는 것)과 synonyms·wordId는 포함되지 않는다 */
         ExamAttemptResponse: {
@@ -2572,7 +2659,7 @@ export interface components {
              */
             totalCount?: number;
             /** @description 문항 목록 (itemOrder 오름차순) */
-            items?: components["schemas"]["AttemptItem"][];
+            items?: components["schemas"]["ExamAttemptItem"][];
             /**
              * @description 보기 단어 목록 — 예문(EXAMPLE) 시험에만 존재하며, 문항 순서와 무관하게 섞여 있다. 그 외 유형은 null
              * @example [

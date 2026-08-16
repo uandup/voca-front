@@ -13,6 +13,11 @@ export {
   attemptPersonalExam,
   submitPersonalExam,
   cancelPersonalExam,
+  gradeOnline,
+} from './api/personalExamApi';
+export type {
+  PersonalExamGradeOnlineRequest,
+  PersonalExamGradeResponse,
 } from './api/personalExamApi';
 export { usePersonalExamAttempt } from './api/usePersonalExamAttempt';
 export { usePersonalExamList } from './api/usePersonalExamList';

@@ -8,13 +8,16 @@ export type PersonalExamItemDetail = components['schemas']['PersonalExamItemDeta
 export type PersonalExamDetailResponse = components['schemas']['PersonalExamDetailResponse'];
 
 // 응시용 문항 — 유형별로 word/koreanMeaning 중 출제되는 프롬프트만 채워진다(entities/test의
-// AttemptItem과 동일한 성격). 정답 필드는 내려오지 않는다.
-export type PersonalExamAttemptItem = components['schemas']['AttemptItem'];
+// ExamAttemptItem과 동일한 성격). 정답 필드는 내려오지 않는다.
+export type PersonalExamAttemptItem = components['schemas']['PersonalExamAttemptItem'];
 
 export type PersonalExamAttemptResponse = components['schemas']['PersonalExamAttemptResponse'];
 export type CreatePersonalExamRequest = components['schemas']['PersonalExamCreateRequest'];
-export type SubmitPersonalExamItemResult = components['schemas']['SubmitItemResult'];
+export type SubmitPersonalExamItemResult = components['schemas']['PersonalExamSubmitItemResult'];
 export type SubmitPersonalExamRequest = components['schemas']['PersonalExamSubmitRequest'];
+export type PersonalExamGradeOnlineRequest =
+  components['schemas']['PersonalExamGradeOnlineRequest'];
+export type PersonalExamGradeResponse = components['schemas']['PersonalExamGradeResponse'];
 
 // ── API functions ──────────────────────────────────────────────────────────
 
@@ -65,4 +68,15 @@ export const submitPersonalExam = (
 export const cancelPersonalExam = (personalExamId: number): Promise<ApiResponse<void>> =>
   axiosInstance
     .post<ApiResponse<void>>(`/api/v1/personal-exams/${personalExamId}/cancel`)
+    .then((r) => r.data);
+
+// 선생님의 온라인 채점 저장 — 학생이 앱에서 제출한 시험의 정오답/합격 여부를 기록한다.
+export const gradeOnline = (
+  personalExamId: number,
+  body: PersonalExamGradeOnlineRequest,
+): Promise<ApiResponse<PersonalExamGradeResponse>> =>
+  axiosInstance
+    .post<
+      ApiResponse<PersonalExamGradeResponse>
+    >(`/api/v1/personal-exams/${personalExamId}/results/online`, body)
     .then((r) => r.data);

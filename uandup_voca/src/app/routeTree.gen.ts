@@ -42,6 +42,7 @@ import { Route as StudentReviewDeckStudySetIdWordsRouteImport } from './../route
 import { Route as StudentLevelTestStudySetIdWordsRouteImport } from './../routes/student/level-test/$studySetId/words'
 import { Route as StudentDashboardAssignedWordsStudySetIdRouteImport } from './../routes/student/dashboard_/assigned-words/$studySetId'
 import { Route as TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport } from './../routes/teacher/students_.$studentId_/assigned-words/$studySetId'
+import { Route as TeacherClinicsStudentsStudentIdPersonalWordsRouteImport } from './../routes/teacher/clinics_.students.$studentId_/personal-words'
 
 const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
@@ -221,6 +222,12 @@ const TeacherStudentsStudentIdAssignedWordsStudySetIdRoute =
     path: '/students/$studentId/assigned-words/$studySetId',
     getParentRoute: () => TeacherRoute,
   } as any)
+const TeacherClinicsStudentsStudentIdPersonalWordsRoute =
+  TeacherClinicsStudentsStudentIdPersonalWordsRouteImport.update({
+    id: '/clinics_/students/$studentId_/personal-words',
+    path: '/clinics/students/$studentId/personal-words',
+    getParentRoute: () => TeacherRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -255,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/teacher/students/$studentId/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/clinics/students/$studentId/personal-words': typeof TeacherClinicsStudentsStudentIdPersonalWordsRoute
   '/teacher/students/$studentId/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRoutesByTo {
@@ -288,6 +296,7 @@ export interface FileRoutesByTo {
   '/teacher/students/$studentId/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/clinics/students/$studentId/personal-words': typeof TeacherClinicsStudentsStudentIdPersonalWordsRoute
   '/teacher/students/$studentId/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRoutesById {
@@ -324,6 +333,7 @@ export interface FileRoutesById {
   '/teacher/students_/$studentId_/pending-reviews': typeof TeacherStudentsStudentIdPendingReviewsRoute
   '/teacher_/exams/$examId/preview': typeof TeacherExamsExamIdPreviewRoute
   '/teacher_/exams/$examId/review': typeof TeacherExamsExamIdReviewRoute
+  '/teacher/clinics_/students/$studentId_/personal-words': typeof TeacherClinicsStudentsStudentIdPersonalWordsRoute
   '/teacher/students_/$studentId_/assigned-words/$studySetId': typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 export interface FileRouteTypes {
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/teacher/students/$studentId/pending-reviews'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
+    | '/teacher/clinics/students/$studentId/personal-words'
     | '/teacher/students/$studentId/assigned-words/$studySetId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/teacher/students/$studentId/pending-reviews'
     | '/teacher/exams/$examId/preview'
     | '/teacher/exams/$examId/review'
+    | '/teacher/clinics/students/$studentId/personal-words'
     | '/teacher/students/$studentId/assigned-words/$studySetId'
   id:
     | '__root__'
@@ -429,6 +441,7 @@ export interface FileRouteTypes {
     | '/teacher/students_/$studentId_/pending-reviews'
     | '/teacher_/exams/$examId/preview'
     | '/teacher_/exams/$examId/review'
+    | '/teacher/clinics_/students/$studentId_/personal-words'
     | '/teacher/students_/$studentId_/assigned-words/$studySetId'
   fileRoutesById: FileRoutesById
 }
@@ -678,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/teacher/clinics_/students/$studentId_/personal-words': {
+      id: '/teacher/clinics_/students/$studentId_/personal-words'
+      path: '/clinics/students/$studentId/personal-words'
+      fullPath: '/teacher/clinics/students/$studentId/personal-words'
+      preLoaderRoute: typeof TeacherClinicsStudentsStudentIdPersonalWordsRouteImport
+      parentRoute: typeof TeacherRoute
+    }
   }
 }
 
@@ -727,6 +747,7 @@ interface TeacherRouteChildren {
   TeacherStudentsStudentIdRoute: typeof TeacherStudentsStudentIdRoute
   TeacherClinicsStudentsStudentIdRoute: typeof TeacherClinicsStudentsStudentIdRoute
   TeacherStudentsStudentIdPendingReviewsRoute: typeof TeacherStudentsStudentIdPendingReviewsRoute
+  TeacherClinicsStudentsStudentIdPersonalWordsRoute: typeof TeacherClinicsStudentsStudentIdPersonalWordsRoute
   TeacherStudentsStudentIdAssignedWordsStudySetIdRoute: typeof TeacherStudentsStudentIdAssignedWordsStudySetIdRoute
 }
 
@@ -741,6 +762,8 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherClinicsStudentsStudentIdRoute: TeacherClinicsStudentsStudentIdRoute,
   TeacherStudentsStudentIdPendingReviewsRoute:
     TeacherStudentsStudentIdPendingReviewsRoute,
+  TeacherClinicsStudentsStudentIdPersonalWordsRoute:
+    TeacherClinicsStudentsStudentIdPersonalWordsRoute,
   TeacherStudentsStudentIdAssignedWordsStudySetIdRoute:
     TeacherStudentsStudentIdAssignedWordsStudySetIdRoute,
 }
