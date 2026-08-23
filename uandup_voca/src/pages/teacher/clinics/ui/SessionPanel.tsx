@@ -73,12 +73,12 @@ export function SessionPanel({
               </button>
               {isOpen && (
                 <div className="bg-white">
-                  {group.hours.map((hour) => {
-                    const isSelected = selectedSlot.hour === hour;
+                  {group.hours.map((slot) => {
+                    const isSelected = selectedSlot.hour === slot.hour;
                     return (
                       <button
-                        key={hour}
-                        onClick={() => onSelectHour(hour)}
+                        key={slot.hour}
+                        onClick={() => onSelectHour(slot.hour)}
                         className={`w-full text-left px-4 py-3 flex items-center transition-all cursor-pointer border-l-4 ${
                           isSelected
                             ? 'bg-primary-fixed border-primary'
@@ -88,8 +88,7 @@ export function SessionPanel({
                         <span
                           className={`text-sm font-bold transition-colors ${isSelected ? 'text-primary' : 'text-on-surface/80'}`}
                         >
-                          {String(hour).padStart(2, '0')}:00 – {String(hour + 1).padStart(2, '0')}
-                          :00
+                          {slot.label}
                         </span>
                       </button>
                     );

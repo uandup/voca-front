@@ -24,26 +24,50 @@ export const todayDay: Day = (() => {
 
 export type TimeGroup = 'morning' | 'afternoon' | 'evening';
 
+// hour는 화면 라벨 계산용이 아니라 백엔드 요청 경로(/clinics/{day}/{hour}/students)에
+// 그대로 들어가는 키다. 슬롯 길이가 50분/60분으로 제각각이라 "hour:00–hour+1:00" 공식으로
+// 라벨을 계산할 수 없어, 키(hour)와 화면 라벨(label)을 분리해 각 슬롯에 실제 시각을 명시한다.
 export const TIME_GROUPS = [
-  { key: 'morning' as TimeGroup, label: 'Morning', range: '09 – 12', hours: [9, 10, 11] as const },
+  {
+    key: 'morning' as TimeGroup,
+    label: 'Morning',
+    range: '10 – 12',
+    hours: [
+      { hour: 10, label: '10:00 – 10:50' },
+      { hour: 11, label: '11:00 – 11:50' },
+    ] as const,
+  },
   {
     key: 'afternoon' as TimeGroup,
     label: 'Afternoon',
-    range: '13 – 17',
-    hours: [13, 14, 15, 16] as const,
+    range: '13 – 20',
+    hours: [
+      { hour: 13, label: '13:00 – 13:50' },
+      { hour: 14, label: '14:00 – 14:50' },
+      { hour: 15, label: '15:00 – 15:50' },
+      { hour: 16, label: '16:30 – 17:20' },
+      { hour: 17, label: '17:30 – 18:20' },
+      { hour: 18, label: '18:30 – 19:20' },
+      { hour: 19, label: '19:30 – 20:20' },
+    ] as const,
   },
   {
     key: 'evening' as TimeGroup,
     label: 'Evening',
-    range: '18 – 23',
-    hours: [18, 19, 20, 21, 22] as const,
+    range: '21 – 23',
+    hours: [
+      { hour: 21, label: '21:00 – 22:00' },
+      { hour: 22, label: '22:00 – 23:00' },
+    ] as const,
   },
 ] as const;
 
-export type ClinicHour = (typeof TIME_GROUPS)[number]['hours'][number];
+export type ClinicHour = (typeof TIME_GROUPS)[number]['hours'][number]['hour'];
 
 // 모든 클리닉 시간을 그룹 순서대로 평탄화한 목록.
-export const ALL_CLINIC_HOURS = TIME_GROUPS.flatMap((g) => g.hours) as ClinicHour[];
+export const ALL_CLINIC_HOURS = TIME_GROUPS.flatMap((g) =>
+  g.hours.map((h) => h.hour),
+) as ClinicHour[];
 
 // Asia/Seoul 기준 현재 시각으로 진행 중이거나 다음에 올 클리닉 시간.
 // 시간대에 빈 구간(12·17시)이 있어 단순 매칭이 불가능하므로 "현재 시 이상인 첫 시간"을 고른다.
@@ -57,7 +81,7 @@ export function getCurrentClinicHour(): ClinicHour {
 
 // 특정 시간이 속한 시간대 그룹.
 export function getTimeGroupOfHour(hour: ClinicHour): TimeGroup {
-  const group = TIME_GROUPS.find((g) => (g.hours as readonly number[]).includes(hour));
+  const group = TIME_GROUPS.find((g) => g.hours.some((h) => h.hour === hour));
   // 모든 ClinicHour는 어느 한 그룹에 속하므로 group은 항상 존재한다.
   return group!.key;
 }
