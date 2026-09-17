@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
@@ -13,6 +14,7 @@ import {
   useWordMask,
 } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
+import { useIsReadOnly } from '@/entities/auth';
 import { WordFlashcard } from '@/widgets/word-flashcard';
 
 type ViewMode = 'list' | 'flashcard';
@@ -25,6 +27,9 @@ interface Props {
   title?: string;
   // 셔플 버튼 노출 여부. 학생 화면은 기본 true, 선생님 조회 뷰에서만 false로 숨긴다.
   showShuffle?: boolean;
+  // 자체 시험(Self Test) 버튼 노출 여부. 학생 화면은 기본 true, 선생님 조회 뷰에서만 false로 숨긴다.
+  // 학부모(읽기전용) 세션은 이 값과 무관하게 숨긴다.
+  showSelfTest?: boolean;
 }
 
 // 한 study-set에 배정된 단어 목록을 학생에게 보여주는 공통 페이지.
@@ -34,7 +39,11 @@ export function StudySetWordsPage({
   parents,
   title = 'Words',
   showShuffle = true,
+  showSelfTest = true,
 }: Props) {
+  const navigate = useNavigate();
+  const isReadOnly = useIsReadOnly();
+
   // 학생 화면이므로 예문 노출은 서버의 exampleVisible을 따른다
   // (NORMAL 배정은 예문시험 채점 완료 후에만 true).
   const { data, isLoading } = useAssignedWords(studySetId, studySetId > 0);
@@ -52,6 +61,15 @@ export function StudySetWordsPage({
   const visibleWords = showBookmarkedOnly
     ? orderedWords.filter((w) => bookmarkedIds.has(w.id))
     : orderedWords;
+
+  // 자체 시험 페이지로 이동. Exit 시 지금 보고 있던 단어 목록으로 돌아오도록 현재 URL을 넘긴다.
+  function handleStartSelfTest() {
+    navigate({
+      to: '/student/self-test/$studySetId',
+      params: { studySetId: String(studySetId) },
+      search: { returnTo: window.location.pathname + window.location.search },
+    });
+  }
 
   return (
     <main>
@@ -99,6 +117,19 @@ export function StudySetWordsPage({
                 Flashcard
               </button>
             </div>
+
+            {/* 자체 시험 — 보기 설정(북마크/셔플/보기 전환)과 달리 다른 화면으로 가는 액션이라 맨 끝에 강조 색으로 둔다 */}
+            {showSelfTest && !isReadOnly && (
+              <button
+                onClick={handleStartSelfTest}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-sm font-semibold transition-colors bg-primary/10 border-primary/20 text-primary hover:bg-primary/15"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  quiz
+                </span>
+                Self Test
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -27,6 +27,7 @@ import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
 import { Route as StudentLevelTestIndexRouteImport } from './../routes/student/level-test/index'
 import { Route as TeacherStudentsStudentIdRouteImport } from './../routes/teacher/students_.$studentId'
+import { Route as StudentSelfTestStudySetIdRouteImport } from './../routes/student_.self-test.$studySetId'
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
 import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
@@ -132,6 +133,12 @@ const TeacherStudentsStudentIdRoute =
     path: '/students/$studentId',
     getParentRoute: () => TeacherRoute,
   } as any)
+const StudentSelfTestStudySetIdRoute =
+  StudentSelfTestStudySetIdRouteImport.update({
+    id: '/student_/self-test/$studySetId',
+    path: '/student/self-test/$studySetId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const StudentReviewDeckWordsRoute = StudentReviewDeckWordsRouteImport.update({
   id: '/review-deck/words',
   path: '/review-deck/words',
@@ -226,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/teacher/': typeof TeacherIndexRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student/self-test/$studySetId': typeof StudentSelfTestStudySetIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
@@ -257,6 +265,7 @@ export interface FileRoutesByTo {
   '/teacher': typeof TeacherIndexRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student/self-test/$studySetId': typeof StudentSelfTestStudySetIdRoute
   '/teacher/students/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test': typeof StudentLevelTestIndexRoute
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
@@ -291,6 +300,7 @@ export interface FileRoutesById {
   '/teacher/': typeof TeacherIndexRoute
   '/student/dashboard_/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
+  '/student_/self-test/$studySetId': typeof StudentSelfTestStudySetIdRoute
   '/teacher/students_/$studentId': typeof TeacherStudentsStudentIdRoute
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/student/dashboard/pending-reviews'
     | '/student/review-deck/words'
+    | '/student/self-test/$studySetId'
     | '/teacher/students/$studentId'
     | '/student/level-test/'
     | '/student/review-deck/'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/student/dashboard/pending-reviews'
     | '/student/review-deck/words'
+    | '/student/self-test/$studySetId'
     | '/teacher/students/$studentId'
     | '/student/level-test'
     | '/student/review-deck'
@@ -390,6 +402,7 @@ export interface FileRouteTypes {
     | '/teacher/'
     | '/student/dashboard_/pending-reviews'
     | '/student/review-deck/words'
+    | '/student_/self-test/$studySetId'
     | '/teacher/students_/$studentId'
     | '/student/level-test/'
     | '/student/review-deck/'
@@ -413,6 +426,7 @@ export interface RootRouteChildren {
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
   OauthCallbackRoute: typeof OauthCallbackRoute
+  StudentSelfTestStudySetIdRoute: typeof StudentSelfTestStudySetIdRoute
   StudentExamsExamIdReviewRoute: typeof StudentExamsExamIdReviewRoute
   StudentExamsExamIdTakeRoute: typeof StudentExamsExamIdTakeRoute
   TeacherExamsExamIdPreviewRoute: typeof TeacherExamsExamIdPreviewRoute
@@ -546,6 +560,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/teacher/students/$studentId'
       preLoaderRoute: typeof TeacherStudentsStudentIdRouteImport
       parentRoute: typeof TeacherRoute
+    }
+    '/student_/self-test/$studySetId': {
+      id: '/student_/self-test/$studySetId'
+      path: '/student/self-test/$studySetId'
+      fullPath: '/student/self-test/$studySetId'
+      preLoaderRoute: typeof StudentSelfTestStudySetIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/student/review-deck/words': {
       id: '/student/review-deck/words'
@@ -711,6 +732,7 @@ const rootRouteChildren: RootRouteChildren = {
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
   OauthCallbackRoute: OauthCallbackRoute,
+  StudentSelfTestStudySetIdRoute: StudentSelfTestStudySetIdRoute,
   StudentExamsExamIdReviewRoute: StudentExamsExamIdReviewRoute,
   StudentExamsExamIdTakeRoute: StudentExamsExamIdTakeRoute,
   TeacherExamsExamIdPreviewRoute: TeacherExamsExamIdPreviewRoute,
