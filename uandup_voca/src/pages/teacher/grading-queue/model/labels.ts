@@ -10,6 +10,7 @@ const EXAM_TYPE_LABEL: Record<ExamType, string> = {
   REVIEW3: 'Review 3',
   REVIEW_DECK: 'Review Deck',
   LEVEL_TEST: 'Level Test',
+  PERSONAL: 'Personal Word',
 };
 
 export function examTypeLabel(examType: ExamType): string {

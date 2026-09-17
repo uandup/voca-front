@@ -22,6 +22,12 @@ const navItems = [
     to: '/student/level-test',
     activePrefixes: ['/student/level-word-list'],
   },
+  {
+    icon: 'auto_stories',
+    label: 'Personal Words',
+    to: '/student/personal-exams',
+    activePrefixes: ['/student/personal-exams/words'],
+  },
 ] as const;
 
 interface StudentSideNavBarProps {

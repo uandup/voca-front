@@ -2,11 +2,13 @@ import { useMemo } from 'react';
 import {
   ITEMS_PER_PAGE,
   type ExamMode,
+  type ExamSource,
   type SentenceTestAnswer,
   type WordTestType,
   inferMode,
   useExamDetail,
 } from '@/entities/test';
+import { usePersonalExamDetail } from '@/entities/personal-exam';
 import type { WordTestItem, VocabReviewItem, SentenceTestItem } from '@/entities/word';
 import type { Answer } from '@/widgets/test-online';
 import { toWordTestItems, toVocabReviewItems, toSentenceTestItems } from '@/entities/test';
@@ -15,12 +17,17 @@ interface UseExamReviewParams {
   examId: number;
   isSentence: boolean;
   currentPage: number;
+  source: ExamSource;
 }
 
 // review/submitted 모드 전용 훅.
 // 답안 state 없이 examDetail에서 직접 읽는다. answer 모드는 useExamTake가 담당한다.
-export function useExamReview({ examId, isSentence, currentPage }: UseExamReviewParams) {
-  const { data: examDetail, isLoading } = useExamDetail(examId);
+export function useExamReview({ examId, isSentence, currentPage, source }: UseExamReviewParams) {
+  // PersonalExam은 entities/test가 아니라 entities/personal-exam의 자체 detail 엔드포인트를
+  // 쓴다. useExamTake의 attempt 분기와 동일한 이유로 두 훅 다 호출하되 source로 활성 쪽만 정한다.
+  const testDetail = useExamDetail(source !== 'personal' ? examId : null);
+  const personalDetail = usePersonalExamDetail(source === 'personal' ? examId : null);
+  const { data: examDetail, isLoading } = source === 'personal' ? personalDetail : testDetail;
 
   const mode = examDetail ? inferMode(examDetail.status) : ('review' as ExamMode);
   const testType: WordTestType = examDetail?.subType ?? 'word-to-meaning';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
-import { ITEMS_PER_PAGE, type ExamType } from '@/entities/test';
+import { ITEMS_PER_PAGE, type ExamType, inferSource } from '@/entities/test';
 import {
   TestHeader,
   TestPagination,
@@ -9,9 +9,12 @@ import {
   SentencePreviewTable,
 } from '@/widgets/test-online';
 import { useExamDetail, toVocabReviewItems, toSentencePreviewItems } from '@/entities/test';
+import { usePersonalExamDetail } from '@/entities/personal-exam';
 
 // 선생님이 학생이 풀게 될 시험을 미리 확인하는 페이지.
 // examType이 'EXAMPLE'이면 sentence preview, 그 외엔 vocab preview를 사용한다.
+// examType이 'PERSONAL'이면 entities/test가 아니라 entities/personal-exam의 자체 detail
+// 엔드포인트를 쓴다 — 학생 쪽 useExamReview.ts와 동일한 source 분기 패턴.
 
 export default function ExamPreviewPage() {
   const { examId: examIdParam } = useParams({ from: '/teacher_/exams/$examId/preview' });
@@ -19,7 +22,10 @@ export default function ExamPreviewPage() {
   const router = useRouter();
 
   const examId = Number(examIdParam);
-  const { data: examDetail, isLoading } = useExamDetail(examId);
+  const source = inferSource(examType);
+  const testDetail = useExamDetail(source !== 'personal' ? examId : null);
+  const personalDetail = usePersonalExamDetail(source === 'personal' ? examId : null);
+  const { data: examDetail, isLoading } = source === 'personal' ? personalDetail : testDetail;
 
   const [currentPage, setCurrentPage] = useState(1);
 

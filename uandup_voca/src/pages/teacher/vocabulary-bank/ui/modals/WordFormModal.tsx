@@ -4,12 +4,32 @@ import { DIFFICULTY_LEVELS } from '@/entities/word';
 import type { WordCardData, PartOfSpeech, WordDifficultyLevel } from '@/entities/word';
 import { useWordActions } from '../../model/useWordActions';
 
-type WordFormData = Omit<WordCardData, 'id'>;
+// WordCardData의 difficulty/synonyms/satPriority는 PersonalWord처럼 개념이 없는 출처를 위해
+// optional이지만, 이 폼은 선생님이 실제 Word를 만들고 고치는 용도라 세 필드 모두 항상 값이 있다
+// (DEFAULT_FORM/VocabularyBankPage의 editTarget 둘 다 concrete하게 채움) — 폼 내부에서 매번
+// undefined 가드를 쓰지 않도록 로컬 타입에서 required로 좁힌다.
+type WordFormData = Omit<WordCardData, 'id' | 'difficulty' | 'synonyms' | 'satPriority'> & {
+  difficulty: WordDifficultyLevel;
+  synonyms: string[];
+  satPriority: number;
+};
 
 interface WordFormModalProps {
   wordId?: number;
-  initialData?: WordFormData;
+  // 호출부(VocabularyBankPage)는 목록에서 읽은 WordCardData를 그대로 넘긴다 — difficulty/
+  // synonyms/satPriority는 실제로는 항상 채워져 있지만 타입상 optional이라, 아래에서
+  // WordFormData로 정규화한다.
+  initialData?: WordCardData;
   onClose: () => void;
+}
+
+function toFormData(data: WordCardData): WordFormData {
+  return {
+    ...data,
+    difficulty: data.difficulty ?? 1,
+    synonyms: data.synonyms ?? [],
+    satPriority: data.satPriority ?? 0,
+  };
 }
 
 const PARTS_OF_SPEECH: PartOfSpeech[] = ['N', 'V', 'Adj', 'Adv', 'Prep', 'Conj', 'Interj'];
@@ -30,7 +50,9 @@ export function WordFormModal({ wordId, initialData, onClose }: WordFormModalPro
   const { create, update: updateAction } = useWordActions();
   const mutation = wordId ? updateAction : create;
 
-  const [form, setForm] = useState<WordFormData>(initialData ?? DEFAULT_FORM);
+  const [form, setForm] = useState<WordFormData>(
+    initialData ? toFormData(initialData) : DEFAULT_FORM,
+  );
   const [synonymInput, setSynonymInput] = useState('');
   const [examTagInput, setExamTagInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
