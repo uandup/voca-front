@@ -1517,6 +1517,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/external/students/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 학생 학습 현황 요약 조회 (이메일 기준)
+         * @description 학생의 구글 이메일로 학습 현황을 조회한다. 외부 시스템 전용이며
+         *     `X-API-KEY` 헤더로 인증한다 (로그인 JWT로는 접근 불가).
+         *
+         *     모든 지표는 일반 단어 배정(NORMAL)만 집계하며 오답 뱅크·레벨 시험은 제외한다.
+         *     학생이 단어를 한 번도 배정받지 않았으면 `currentLevel`이, 채점 완료된 시험이
+         *     하나도 없으면 `accuracy`가 null로 내려간다.
+         */
+        get: operations["getSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/exams/{examId}": {
         parameters: {
             query?: never;
@@ -3881,6 +3906,120 @@ export interface components {
             name?: string;
             /** Format: int32 */
             grade?: number;
+        };
+        ApiResponseExternalStudentSummaryResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["ExternalStudentSummaryResponse"];
+        };
+        /** @description 외부 시스템용 학생 학습 현황 요약 */
+        ExternalStudentSummaryResponse: {
+            /**
+             * Format: int64
+             * @description 학생 ID
+             * @example 12
+             */
+            studentId?: number;
+            /**
+             * @description 학생 이름
+             * @example 홍길동
+             */
+            name?: string;
+            /**
+             * Format: int32
+             * @description 학년 (1~12) — 미설정이면 null
+             * @example 9
+             */
+            grade?: number;
+            /**
+             * Format: int32
+             * @description 현재 레벨 (1~10) — 단어를 한 번도 배정받지 않았으면 null
+             * @example 3
+             */
+            currentLevel?: number;
+            /**
+             * Format: int32
+             * @description 현재 레벨 진행 분자 — 현재 레벨에서 암기 완료한 마지막 단어의 순번. 없으면 0
+             * @example 45
+             */
+            levelMemorizedIndex?: number;
+            /**
+             * Format: int32
+             * @description 현재 레벨 진행 분모 — 현재 레벨의 전체 단어 수. currentLevel이 null이면 0
+             * @example 120
+             */
+            levelTotalWordCount?: number;
+            /**
+             * Format: double
+             * @description 전체 정답률 (0.0 ~ 1.0) — 채점 완료된 시험이 하나도 없으면 null
+             * @example 0.87
+             */
+            accuracy?: number;
+            /**
+             * Format: int32
+             * @description 암기 완료 단어 수 — 복습 3차까지 통과한 누적 단어 수
+             * @example 340
+             */
+            memorizedWordCount?: number;
+            /**
+             * Format: int32
+             * @description 총 배정 단어 수 — 지금까지 배정받은 누적 단어 수(취소된 배정 제외)
+             * @example 420
+             */
+            assignedWordCount?: number;
+            /**
+             * Format: int32
+             * @description 복습할 수 있는 단어 수 — 진행 중인 복습 시험에 걸린 배정 단어 수
+             * @example 60
+             */
+            pendingReviewWordCount?: number;
+            /** @description 최근 채점 완료 시험 (최신순, 최대 5건). 이력이 없으면 빈 배열 */
+            recentExams?: components["schemas"]["RecentExamScore"][];
+        };
+        /** @description 최근 채점 완료 시험 1건 */
+        RecentExamScore: {
+            /**
+             * Format: int64
+             * @description 시험 ID
+             * @example 128
+             */
+            examId?: number;
+            /**
+             * @description 시험 유형
+             * @example REVIEW1
+             * @enum {string}
+             */
+            examType?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3";
+            /**
+             * Format: date
+             * @description 시험 생성일 (YYYY-MM-DD)
+             * @example 2026-09-10
+             */
+            date?: string;
+            /**
+             * Format: int32
+             * @description 맞은 문항 수
+             * @example 18
+             */
+            correctCount?: number;
+            /**
+             * Format: int32
+             * @description 총 문항 수
+             * @example 20
+             */
+            totalCount?: number;
+            /**
+             * Format: double
+             * @description 정답률 (0.0 ~ 1.0)
+             * @example 0.9
+             */
+            accuracy?: number;
+            /**
+             * @description 합격 여부
+             * @example true
+             */
+            isPassed?: boolean;
         };
         ApiResponseExamDetailResponse: {
             /** Format: int32 */
@@ -7829,6 +7968,53 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["ApiResponseMemberResponse"];
                 };
+            };
+        };
+    };
+    getSummary: {
+        parameters: {
+            query: {
+                /**
+                 * @description 학생의 구글 계정 이메일
+                 * @example student@gmail.com
+                 */
+                email: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseExternalStudentSummaryResponse"];
+                };
+            };
+            /** @description INVALID_INPUT — email 파라미터 누락/빈 값 · MEMBER_NOT_STUDENT — 해당 이메일의 회원이 학생이 아님(선생님·학부모) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description INVALID_API_KEY — X-API-KEY 헤더가 없거나 일치하지 않음 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description MEMBER_NOT_FOUND — 해당 이메일로 가입한 회원이 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

@@ -80,6 +80,8 @@ export function TeacherStudentAssignedWordsRoute() {
       title="Assigned Words"
       // 선생님은 학생 데이터를 조회만 하므로 셔플 버튼을 숨긴다.
       showShuffle={false}
+      // 선생님 조회 뷰에서는 자체 시험도 숨긴다.
+      showSelfTest={false}
     />
   );
 }
