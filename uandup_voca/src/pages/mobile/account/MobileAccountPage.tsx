@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { setViewPreference } from '@/shared/lib/viewport';
 import { useInstallPrompt } from '@/shared/lib/useInstallPrompt';
@@ -15,8 +14,6 @@ export function MobileAccountPage() {
   const { data: overview } = useStudentOverview(studentId);
 
   const { canInstall, needsManualInstall, install } = useInstallPrompt();
-  // iOS는 코드로 설치를 띄울 수 없어 "공유 → 홈 화면에 추가" 안내를 펼쳐 보여준다.
-  const [iosGuideOpen, setIosGuideOpen] = useState(false);
 
   // 데스크탑 화면으로 빠져나간다. 선호도를 남겨야 좁은 창에서 다시 /m으로 튕기지 않는다 —
   // /m은 반대 방향으로 자동 리다이렉트하지 않으므로(무한 루프 방지) 이 버튼이 유일한 탈출구다.
@@ -37,7 +34,7 @@ export function MobileAccountPage() {
       </div>
 
       <div className="space-y-2">
-        {/* 이미 홈 화면 앱으로 실행 중이면 설치 관련 항목을 아예 감춘다. */}
+        {/* 크롬 계열: 탭하면 브라우저 설치창이 뜬다. 이미 설치된 상태면 canInstall이 false라 숨는다. */}
         {canInstall && (
           <ActionRow
             icon="install_mobile"
@@ -47,48 +44,74 @@ export function MobileAccountPage() {
           />
         )}
 
-        {needsManualInstall && (
-          <div className="bg-surface-container-lowest border border-outline-variant/60 rounded-xl overflow-hidden">
-            <button
-              onClick={() => setIosGuideOpen((v) => !v)}
-              aria-expanded={iosGuideOpen}
-              className="w-full min-h-14 px-4 flex items-center gap-3 text-on-surface touch-manipulation"
-            >
-              <span className="material-symbols-outlined shrink-0" style={{ fontSize: '22px' }}>
-                install_mobile
-              </span>
-              <span className="min-w-0 flex-1 text-left">
-                <span className="block text-sm font-bold">Add to home screen</span>
-                <span className="block text-xs text-on-surface-variant mt-0.5">
-                  Open it like an app, without the address bar
-                </span>
-              </span>
-              <span
-                className="material-symbols-outlined shrink-0 text-outline"
-                style={{ fontSize: '20px' }}
-              >
-                {iosGuideOpen ? 'expand_less' : 'expand_more'}
-              </span>
-            </button>
-            {iosGuideOpen && (
-              <ol className="px-4 pb-4 pt-1 space-y-1.5 text-xs text-on-surface-variant list-decimal list-inside leading-relaxed">
-                <li>Tap the Share button at the bottom of Safari</li>
-                <li>Scroll down and tap "Add to Home Screen"</li>
-                <li>Tap "Add" in the top right</li>
-              </ol>
-            )}
-          </div>
-        )}
+        {/* iOS 사파리: 애플이 beforeinstallprompt를 지원하지 않아 코드로 설치창을 띄울 수 없다.
+            사용자가 직접 "공유 → 홈 화면에 추가"를 눌러야 하므로 **버튼이 아니라 안내문**으로 둔다.
+            접어두면 설치 버튼과 똑같이 생겨서 눌러도 반응 없는 버튼처럼 보이므로 항상 펼쳐둔다. */}
+        {needsManualInstall && <IosInstallGuide />}
 
         <ActionRow icon="desktop_windows" label="Use desktop site" onClick={goDesktop} />
         <ActionRow icon="logout" label="Sign out" onClick={onSignOut} danger />
       </div>
 
       <p className="text-xs text-on-surface-variant/70 mt-6 leading-relaxed">
-        Tests are only available on the desktop site. Use "Use desktop site" above when it's
-        time to take a test.
+        Tests are only available on the desktop site. Use "Use desktop site" above when it's time to
+        take a test.
       </p>
     </div>
+  );
+}
+
+// 사파리 하단 공유 버튼과 같은 모양의 아이콘. 글로 설명하는 것보다 그림이 빠르다.
+function ShareIcon() {
+  return (
+    <span
+      className="material-symbols-outlined align-middle text-primary mx-0.5"
+      style={{ fontSize: '16px' }}
+      aria-label="Share"
+    >
+      ios_share
+    </span>
+  );
+}
+
+function IosInstallGuide() {
+  return (
+    <section className="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4">
+      <div className="flex items-start gap-3">
+        <span
+          className="material-symbols-outlined text-primary shrink-0"
+          style={{ fontSize: '22px' }}
+        >
+          install_mobile
+        </span>
+        <div className="min-w-0">
+          <h2 className="text-sm font-bold text-on-surface">Add to home screen</h2>
+          <p className="text-xs text-on-surface-variant mt-0.5">
+            Open it like an app, without the address bar
+          </p>
+        </div>
+      </div>
+
+      <ol className="mt-3 space-y-2.5">
+        <GuideStep n={1}>
+          Tap <ShareIcon /> at the bottom of Safari
+        </GuideStep>
+        <GuideStep n={2}>Scroll down and tap "Add to Home Screen"</GuideStep>
+        <GuideStep n={3}>Tap "Add" in the top right</GuideStep>
+      </ol>
+    </section>
+  );
+}
+
+function GuideStep({ n, children }: { n: number; children: React.ReactNode }) {
+  return (
+    <li className="flex items-start gap-2.5">
+      {/* 이 프로젝트의 rounded-full은 12px이라 원형이 필요하면 값을 명시해야 한다. */}
+      <span className="w-5 h-5 shrink-0 flex items-center justify-center rounded-[999px] bg-primary text-white text-[11px] font-bold tabular-nums">
+        {n}
+      </span>
+      <span className="text-xs text-on-surface-variant leading-5">{children}</span>
+    </li>
   );
 }
 
