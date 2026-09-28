@@ -13,9 +13,11 @@ import { Route as TeacherRouteImport } from './../routes/teacher'
 import { Route as StudentRouteImport } from './../routes/student'
 import { Route as PendingRouteImport } from './../routes/pending'
 import { Route as OnboardingRouteImport } from './../routes/onboarding'
+import { Route as MRouteImport } from './../routes/m'
 import { Route as IndexRouteImport } from './../routes/index'
 import { Route as TeacherIndexRouteImport } from './../routes/teacher/index'
 import { Route as StudentIndexRouteImport } from './../routes/student/index'
+import { Route as MIndexRouteImport } from './../routes/m/index'
 import { Route as TeacherVocabularyBankRouteImport } from './../routes/teacher/vocabulary-bank'
 import { Route as TeacherStudentsRouteImport } from './../routes/teacher/students'
 import { Route as TeacherGradingRouteImport } from './../routes/teacher/grading'
@@ -24,6 +26,9 @@ import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
+import { Route as MUnsupportedRouteImport } from './../routes/m/unsupported'
+import { Route as MLibraryRouteImport } from './../routes/m/library'
+import { Route as MAccountRouteImport } from './../routes/m/account'
 import { Route as StudentReviewDeckIndexRouteImport } from './../routes/student/review-deck/index'
 import { Route as StudentPersonalExamsIndexRouteImport } from './../routes/student/personal-exams/index'
 import { Route as StudentLevelTestIndexRouteImport } from './../routes/student/level-test/index'
@@ -32,6 +37,8 @@ import { Route as StudentSelfTestStudySetIdRouteImport } from './../routes/stude
 import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/review-deck/words'
 import { Route as StudentPersonalExamsWordsRouteImport } from './../routes/student/personal-exams/words'
 import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
+import { Route as MWordsReviewRouteImport } from './../routes/m/words/review'
+import { Route as MWordsPersonalRouteImport } from './../routes/m/words/personal'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
 import { Route as TeacherStudentsStudentIdPendingReviewsRouteImport } from './../routes/teacher/students_.$studentId_/pending-reviews'
@@ -42,6 +49,7 @@ import { Route as StudentWordTestIdWordsRouteImport } from './../routes/student/
 import { Route as StudentReviewDeckStudySetIdWordsRouteImport } from './../routes/student/review-deck/$studySetId/words'
 import { Route as StudentLevelTestStudySetIdWordsRouteImport } from './../routes/student/level-test/$studySetId/words'
 import { Route as StudentDashboardAssignedWordsStudySetIdRouteImport } from './../routes/student/dashboard_/assigned-words/$studySetId'
+import { Route as MWordsAssignedStudySetIdRouteImport } from './../routes/m/words/assigned/$studySetId'
 import { Route as TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport } from './../routes/teacher/students_.$studentId_/assigned-words/$studySetId'
 import { Route as TeacherClinicsStudentsStudentIdPersonalWordsRouteImport } from './../routes/teacher/clinics_.students.$studentId_/personal-words'
 
@@ -65,6 +73,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MRoute = MRouteImport.update({
+  id: '/m',
+  path: '/m',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -79,6 +92,11 @@ const StudentIndexRoute = StudentIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => StudentRoute,
+} as any)
+const MIndexRoute = MIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MRoute,
 } as any)
 const TeacherVocabularyBankRoute = TeacherVocabularyBankRouteImport.update({
   id: '/vocabulary-bank',
@@ -119,6 +137,21 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
   id: '/oauth/callback',
   path: '/oauth/callback',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MUnsupportedRoute = MUnsupportedRouteImport.update({
+  id: '/unsupported',
+  path: '/unsupported',
+  getParentRoute: () => MRoute,
+} as any)
+const MLibraryRoute = MLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => MRoute,
+} as any)
+const MAccountRoute = MAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => MRoute,
 } as any)
 const StudentReviewDeckIndexRoute = StudentReviewDeckIndexRouteImport.update({
   id: '/review-deck/',
@@ -165,6 +198,16 @@ const StudentDashboardPendingReviewsRoute =
     path: '/dashboard/pending-reviews',
     getParentRoute: () => StudentRoute,
   } as any)
+const MWordsReviewRoute = MWordsReviewRouteImport.update({
+  id: '/words/review',
+  path: '/words/review',
+  getParentRoute: () => MRoute,
+} as any)
+const MWordsPersonalRoute = MWordsPersonalRouteImport.update({
+  id: '/words/personal',
+  path: '/words/personal',
+  getParentRoute: () => MRoute,
+} as any)
 const TeacherExamsExamIdReviewRoute =
   TeacherExamsExamIdReviewRouteImport.update({
     id: '/teacher_/exams/$examId/review',
@@ -223,6 +266,12 @@ const StudentDashboardAssignedWordsStudySetIdRoute =
     path: '/dashboard/assigned-words/$studySetId',
     getParentRoute: () => StudentRoute,
   } as any)
+const MWordsAssignedStudySetIdRoute =
+  MWordsAssignedStudySetIdRouteImport.update({
+    id: '/words/assigned/$studySetId',
+    path: '/words/assigned/$studySetId',
+    getParentRoute: () => MRoute,
+  } as any)
 const TeacherStudentsStudentIdAssignedWordsStudySetIdRoute =
   TeacherStudentsStudentIdAssignedWordsStudySetIdRouteImport.update({
     id: '/students_/$studentId_/assigned-words/$studySetId',
@@ -238,10 +287,14 @@ const TeacherClinicsStudentsStudentIdPersonalWordsRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/m': typeof MRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/m/account': typeof MAccountRoute
+  '/m/library': typeof MLibraryRoute
+  '/m/unsupported': typeof MUnsupportedRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test': typeof StudentWordTestRoute
@@ -250,8 +303,11 @@ export interface FileRoutesByFullPath {
   '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/m/': typeof MIndexRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/m/words/personal': typeof MWordsPersonalRoute
+  '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
@@ -260,6 +316,7 @@ export interface FileRoutesByFullPath {
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/personal-exams/': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/m/words/assigned/$studySetId': typeof MWordsAssignedStudySetIdRoute
   '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
@@ -277,6 +334,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
+  '/m/account': typeof MAccountRoute
+  '/m/library': typeof MLibraryRoute
+  '/m/unsupported': typeof MUnsupportedRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test': typeof StudentWordTestRoute
@@ -285,8 +345,11 @@ export interface FileRoutesByTo {
   '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/m': typeof MIndexRoute
   '/student': typeof StudentIndexRoute
   '/teacher': typeof TeacherIndexRoute
+  '/m/words/personal': typeof MWordsPersonalRoute
+  '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
@@ -295,6 +358,7 @@ export interface FileRoutesByTo {
   '/student/level-test': typeof StudentLevelTestIndexRoute
   '/student/personal-exams': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck': typeof StudentReviewDeckIndexRoute
+  '/m/words/assigned/$studySetId': typeof MWordsAssignedStudySetIdRoute
   '/student/dashboard/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
@@ -311,10 +375,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/m': typeof MRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/pending': typeof PendingRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/m/account': typeof MAccountRoute
+  '/m/library': typeof MLibraryRoute
+  '/m/unsupported': typeof MUnsupportedRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test_': typeof StudentWordTestRoute
@@ -323,8 +391,11 @@ export interface FileRoutesById {
   '/teacher/grading': typeof TeacherGradingRoute
   '/teacher/students': typeof TeacherStudentsRoute
   '/teacher/vocabulary-bank': typeof TeacherVocabularyBankRoute
+  '/m/': typeof MIndexRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/m/words/personal': typeof MWordsPersonalRoute
+  '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard_/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-exams/words': typeof StudentPersonalExamsWordsRoute
   '/student/review-deck/words': typeof StudentReviewDeckWordsRoute
@@ -333,6 +404,7 @@ export interface FileRoutesById {
   '/student/level-test/': typeof StudentLevelTestIndexRoute
   '/student/personal-exams/': typeof StudentPersonalExamsIndexRoute
   '/student/review-deck/': typeof StudentReviewDeckIndexRoute
+  '/m/words/assigned/$studySetId': typeof MWordsAssignedStudySetIdRoute
   '/student/dashboard_/assigned-words/$studySetId': typeof StudentDashboardAssignedWordsStudySetIdRoute
   '/student/level-test/$studySetId/words': typeof StudentLevelTestStudySetIdWordsRoute
   '/student/review-deck/$studySetId/words': typeof StudentReviewDeckStudySetIdWordsRoute
@@ -350,10 +422,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/m'
     | '/onboarding'
     | '/pending'
     | '/student'
     | '/teacher'
+    | '/m/account'
+    | '/m/library'
+    | '/m/unsupported'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test'
@@ -362,8 +438,11 @@ export interface FileRouteTypes {
     | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
+    | '/m/'
     | '/student/'
     | '/teacher/'
+    | '/m/words/personal'
+    | '/m/words/review'
     | '/student/dashboard/pending-reviews'
     | '/student/personal-exams/words'
     | '/student/review-deck/words'
@@ -372,6 +451,7 @@ export interface FileRouteTypes {
     | '/student/level-test/'
     | '/student/personal-exams/'
     | '/student/review-deck/'
+    | '/m/words/assigned/$studySetId'
     | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
@@ -389,6 +469,9 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/pending'
+    | '/m/account'
+    | '/m/library'
+    | '/m/unsupported'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test'
@@ -397,8 +480,11 @@ export interface FileRouteTypes {
     | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
+    | '/m'
     | '/student'
     | '/teacher'
+    | '/m/words/personal'
+    | '/m/words/review'
     | '/student/dashboard/pending-reviews'
     | '/student/personal-exams/words'
     | '/student/review-deck/words'
@@ -407,6 +493,7 @@ export interface FileRouteTypes {
     | '/student/level-test'
     | '/student/personal-exams'
     | '/student/review-deck'
+    | '/m/words/assigned/$studySetId'
     | '/student/dashboard/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
@@ -422,10 +509,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/m'
     | '/onboarding'
     | '/pending'
     | '/student'
     | '/teacher'
+    | '/m/account'
+    | '/m/library'
+    | '/m/unsupported'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test_'
@@ -434,8 +525,11 @@ export interface FileRouteTypes {
     | '/teacher/grading'
     | '/teacher/students'
     | '/teacher/vocabulary-bank'
+    | '/m/'
     | '/student/'
     | '/teacher/'
+    | '/m/words/personal'
+    | '/m/words/review'
     | '/student/dashboard_/pending-reviews'
     | '/student/personal-exams/words'
     | '/student/review-deck/words'
@@ -444,6 +538,7 @@ export interface FileRouteTypes {
     | '/student/level-test/'
     | '/student/personal-exams/'
     | '/student/review-deck/'
+    | '/m/words/assigned/$studySetId'
     | '/student/dashboard_/assigned-words/$studySetId'
     | '/student/level-test/$studySetId/words'
     | '/student/review-deck/$studySetId/words'
@@ -460,6 +555,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MRoute: typeof MRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
   PendingRoute: typeof PendingRoute
   StudentRoute: typeof StudentRouteWithChildren
@@ -502,6 +598,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/m': {
+      id: '/m'
+      path: '/m'
+      fullPath: '/m'
+      preLoaderRoute: typeof MRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -522,6 +625,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/'
       preLoaderRoute: typeof StudentIndexRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/m/': {
+      id: '/m/'
+      path: '/'
+      fullPath: '/m/'
+      preLoaderRoute: typeof MIndexRouteImport
+      parentRoute: typeof MRoute
     }
     '/teacher/vocabulary-bank': {
       id: '/teacher/vocabulary-bank'
@@ -579,6 +689,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/m/unsupported': {
+      id: '/m/unsupported'
+      path: '/unsupported'
+      fullPath: '/m/unsupported'
+      preLoaderRoute: typeof MUnsupportedRouteImport
+      parentRoute: typeof MRoute
+    }
+    '/m/library': {
+      id: '/m/library'
+      path: '/library'
+      fullPath: '/m/library'
+      preLoaderRoute: typeof MLibraryRouteImport
+      parentRoute: typeof MRoute
+    }
+    '/m/account': {
+      id: '/m/account'
+      path: '/account'
+      fullPath: '/m/account'
+      preLoaderRoute: typeof MAccountRouteImport
+      parentRoute: typeof MRoute
+    }
     '/student/review-deck/': {
       id: '/student/review-deck/'
       path: '/review-deck'
@@ -634,6 +765,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/dashboard/pending-reviews'
       preLoaderRoute: typeof StudentDashboardPendingReviewsRouteImport
       parentRoute: typeof StudentRoute
+    }
+    '/m/words/review': {
+      id: '/m/words/review'
+      path: '/words/review'
+      fullPath: '/m/words/review'
+      preLoaderRoute: typeof MWordsReviewRouteImport
+      parentRoute: typeof MRoute
+    }
+    '/m/words/personal': {
+      id: '/m/words/personal'
+      path: '/words/personal'
+      fullPath: '/m/words/personal'
+      preLoaderRoute: typeof MWordsPersonalRouteImport
+      parentRoute: typeof MRoute
     }
     '/teacher_/exams/$examId/review': {
       id: '/teacher_/exams/$examId/review'
@@ -705,6 +850,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentDashboardAssignedWordsStudySetIdRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/m/words/assigned/$studySetId': {
+      id: '/m/words/assigned/$studySetId'
+      path: '/words/assigned/$studySetId'
+      fullPath: '/m/words/assigned/$studySetId'
+      preLoaderRoute: typeof MWordsAssignedStudySetIdRouteImport
+      parentRoute: typeof MRoute
+    }
     '/teacher/students_/$studentId_/assigned-words/$studySetId': {
       id: '/teacher/students_/$studentId_/assigned-words/$studySetId'
       path: '/students/$studentId/assigned-words/$studySetId'
@@ -721,6 +873,28 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface MRouteChildren {
+  MAccountRoute: typeof MAccountRoute
+  MLibraryRoute: typeof MLibraryRoute
+  MUnsupportedRoute: typeof MUnsupportedRoute
+  MIndexRoute: typeof MIndexRoute
+  MWordsPersonalRoute: typeof MWordsPersonalRoute
+  MWordsReviewRoute: typeof MWordsReviewRoute
+  MWordsAssignedStudySetIdRoute: typeof MWordsAssignedStudySetIdRoute
+}
+
+const MRouteChildren: MRouteChildren = {
+  MAccountRoute: MAccountRoute,
+  MLibraryRoute: MLibraryRoute,
+  MUnsupportedRoute: MUnsupportedRoute,
+  MIndexRoute: MIndexRoute,
+  MWordsPersonalRoute: MWordsPersonalRoute,
+  MWordsReviewRoute: MWordsReviewRoute,
+  MWordsAssignedStudySetIdRoute: MWordsAssignedStudySetIdRoute,
+}
+
+const MRouteWithChildren = MRoute._addFileChildren(MRouteChildren)
 
 interface StudentRouteChildren {
   StudentDashboardRoute: typeof StudentDashboardRoute
@@ -794,6 +968,7 @@ const TeacherRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MRoute: MRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
   PendingRoute: PendingRoute,
   StudentRoute: StudentRouteWithChildren,

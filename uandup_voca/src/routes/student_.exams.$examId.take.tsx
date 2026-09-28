@@ -1,5 +1,6 @@
 import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { requireStudentArea, getTokenPayload } from '@/entities/auth';
+import { shouldRedirectToMobile } from '@/shared/lib/viewport';
 import type { ExamType } from '@/entities/test';
 
 const EXAM_TYPES: readonly ExamType[] = [
@@ -31,6 +32,12 @@ export const Route = createFileRoute('/student_/exams/$examId/take')({
   // PARENT는 응시 불가 — 같은 시험의 결과 확인 페이지(/review)로 리다이렉트한다.
   beforeLoad: ({ params, search }) => {
     requireStudentArea();
+    // 이 라우트는 /student 레이아웃 밖이라 거기 걸린 모바일 리다이렉트가 적용되지 않는다.
+    // 폰에서는 시험 자체를 막는다 — 모바일 Safari는 전체화면 진입이 불가능해 감시 가림막이
+    // 뜨면 학생이 시험에 갇힌다(useExamProctor.ts 주석의 PR #31 revert 사고).
+    if (shouldRedirectToMobile()) {
+      throw redirect({ to: '/m/unsupported' });
+    }
     if (getTokenPayload()?.role === 'PARENT') {
       throw redirect({
         to: '/student/exams/$examId/review',

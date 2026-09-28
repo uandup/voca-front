@@ -1,5 +1,6 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { requireStudentArea } from '@/entities/auth';
+import { shouldRedirectToMobile } from '@/shared/lib/viewport';
 import type { ExamType } from '@/entities/test';
 
 const EXAM_TYPES: readonly ExamType[] = [
@@ -27,7 +28,14 @@ interface ExamReviewSearch {
 }
 
 export const Route = createFileRoute('/student_/exams/$examId/review')({
-  beforeLoad: requireStudentArea,
+  beforeLoad: () => {
+    requireStudentArea();
+    // /student 레이아웃 밖이라 모바일 리다이렉트를 여기서 다시 건다.
+    // 결과 화면은 시험 문항을 그대로 보여주는 데스크탑 전용 레이아웃이라 폰에서는 막는다.
+    if (shouldRedirectToMobile()) {
+      throw redirect({ to: '/m/unsupported' });
+    }
+  },
   component: lazyRouteComponent(() => import('@/pages/student/exam-review/ExamReviewPage')),
   validateSearch: (search: Record<string, unknown>): ExamReviewSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,

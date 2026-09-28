@@ -3,7 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover가 있어야 env(safe-area-inset-*)가 0이 아닌 값으로 해석된다.
+         모바일 화면(/m)의 하단 탭바가 아이폰 홈 인디케이터에 깔리지 않게 하는 데 필요하다. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- 안드로이드 크롬 상태바 색. manifest의 theme_color와 같은 값으로 맞춘다. -->
+    <meta name="theme-color" content="#001b5f" />
+
+    <!-- iOS는 홈 화면 추가 시 manifest를 제대로 읽지 않고 아래 태그들을 본다.
+         apple-touch-icon이 없으면 화면을 캡처해 아이콘으로 쓴다. -->
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <meta name="apple-mobile-web-app-title" content="Vocably" />
+    <!-- 주소창 없는 전체화면으로 실행. mobile-web-app-capable은 표준, apple- 쪽은 구형 iOS 호환용. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
     <title>learnvocably</title>
   </head>
   <body>
