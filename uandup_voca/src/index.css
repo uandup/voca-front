@@ -80,6 +80,15 @@ body {
   font-family: var(--font-sans);
 }
 
+/* 아이폰 홈 인디케이터 영역 높이. 모바일 화면(/m)의 하단 탭바와 본문 하단 여백에 쓴다.
+   @theme이 아니라 평범한 :root에 두는 이유 — @theme의 --spacing-* 네임스페이스는 값으로
+   유틸리티 스케일을 생성하는데, env()는 거기서 예측 가능하게 동작하지 않는다.
+   여기 두면 pb-[var(--safe-bottom)] / calc(...) 형태로 그대로 쓸 수 있다.
+   index.html의 viewport-fit=cover가 없으면 항상 0px로 해석된다. */
+:root {
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,

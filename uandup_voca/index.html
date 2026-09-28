@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover가 있어야 env(safe-area-inset-*)가 0이 아닌 값으로 해석된다.
+         모바일 화면(/m)의 하단 탭바가 아이폰 홈 인디케이터에 깔리지 않게 하는 데 필요하다. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>learnvocably</title>
   </head>
   <body>
