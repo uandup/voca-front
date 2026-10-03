@@ -1,7 +1,8 @@
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useAssignedWords } from '@/entities/student';
 import { useReviewDeckWords } from '@/entities/review-deck';
-import { usePersonalWords } from '@/entities/personal-word';
+import { usePersonalWordsBySet } from '@/entities/personal-word';
+import { usePersonalWordSets } from '@/entities/personal-word-set';
 import { useCurrentStudentId } from '@/entities/auth';
 import {
   toMobileWordItems,
@@ -12,6 +13,7 @@ import {
 import { MobileWordListPage } from './MobileWordListPage';
 
 // 세 라우트가 같은 MobileWordListPage를 쓰지만 데이터 소스와 북마크 스코프가 다르다.
+// (개인 단어는 세트 목록 화면이 한 단계 앞에 더 있다 — MobilePersonalWordSetListPage.)
 // 라우트마다 별도 wrapper 컴포넌트를 두는 이유:
 //  (1) 훅을 조건부로 호출하지 않게 된다 — 라우트가 다르면 컴포넌트 자체가 다르다.
 //  (2) 라우트 파일에 컴포넌트 정의가 없어져 react-refresh 경고가 뜨지 않는다.
@@ -70,24 +72,44 @@ export function MobileReviewDeckWordsRoute() {
   );
 }
 
-export function MobilePersonalWordsRoute() {
+// 개인 단어는 세트 단위로 조회한다 — 세트 목록은 MobilePersonalWordSetListPage가 담당하고,
+// 이 wrapper는 세트 하나의 단어만 보여준다.
+export function MobilePersonalWordSetWordsRoute() {
   const navigate = useNavigate();
+  const { personalWordSetId: setIdParam } = useParams({
+    from: '/m/words/personal/$personalWordSetId',
+  });
+  const { view } = useSearch({ from: '/m/words/personal/$personalWordSetId' });
+  const personalWordSetId = Number(setIdParam);
   const studentId = useCurrentStudentId() ?? 0;
 
-  const { data = [], isLoading } = usePersonalWords(studentId, studentId > 0);
+  const { data = [], isLoading } = usePersonalWordsBySet(
+    personalWordSetId,
+    personalWordSetId > 0,
+  );
+  // 세트 이름을 제목에 쓴다 — 목록 캐시에서 찾으므로 추가 요청이 없다.
+  const { data: sets = [] } = usePersonalWordSets(studentId, studentId > 0);
+  const setName = sets.find((s) => s.id === personalWordSetId)?.name ?? 'Personal Words';
 
   return (
     <MobileWordListPage
-      title="Personal Words"
+      title={setName}
       items={personalToMobileWordItems(data)}
       isLoading={isLoading}
-      scopeKey={`personalwords_${studentId}`}
-      onBack={() => navigate({ to: '/m/library' })}
-      // 개인 단어는 단어·한글뜻뿐이라 뒤집을 내용이 빈약하고 섞을 이유도 적다 → 리스트 전용.
-      view="list"
-      onChangeView={() => {}}
-      supportsFlashcard={false}
-      supportsShuffle={false}
+      // 데스크탑 세트 상세와 같은 키 — 같은 브라우저라면 북마크가 양쪽에서 공유된다.
+      scopeKey={`personalwordset_${personalWordSetId}`}
+      onBack={() => navigate({ to: '/m/words/personal' })}
+      // 플래시카드·셔플을 켠다. 단어 앞/뜻 뒤는 플래시카드의 가장 전형적인 쓰임이고,
+      // 폰은 학생이 직접 모은 단어를 외우는 주 화면이다.
+      // (MobileWordFlashcard는 engMeaning·synonyms를 조건부로 그려 개인 단어를 이미 지원한다.)
+      view={view}
+      onChangeView={(next: MobileWordView) =>
+        navigate({
+          to: '/m/words/personal/$personalWordSetId',
+          params: { personalWordSetId: setIdParam },
+          search: { view: next },
+        })
+      }
     />
   );
 }

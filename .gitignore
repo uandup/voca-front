@@ -1,2 +1,7 @@
 # 로컬 학습·분석 노트 — git에 올리지 않음
 /docs/
+
+# JVM 크래시 덤프 — Gradle 데몬이나 IDE Java 서버가 OOM으로 죽을 때 JVM이 자동 생성한다.
+# 진단용 일회성 파일이라 커밋 대상이 아니다.
+hs_err_pid*.log
+replay_pid*.log

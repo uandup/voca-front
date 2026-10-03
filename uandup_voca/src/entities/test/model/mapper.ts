@@ -20,9 +20,6 @@ type ExamItemDetail = components['schemas']['ExamItemDetail'];
 type ExamAttemptResponse = components['schemas']['ExamAttemptResponse'];
 
 // 서버 시험 유형(enum) → 클라이언트 ExamType. WRONG_BANK/LEVEL만 명칭이 다르다.
-// PERSONAL은 여기 없다 — PersonalExam은 이 응답(/api/v1/exams/{id}/attempt)이 아니라
-// entities/personal-exam의 자체 엔드포인트를 쓰므로 이 함수를 절대 거치지 않는다
-// (entities/personal-exam/model/mapper.ts의 toPersonalExamAttemptData가 type: 'PERSONAL'을 직접 채운다).
 function toClientExamType(t: ExamAttemptResponse['type']): ExamType {
   if (t === 'WRONG_BANK') return 'REVIEW_DECK';
   if (t === 'LEVEL') return 'LEVEL_TEST';
@@ -144,7 +141,6 @@ export function inferMode(status: string): ExamMode {
 export function inferSource(examType: ExamType | undefined): ExamSource {
   if (examType === 'REVIEW_DECK') return 'review-deck';
   if (examType === 'LEVEL_TEST') return 'level-test';
-  if (examType === 'PERSONAL') return 'personal';
   return 'study-set';
 }
 

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ITEMS_PER_PAGE } from '@/entities/test';
-import type { WordCardData } from '@/entities/word';
 import type { Answer } from '@/widgets/test-online';
 import type { SelfTestConfig, SelfTestPhase, SelfTestSession } from './types';
 import {
@@ -8,16 +7,25 @@ import {
   getQuestionCountError,
   pickSelfTestQuestions,
   toSelfTestReviewItems,
+  type SelfTestWord,
 } from './selfTestQuestions';
 
 interface UseSelfTestParams {
-  words: WordCardData[];
+  words: SelfTestWord[];
   // 선생님이 정한 실제 시험 설정. overview를 받지 못했으면 undefined → 기본값으로 대체.
   realSettings?: SelfTestConfig;
+  // 단어 묶음에 동의어 개념이 있는지. 개인 단어는 단어·한글뜻뿐이라 false —
+  // 설정 화면이 토글을 숨기는 것과 별개로, 여기서도 하드하게 false로 고정해
+  // realSettings가 섞여 들어와도 빈 동의어 입력칸이 뜰 수 없게 한다.
+  supportsSynonyms?: boolean;
 }
 
 // 자체 시험 페이지의 상태를 전부 소유하는 훅. 서버 호출은 하지 않는다(읽기 데이터는 인자로 받음).
-export function useSelfTest({ words, realSettings }: UseSelfTestParams) {
+export function useSelfTest({
+  words,
+  realSettings,
+  supportsSynonyms = true,
+}: UseSelfTestParams) {
   // 학생이 설정 화면에서 바꾼 항목만 담는다. 실제 설정은 파생값으로 계산하므로
   // overview가 늦게 도착해도 useEffect로 동기화할 필요가 없고, Reset은 빈 객체로 되돌리기만 하면 된다.
   // 저장하지 않는다 — 다음에 들어오면 다시 실제 시험 설정으로 시작한다.
@@ -38,9 +46,11 @@ export function useSelfTest({ words, realSettings }: UseSelfTestParams) {
     testType: realSettings?.testType ?? 'word-to-meaning',
     // 선생님 설정이 없으면 전체 단어로 시험.
     questionCount: clampQuestionCount(realSettings?.questionCount ?? wordCount, wordCount),
-    includeSynonyms: realSettings?.includeSynonyms ?? false,
+    includeSynonyms: supportsSynonyms ? (realSettings?.includeSynonyms ?? false) : false,
   };
-  const config: SelfTestConfig = { ...realConfig, ...override };
+  const config: SelfTestConfig = supportsSynonyms
+    ? { ...realConfig, ...override }
+    : { ...realConfig, ...override, includeSynonyms: false };
   // override에 키가 있어도 값이 실제 설정과 같으면 "수정 안 함"으로 본다.
   const isCustomized =
     config.testType !== realConfig.testType ||

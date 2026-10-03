@@ -75,23 +75,36 @@ export function MobileWordCard({
     (item.synonyms?.length ?? 0) > 0 ||
     (showSentence && Boolean(item.sentence));
 
+  // 메타 줄에 실제로 그릴 뱃지가 있는지. 개인 단어는 셋 다 없어 줄 자체를 그리지 않는다 —
+  // 북마크만 남은 빈 줄이 서 있으면(버튼 높이 ~38px + mb-2) 단어 위에 큰 여백이 생긴다.
+  const hasMeta =
+    item.difficulty !== undefined ||
+    item.satPriority !== undefined ||
+    item.wrongCount !== undefined;
+
   return (
-    <article className="bg-surface-container-lowest rounded-xl border border-outline-variant/60 shadow-sm p-4">
-      {/* 메타 줄 — LEVEL·별점·틀린 횟수는 정답이 아니므로 가리기와 무관하게 항상 노출한다. */}
-      <div className="flex items-center gap-2 mb-2 min-h-6">
-        {item.difficulty !== undefined && (
-          <span className="px-2 py-0.5 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-            LV {item.difficulty}
-          </span>
-        )}
-        {item.satPriority !== undefined && <SatStars priority={item.satPriority} />}
-        {item.wrongCount !== undefined && (
-          <span className="px-2 py-0.5 bg-error/5 border border-error/20 text-error text-[10px] font-bold rounded-full">
-            {item.wrongCount}x wrong
-          </span>
-        )}
-        <div className="ml-auto shrink-0">{extraInfo}</div>
-      </div>
+    <article className="relative bg-surface-container-lowest rounded-xl border border-outline-variant/60 shadow-sm p-4">
+      {/* 북마크 등 부가 버튼은 메타 줄 유무와 무관하게 항상 카드 우상단에 둔다 —
+          흐름에 넣으면 뱃지가 없는 카드에서 줄 하나를 통째로 차지한다. */}
+      {extraInfo && <div className="absolute top-3 right-3">{extraInfo}</div>}
+
+      {/* 메타 줄 — LEVEL·별점·틀린 횟수는 정답이 아니므로 가리기와 무관하게 항상 노출한다.
+          pr-10은 위 절대 배치된 북마크와 겹치지 않기 위한 여백. */}
+      {hasMeta && (
+        <div className="flex items-center gap-2 mb-2 min-h-6 pr-10">
+          {item.difficulty !== undefined && (
+            <span className="px-2 py-0.5 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
+              LV {item.difficulty}
+            </span>
+          )}
+          {item.satPriority !== undefined && <SatStars priority={item.satPriority} />}
+          {item.wrongCount !== undefined && (
+            <span className="px-2 py-0.5 bg-error/5 border border-error/20 text-error text-[10px] font-bold rounded-full">
+              {item.wrongCount}x wrong
+            </span>
+          )}
+        </div>
+      )}
 
       <Maskable
         hidden={wordMasked}
@@ -99,7 +112,12 @@ export function MobileWordCard({
         label={wordMasked ? 'Show word' : 'Hide word again'}
         onClick={() => setRevealedWord(!revealedWord)}
       >
-        <h2 className="font-headline font-bold text-xl text-primary break-words">{item.word}</h2>
+        {/* 메타 줄이 없으면 단어가 카드 맨 위에 오므로 북마크를 피할 여백이 필요하다. */}
+        <h2
+          className={`font-headline font-bold text-xl text-primary break-words ${hasMeta ? '' : 'pr-10'}`}
+        >
+          {item.word}
+        </h2>
       </Maskable>
 
       <Maskable
