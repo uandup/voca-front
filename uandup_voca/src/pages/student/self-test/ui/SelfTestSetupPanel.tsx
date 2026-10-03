@@ -11,6 +11,15 @@ interface Props {
   onChange: (patch: Partial<SelfTestConfig>) => void;
   onReset: () => void;
   onStart: () => void;
+  // 아래 세 개는 단어 묶음에 따라 달라지는 부분. 기본값은 StudySet 배정 단어 기준이라
+  // 기존 호출부는 그대로 두면 동작이 바뀌지 않는다.
+  // 어떤 단어로 연습하는지 알려주는 안내 문구.
+  description?: string;
+  // 동의어 개념이 있는 단어 묶음인지. 개인 단어는 단어·한글뜻뿐이라 false → 토글을 숨긴다.
+  supportsSynonyms?: boolean;
+  // "선생님이 정한 실제 시험 설정"이 존재하는 묶음인지. 개인 단어 세트엔 그 개념이 없어
+  // false → 비교 대상이 없으므로 "Same as your real test"·Reset 행을 숨긴다.
+  showRealSettingsHint?: boolean;
 }
 
 const DIRECTION_OPTIONS: { value: WordTestType; label: string }[] = [
@@ -28,6 +37,9 @@ export function SelfTestSetupPanel({
   onChange,
   onReset,
   onStart,
+  description = 'Practice with your assigned words. Your answers are not saved or sent to your teacher.',
+  supportsSynonyms = true,
+  showRealSettingsHint = true,
 }: Props) {
   return (
     <div className="w-full max-w-md bg-white border border-outline-variant/30 rounded-2xl p-6 flex flex-col gap-6">
@@ -36,9 +48,7 @@ export function SelfTestSetupPanel({
           quiz
         </span>
         <h2 className="text-xl font-bold text-on-surface">Self Test</h2>
-        <p className="text-sm text-on-surface-variant">
-          Practice with your assigned words. Your answers are not saved or sent to your teacher.
-        </p>
+        <p className="text-sm text-on-surface-variant">{description}</p>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -46,22 +56,24 @@ export function SelfTestSetupPanel({
           <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">
             Test Settings
           </span>
-          {isCustomized ? (
-            <button
-              type="button"
-              onClick={onReset}
-              className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-                restart_alt
+          {/* 비교할 "실제 시험 설정"이 있는 묶음에서만 노출한다 — 개인 단어 세트엔 그 개념이 없다. */}
+          {showRealSettingsHint &&
+            (isCustomized ? (
+              <button
+                type="button"
+                onClick={onReset}
+                className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                  restart_alt
+                </span>
+                Reset to my test settings
+              </button>
+            ) : (
+              <span className="text-xs font-semibold text-on-surface-variant/70">
+                Same as your real test
               </span>
-              Reset to my test settings
-            </button>
-          ) : (
-            <span className="text-xs font-semibold text-on-surface-variant/70">
-              Same as your real test
-            </span>
-          )}
+            ))}
         </div>
 
         {/* 출제 방향 */}
@@ -99,19 +111,22 @@ export function SelfTestSetupPanel({
           {questionCountError && <p className="text-xs text-error mt-1">{questionCountError}</p>}
         </div>
 
-        {/* 동의어 포함 — TestConfigSection과 같은 토글 스타일 */}
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-on-surface-variant">Include Synonyms</p>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={config.includeSynonyms}
-              onChange={(e) => onChange({ includeSynonyms: e.target.checked })}
-              className="sr-only peer"
-            />
-            <div className="w-8 h-5 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
-          </label>
-        </div>
+        {/* 동의어 포함 — TestConfigSection과 같은 토글 스타일.
+            동의어가 없는 단어 묶음에선 숨긴다 — 켜도 빈 입력칸만 뜨기 때문이다. */}
+        {supportsSynonyms && (
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-on-surface-variant">Include Synonyms</p>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={config.includeSynonyms}
+                onChange={(e) => onChange({ includeSynonyms: e.target.checked })}
+                className="sr-only peer"
+              />
+              <div className="w-8 h-5 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
+            </label>
+          </div>
+        )}
       </div>
 
       <button

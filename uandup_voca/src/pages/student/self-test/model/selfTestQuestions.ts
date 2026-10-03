@@ -1,6 +1,17 @@
 import { shuffle } from '@/shared/lib/shuffle';
 import type { VocabReviewItem, WordCardData, WordTestItem } from '@/entities/word';
 
+/**
+ * self-test가 실제로 읽는 필드만 — 출제에 쓰이는 네 개다.
+ *
+ * WordCardData 전체(품사·난이도·SAT우선순위·기출태그까지 10필드)를 요구하면, 단어와 한글뜻
+ * 두 개뿐인 개인 단어를 억지로 맞춰야 한다. 좁혀두면 어느 단어 묶음이든 어댑팅만으로 붙는다.
+ */
+export type SelfTestWord = Pick<
+  WordCardData,
+  'word' | 'korMeaning' | 'engMeaning' | 'synonyms'
+>;
+
 // 문항 수를 1 ~ 단어 수 범위로 맞춘다. 단어가 없으면 0.
 // 선생님 설정 문항 수가 이 study-set의 단어 수보다 많을 수 있어 기본값 계산에 쓴다.
 export function clampQuestionCount(count: number, wordCount: number): number {
@@ -19,7 +30,7 @@ export function getQuestionCountError(count: number, wordCount: number): string 
 
 // 단어 목록에서 무작위로 count개를 뽑아 시험 문항으로 만든다.
 // id는 원본 word id가 아니라 출제 순서(1..N) — 답안 Record의 key이자 ProgressPanel 번호가 된다.
-export function pickSelfTestQuestions(words: WordCardData[], count: number): WordTestItem[] {
+export function pickSelfTestQuestions(words: SelfTestWord[], count: number): WordTestItem[] {
   return shuffle(words)
     .slice(0, count)
     .map((word, index) => ({

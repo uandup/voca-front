@@ -5,8 +5,8 @@ import { LevelBlock } from '@/entities/word';
 import { useActiveStudySetList, useStudySetHistory, toStudySetRow } from '@/entities/student';
 import type { StudySetRow } from '@/entities/student';
 import { useReviewDeckCount } from '@/entities/review-deck';
-import { usePersonalWords } from '@/entities/personal-word';
-import { useCurrentStudentId } from '@/entities/auth';
+import { usePersonalWordSets } from '@/entities/personal-word-set';
+import { useCurrentStudentId, useIsReadOnly } from '@/entities/auth';
 import { MobileScreenHeader } from '@/widgets/mobile-nav';
 
 function formatDate(iso: string): string {
@@ -25,11 +25,13 @@ function formatDate(iso: string): string {
 export function MobileLibraryPage() {
   const navigate = useNavigate();
   const studentId = useCurrentStudentId() ?? 0;
+  // 학부모 세션에선 개인 단어장이 보이지 않는다 — 서버가 403으로 막으므로 조회도 하지 않는다.
+  const isReadOnly = useIsReadOnly();
 
   const { data: activeSets = [], isLoading: activeLoading } = useActiveStudySetList(studentId);
   const { data: historyData, isLoading: historyLoading } = useStudySetHistory(studentId);
   const { data: reviewCount = 0 } = useReviewDeckCount(studentId);
-  const { data: personalWords = [] } = usePersonalWords(studentId, studentId > 0);
+  const { data: personalSets = [] } = usePersonalWordSets(studentId, studentId > 0 && !isReadOnly);
 
   // 이력은 무한스크롤이지만 홈에서는 첫 페이지만 보여준다 — 전체 열람은 목록 화면의 몫이 아니다.
   const pastSets = (historyData?.pages ?? []).flatMap((page) =>
@@ -73,12 +75,14 @@ export function MobileLibraryPage() {
               description={`${reviewCount} words you got wrong`}
               onClick={() => navigate({ to: '/m/words/review', search: { view: 'list' } })}
             />
-            <SummaryRow
-              icon="auto_stories"
-              label="Personal Words"
-              description={`${personalWords.length} words`}
-              onClick={() => navigate({ to: '/m/words/personal' })}
-            />
+            {!isReadOnly && (
+              <SummaryRow
+                icon="auto_stories"
+                label="Personal Words"
+                description={`${personalSets.length} ${personalSets.length === 1 ? 'set' : 'sets'}`}
+                onClick={() => navigate({ to: '/m/words/personal' })}
+              />
+            )}
           </Section>
 
           {pastSets.length > 0 && (

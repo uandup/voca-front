@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter, useParams, useSearch } from '@tanstack/react-router';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
-import { type ExamType, inferSource } from '@/entities/test';
+import { type ExamType } from '@/entities/test';
 import { TestHeader, TestPagination, ProgressPanel } from '@/widgets/test-online';
 import { useExamReview } from './model/useExamReview';
 import { ExamReviewTable } from './ui/ExamReviewTable';
@@ -39,7 +39,6 @@ export default function ExamReviewPage() {
 
   const examType: ExamType = (search.examType ?? 'WORD') as ExamType;
   const isSentence = examType === 'EXAMPLE';
-  const source = inferSource(search.examType);
   const examId = showAttemptTabs ? selectedExamId : routeExamId;
 
   const {
@@ -57,7 +56,7 @@ export default function ExamReviewPage() {
     sentenceCorrectAnswers,
     vocabReviewAnswers,
     sentenceAnswers,
-  } = useExamReview({ examId, isSentence, currentPage, source });
+  } = useExamReview({ examId, isSentence, currentPage });
 
   function handleExit() {
     if (search.returnTo) {

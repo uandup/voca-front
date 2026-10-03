@@ -22,7 +22,10 @@ export const Route = createFileRoute('/student_/self-test/$studySetId')({
       throw redirect({ to: '/student/dashboard' });
     }
   },
-  component: lazyRouteComponent(() => import('@/pages/student/self-test/SelfTestPage')),
+  component: lazyRouteComponent(
+    () => import('@/pages/student/self-test/routeWrappers'),
+    'StudySetSelfTestRoute',
+  ),
   validateSearch: (search: Record<string, unknown>): SelfTestSearch => ({
     returnTo: typeof search.returnTo === 'string' ? search.returnTo : undefined,
   }),

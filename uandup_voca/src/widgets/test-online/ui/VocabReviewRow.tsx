@@ -87,9 +87,12 @@ export function VocabReviewRow({
         ) : (
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-on-surface leading-tight">{korMeaning}</p>
-            <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
-              {engMeaning}
-            </p>
+            {/* 영영뜻이 없는 단어 묶음(개인 단어)에선 줄 자체를 생략한다 — 빈 <p>가 여백으로 남는다. */}
+            {engMeaning && (
+              <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
+                {engMeaning}
+              </p>
+            )}
           </div>
         )}
 
@@ -132,9 +135,12 @@ export function VocabReviewRow({
         {isWordToMeaning ? (
           <div className="flex-1 min-w-0">
             <p className="text-xs font-semibold text-primary/80 leading-tight">{korMeaning}</p>
-            <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
-              {engMeaning}
-            </p>
+            {/* 위와 같은 이유로 조건부. 개인 단어 세트는 word-to-meaning이 기본이라 이쪽이 더 자주 걸린다. */}
+            {engMeaning && (
+              <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
+                {engMeaning}
+              </p>
+            )}
           </div>
         ) : (
           <span className="flex-1 min-w-0" />
