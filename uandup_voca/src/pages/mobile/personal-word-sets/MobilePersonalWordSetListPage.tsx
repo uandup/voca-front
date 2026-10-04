@@ -4,7 +4,6 @@ import { EmptyState } from '@/shared/ui/EmptyState';
 import { usePersonalWordSets } from '@/entities/personal-word-set';
 import type { PersonalWordSetRow } from '@/entities/personal-word-set';
 import { useCurrentStudentId } from '@/entities/auth';
-import { MobileScreenHeader } from '@/widgets/mobile-nav';
 
 /**
  * 모바일 개인 단어 세트 목록 — 폰에서는 **조회·암기 전용**이다.
@@ -27,13 +26,7 @@ export function MobilePersonalWordSetListPage() {
   }
 
   return (
-    <div className="px-4 pt-4">
-      {/* 탭 최상위 화면이라 뒤로가기를 두지 않는다 — MobileScreenHeader는 onBack이 없으면 화살표를 그리지 않는다. */}
-      <MobileScreenHeader
-        title="Personal Words"
-        subtitle={`${sets.length} ${sets.length === 1 ? 'set' : 'sets'}`}
-      />
-
+    <div className="px-4 pt-6">
       {isLoading ? (
         <LoadingSpinner />
       ) : sets.length === 0 ? (

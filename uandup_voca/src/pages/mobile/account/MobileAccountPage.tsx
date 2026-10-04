@@ -3,7 +3,6 @@ import { setViewPreference } from '@/shared/lib/viewport';
 import { useInstallPrompt } from '@/shared/lib/useInstallPrompt';
 import { useStudentOverview } from '@/entities/student';
 import { useCurrentStudentId, useIsReadOnly, useSignOut } from '@/entities/auth';
-import { MobileScreenHeader } from '@/widgets/mobile-nav';
 
 export function MobileAccountPage() {
   const navigate = useNavigate();
@@ -23,9 +22,7 @@ export function MobileAccountPage() {
   }
 
   return (
-    <div className="px-4 pt-4">
-      <MobileScreenHeader title="Account" />
-
+    <div className="px-4 pt-6">
       <div className="bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-4 mb-4">
         <p className="text-lg font-bold text-on-surface">{overview?.nameKo ?? '—'}</p>
         <p className="text-xs text-on-surface-variant mt-0.5">
