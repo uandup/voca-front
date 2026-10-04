@@ -1,5 +1,6 @@
 export { loginWithGoogle, registerProfile } from './api/authApi';
 export { requireAuth, requireTeacher, requireStudentArea } from './lib/authGuard';
+export { buildGoogleAuthUrl } from './lib/googleAuth';
 export type { JwtPayload } from './model/types';
 export { decodeToken, getTokenPayload } from './model/jwt';
 export { useCurrentStudentId } from './model/useCurrentStudentId';

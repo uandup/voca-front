@@ -11,10 +11,13 @@ interface TabItem {
 const TAB_ITEMS: readonly TabItem[] = [
   {
     icon: 'menu_book',
-    label: 'Library',
+    label: 'Word Sets',
     to: '/m/library',
-    activePrefixes: ['/m/words'],
+    // 개인 단어(/m/words/personal)는 별도 탭이므로 '/m/words' 전체를 잡으면 안 된다 —
+    // Personal 탭에 있는데 Word Sets가 활성으로 보이게 된다.
+    activePrefixes: ['/m/words/assigned', '/m/words/review', '/m/words/past'],
   },
+  { icon: 'auto_stories', label: 'Personal', to: '/m/words/personal' },
   { icon: 'account_circle', label: 'Account', to: '/m/account' },
 ] as const;
 
@@ -25,7 +28,7 @@ const TAB_ITEMS: readonly TabItem[] = [
  * 소비처가 하나뿐이다. SideNavBar(shared, 도메인 무지) ↔ StudentSideNavBar(widgets, 항목 주입)
  * 처럼 둘로 쪼개는 것은 선생님 모바일 화면이 생길 때 하면 된다.
  *
- * 로그아웃은 탭에 넣지 않고 /m/account 안에 둔다 — 탭이 2개로 단순해지고,
+ * 로그아웃은 탭에 넣지 않고 /m/account 안에 둔다 — 탭 수를 늘리지 않으면서
  * 오탭으로 로그아웃되는 사고를 막는다.
  */
 export function MobileStudentTabBar() {

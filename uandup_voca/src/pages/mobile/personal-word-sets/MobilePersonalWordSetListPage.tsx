@@ -28,10 +28,10 @@ export function MobilePersonalWordSetListPage() {
 
   return (
     <div className="px-4 pt-4">
+      {/* 탭 최상위 화면이라 뒤로가기를 두지 않는다 — MobileScreenHeader는 onBack이 없으면 화살표를 그리지 않는다. */}
       <MobileScreenHeader
         title="Personal Words"
         subtitle={`${sets.length} ${sets.length === 1 ? 'set' : 'sets'}`}
-        onBack={() => navigate({ to: '/m/library' })}
       />
 
       {isLoading ? (
