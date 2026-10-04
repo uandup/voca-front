@@ -26,6 +26,7 @@ import { Route as TeacherAdminRouteImport } from './../routes/teacher/admin'
 import { Route as StudentWordTestRouteImport } from './../routes/student/word-test_'
 import { Route as StudentDashboardRouteImport } from './../routes/student/dashboard'
 import { Route as OauthCallbackRouteImport } from './../routes/oauth/callback'
+import { Route as MLoginRouteImport } from './../routes/m_.login'
 import { Route as MUnsupportedRouteImport } from './../routes/m/unsupported'
 import { Route as MLibraryRouteImport } from './../routes/m/library'
 import { Route as MAccountRouteImport } from './../routes/m/account'
@@ -39,6 +40,7 @@ import { Route as StudentReviewDeckWordsRouteImport } from './../routes/student/
 import { Route as StudentPersonalWordsPersonalWordSetIdRouteImport } from './../routes/student/personal-words/$personalWordSetId'
 import { Route as StudentDashboardPendingReviewsRouteImport } from './../routes/student/dashboard_/pending-reviews'
 import { Route as MWordsReviewRouteImport } from './../routes/m/words/review'
+import { Route as MWordsPastRouteImport } from './../routes/m/words/past'
 import { Route as MWordsPersonalIndexRouteImport } from './../routes/m/words/personal/index'
 import { Route as TeacherExamsExamIdReviewRouteImport } from './../routes/teacher_.exams.$examId.review'
 import { Route as TeacherExamsExamIdPreviewRouteImport } from './../routes/teacher_.exams.$examId.preview'
@@ -140,6 +142,11 @@ const OauthCallbackRoute = OauthCallbackRouteImport.update({
   path: '/oauth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MLoginRoute = MLoginRouteImport.update({
+  id: '/m_/login',
+  path: '/m/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MUnsupportedRoute = MUnsupportedRouteImport.update({
   id: '/unsupported',
   path: '/unsupported',
@@ -209,6 +216,11 @@ const StudentDashboardPendingReviewsRoute =
 const MWordsReviewRoute = MWordsReviewRouteImport.update({
   id: '/words/review',
   path: '/words/review',
+  getParentRoute: () => MRoute,
+} as any)
+const MWordsPastRoute = MWordsPastRouteImport.update({
+  id: '/words/past',
+  path: '/words/past',
   getParentRoute: () => MRoute,
 } as any)
 const MWordsPersonalIndexRoute = MWordsPersonalIndexRouteImport.update({
@@ -311,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/m/account': typeof MAccountRoute
   '/m/library': typeof MLibraryRoute
   '/m/unsupported': typeof MUnsupportedRoute
+  '/m/login': typeof MLoginRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test': typeof StudentWordTestRoute
@@ -322,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/m/': typeof MIndexRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/m/words/past': typeof MWordsPastRoute
   '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-words/$personalWordSetId': typeof StudentPersonalWordsPersonalWordSetIdRoute
@@ -355,6 +369,7 @@ export interface FileRoutesByTo {
   '/m/account': typeof MAccountRoute
   '/m/library': typeof MLibraryRoute
   '/m/unsupported': typeof MUnsupportedRoute
+  '/m/login': typeof MLoginRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test': typeof StudentWordTestRoute
@@ -366,6 +381,7 @@ export interface FileRoutesByTo {
   '/m': typeof MIndexRoute
   '/student': typeof StudentIndexRoute
   '/teacher': typeof TeacherIndexRoute
+  '/m/words/past': typeof MWordsPastRoute
   '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-words/$personalWordSetId': typeof StudentPersonalWordsPersonalWordSetIdRoute
@@ -403,6 +419,7 @@ export interface FileRoutesById {
   '/m/account': typeof MAccountRoute
   '/m/library': typeof MLibraryRoute
   '/m/unsupported': typeof MUnsupportedRoute
+  '/m_/login': typeof MLoginRoute
   '/oauth/callback': typeof OauthCallbackRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/word-test_': typeof StudentWordTestRoute
@@ -414,6 +431,7 @@ export interface FileRoutesById {
   '/m/': typeof MIndexRoute
   '/student/': typeof StudentIndexRoute
   '/teacher/': typeof TeacherIndexRoute
+  '/m/words/past': typeof MWordsPastRoute
   '/m/words/review': typeof MWordsReviewRoute
   '/student/dashboard_/pending-reviews': typeof StudentDashboardPendingReviewsRoute
   '/student/personal-words/$personalWordSetId': typeof StudentPersonalWordsPersonalWordSetIdRoute
@@ -452,6 +470,7 @@ export interface FileRouteTypes {
     | '/m/account'
     | '/m/library'
     | '/m/unsupported'
+    | '/m/login'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test'
@@ -463,6 +482,7 @@ export interface FileRouteTypes {
     | '/m/'
     | '/student/'
     | '/teacher/'
+    | '/m/words/past'
     | '/m/words/review'
     | '/student/dashboard/pending-reviews'
     | '/student/personal-words/$personalWordSetId'
@@ -496,6 +516,7 @@ export interface FileRouteTypes {
     | '/m/account'
     | '/m/library'
     | '/m/unsupported'
+    | '/m/login'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test'
@@ -507,6 +528,7 @@ export interface FileRouteTypes {
     | '/m'
     | '/student'
     | '/teacher'
+    | '/m/words/past'
     | '/m/words/review'
     | '/student/dashboard/pending-reviews'
     | '/student/personal-words/$personalWordSetId'
@@ -543,6 +565,7 @@ export interface FileRouteTypes {
     | '/m/account'
     | '/m/library'
     | '/m/unsupported'
+    | '/m_/login'
     | '/oauth/callback'
     | '/student/dashboard'
     | '/student/word-test_'
@@ -554,6 +577,7 @@ export interface FileRouteTypes {
     | '/m/'
     | '/student/'
     | '/teacher/'
+    | '/m/words/past'
     | '/m/words/review'
     | '/student/dashboard_/pending-reviews'
     | '/student/personal-words/$personalWordSetId'
@@ -588,6 +612,7 @@ export interface RootRouteChildren {
   PendingRoute: typeof PendingRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
+  MLoginRoute: typeof MLoginRoute
   OauthCallbackRoute: typeof OauthCallbackRoute
   StudentPersonalSelfTestPersonalWordSetIdRoute: typeof StudentPersonalSelfTestPersonalWordSetIdRoute
   StudentSelfTestStudySetIdRoute: typeof StudentSelfTestStudySetIdRoute
@@ -718,6 +743,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OauthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/m_/login': {
+      id: '/m_/login'
+      path: '/m/login'
+      fullPath: '/m/login'
+      preLoaderRoute: typeof MLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/m/unsupported': {
       id: '/m/unsupported'
       path: '/unsupported'
@@ -807,6 +839,13 @@ declare module '@tanstack/react-router' {
       path: '/words/review'
       fullPath: '/m/words/review'
       preLoaderRoute: typeof MWordsReviewRouteImport
+      parentRoute: typeof MRoute
+    }
+    '/m/words/past': {
+      id: '/m/words/past'
+      path: '/words/past'
+      fullPath: '/m/words/past'
+      preLoaderRoute: typeof MWordsPastRouteImport
       parentRoute: typeof MRoute
     }
     '/m/words/personal/': {
@@ -922,6 +961,7 @@ interface MRouteChildren {
   MLibraryRoute: typeof MLibraryRoute
   MUnsupportedRoute: typeof MUnsupportedRoute
   MIndexRoute: typeof MIndexRoute
+  MWordsPastRoute: typeof MWordsPastRoute
   MWordsReviewRoute: typeof MWordsReviewRoute
   MWordsAssignedStudySetIdRoute: typeof MWordsAssignedStudySetIdRoute
   MWordsPersonalPersonalWordSetIdRoute: typeof MWordsPersonalPersonalWordSetIdRoute
@@ -933,6 +973,7 @@ const MRouteChildren: MRouteChildren = {
   MLibraryRoute: MLibraryRoute,
   MUnsupportedRoute: MUnsupportedRoute,
   MIndexRoute: MIndexRoute,
+  MWordsPastRoute: MWordsPastRoute,
   MWordsReviewRoute: MWordsReviewRoute,
   MWordsAssignedStudySetIdRoute: MWordsAssignedStudySetIdRoute,
   MWordsPersonalPersonalWordSetIdRoute: MWordsPersonalPersonalWordSetIdRoute,
@@ -1019,6 +1060,7 @@ const rootRouteChildren: RootRouteChildren = {
   PendingRoute: PendingRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
+  MLoginRoute: MLoginRoute,
   OauthCallbackRoute: OauthCallbackRoute,
   StudentPersonalSelfTestPersonalWordSetIdRoute:
     StudentPersonalSelfTestPersonalWordSetIdRoute,

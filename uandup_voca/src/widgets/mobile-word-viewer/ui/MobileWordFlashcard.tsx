@@ -44,6 +44,13 @@ export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
 
+  // 카드 좌우 스와이프. 손가락을 따라 움직인 거리(px)이며 0이면 드래그 중 아님.
+  const [swipeDx, setSwipeDx] = useState(0);
+  // 제스처 판정 상태. 렌더에 영향을 주지 않으므로 ref로 둔다.
+  //  - axis: 첫 이동으로 확정한 방향. 'y'면 세로 스크롤이므로 끝까지 관여하지 않는다.
+  //  - moved: 임계값을 넘겼는지 — 넘겼으면 뒤따르는 click(뒤집기)을 삼킨다.
+  const swipeRef = useRef({ startX: 0, startY: 0, axis: null as 'x' | 'y' | null, moved: false });
+
   const total = items.length;
   // items가 줄어들어 index가 범위를 벗어날 수 있으므로 렌더 시점에 clamp
   const safeIndex = total > 0 ? Math.min(index, total - 1) : 0;
@@ -102,6 +109,59 @@ export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: 
     if (dragIndex === null) return;
     navigateTo(indexFromClientX(e.clientX));
     setDragIndex(null);
+  }
+
+  // --- 카드 좌우 스와이프 ---
+  // 임계값 2개: AXIS_LOCK은 "가로 제스처로 확정"하는 거리, SWIPE_COMMIT은 "넘긴다"고 보는 거리.
+  const AXIS_LOCK = 10;
+  const SWIPE_COMMIT = 56;
+
+  function handleCardPointerDown(e: React.PointerEvent) {
+    swipeRef.current = { startX: e.clientX, startY: e.clientY, axis: null, moved: false };
+  }
+
+  function handleCardPointerMove(e: React.PointerEvent) {
+    const s = swipeRef.current;
+    // 세로로 확정됐으면 브라우저 스크롤에 맡기고 아무것도 하지 않는다.
+    if (s.axis === 'y') return;
+
+    const dx = e.clientX - s.startX;
+    const dy = e.clientY - s.startY;
+
+    if (s.axis === null) {
+      // 아직 방향 미확정 — 둘 중 먼저 임계값을 넘은 축으로 잠근다.
+      if (Math.abs(dx) < AXIS_LOCK && Math.abs(dy) < AXIS_LOCK) return;
+      s.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (s.axis === 'y') return;
+      s.moved = true;
+      // 가로로 확정된 뒤에는 포인터를 잡아 카드 밖으로 나가도 추적한다.
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+
+    // 양 끝에서는 저항을 줘 "더 없음"을 손끝으로 알린다.
+    const atStart = safeIndex === 0 && dx > 0;
+    const atEnd = safeIndex >= total - 1 && dx < 0;
+    setSwipeDx(atStart || atEnd ? dx * 0.3 : dx);
+  }
+
+  function handleCardPointerUp() {
+    const s = swipeRef.current;
+    const dx = swipeDx;
+    setSwipeDx(0);
+
+    if (s.axis !== 'x') return;
+    if (dx <= -SWIPE_COMMIT) goNext();
+    else if (dx >= SWIPE_COMMIT) goPrev();
+    // 임계값 미달이면 원위치(위에서 0으로 되돌림)
+  }
+
+  // 스와이프 뒤에 따라오는 click을 삼킨다 — 안 막으면 밀 때마다 카드가 뒤집힌다.
+  function handleCardClick() {
+    if (swipeRef.current.moved) {
+      swipeRef.current.moved = false;
+      return;
+    }
+    setFlipped((f) => !f);
   }
 
   // items가 갱신돼 목록이 짧아지면 index를 되돌린다.
@@ -218,11 +278,25 @@ export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: 
         </div>
       </div>
 
-      {/* 카드 — 탭하면 뒤집힌다. 높이는 뷰포트에 비례하되 위아래로 클램프. */}
+      {/* 카드 — 탭하면 뒤집히고, 좌우로 밀면 이전/다음 단어로 넘어간다.
+          높이는 뷰포트에 비례하되 위아래로 클램프.
+          translateX는 **이 바깥 래퍼**에 준다 — 안쪽은 rotateY + preserve-3d를 쓰고 있어
+          거기에 이동을 더하면 뒤집기가 깨진다.
+          touch-action: pan-y = 세로 스크롤은 브라우저에 맡기고 가로만 가져온다. */}
       <div
-        className="relative w-full cursor-pointer touch-manipulation"
-        style={{ perspective: '1200px' }}
-        onClick={() => setFlipped((f) => !f)}
+        className="relative w-full cursor-pointer"
+        style={{
+          perspective: '1200px',
+          touchAction: 'pan-y',
+          transform: `translateX(${swipeDx}px)`,
+          transition: swipeDx === 0 ? 'transform 200ms' : undefined,
+          opacity: swipeDx === 0 ? 1 : 0.85,
+        }}
+        onPointerDown={handleCardPointerDown}
+        onPointerMove={handleCardPointerMove}
+        onPointerUp={handleCardPointerUp}
+        onPointerCancel={handleCardPointerUp}
+        onClick={handleCardClick}
       >
         <div
           className={`relative w-full ${animated ? 'transition-transform duration-300' : ''}`}
