@@ -66,7 +66,7 @@ export function MobilePastAssignmentsPage() {
               }
               className="w-full text-left bg-surface-container-lowest border border-outline-variant/50 rounded-2xl px-5 py-4 flex items-center gap-3 touch-manipulation active:bg-surface-container-low transition-colors"
             >
-              {/* 진행 중 카드와 같은 타이포 — 11px 메타 줄(배정일) + 15px 본문 줄(단어 수·레벨).
+              {/* 진행 중 카드와 같은 타이포 — 11px 메타 줄(배정일) + 14px 본문 줄(단어 수·레벨).
                   다만 이미 끝난 세트라 진행 점은 그리지 않는다. */}
               <div className="min-w-0 flex-1">
                 <p className="flex items-baseline gap-2 text-[11px]">
@@ -77,7 +77,7 @@ export function MobilePastAssignmentsPage() {
                     {formatDate(set.assignedDate)}
                   </span>
                 </p>
-                <h3 className="text-[15px] mt-1.5">
+                <h3 className="text-[14px] mt-1.5">
                   <span className="font-bold text-on-surface">{set.wordCount} words</span>
                   <span className="font-semibold text-on-surface-variant">
                     {' · '}
