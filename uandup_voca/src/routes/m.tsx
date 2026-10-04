@@ -6,8 +6,13 @@ import { requireStudentArea } from '@/entities/auth';
 // /student 트리와 완전히 분리해 데스크탑 화면을 건드리지 않는다.
 export const Route = createFileRoute('/m')({
   // /student와 동일한 가드를 재사용한다 — STUDENT 본인 또는 PARENT(자녀 열람)만 허용.
-  // PARENT 허용이 안전한 이유: /m에는 쓰기 동작이 없고(북마크·셔플·가리기 전부 localStorage)
-  // 시험 화면도 없다. useCurrentStudentId가 자녀 id를 자동 해석한다.
+  // useCurrentStudentId가 자녀 id를 자동 해석한다.
+  //
+  // PARENT 허용이 안전한 이유: /m에 시험 화면이 없고, 표시 상태(북마크·셔플·가리기)는
+  // 전부 localStorage다. **쓰기가 있는 곳은 개인 단어 두 라우트뿐이고**
+  // (/m/words/personal, /m/words/personal/$personalWordSetId — 세트·단어 등록·수정·삭제)
+  // 그 둘은 각자 beforeLoad에서 PARENT를 /m/library로 돌려보낸다.
+  // 개인 단어장은 학생 본인과 선생님만 접근 가능하다는 정책이라 서버도 403을 준다.
   beforeLoad: requireStudentArea,
   component: function MobileLayout() {
     return (
