@@ -12,6 +12,12 @@ interface Props {
   onShuffle?: () => void;
   // 플래시카드 미지원 소스(개인 단어)는 false → List/Cards 전환이 사라진다.
   showViewToggle?: boolean;
+  /**
+   * 단어 수정·삭제를 지원하는 소스(개인 단어)만 넘긴다. **둘 다 있을 때만** 연필 토글이 생긴다.
+   * 배정 단어·오답 단어는 학생이 고칠 수 있는 대상이 아니라 넘기지 않는다 → 툴바가 그대로다.
+   */
+  editMode?: boolean;
+  onToggleEditMode?: () => void;
   hideWord: boolean;
   hideMeaning: boolean;
   onToggleHideWord: () => void;
@@ -36,6 +42,8 @@ export function MobileWordToolbar({
   onToggleBookmarkFilter,
   onShuffle,
   showViewToggle = true,
+  editMode = false,
+  onToggleEditMode,
   hideWord,
   hideMeaning,
   onToggleHideWord,
@@ -53,6 +61,14 @@ export function MobileWordToolbar({
           onClick={onToggleBookmarkFilter}
         />
         {onShuffle && <IconToggle icon="shuffle" label="Shuffle order" onClick={onShuffle} />}
+        {onToggleEditMode && (
+          <IconToggle
+            icon="edit"
+            label={editMode ? 'Done editing' : 'Edit words'}
+            active={editMode}
+            onClick={onToggleEditMode}
+          />
+        )}
 
         {showViewToggle && (
           <div className="flex items-center gap-1 p-1 bg-surface-container rounded-xl border border-outline-variant/30 ml-auto">
