@@ -76,9 +76,9 @@ export function MobileWordListPage({
 
   // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
   // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요 — 데스크탑 StudySetWordsPage와 동일한 불변식).
-  const visibleItems = showBookmarkedOnly
-    ? orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)))
-    : orderedWords;
+  // 배지 숫자도 이 필터 결과로 센다. 저장된 북마크 전체로 세면 리뷰덱에서 해제된 단어·삭제한 개인 단어까지 센다.
+  const bookmarkedItems = orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)));
+  const visibleItems = showBookmarkedOnly ? bookmarkedItems : orderedWords;
 
   // 개인 단어처럼 플래시카드를 지원하지 않는 소스는 URL에 ?view=cards가 들어와도 리스트로 강제한다.
   const effectiveView: MobileWordView = supportsFlashcard ? view : 'list';
@@ -106,7 +106,7 @@ export function MobileWordListPage({
             view={effectiveView}
             onChangeView={onChangeView}
             bookmarkFilterActive={showBookmarkedOnly}
-            bookmarkCount={bookmarkedKeys.size}
+            bookmarkCount={bookmarkedItems.length}
             onToggleBookmarkFilter={() => setShowBookmarkedOnly((v) => !v)}
             onShuffle={supportsShuffle ? shuffle : undefined}
             showViewToggle={supportsFlashcard}

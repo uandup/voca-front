@@ -66,7 +66,9 @@ export default function PersonalWordSetDetailPage() {
   );
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
-  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedKeys.has(personalWordKey(w))) : words;
+  // 배지 숫자도 이 필터 결과로 센다. 저장된 북마크 전체로 세면 삭제한 단어의 북마크까지 남아 숫자가 부풀어 보인다.
+  const bookmarkedWords = words.filter((w) => bookmarkedKeys.has(personalWordKey(w)));
+  const visibleWords = showBookmarkedOnly ? bookmarkedWords : words;
 
   function goSelfTest() {
     navigate({
@@ -91,7 +93,7 @@ export default function PersonalWordSetDetailPage() {
             <>
               <WordBookmarkFilterButton
                 active={showBookmarkedOnly}
-                count={bookmarkedKeys.size}
+                count={bookmarkedWords.length}
                 onToggle={() => setShowBookmarkedOnly((v) => !v)}
               />
 

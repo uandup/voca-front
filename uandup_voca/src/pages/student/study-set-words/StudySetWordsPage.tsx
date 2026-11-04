@@ -59,9 +59,9 @@ export function StudySetWordsPage({
 
   // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
   // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요).
-  const visibleWords = showBookmarkedOnly
-    ? orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)))
-    : orderedWords;
+  // 배지 숫자도 이 필터 결과로 센다 — 저장된 북마크 전체가 아니라 지금 목록에 있는 단어 기준.
+  const bookmarkedWords = orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)));
+  const visibleWords = showBookmarkedOnly ? bookmarkedWords : orderedWords;
 
   // 자체 시험 페이지로 이동. Exit 시 지금 보고 있던 단어 목록으로 돌아오도록 현재 URL을 넘긴다.
   function handleStartSelfTest() {
@@ -82,7 +82,7 @@ export function StudySetWordsPage({
             {/* 북마크 필터 토글 */}
             <WordBookmarkFilterButton
               active={showBookmarkedOnly}
-              count={bookmarkedKeys.size}
+              count={bookmarkedWords.length}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
             />
 

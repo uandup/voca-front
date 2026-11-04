@@ -29,7 +29,10 @@ export default function WrongWordListPage() {
   const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(`wrongwords_${studentId}`);
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
-  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedKeys.has(toWordKey(w))) : words;
+  // 배지 숫자와 필터 결과를 같은 목록에서 낸다. 저장된 북마크 전체(bookmarkedKeys.size)로 세면
+  // 오답 시험에서 맞혀 리뷰덱에서 빠진 단어까지 세어 "북마크 6개인데 단어 없음"이 된다.
+  const bookmarkedWords = words.filter((w) => bookmarkedKeys.has(toWordKey(w)));
+  const visibleWords = showBookmarkedOnly ? bookmarkedWords : words;
 
   return (
     <main>
@@ -44,7 +47,7 @@ export default function WrongWordListPage() {
             {/* 북마크 필터 토글 */}
             <WordBookmarkFilterButton
               active={showBookmarkedOnly}
-              count={bookmarkedKeys.size}
+              count={bookmarkedWords.length}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
             />
 
