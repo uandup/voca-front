@@ -32,9 +32,13 @@ export function toReviewDeckExamRow(r: WrongBankExamListResponse): ReviewDeckExa
   };
 }
 
+// 오답 뱅크엔 공용 단어(WORD)와 개인 단어장 시험 오답(PERSONAL)이 섞여 있다.
+// PERSONAL은 단어·한글 뜻만 있고, difficulty 등은 서버가 null로 내려준다 — 타입을 맞추려 채운 기본값은
+// WordCard가 wordSource를 보고 그리지 않으므로 화면에 "LEVEL 1"로 새지 않는다.
 export function toReviewDeckWord(r: WrongBankWordResponse): ReviewDeckWord {
   return {
     id: r.wordId ?? 0,
+    wordSource: r.wordSource ?? 'WORD',
     word: r.word ?? '',
     partsOfSpeech: (r.partsOfSpeech ?? []).map(toPartOfSpeech),
     korMeaning: r.koreanMeaning ?? '',

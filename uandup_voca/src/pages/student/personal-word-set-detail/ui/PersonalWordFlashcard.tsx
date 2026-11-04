@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PersonalWordCardData } from '@/entities/personal-word';
+import { toWordKey } from '@/entities/word';
 
 interface PersonalWordFlashcardProps {
   words: PersonalWordCardData[];
-  bookmarkedIds?: Set<number>;
-  onToggleBookmark?: (wordId: number) => void;
+  // 출처 포함 북마크 키 집합(`PERSONAL-{id}`) — useWordBookmarks와 같은 형식
+  bookmarkedKeys?: Set<string>;
+  onToggleBookmark?: (wordKey: string) => void;
 }
 
 type FrontFace = 'word' | 'meaning';
@@ -22,7 +24,7 @@ function loadFrontFace(): FrontFace {
 // PersonalWordListPage 전용으로 따로 둔다.
 export function PersonalWordFlashcard({
   words,
-  bookmarkedIds,
+  bookmarkedKeys,
   onToggleBookmark,
 }: PersonalWordFlashcardProps) {
   const [index, setIndex] = useState(0);
@@ -39,6 +41,8 @@ export function PersonalWordFlashcard({
   // words prop이 줄어들어 index가 범위를 벗어날 수 있으므로 렌더 시점에 clamp
   const safeIndex = total > 0 ? Math.min(index, total - 1) : 0;
   const word = words[safeIndex];
+  // 북마크 키 — 이 카드는 전부 개인 단어라 출처를 PERSONAL로 붙인다
+  const wordKey = word ? toWordKey({ id: word.id, wordSource: 'PERSONAL' }) : '';
   // 드래그 중이면 미리보기 인덱스를, 아니면 실제 인덱스를 표시에 사용
   const displayIndex = dragIndex ?? safeIndex;
 
@@ -264,20 +268,20 @@ export function PersonalWordFlashcard({
             <BackPanel isBack={true} />
           </div>
           {/* 북마크 버튼은 회전 컨테이너 밖에 둬야 카드를 뒤집어도 좌우로 따라 돌지 않고 우상단에 고정됨 */}
-          {bookmarkedIds && onToggleBookmark && (
+          {bookmarkedKeys && onToggleBookmark && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onToggleBookmark(word.id);
+                onToggleBookmark(wordKey);
               }}
               className="absolute top-3 right-3 z-10 p-1 rounded-lg leading-none hover:bg-surface-container transition-colors"
-              aria-label={bookmarkedIds.has(word.id) ? 'Remove bookmark' : 'Add bookmark'}
+              aria-label={bookmarkedKeys.has(wordKey) ? 'Remove bookmark' : 'Add bookmark'}
             >
               <span
-                className={`material-symbols-outlined ${bookmarkedIds.has(word.id) ? 'text-amber-400' : 'text-outline/40 hover:text-outline'}`}
+                className={`material-symbols-outlined ${bookmarkedKeys.has(wordKey) ? 'text-amber-400' : 'text-outline/40 hover:text-outline'}`}
                 style={{
                   fontSize: '30px',
-                  fontVariationSettings: bookmarkedIds.has(word.id) ? "'FILL' 1" : "'FILL' 0",
+                  fontVariationSettings: bookmarkedKeys.has(wordKey) ? "'FILL' 1" : "'FILL' 0",
                 }}
               >
                 bookmark

@@ -7,8 +7,8 @@ type SubmittedExamResponse = components['schemas']['SubmittedExamResponse'];
 type ServerExamType = NonNullable<SubmittedExamResponse['type']>;
 
 // 서버 시험 유형 enum → 클라이언트 ExamType.
-// 대부분 동일하나 WRONG_BANK/LEVEL만 클라이언트에서 다른 이름을 쓴다
-// (REVIEW_DECK / LEVEL_TEST). 채점 화면은 클라이언트 이름 기준으로 분기한다.
+// 대부분 동일하나 WRONG_BANK/LEVEL/PERSONAL만 클라이언트에서 다른 이름을 쓴다
+// (REVIEW_DECK / LEVEL_TEST / PERSONAL_TEST). 채점 화면은 클라이언트 이름 기준으로 분기한다.
 const SERVER_TYPE_TO_EXAM_TYPE: Record<ServerExamType, ExamType> = {
   WORD: 'WORD',
   EXAMPLE: 'EXAMPLE',
@@ -17,6 +17,7 @@ const SERVER_TYPE_TO_EXAM_TYPE: Record<ServerExamType, ExamType> = {
   REVIEW3: 'REVIEW3',
   WRONG_BANK: 'REVIEW_DECK',
   LEVEL: 'LEVEL_TEST',
+  PERSONAL: 'PERSONAL_TEST',
 };
 
 function toExamType(type: ServerExamType | undefined): ExamType {

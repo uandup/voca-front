@@ -1,9 +1,11 @@
 export { useWordBookmarks } from './lib/useWordBookmarks';
+export { toWordKey } from './lib/wordKey';
 export { useWordShuffle } from './lib/useWordShuffle';
 export { useWordMask } from './lib/useWordMask';
 export { DIFFICULTY_LEVELS } from './model/types';
 export type {
   PartOfSpeech,
+  WordSource,
   WordDifficultyLevel,
   WordCardData,
   WordTestItem,

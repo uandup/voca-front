@@ -3,7 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router';
 import { BreadcrumbPageTitle } from '@/shared/ui/BreadcrumbPageTitle';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
-import { ConfirmDialog } from '@/shared/ui/Modal';
+import { ConfirmDialog, AlertDialog } from '@/shared/ui/Modal';
 import { usePersonalWordsBySet, PersonalWordCard } from '@/entities/personal-word';
 import type { PersonalWordCardData } from '@/entities/personal-word';
 import { usePersonalWordSets } from '@/entities/personal-word-set';
@@ -13,6 +13,7 @@ import {
   PersonalWordBulkAddModal,
   PersonalWordEditModal,
 } from '@/features/personal-word';
+import { PersonalTestCreateModal } from '@/features/personal-test-exam';
 
 // 한 세트의 개인 단어를 등록/수정/삭제하는 선생님 전용 페이지 — VocabularyBankPage와 구조는
 // 같지만, PersonalWord는 word/koreanMeaning 2필드뿐이고 목록 조회가 검색/페이지네이션을
@@ -40,6 +41,11 @@ export default function PersonalWordManagementPage() {
   const [showBulkAdd, setShowBulkAdd] = useState(false);
   const [editTarget, setEditTarget] = useState<PersonalWordCardData | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PersonalWordCardData | null>(null);
+  const [showCreateTest, setShowCreateTest] = useState(false);
+  const [showCreateSuccess, setShowCreateSuccess] = useState(false);
+
+  // 등록순 번호 — 개인 단어장 시험 범위(From~To)의 기준. 검색 필터와 무관하게 전체 목록(서버 순서) 기준으로 매긴다.
+  const orderNumberById = new Map(words.map((w, i) => [w.id, i + 1]));
 
   const filteredWords = keyword.trim()
     ? words.filter((w) => {
@@ -66,13 +72,23 @@ export default function PersonalWordManagementPage() {
           ]}
           title={setName}
         />
-        <button
-          className="bg-linear-to-r bg-primary text-white px-5 py-2.5 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
-          onClick={() => setShowBulkAdd(true)}
-        >
-          <span className="material-symbols-outlined">add</span>
-          <span className="font-bold">Add Words</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="border border-primary/30 text-primary px-5 py-2.5 rounded-full flex items-center gap-2 hover:bg-primary/5 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => setShowCreateTest(true)}
+            disabled={words.length === 0}
+          >
+            <span className="material-symbols-outlined">quiz</span>
+            <span className="font-bold">Generate Test</span>
+          </button>
+          <button
+            className="bg-linear-to-r bg-primary text-white px-5 py-2.5 rounded-full flex items-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all"
+            onClick={() => setShowBulkAdd(true)}
+          >
+            <span className="material-symbols-outlined">add</span>
+            <span className="font-bold">Add Words</span>
+          </button>
+        </div>
       </header>
 
       <section className="mb-4">
@@ -116,6 +132,7 @@ export default function PersonalWordManagementPage() {
             <PersonalWordCard
               key={word.id}
               {...word}
+              orderNumber={orderNumberById.get(word.id)}
               extraInfo={
                 <div className="flex gap-2">
                   <button
@@ -153,6 +170,25 @@ export default function PersonalWordManagementPage() {
           personalWordSetId={personalWordSetId}
           word={editTarget}
           onClose={() => setEditTarget(null)}
+        />
+      )}
+
+      {showCreateTest && (
+        <PersonalTestCreateModal
+          studentId={studentId}
+          initialSetId={personalWordSetId}
+          lockSet
+          onClose={() => setShowCreateTest(false)}
+          onCreated={() => setShowCreateSuccess(true)}
+        />
+      )}
+
+      {showCreateSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
+          description="Start it from the Personal Words tab when the student is ready."
+          onClose={() => setShowCreateSuccess(false)}
         />
       )}
 

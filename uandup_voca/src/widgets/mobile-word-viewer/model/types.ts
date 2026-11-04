@@ -12,6 +12,9 @@
  */
 export interface MobileWordItem {
   id: number;
+  // 단어 출처 — 북마크·React key를 (출처, id)로 잡기 위함(toWordKey). 생략 = 공용 단어.
+  // 오답 뱅크 목록은 공용 단어와 개인 단어장 시험 오답이 섞여 id가 겹칠 수 있다.
+  wordSource?: 'WORD' | 'PERSONAL';
   word: string;
   korMeaning: string;
   partsOfSpeech?: string[];

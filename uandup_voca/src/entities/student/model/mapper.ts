@@ -43,19 +43,24 @@ type DailyCountDto = components['schemas']['DailyCount'];
 type PendingReviewItemDto = components['schemas']['PendingReviewItem'];
 type TodoItemDto = components['schemas']['TodoItem'];
 
+// 배정 단어는 출처가 섞일 수 있다 — 오답 뱅크 배정은 공용+개인 단어, 개인 단어장 시험 배정은 전부 개인 단어.
+// wordSource를 함께 넘겨야 WordCard가 개인 단어의 빈 섹션(LEVEL·품사·동의어)을 그리지 않고, 키도 겹치지 않는다.
 export function toAssignedWordCardData(res: AssignedWordResponse): WordCardData {
-  return toWordCardData({
-    id: res.wordId,
-    word: res.word,
-    partsOfSpeech: res.partsOfSpeech,
-    koreanMeaning: res.koreanMeaning,
-    englishMeaning: res.englishMeaning,
-    difficulty: res.difficulty,
-    synonyms: res.synonyms,
-    example: res.example,
-    satPriority: res.satPriority,
-    examTag: res.examTag,
-  });
+  return {
+    ...toWordCardData({
+      id: res.wordId,
+      word: res.word,
+      partsOfSpeech: res.partsOfSpeech,
+      koreanMeaning: res.koreanMeaning,
+      englishMeaning: res.englishMeaning,
+      difficulty: res.difficulty,
+      synonyms: res.synonyms,
+      example: res.example,
+      satPriority: res.satPriority,
+      examTag: res.examTag,
+    }),
+    wordSource: res.wordSource ?? 'WORD',
+  };
 }
 
 export function toStudentPickerRow(r: StudentListResponse): StudentPickerRow {

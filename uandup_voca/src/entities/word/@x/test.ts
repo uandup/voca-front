@@ -1,1 +1,1 @@
-export type { WordTestItem, VocabReviewItem, SentenceTestItem } from '../model/types';
+export type { WordTestItem, VocabReviewItem, SentenceTestItem, WordSource } from '../model/types';

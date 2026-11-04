@@ -6,6 +6,7 @@ import { useCurrentStudentId } from '@/entities/auth';
 import { studentKeys } from '@/entities/student';
 import { reviewDeckKeys } from '@/entities/review-deck';
 import { levelTestKeys } from '@/entities/level-test';
+import { personalTestKeys } from '@/entities/personal-test';
 import { useExamAnswers } from './useExamAnswers';
 import { useExamItems } from './useExamItems';
 
@@ -52,6 +53,8 @@ export function useExamTake({
       queryClient.invalidateQueries({ queryKey: reviewDeckKeys.exams(studentId) });
     } else if (source === 'level-test') {
       queryClient.invalidateQueries({ queryKey: levelTestKeys.exams(studentId) });
+    } else if (source === 'personal-test') {
+      queryClient.invalidateQueries({ queryKey: personalTestKeys.exams(studentId) });
     } else {
       queryClient.invalidateQueries({ queryKey: studentKeys.studySets(studentId) });
     }
@@ -61,8 +64,13 @@ export function useExamTake({
 
   const showSynonym = attempt?.includeSynonym ?? false;
 
-  const answers = useExamAnswers({ isSentence, showSynonym });
+  // 동의어 칸이 없는 문항(개인 단어)은 완료 판정에서 동의어를 요구하지 않는다 — items를 먼저 만든다.
   const items = useExamItems({ attempt, isSentence, currentPage });
+  const answers = useExamAnswers({
+    isSentence,
+    showSynonym,
+    synonymDisabledIds: items.synonymDisabledIds,
+  });
 
   const submit = useSubmitExam({ examId: routeExamId, studentId, source });
 

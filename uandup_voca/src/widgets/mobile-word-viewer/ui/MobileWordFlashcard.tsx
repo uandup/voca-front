@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toWordKey } from '@/entities/word';
 import type { MobileWordItem } from '../model/types';
 
 interface Props {
   items: MobileWordItem[];
-  bookmarkedIds?: Set<number>;
-  onToggleBookmark?: (wordId: number) => void;
+  // 출처 포함 북마크 키 집합(toWordKey) — useWordBookmarks와 같은 형식
+  bookmarkedKeys?: Set<string>;
+  onToggleBookmark?: (wordKey: string) => void;
 }
 
 type FrontFace = 'word' | 'meaning';
@@ -34,7 +36,7 @@ function loadFrontFace(): FrontFace {
  * 원본에서 그대로 가져온 것: frontFace 저장 키, 뒤집기(preserve-3d + backface-visibility),
  * 진행바 pointer capture 스크럽.
  */
-export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: Props) {
+export function MobileWordFlashcard({ items, bookmarkedKeys, onToggleBookmark }: Props) {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   // transition을 일시적으로 비활성화하는 플래그. 카드 전환 시 flip-back 애니메이션 없이 즉시 스냅.
@@ -237,7 +239,8 @@ export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: 
   const [FrontPanel, BackPanel] =
     frontFace === 'word' ? [WordPanel, MeaningPanel] : [MeaningPanel, WordPanel];
 
-  const isBookmarked = bookmarkedIds?.has(item.id) ?? false;
+  const itemKey = toWordKey(item);
+  const isBookmarked = bookmarkedKeys?.has(itemKey) ?? false;
 
   return (
     <div className="flex flex-col gap-4">
@@ -312,11 +315,11 @@ export function MobileWordFlashcard({ items, bookmarkedIds, onToggleBookmark }: 
         </div>
 
         {/* 북마크 버튼은 회전 컨테이너 밖에 둬야 카드를 뒤집어도 좌우로 따라 돌지 않고 우상단에 고정됨 */}
-        {bookmarkedIds && onToggleBookmark && (
+        {bookmarkedKeys && onToggleBookmark && (
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onToggleBookmark(item.id);
+              onToggleBookmark(itemKey);
             }}
             className="absolute top-2 right-2 z-10 p-2 rounded-lg leading-none touch-manipulation"
             aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}

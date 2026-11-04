@@ -1,3 +1,5 @@
+import type { WordSource } from '@/entities/word/@x/test';
+
 // ── Domain Primitives ───────────────────────────────────────────────────────
 
 export type TestType = 'word-to-meaning' | 'meaning-to-word' | 'sentence';
@@ -7,7 +9,7 @@ export type WordTestType = Exclude<TestType, 'sentence'>;
 export type ExamMode = 'answer' | 'review' | 'submitted';
 // useSubmitExam / cache invalidation에서 사용하는 시험 출처 구분.
 // 세 출처 모두 제출은 entities/test의 submitExam을 쓰고, 무효화할 캐시만 다르다.
-export type ExamSource = 'study-set' | 'review-deck' | 'level-test';
+export type ExamSource = 'study-set' | 'review-deck' | 'level-test' | 'personal-test';
 
 // ── Shared ──────────────────────────────────────────────────────────────────
 
@@ -104,6 +106,7 @@ export interface ESRow {
 // study-set 단계 시험이 아닌 학생-단위 독립 시험. preview/review 라우트가 examType만으로
 // invalidation 분기를 일관되게 처리할 수 있게 같은 enum에 둔다. 두 값 모두 자체 endpoint를
 // 사용하므로 서버 CreateExamRequest.examType으로 전송되는 일은 없다.
+// 'PERSONAL_TEST'(서버 enum: PERSONAL)도 같은 부류 — 개인 단어장 시험(자체 생성 endpoint).
 export type ExamType =
   | 'WORD'
   | 'EXAMPLE'
@@ -111,15 +114,19 @@ export type ExamType =
   | 'REVIEW2'
   | 'REVIEW3'
   | 'REVIEW_DECK'
-  | 'LEVEL_TEST';
+  | 'LEVEL_TEST'
+  | 'PERSONAL_TEST';
 
 // study-set 기반 단계 시험만 다룰 때 쓰는 좁힌 타입 — createExam/getExamsByType 같이
-// 서버 enum과 직접 매핑되는 경로에서 사용. 서버 enum엔 REVIEW_DECK / LEVEL_TEST가 없다.
-export type StudySetExamType = Exclude<ExamType, 'REVIEW_DECK' | 'LEVEL_TEST'>;
+// 서버 enum과 직접 매핑되는 경로에서 사용. 서버 enum엔 REVIEW_DECK / LEVEL_TEST / PERSONAL_TEST가 없다.
+export type StudySetExamType = Exclude<ExamType, 'REVIEW_DECK' | 'LEVEL_TEST' | 'PERSONAL_TEST'>;
 
 export interface ExamItem {
   examItemId: number;
   itemOrder: number;
+  // 문항 단어 출처. PERSONAL 문항은 서버가 출제 시점 스냅샷(단어·한글 뜻)만 내려주고
+  // 영영뜻·동의어·예문이 없다 — 동의어 칸을 이 문항만 숨긴다(오답 뱅크 혼합 시험).
+  wordSource: WordSource;
   word: string;
   koreanMeaning: string;
   englishMeaning: string;
@@ -153,6 +160,8 @@ export interface ExamDetail {
 export interface ExamAttemptItem {
   examItemId: number;
   itemOrder: number;
+  // ExamItem.wordSource와 동일 — PERSONAL 문항엔 동의어 입력칸을 두지 않는다.
+  wordSource: WordSource;
   word: string;
   koreanMeaning: string;
   englishMeaning: string;

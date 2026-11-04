@@ -313,6 +313,52 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/students/{studentId}/personal-exams": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 개인 단어장 시험 목록 조회
+         * @description 학생의 개인 단어장 시험 이력을 최신순(examId 내림차순)으로 조회합니다.
+         *     선생님·학생 본인·연결된 학부모가 조회할 수 있습니다(개인 단어 세트 API와 달리 학부모 허용 — 시험 결과는 공개).
+         *
+         *     **status 값:**
+         *     - `READY` — 생성됨 (오프라인 대기 또는 온라인 시작 전)
+         *     - `IN_PROGRESS` — 온라인 시험 진행 중 (학생 제출 대기). `attemptStartedAt`이 있으면 이미 응시함(재응시 불가)
+         *     - `SUBMITTED` — 학생 답안 제출 완료 (채점 대기)
+         *     - `PASSED` — 채점 완료·합격
+         *     - `FAILED` — 채점 완료·불합격
+         *
+         *     CANCELLED 상태 시험은 목록에서 제외됩니다.
+         *     questionCount(문항 수)는 항상, correctCount(맞은 수)는 PASSED/FAILED일 때만 포함됩니다 — 점수는 correctCount / questionCount.
+         *     rangeStart·rangeEnd는 생성 시점의 등록순 번호라, 이후 단어를 지우면 현재 화면 번호와 다를 수 있습니다.
+         */
+        get: operations["getPersonalExamList"];
+        put?: never;
+        /**
+         * 개인 단어장 시험 생성
+         * @description 학생의 개인 단어 세트 1개에서 시험을 만듭니다. 선생님만 가능.
+         *
+         *     - 세트의 활성 단어를 등록순으로 1번부터 매긴 뒤 `startIndex`~`endIndex`(양끝 포함)를 배정 풀로 삼고,
+         *       그 안에서 `questionCount`개를 랜덤 선택·랜덤 순서로 출제합니다.
+         *     - `expectedStartWordId`·`expectedEndWordId`는 선생님 화면에서 그 번호에 보였던 단어 ID입니다.
+         *       그 사이 학생이 단어를 추가·삭제해 번호가 밀렸으면 409(`PERSONAL_EXAM_RANGE_STALE`) — 범위를 다시 선택해야 합니다.
+         *     - 동의어 포함은 항상 false입니다(개인 단어엔 동의어가 없음).
+         *     - 문항에는 출제 시점 단어·뜻이 스냅샷으로 저장되어, 이후 단어를 고치거나 지워도 시험 기록은 바뀌지 않습니다.
+         *     - 학생당 동시 진행 개수 제한이 없습니다(레벨·오답 뱅크 시험과 다름).
+         *     - 생성 직후 상태는 READY — 이후 흐름(온라인 시작·응시·제출·채점·취소)은 다른 시험과 동일하며,
+         *       채점 시 오답은 오답 뱅크에 출처 PERSONAL로 쌓입니다.
+         */
+        post: operations["createPersonalExam"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/students/{studentId}/memos": {
         parameters: {
             query?: never;
@@ -917,7 +963,7 @@ export interface paths {
         };
         /**
          * 배정 단어 목록 조회
-         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true).
+         * @description 특정 배정(studySetId)에 포함된 단어 목록을 조회합니다. NORMAL·WRONG_BANK·LEVEL·PERSONAL 타입 모두 사용 가능합니다. 선생님은 모든 배정, 학생은 자신의 배정, 학부모는 연결된 자녀의 배정만 조회 가능합니다. 응답은 exampleVisible(예문 공개 여부) + words로 구성됩니다. example(예문)은 항상 내려가며, 학생 화면에서 예문 표시 여부는 프론트가 exampleVisible로 토글합니다 (NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL·PERSONAL은 항상 true). 각 단어의 wordSource로 공용 단어(WORD)와 개인 단어(PERSONAL)를 구분합니다 — 오답 뱅크 배정은 둘이 섞이고, 개인 단어장 시험 배정은 전부 PERSONAL입니다(개인 단어는 단어·한글 뜻만 있음). 공용 단어가 먼저, 개인 단어는 그 뒤에 등록순.
          */
         get: operations["getAssignedWords"];
         put?: never;
@@ -943,6 +989,8 @@ export interface paths {
          *     - 오답 뱅크 시험에서 또 틀리면 lastWrongAt이 갱신되어 목록 뒤로 이동
          *     - 단어 정보(뜻, 예문, 동의어) + 누적 오답 횟수(wrongCount) 포함
          *     - **예문(example)은 해당 단어의 예문 시험(EXAMPLE)을 통과한(NORMAL StudySet이 WORD_COMP+) 경우에만 내려가고, 그 전에는 null** — 예문 시험 치팅 방지
+         *     - 공용 단어(`wordSource=WORD`)와 개인 단어장 시험 오답(`wordSource=PERSONAL`)이 섞여 있다 — 항목 식별은 (wordSource, wordId) 쌍.
+         *       PERSONAL 항목은 단어·한글 뜻만 있고(품사·영어 뜻·레벨·동의어·예문·기출 태그 없음), 학생이 단어를 지워도 남는다
          *     - 선생님·학생 접근 가능
          */
         get: operations["getActiveWrongBankWords"];
@@ -1477,7 +1525,7 @@ export interface paths {
         };
         /**
          * 채점 대기 큐 조회
-         * @description 학원 전체에서 학생이 온라인 제출했으나 아직 채점되지 않은(SUBMITTED) 시험 목록을 반환합니다. 선생님의 채점 화면에서 새로고침 시 호출하는 용도입니다. NORMAL·WRONG_BANK·LEVEL 온라인 제출을 모두 포함하며, 제출 시각(submittedAt) 오름차순으로 정렬됩니다(먼저 제출한 학생이 위). 채점(POST /api/v1/exams/{examId}/results/online)하면 COMPLETED로 전이돼 목록에서 자동으로 빠집니다. 목록엔 학생 답안·문항을 담지 않으며, 항목 클릭 시 GET /api/v1/exams/{examId}로 상세를 조회합니다.
+         * @description 학원 전체에서 학생이 온라인 제출했으나 아직 채점되지 않은(SUBMITTED) 시험 목록을 반환합니다. 선생님의 채점 화면에서 새로고침 시 호출하는 용도입니다. NORMAL·WRONG_BANK·LEVEL·PERSONAL 온라인 제출을 모두 포함하며, 제출 시각(submittedAt) 오름차순으로 정렬됩니다(먼저 제출한 학생이 위). 채점(POST /api/v1/exams/{examId}/results/online)하면 COMPLETED로 전이돼 목록에서 자동으로 빠집니다. 목록엔 학생 답안·문항을 담지 않으며, 항목 클릭 시 GET /api/v1/exams/{examId}로 상세를 조회합니다.
          */
         get: operations["getSubmittedExams"];
         put?: never;
@@ -2072,6 +2120,51 @@ export interface components {
              */
             name: string;
         };
+        /** @description 개인 단어장 시험 생성 요청 — 세트 1개의 등록순 연속 범위(startIndex~endIndex)에서 questionCount개를 랜덤 출제 */
+        CreatePersonalExamRequest: {
+            /**
+             * Format: int64
+             * @description 출제할 개인 단어 세트 ID — 대상 학생의 활성 세트여야 한다
+             * @example 3
+             */
+            personalWordSetId: number;
+            /**
+             * Format: int32
+             * @description 출제 범위 시작 번호 — 세트의 활성 단어를 등록순으로 1번부터 매긴 번호 (양끝 포함)
+             * @example 1
+             */
+            startIndex: number;
+            /**
+             * Format: int32
+             * @description 출제 범위 끝 번호 — startIndex 이상, 세트의 활성 단어 수 이하
+             * @example 40
+             */
+            endIndex: number;
+            /**
+             * Format: int64
+             * @description 선생님 화면에서 startIndex 위치에 보였던 개인 단어 ID — 서버 기준 단어와 다르면 409(PERSONAL_EXAM_RANGE_STALE). 범위를 본 뒤 학생이 단어를 지워 번호가 당겨진 경우 다른 단어가 출제되는 것을 막는다
+             * @example 120
+             */
+            expectedStartWordId: number;
+            /**
+             * Format: int64
+             * @description 선생님 화면에서 endIndex 위치에 보였던 개인 단어 ID — 서버 기준 단어와 다르면 409(PERSONAL_EXAM_RANGE_STALE)
+             * @example 159
+             */
+            expectedEndWordId: number;
+            /**
+             * Format: int32
+             * @description 시험 문항 수 — 범위 단어 수(endIndex - startIndex + 1) 이하. 범위 안에서 랜덤 선택·랜덤 순서
+             * @example 20
+             */
+            questionCount: number;
+            /**
+             * @description 출제 방향 — WORD_TO_MEANING(단어 → 뜻) / MEANING_TO_WORD(뜻 → 단어). 개인 단어엔 동의어가 없어 동의어 포함은 항상 false
+             * @example WORD_TO_MEANING
+             * @enum {string}
+             */
+            subType: "WORD_TO_MEANING" | "MEANING_TO_WORD";
+        };
         CreateLevelExamRequest: {
             /** Format: int32 */
             level: number;
@@ -2139,8 +2232,12 @@ export interface components {
             skippedTypes?: string[];
         };
         CreateExamRequest: {
-            /** @enum {string} */
-            examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            /**
+             * @description NORMAL 5단계 시험 유형 — WRONG_BANK·LEVEL·PERSONAL은 각자 생성 API를 써야 하며 여기로 보내면 400(INVALID_INPUT)
+             * @example WORD
+             * @enum {string}
+             */
+            examType: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3";
         };
         ApiResponseAssignWordsResponse: {
             /** Format: int32 */
@@ -2161,17 +2258,23 @@ export interface components {
         AssignedWordResponse: {
             /**
              * Format: int64
-             * @description 단어 ID
+             * @description 단어 ID — wordSource가 WORD면 공용 단어 ID, PERSONAL이면 개인 단어 ID (두 ID는 서로 겹칠 수 있다)
              * @example 1
              */
             wordId?: number;
+            /**
+             * @description 단어 출처 — WORD: 공용 단어장, PERSONAL: 학생 개인 단어. 오답 뱅크 배정은 둘이 섞이고, 개인 단어장 시험 배정은 전부 PERSONAL
+             * @example WORD
+             * @enum {string}
+             */
+            wordSource?: "WORD" | "PERSONAL";
             /**
              * @description 영어 단어
              * @example eloquent
              */
             word?: string;
             /**
-             * @description 품사 목록
+             * @description 품사 목록 — PERSONAL은 빈 배열
              * @example [
              *       "adjective"
              *     ]
@@ -2183,18 +2286,18 @@ export interface components {
              */
             koreanMeaning?: string;
             /**
-             * @description 영어 뜻
+             * @description 영어 뜻 — PERSONAL은 null
              * @example fluent and persuasive in speaking or writing
              */
             englishMeaning?: string;
             /**
              * Format: int32
-             * @description 난이도 (1~10)
+             * @description 난이도 (1~10) — PERSONAL은 null
              * @example 5
              */
             difficulty?: number;
             /**
-             * @description 동의어 목록
+             * @description 동의어 목록 — PERSONAL은 빈 배열
              * @example [
              *       "articulate",
              *       "fluent"
@@ -2202,18 +2305,18 @@ export interface components {
              */
             synonyms?: string[];
             /**
-             * @description 예문
+             * @description 예문 — PERSONAL은 null
              * @example She gave an eloquent speech.
              */
             example?: string;
             /**
              * Format: int32
-             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★) — PERSONAL은 0
              * @example 2
              */
             satPriority?: number;
             /**
-             * @description 기출 태그
+             * @description 기출 태그 — PERSONAL은 null
              * @example 26.3 기출
              */
             examTag?: string;
@@ -2370,6 +2473,12 @@ export interface components {
              */
             itemOrder?: number;
             /**
+             * @description 단어 출처 — WORD: 공용 단어장, PERSONAL: 학생 개인 단어. PERSONAL 문항은 영어 뜻·동의어가 없어 동의어 입력칸을 노출하지 않는다
+             * @example WORD
+             * @enum {string}
+             */
+            wordSource?: "WORD" | "PERSONAL";
+            /**
              * @description 영어 단어 — subType이 WORD_TO_MEANING일 때만 존재
              * @example diligent
              */
@@ -2380,7 +2489,7 @@ export interface components {
              */
             koreanMeaning?: string;
             /**
-             * @description 영어 뜻 — subType이 MEANING_TO_WORD일 때만 존재
+             * @description 영어 뜻 — subType이 MEANING_TO_WORD일 때만 존재. PERSONAL 문항은 영어 뜻이 없어 항상 null
              * @example hard-working
              */
             englishMeaning?: string;
@@ -2409,7 +2518,7 @@ export interface components {
              * @example WORD
              * @enum {string}
              */
-            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL" | "PERSONAL";
             /**
              * @description 시험 세부 유형 — 예문(EXAMPLE) 시험은 null
              * @example MEANING_TO_WORD
@@ -2417,7 +2526,7 @@ export interface components {
              */
             subType?: "WORD_TO_MEANING" | "MEANING_TO_WORD";
             /**
-             * @description 동의어 포함 여부 — true이면 동의어 입력칸을 노출한다. 정답 동의어는 내려주지 않는다
+             * @description 동의어 포함 여부 — true이면 동의어 입력칸을 노출한다. 정답 동의어는 내려주지 않는다. 단, wordSource가 PERSONAL인 문항은 동의어가 없으므로 true여도 입력칸을 노출하지 않는다. 개인 단어장(PERSONAL) 시험은 항상 false
              * @example false
              */
             includeSynonym?: boolean;
@@ -2625,11 +2734,11 @@ export interface components {
         /** @description 배정 단어 목록 + 예문 공개 여부 */
         StudySetWordsResponse: {
             /**
-             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
+             * @description 학생에게 example(예문)을 노출해도 되는지 여부. NORMAL은 예문시험 합격 후 true, WRONG_BANK·LEVEL·PERSONAL은 항상 true. 백엔드는 example을 항상 내려주며, 이 플래그는 프론트 표시 토글용
              * @example false
              */
             exampleVisible?: boolean;
-            /** @description 배정된 단어 목록 */
+            /** @description 배정된 단어 목록 — wordSource로 공용 단어(WORD)/개인 단어(PERSONAL) 구분. 공용 단어 먼저, 개인 단어는 그 뒤에 등록순 */
             words?: components["schemas"]["AssignedWordResponse"][];
         };
         ApiResponseListWrongBankWordResponse: {
@@ -2638,17 +2747,23 @@ export interface components {
             message?: string;
             data?: components["schemas"]["WrongBankWordResponse"][];
         };
-        /** @description 활성 오답 단어 항목 */
+        /** @description 활성 오답 단어 항목 — 공용 단어(WORD)와 학생 개인 단어(PERSONAL)가 섞여 있다. PERSONAL 항목은 단어·한글 뜻만 있고 품사·영어 뜻·레벨·동의어·예문·기출 태그가 없다 */
         WrongBankWordResponse: {
             /**
              * Format: int64
-             * @description 단어 ID
+             * @description 단어 ID — wordSource가 WORD면 공용 단어 ID, PERSONAL이면 개인 단어 ID. 두 ID는 서로 겹칠 수 있으므로 항목 식별은 (wordSource, wordId) 쌍으로 한다
              */
             wordId?: number;
+            /**
+             * @description 단어 출처 — WORD: 공용 단어장, PERSONAL: 학생 개인 단어(개인 단어장 시험 오답)
+             * @example WORD
+             * @enum {string}
+             */
+            wordSource?: "WORD" | "PERSONAL";
             /** @description 영어 단어 */
             word?: string;
             /**
-             * @description 품사 목록
+             * @description 품사 목록 — PERSONAL은 빈 배열
              * @example [
              *       "noun"
              *     ]
@@ -2656,25 +2771,25 @@ export interface components {
             partsOfSpeech?: string[];
             /** @description 한글 뜻 */
             koreanMeaning?: string;
-            /** @description 영어 뜻 */
+            /** @description 영어 뜻 — PERSONAL은 null */
             englishMeaning?: string;
             /**
              * Format: int32
-             * @description 레벨 (1~10)
+             * @description 레벨 (1~10) — PERSONAL은 null
              */
             difficulty?: number;
-            /** @description 동의어 목록 */
+            /** @description 동의어 목록 — PERSONAL은 빈 배열 */
             synonyms?: string[];
-            /** @description 예문 — 해당 단어의 예문 시험(EXAMPLE) 통과 전에는 null (치팅 방지) */
+            /** @description 예문 — 해당 단어의 예문 시험(EXAMPLE) 통과 전에는 null (치팅 방지). PERSONAL은 항상 null */
             example?: string;
             /**
              * Format: int32
-             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★)
+             * @description SAT 중요도 (0=없음, 1=★, 2=★★, 3=★★★) — PERSONAL은 0
              * @example 2
              */
             satPriority?: number;
             /**
-             * @description 기출 태그
+             * @description 기출 태그 — PERSONAL은 null
              * @example 26.3 기출
              */
             examTag?: string;
@@ -2754,7 +2869,7 @@ export interface components {
              * @example REVIEW1
              * @enum {string}
              */
-            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL" | "PERSONAL";
             /**
              * Format: int64
              * @description 시험 ID — GET /api/v1/exams/{examId} 로 시험 상세 진입
@@ -2790,6 +2905,91 @@ export interface components {
             status?: number;
             message?: string;
             data?: components["schemas"]["PersonalWordSetResponse"][];
+        };
+        ApiResponseListPersonalExamListResponse: {
+            /** Format: int32 */
+            status?: number;
+            message?: string;
+            data?: components["schemas"]["PersonalExamListResponse"][];
+        };
+        /** @description 개인 단어장 시험 목록 항목 — 한 건의 개인 단어장 시험 요약 */
+        PersonalExamListResponse: {
+            /**
+             * Format: int64
+             * @description 시험 ID
+             * @example 1
+             */
+            examId?: number;
+            /**
+             * Format: int64
+             * @description 시험이 속한 StudySet ID (PERSONAL 타입) — GET /api/v1/study-sets/{studySetId}/words 로 출제 범위 단어 조회
+             * @example 5
+             */
+            studySetId?: number;
+            /**
+             * Format: date-time
+             * @description 시험 생성 시각
+             * @example 2026-11-01T10:00:00
+             */
+            createdAt?: string;
+            /**
+             * Format: int64
+             * @description 출제한 개인 단어 세트 ID
+             * @example 3
+             */
+            personalWordSetId?: number;
+            /**
+             * @description 출제한 개인 단어 세트 이름 — 세트 이름을 바꾸면 현재 이름이 보인다. 세트 행을 찾지 못하면 null
+             * @example 9월 13일 토익 단어
+             */
+            personalWordSetName?: string;
+            /**
+             * @description 출제한 세트가 이후 삭제되었는지 — 시험 이력은 세트 삭제와 무관하게 남는다
+             * @example false
+             */
+            personalWordSetDeleted?: boolean;
+            /**
+             * Format: int32
+             * @description 출제 범위 시작 번호 (생성 시점 등록순 기준, 1부터)
+             * @example 1
+             */
+            rangeStart?: number;
+            /**
+             * Format: int32
+             * @description 출제 범위 끝 번호 (생성 시점 등록순 기준, 양끝 포함)
+             * @example 40
+             */
+            rangeEnd?: number;
+            /**
+             * Format: int32
+             * @description 출제 범위의 단어 수(배정 단어 수) — 시험 문항 수(questionCount)와 별개
+             * @example 40
+             */
+            wordCount?: number;
+            /**
+             * Format: int32
+             * @description 시험 문항 수 — 시험 생성 시 확정되며 상태와 무관하게 항상 포함
+             * @example 20
+             */
+            questionCount?: number;
+            /**
+             * @description 클라이언트 표시용 시험 상태. CANCELLED 시험은 목록에서 제외됨 — READY(대기) / IN_PROGRESS(온라인 진행 중) / SUBMITTED(채점 대기) / PASSED(합격) / FAILED(불합격)
+             * @example PASSED
+             * @enum {string}
+             */
+            status?: "READY" | "IN_PROGRESS" | "SUBMITTED" | "PASSED" | "FAILED";
+            /**
+             * Format: int32
+             * @description 맞춘 문항 수 — PASSED·FAILED 상태일 때만 포함, 그 외에는 null. 점수는 correctCount / questionCount 로 계산
+             * @example 18
+             */
+            correctCount?: number;
+            /**
+             * Format: date-time
+             * @description 학생이 응시를 시작한 시각 — 값이 있으면 이미 응시한 시험이라 재응시 불가. 미응시면 null
+             * @example 2026-11-01T10:05:00
+             */
+            attemptStartedAt?: string;
         };
         ApiResponsePendingReviewsResponse: {
             /** Format: int32 */
@@ -3669,19 +3869,73 @@ export interface components {
             items?: components["schemas"]["ExamItemDetail"][];
         };
         ExamItemDetail: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 문항 ID
+             * @example 101
+             */
             examItemId?: number;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description 문항 순서
+             * @example 1
+             */
             itemOrder?: number;
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description 출제된 단어 ID — wordSource가 WORD면 공용 단어 ID, PERSONAL이면 개인 단어 ID (두 ID는 서로 겹칠 수 있다)
+             * @example 42
+             */
             wordId?: number;
+            /**
+             * @description 단어 출처 — WORD: 공용 단어장, PERSONAL: 학생 개인 단어. PERSONAL 문항은 출제 시점 스냅샷(단어·한글 뜻)만 있고 영어 뜻·동의어·예문이 없다
+             * @example WORD
+             * @enum {string}
+             */
+            wordSource?: "WORD" | "PERSONAL";
+            /**
+             * @description 영어 단어 — PERSONAL 문항은 출제 시점 스냅샷
+             * @example diligent
+             */
             word?: string;
+            /**
+             * @description 한글 뜻 — PERSONAL 문항은 출제 시점 스냅샷
+             * @example 근면한
+             */
             koreanMeaning?: string;
+            /**
+             * @description 영어 뜻 — PERSONAL 문항은 항상 null
+             * @example hard-working
+             */
             englishMeaning?: string;
+            /**
+             * @description 정답 동의어 목록 — PERSONAL 문항은 항상 빈 배열
+             * @example [
+             *       "industrious"
+             *     ]
+             */
             synonyms?: string[];
+            /**
+             * @description 빈칸 예문 — PERSONAL 문항은 항상 null
+             * @example She is a _____ student.
+             */
             example?: string;
+            /**
+             * @description 정오답 — 채점 전 null
+             * @example true
+             */
             isCorrect?: boolean;
+            /**
+             * @description 학생 답안 — 온라인 제출·채점 시에만 존재
+             * @example 근면한
+             */
             userAnswer?: string;
+            /**
+             * @description 학생 동의어 답안 목록 — 제출하지 않았으면 빈 배열
+             * @example [
+             *       "industrious"
+             *     ]
+             */
             synonymUserAnswers?: string[];
         };
         ApiResponseListSubmittedExamResponse: {
@@ -3720,7 +3974,7 @@ export interface components {
              * @example WORD
              * @enum {string}
              */
-            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL";
+            type?: "WORD" | "EXAMPLE" | "REVIEW1" | "REVIEW2" | "REVIEW3" | "WRONG_BANK" | "LEVEL" | "PERSONAL";
             /**
              * @description 출제 방향 — WORD_TO_MEANING(영어 단어→뜻), MEANING_TO_WORD(뜻→영어 단어). 예문 시험(EXAMPLE)은 null
              * @example WORD_TO_MEANING
@@ -5020,6 +5274,116 @@ export interface operations {
             };
         };
     };
+    getPersonalExamList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 — 빈 배열 가능 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalExamListResponse"];
+                };
+            };
+            /** @description 본인/담당/연결된 자녀가 아닌 학생 데이터 조회 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalExamListResponse"];
+                };
+            };
+            /** @description MEMBER_NOT_FOUND — 학생 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListPersonalExamListResponse"];
+                };
+            };
+        };
+    };
+    createPersonalExam: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /**
+                 * @description 학생 ID
+                 * @example 1
+                 */
+                studentId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePersonalExamRequest"];
+            };
+        };
+        responses: {
+            /** @description 생성 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description 범위가 올바르지 않음(PERSONAL_EXAM_RANGE_INVALID) · 문항 수가 범위 단어 수보다 많음(EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED) · 필수 값 누락(INVALID_INPUT) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description 선생님만 가능 (ACCESS_DENIED) */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description 학생 없음(MEMBER_NOT_FOUND) · 세트가 없거나 삭제됐거나 이 학생의 세트가 아님(PERSONAL_WORD_SET_NOT_FOUND) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+            /** @description 범위를 본 뒤 단어장이 바뀌어 양끝 단어가 달라짐 (PERSONAL_EXAM_RANGE_STALE) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
+                };
+            };
+        };
+    };
     getMemos: {
         parameters: {
             query?: never;
@@ -5342,7 +5706,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseSkipStageResponse"];
                 };
             };
-            /** @description NORMAL이 아닌 StudySet 또는 지원하지 않는 단계(WRONG_BANK/LEVEL) — INVALID_INPUT / 진행 중 시험이 있어 스킵 불가 — STUDY_STAGE_HAS_ACTIVE_EXAM */
+            /** @description NORMAL이 아닌 StudySet 또는 지원하지 않는 단계(WRONG_BANK/LEVEL/PERSONAL) — INVALID_INPUT / 진행 중 시험이 있어 스킵 불가 — STUDY_STAGE_HAS_ACTIVE_EXAM */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -5399,7 +5763,7 @@ export interface operations {
                     "*/*": components["schemas"]["ApiResponseCreateExamResponse"];
                 };
             };
-            /** @description examType 미지원(WRONG_BANK/LEVEL) / 학생 시험 설정 누락(STUDENT_EXAM_SETTINGS_NOT_SET) / 같은 타입 진행 중 시험 있음(EXAM_ALREADY_ACTIVE) / 같은 타입 합격 시험 있음(EXAM_ALREADY_PASSED) / 문항 수가 배정 단어 수 초과(EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED) */
+            /** @description NORMAL이 아닌 StudySet 또는 examType 미지원(WRONG_BANK/LEVEL/PERSONAL) — INVALID_INPUT / 학생 시험 설정 누락(STUDENT_EXAM_SETTINGS_NOT_SET) / 같은 타입 진행 중 시험 있음(EXAM_ALREADY_ACTIVE) / 같은 타입 합격 시험 있음(EXAM_ALREADY_PASSED) / 문항 수가 배정 단어 수 초과(EXAM_QUESTION_COUNT_EXCEEDS_ASSIGNED) */
             400: {
                 headers: {
                     [name: string]: unknown;

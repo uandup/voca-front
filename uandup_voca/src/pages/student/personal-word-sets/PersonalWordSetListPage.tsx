@@ -8,6 +8,7 @@ import { usePersonalWordSets, PersonalWordSetCard } from '@/entities/personal-wo
 import type { PersonalWordSetRow } from '@/entities/personal-word-set';
 import { useCurrentStudentId } from '@/entities/auth';
 import { usePersonalWordSetActions, PersonalWordSetFormModal } from '@/features/personal-word';
+import { PersonalTestList } from './ui/PersonalTestList';
 
 // 학생의 개인 단어 세트 목록 — 사이드바 "Personal Words"의 목적지.
 // 학부모는 라우트 가드에서 이미 차단되므로(서버도 403) 이 화면에서 읽기 전용 분기를 두지 않는다.
@@ -79,6 +80,9 @@ export default function PersonalWordSetListPage() {
           ))}
         </div>
       )}
+
+      {/* 선생님이 이 학생의 세트로 낸 개인 단어장 시험 — 시험이 없으면 렌더링하지 않는다 */}
+      <PersonalTestList studentId={studentId} />
 
       {formTarget !== null && (
         <PersonalWordSetFormModal

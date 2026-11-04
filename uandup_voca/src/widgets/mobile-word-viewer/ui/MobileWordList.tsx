@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
-import { WordBookmarkButton } from '@/entities/word';
+import { WordBookmarkButton, toWordKey } from '@/entities/word';
 import { MobileWordCard } from './MobileWordCard';
 import type { MobileWordItem } from '../model/types';
 
 interface Props {
   items: MobileWordItem[];
   showSentence?: boolean;
-  bookmarkedIds: Set<number>;
-  onToggleBookmark: (wordId: number) => void;
+  // 출처 포함 북마크 키 집합(toWordKey) — useWordBookmarks와 같은 형식
+  bookmarkedKeys: Set<string>;
+  onToggleBookmark: (wordKey: string) => void;
   hideWord: boolean;
   hideMeaning: boolean;
   /**
@@ -22,7 +23,7 @@ interface Props {
 export function MobileWordList({
   items,
   showSentence,
-  bookmarkedIds,
+  bookmarkedKeys,
   onToggleBookmark,
   hideWord,
   hideMeaning,
@@ -32,7 +33,7 @@ export function MobileWordList({
     <div className="space-y-3">
       {items.map((item) => (
         <MobileWordCard
-          key={item.id}
+          key={toWordKey(item)}
           item={item}
           showSentence={showSentence}
           hideWord={hideWord}
@@ -42,8 +43,8 @@ export function MobileWordList({
               renderActions(item)
             ) : (
               <WordBookmarkButton
-                bookmarked={bookmarkedIds.has(item.id)}
-                onToggle={() => onToggleBookmark(item.id)}
+                bookmarked={bookmarkedKeys.has(toWordKey(item))}
+                onToggle={() => onToggleBookmark(toWordKey(item))}
               />
             )
           }

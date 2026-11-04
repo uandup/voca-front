@@ -10,6 +10,7 @@ import {
   WordMaskButtons,
   useWordBookmarks,
   useWordMask,
+  toWordKey,
 } from '@/entities/word';
 import { useReviewDeckWords } from '@/entities/review-deck';
 import { useCurrentStudentId } from '@/entities/auth';
@@ -23,10 +24,12 @@ export default function WrongWordListPage() {
   const { data: words = [], isLoading } = useReviewDeckWords(studentId, studentId > 0);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
-  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`wrongwords_${studentId}`);
+  // 오답 뱅크엔 공용 단어와 개인 단어장 시험 오답이 섞인다 — 북마크·key는 출처 포함 키(toWordKey)로.
+  // 예전(숫자) 북마크는 전부 공용 단어 오답이었으므로 기본 legacySource('WORD')로 변환된다.
+  const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(`wrongwords_${studentId}`);
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
-  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedIds.has(w.id)) : words;
+  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedKeys.has(toWordKey(w))) : words;
 
   return (
     <main>
@@ -41,7 +44,7 @@ export default function WrongWordListPage() {
             {/* 북마크 필터 토글 */}
             <WordBookmarkFilterButton
               active={showBookmarkedOnly}
-              count={bookmarkedIds.size}
+              count={bookmarkedKeys.size}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
             />
 
@@ -85,7 +88,7 @@ export default function WrongWordListPage() {
       ) : viewMode === 'flashcard' ? (
         <WordFlashcard
             words={visibleWords}
-            bookmarkedIds={bookmarkedIds}
+            bookmarkedKeys={bookmarkedKeys}
             onToggleBookmark={toggleBookmark}
           />
       ) : (
@@ -100,7 +103,7 @@ export default function WrongWordListPage() {
           <div className="space-y-5">
             {visibleWords.map((word) => (
               <WordCard
-                key={word.id}
+                key={toWordKey(word)}
                 {...word}
                 showSentence
                 hideWord={hideWord}
@@ -114,8 +117,8 @@ export default function WrongWordListPage() {
                       <span className="text-base font-bold text-error">{word.wrongCount}</span>
                     </div>
                     <WordBookmarkButton
-                      bookmarked={bookmarkedIds.has(word.id)}
-                      onToggle={() => toggleBookmark(word.id)}
+                      bookmarked={bookmarkedKeys.has(toWordKey(word))}
+                      onToggle={() => toggleBookmark(toWordKey(word))}
                     />
                   </div>
                 }

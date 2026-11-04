@@ -14,6 +14,7 @@ export function useExamItems({ attempt, isSentence, currentPage }: UseExamItemsP
   const testType: WordTestType = attempt?.subType ?? 'word-to-meaning';
 
   // 응시용 문항은 유형별 프롬프트 필드만 채워져 있다(정답 없음). synonyms는 학생이 입력하므로 빈 배열.
+  // 개인 단어 문항(오답 뱅크 혼합 시험)은 동의어가 없어 그 문항만 동의어 칸을 끈다.
   const vocabItems: WordTestItem[] = useMemo(
     () =>
       !isSentence && attempt
@@ -23,9 +24,15 @@ export function useExamItems({ attempt, isSentence, currentPage }: UseExamItemsP
             korMeaning: item.koreanMeaning,
             engMeaning: item.englishMeaning,
             synonyms: [],
+            synonymDisabled: item.wordSource === 'PERSONAL',
           }))
         : [],
     [attempt, isSentence],
+  );
+  // 동의어 칸이 없는 문항 id(itemOrder) — useExamAnswers의 완료 판정용
+  const synonymDisabledIds = useMemo(
+    () => new Set(vocabItems.filter((i) => i.synonymDisabled).map((i) => i.id)),
+    [vocabItems],
   );
   const sentenceItems: SentenceTestItem[] = useMemo(
     () =>
@@ -66,5 +73,6 @@ export function useExamItems({ attempt, isSentence, currentPage }: UseExamItemsP
     allIds,
     totalItems,
     totalPages,
+    synonymDisabledIds,
   };
 }

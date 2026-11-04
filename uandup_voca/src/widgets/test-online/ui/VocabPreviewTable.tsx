@@ -18,7 +18,8 @@ export function VocabPreviewTable({ items, showSynonym }: VocabPreviewTableProps
             korMeaning={item.korMeaning}
             engMeaning={item.engMeaning}
             synonymAnswer={item.synonymAnswer}
-            showSynonym={showSynonym}
+            // 개인 단어 문항(동의어 없음)은 시험 설정과 무관하게 동의어 칸을 끈다
+            showSynonym={showSynonym && !item.synonymDisabled}
           />
         ))}
       </div>

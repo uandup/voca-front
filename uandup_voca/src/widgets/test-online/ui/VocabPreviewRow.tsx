@@ -28,9 +28,12 @@ export function VocabPreviewRow({
 
       <div className="flex-1 min-w-0">
         <p className="text-xs font-semibold text-on-surface leading-tight">{korMeaning}</p>
-        <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
-          {engMeaning}
-        </p>
+        {/* 개인 단어 문항은 영영뜻이 없다 — 빈 줄을 남기지 않는다(VocabAnswerRow·VocabReviewRow와 동일) */}
+        {engMeaning && (
+          <p className="text-xs text-on-surface-variant/60 leading-tight line-clamp-2 mt-1">
+            {engMeaning}
+          </p>
+        )}
       </div>
 
       {showSynonym && (

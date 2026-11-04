@@ -19,6 +19,7 @@ const TODO_TYPE_LABEL: Record<TodoItem['type'], string> = {
   REVIEW3: 'Review 3',
   WRONG_BANK: 'Review Deck',
   LEVEL: 'Level Test',
+  PERSONAL: 'Personal Test',
 };
 
 // 시험 유형 → Material Symbols 아이콘
@@ -30,6 +31,7 @@ const TODO_TYPE_ICON: Record<TodoItem['type'], string> = {
   REVIEW3: 'replay',
   WRONG_BANK: 'build',
   LEVEL: 'bar_chart',
+  PERSONAL: 'person',
 };
 
 // TodoItem type → ExamType search param 매핑
@@ -41,6 +43,7 @@ const TODO_EXAM_TYPE: Record<TodoItem['type'], ExamType> = {
   REVIEW3: 'REVIEW3',
   WRONG_BANK: 'REVIEW_DECK',
   LEVEL: 'LEVEL_TEST',
+  PERSONAL: 'PERSONAL_TEST',
 };
 
 export function TodoList({ studentId, readOnly = false }: Props) {
@@ -66,6 +69,7 @@ export function TodoList({ studentId, readOnly = false }: Props) {
     REVIEW3: '/student/word-test',
     WRONG_BANK: '/student/review-deck',
     LEVEL: '/student/level-test',
+    PERSONAL: '/student/personal-words',
   };
 
   // actionable(ONLINE_STARTED) → 바로 시험 응시 페이지로 이동.
@@ -93,6 +97,12 @@ export function TodoList({ studentId, readOnly = false }: Props) {
     } else if (todo.type === 'LEVEL') {
       navigate({
         to: '/student/level-test/$studySetId/words',
+        params: { studySetId: String(todo.studySetId) },
+      });
+    } else if (todo.type === 'PERSONAL') {
+      // 개인 단어장 시험의 출제 범위 단어 — 일반 배정 단어 페이지(word-test)로 보내면 안 된다
+      navigate({
+        to: '/student/personal-test/$studySetId/words',
         params: { studySetId: String(todo.studySetId) },
       });
     } else {

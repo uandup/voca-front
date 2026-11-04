@@ -5,11 +5,13 @@ import type { Answer } from '@/widgets/test-online';
 interface UseExamAnswersParams {
   isSentence: boolean;
   showSynonym: boolean;
+  // 동의어 칸이 없는 문항 id(itemOrder) — 개인 단어 문항. showSynonym이 true여도 뜻만 채우면 완료.
+  synonymDisabledIds?: Set<number>;
 }
 
 // 시험 답안 상태를 관리하는 훅.
 // 응시용(attempt)은 이전 답안이 없으므로 빈 상태로 시작하고, 답안 변경 핸들러와 completedIds를 제공한다.
-export function useExamAnswers({ isSentence, showSynonym }: UseExamAnswersParams) {
+export function useExamAnswers({ isSentence, showSynonym, synonymDisabledIds }: UseExamAnswersParams) {
   const [vocabAnswers, setVocabAnswers] = useState<Record<number, Answer>>({});
   const [sentenceAnswers, setSentenceAnswers] = useState<Record<number, SentenceTestAnswer>>({});
 
@@ -29,10 +31,11 @@ export function useExamAnswers({ isSentence, showSynonym }: UseExamAnswersParams
           .filter(([, v]) => (v.answer ?? '').trim() !== '')
           .map(([k]) => Number(k))
       : Object.entries(vocabAnswers)
-          .filter(([, v]) => {
+          .filter(([k, v]) => {
             const meaningFilled = (v.answer ?? '').trim() !== '';
             const synonymFilled = (v.synonym ?? '').trim() !== '';
-            return showSynonym ? meaningFilled && synonymFilled : meaningFilled;
+            const needsSynonym = showSynonym && !synonymDisabledIds?.has(Number(k));
+            return needsSynonym ? meaningFilled && synonymFilled : meaningFilled;
           })
           .map(([k]) => Number(k)),
   );

@@ -50,6 +50,7 @@ export function WordCard({
   sentence,
   satPriority,
   examTags,
+  wordSource,
   showSentence = false,
   extraInfo,
   hideWord = false,
@@ -71,6 +72,9 @@ export function WordCard({
 
   const wordMasked = hideWord && !revealedWord;
   const meaningMasked = hideMeaning && !revealedMeaning;
+  // 개인 단어는 단어·한글 뜻뿐이다 — 레벨·SAT·품사·영영뜻·동의어 섹션을 그리지 않는다
+  // (빈 값으로 그리면 "LEVEL 1"·빈 별 3개처럼 없는 정보가 있는 것처럼 보인다).
+  const isPersonal = wordSource === 'PERSONAL';
 
   const wordHeading = <h2 className="font-headline font-bold text-2xl text-primary">{word}</h2>;
 
@@ -79,30 +83,36 @@ export function WordCard({
       <div>
         <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">Meaning</h4>
         <p className="text-primary font-bold text-lg">
-          <span className="text-on-tertiary-container tracking-wider mr-2">
-            {partsOfSpeech.join(' / ')}
-          </span>
+          {!isPersonal && (
+            <span className="text-on-tertiary-container tracking-wider mr-2">
+              {partsOfSpeech.join(' / ')}
+            </span>
+          )}
           {korMeaning}
         </p>
-        <p className="text-on-surface-variant leading-relaxed font-body text-sm mt-1">
-          {engMeaning}
-        </p>
+        {!isPersonal && (
+          <p className="text-on-surface-variant leading-relaxed font-body text-sm mt-1">
+            {engMeaning}
+          </p>
+        )}
       </div>
-      <div>
-        <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
-          Synonyms
-        </h4>
-        <div className="flex flex-wrap gap-2">
-          {synonyms.map((syn) => (
-            <span
-              key={syn}
-              className="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-xs font-medium"
-            >
-              {syn}
-            </span>
-          ))}
+      {!isPersonal && (
+        <div>
+          <h4 className="text-[10px] uppercase tracking-wider text-outline font-bold mb-2">
+            Synonyms
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {synonyms.map((syn) => (
+              <span
+                key={syn}
+                className="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full text-xs font-medium"
+              >
+                {syn}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 
@@ -113,9 +123,15 @@ export function WordCard({
           <div className="w-1/4">
             {/* LEVEL·별점·기출 태그는 정답이 아니므로 가리기와 무관하게 항상 노출한다. */}
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
-                LEVEL {difficulty}
-              </span>
+              {isPersonal ? (
+                <span className="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-500 text-[10px] font-bold tracking-widest uppercase rounded-full">
+                  Personal Word
+                </span>
+              ) : (
+                <span className="px-3 py-1 bg-surface-container-highest text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">
+                  LEVEL {difficulty}
+                </span>
+              )}
             </div>
             <Maskable
               hidden={wordMasked}
@@ -125,8 +141,8 @@ export function WordCard({
             >
               {wordHeading}
             </Maskable>
-            {/* SAT 중요도 별표 */}
-            <SatStars priority={satPriority} />
+            {/* SAT 중요도 별표 — 개인 단어엔 SAT 중요도 개념이 없다 */}
+            {!isPersonal && <SatStars priority={satPriority} />}
             {/* 기출 태그 */}
             {examTags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-2">
