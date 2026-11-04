@@ -139,6 +139,7 @@ export function MobilePersonalWordSetWordsRoute() {
         isLoading={isLoading}
         // 데스크탑 세트 상세와 같은 키 — 같은 브라우저라면 북마크가 양쪽에서 공유된다.
         scopeKey={`personalwordset_${personalWordSetId}`}
+        bookmarkLegacySource="PERSONAL"
         onBack={() => navigate({ to: '/m/words/personal' })}
         // 플래시카드·셔플을 켠다. 단어 앞/뜻 뒤는 플래시카드의 가장 전형적인 쓰임이고,
         // 폰은 학생이 직접 모은 단어를 외우는 주 화면이다.

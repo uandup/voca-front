@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
-import { useWordBookmarks, useWordShuffle, useWordMask } from '@/entities/word';
+import { useWordBookmarks, useWordShuffle, useWordMask, toWordKey } from '@/entities/word';
+import type { WordSource } from '@/entities/word';
 import { MobileScreenHeader } from '@/widgets/mobile-nav';
 import {
   MobileWordList,
@@ -21,6 +22,9 @@ interface Props {
    * 그래야 같은 브라우저에서 데스크탑에 찍어둔 북마크가 폰에서도 보인다.
    */
   scopeKey: string;
+  // 이 스코프의 예전(숫자 id) 북마크가 가리키던 단어 출처 — 개인 단어 목록만 'PERSONAL', 기본 'WORD'.
+  // 북마크가 출처 포함 키로 바뀌면서 기존 숫자 북마크를 이 출처로 변환해 유지한다.
+  bookmarkLegacySource?: WordSource;
   showSentence?: boolean;
   onBack: () => void;
   // 현재 보기 모드와 변경 핸들러. 라우트 search param에 묶여 있어 상위(wrapper)가 소유한다.
@@ -54,6 +58,7 @@ export function MobileWordListPage({
   items,
   isLoading,
   scopeKey,
+  bookmarkLegacySource,
   showSentence = false,
   onBack,
   view,
@@ -65,15 +70,15 @@ export function MobileWordListPage({
 }: Props) {
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(scopeKey);
+  const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(scopeKey, bookmarkLegacySource);
   const { orderedWords, shuffle, shuffleCount } = useWordShuffle(items);
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
   // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요 — 데스크탑 StudySetWordsPage와 동일한 불변식).
-  const visibleItems = showBookmarkedOnly
-    ? orderedWords.filter((w) => bookmarkedIds.has(w.id))
-    : orderedWords;
+  // 배지 숫자도 이 필터 결과로 센다. 저장된 북마크 전체로 세면 리뷰덱에서 해제된 단어·삭제한 개인 단어까지 센다.
+  const bookmarkedItems = orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)));
+  const visibleItems = showBookmarkedOnly ? bookmarkedItems : orderedWords;
 
   // 개인 단어처럼 플래시카드를 지원하지 않는 소스는 URL에 ?view=cards가 들어와도 리스트로 강제한다.
   const effectiveView: MobileWordView = supportsFlashcard ? view : 'list';
@@ -101,7 +106,7 @@ export function MobileWordListPage({
             view={effectiveView}
             onChangeView={onChangeView}
             bookmarkFilterActive={showBookmarkedOnly}
-            bookmarkCount={bookmarkedIds.size}
+            bookmarkCount={bookmarkedItems.length}
             onToggleBookmarkFilter={() => setShowBookmarkedOnly((v) => !v)}
             onShuffle={supportsShuffle ? shuffle : undefined}
             showViewToggle={supportsFlashcard}
@@ -120,14 +125,14 @@ export function MobileWordListPage({
             <MobileWordFlashcard
               key={shuffleCount}
               items={visibleItems}
-              bookmarkedIds={bookmarkedIds}
+              bookmarkedKeys={bookmarkedKeys}
               onToggleBookmark={toggleBookmark}
             />
           ) : (
             <MobileWordList
               items={visibleItems}
               showSentence={showSentence}
-              bookmarkedIds={bookmarkedIds}
+              bookmarkedKeys={bookmarkedKeys}
               onToggleBookmark={toggleBookmark}
               hideWord={hideWord}
               hideMeaning={hideMeaning}

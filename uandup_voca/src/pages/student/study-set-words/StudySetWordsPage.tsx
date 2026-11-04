@@ -12,6 +12,7 @@ import {
   useWordBookmarks,
   useWordShuffle,
   useWordMask,
+  toWordKey,
 } from '@/entities/word';
 import { useAssignedWords } from '@/entities/student';
 import { useIsReadOnly } from '@/entities/auth';
@@ -52,15 +53,15 @@ export function StudySetWordsPage({
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
-  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`studyset_${studySetId}`);
+  const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(`studyset_${studySetId}`);
   const { orderedWords, shuffle, shuffleCount } = useWordShuffle(words);
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   // 셔플 순서를 먼저 적용하고 그 위에 북마크 필터를 얹는다
   // (필터 토글이 재섞기를 유발하지 않도록 순서가 중요).
-  const visibleWords = showBookmarkedOnly
-    ? orderedWords.filter((w) => bookmarkedIds.has(w.id))
-    : orderedWords;
+  // 배지 숫자도 이 필터 결과로 센다 — 저장된 북마크 전체가 아니라 지금 목록에 있는 단어 기준.
+  const bookmarkedWords = orderedWords.filter((w) => bookmarkedKeys.has(toWordKey(w)));
+  const visibleWords = showBookmarkedOnly ? bookmarkedWords : orderedWords;
 
   // 자체 시험 페이지로 이동. Exit 시 지금 보고 있던 단어 목록으로 돌아오도록 현재 URL을 넘긴다.
   function handleStartSelfTest() {
@@ -81,7 +82,7 @@ export function StudySetWordsPage({
             {/* 북마크 필터 토글 */}
             <WordBookmarkFilterButton
               active={showBookmarkedOnly}
-              count={bookmarkedIds.size}
+              count={bookmarkedWords.length}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
             />
 
@@ -142,7 +143,7 @@ export function StudySetWordsPage({
         <WordFlashcard
             key={shuffleCount}
             words={visibleWords}
-            bookmarkedIds={bookmarkedIds}
+            bookmarkedKeys={bookmarkedKeys}
             onToggleBookmark={toggleBookmark}
           />
       ) : (
@@ -157,15 +158,16 @@ export function StudySetWordsPage({
           <div className="space-y-5">
             {visibleWords.map((word) => (
               <WordCard
-                key={word.id}
+                // 오답 뱅크 배정은 공용·개인 단어 id가 겹칠 수 있어 출처 포함 키를 쓴다
+                key={toWordKey(word)}
                 {...word}
                 showSentence={exampleVisible}
                 hideWord={hideWord}
                 hideMeaning={hideMeaning}
                 extraInfo={
                   <WordBookmarkButton
-                    bookmarked={bookmarkedIds.has(word.id)}
-                    onToggle={() => toggleBookmark(word.id)}
+                    bookmarked={bookmarkedKeys.has(toWordKey(word))}
+                    onToggle={() => toggleBookmark(toWordKey(word))}
                   />
                 }
               />

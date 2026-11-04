@@ -170,7 +170,15 @@ export interface PendingReviewItem {
 
 // ── Todo (/todos) ────────────────────────────────────────────────────────────
 
-export type TodoType = 'WORD' | 'EXAMPLE' | 'REVIEW1' | 'REVIEW2' | 'REVIEW3' | 'WRONG_BANK' | 'LEVEL';
+export type TodoType =
+  | 'WORD'
+  | 'EXAMPLE'
+  | 'REVIEW1'
+  | 'REVIEW2'
+  | 'REVIEW3'
+  | 'WRONG_BANK'
+  | 'LEVEL'
+  | 'PERSONAL';
 
 /** 학생 할 일 한 건 — /api/v1/students/{id}/todos */
 export interface TodoItem {

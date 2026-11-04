@@ -10,6 +10,7 @@ import {
   WordMaskButtons,
   useWordBookmarks,
   useWordMask,
+  toWordKey,
 } from '@/entities/word';
 import { usePersonalWordsBySet, PersonalWordCard } from '@/entities/personal-word';
 import type { PersonalWordCardData } from '@/entities/personal-word';
@@ -21,6 +22,11 @@ import {
   PersonalWordEditModal,
 } from '@/features/personal-word';
 import { PersonalWordFlashcard } from './ui/PersonalWordFlashcard';
+
+// 개인 단어 데이터엔 출처 필드가 없다(전부 개인 단어) — 북마크 키만 출처를 붙여 만든다.
+function personalWordKey(word: PersonalWordCardData): string {
+  return toWordKey({ id: word.id, wordSource: 'PERSONAL' });
+}
 
 type ViewMode = 'list' | 'flashcard';
 
@@ -53,12 +59,16 @@ export default function PersonalWordSetDetailPage() {
 
   // 북마크 스코프는 세트 단위 — studySetId를 쓰는 StudySetWordsPage와 같은 형태.
   // 학생 단위로 두면 세트를 옮겨도 북마크가 섞이고 "북마크 N개" 배지가 전체 기준이 되어 의미가 안 맞는다.
-  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(
+  // 이 스코프는 전부 개인 단어 — 예전(숫자) 북마크도 개인 단어 id였으므로 legacySource='PERSONAL'.
+  const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(
     `personalwordset_${personalWordSetId}`,
+    'PERSONAL',
   );
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
-  const visibleWords = showBookmarkedOnly ? words.filter((w) => bookmarkedIds.has(w.id)) : words;
+  // 배지 숫자도 이 필터 결과로 센다. 저장된 북마크 전체로 세면 삭제한 단어의 북마크까지 남아 숫자가 부풀어 보인다.
+  const bookmarkedWords = words.filter((w) => bookmarkedKeys.has(personalWordKey(w)));
+  const visibleWords = showBookmarkedOnly ? bookmarkedWords : words;
 
   function goSelfTest() {
     navigate({
@@ -83,7 +93,7 @@ export default function PersonalWordSetDetailPage() {
             <>
               <WordBookmarkFilterButton
                 active={showBookmarkedOnly}
-                count={bookmarkedIds.size}
+                count={bookmarkedWords.length}
                 onToggle={() => setShowBookmarkedOnly((v) => !v)}
               />
 
@@ -156,7 +166,7 @@ export default function PersonalWordSetDetailPage() {
       ) : viewMode === 'flashcard' ? (
         <PersonalWordFlashcard
           words={visibleWords}
-          bookmarkedIds={bookmarkedIds}
+          bookmarkedKeys={bookmarkedKeys}
           onToggleBookmark={toggleBookmark}
         />
       ) : (
@@ -178,8 +188,8 @@ export default function PersonalWordSetDetailPage() {
                 extraInfo={
                   <div className="flex items-center gap-2">
                     <WordBookmarkButton
-                      bookmarked={bookmarkedIds.has(word.id)}
-                      onToggle={() => toggleBookmark(word.id)}
+                      bookmarked={bookmarkedKeys.has(personalWordKey(word))}
+                      onToggle={() => toggleBookmark(personalWordKey(word))}
                     />
                     <button
                       onClick={() => setEditTarget(word)}

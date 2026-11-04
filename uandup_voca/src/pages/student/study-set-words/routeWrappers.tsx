@@ -29,6 +29,23 @@ export function LevelTestStudySetWordsRoute() {
   );
 }
 
+// 개인 단어장 시험의 출제 범위 단어 — 할 일 목록에서 진입. 뒤로 가면 개인 단어장 목록(시험 목록 포함).
+// 자체 시험(self-test)은 숨긴다 — 개인 단어 연습 시험은 세트 상세 화면에서 연다.
+export function PersonalTestStudySetWordsRoute() {
+  const navigate = useNavigate();
+  const { studySetId } = useParams({ from: '/student/personal-test/$studySetId/words' });
+  return (
+    <StudySetWordsPage
+      studySetId={Number(studySetId)}
+      parents={[
+        { label: 'Personal Words', onClick: () => navigate({ to: '/student/personal-words' }) },
+      ]}
+      title="Test Words"
+      showSelfTest={false}
+    />
+  );
+}
+
 export function ReviewDeckStudySetWordsRoute() {
   const navigate = useNavigate();
   const { studySetId } = useParams({ from: '/student/review-deck/$studySetId/words' });

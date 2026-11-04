@@ -19,10 +19,11 @@ type ExamDetailResponse = components['schemas']['ExamDetailResponse'];
 type ExamItemDetail = components['schemas']['ExamItemDetail'];
 type ExamAttemptResponse = components['schemas']['ExamAttemptResponse'];
 
-// 서버 시험 유형(enum) → 클라이언트 ExamType. WRONG_BANK/LEVEL만 명칭이 다르다.
+// 서버 시험 유형(enum) → 클라이언트 ExamType. WRONG_BANK/LEVEL/PERSONAL만 명칭이 다르다.
 function toClientExamType(t: ExamAttemptResponse['type']): ExamType {
   if (t === 'WRONG_BANK') return 'REVIEW_DECK';
   if (t === 'LEVEL') return 'LEVEL_TEST';
+  if (t === 'PERSONAL') return 'PERSONAL_TEST';
   return (t ?? 'WORD') as ExamType;
 }
 
@@ -39,6 +40,7 @@ export function toExamAttemptData(r: ExamAttemptResponse): ExamAttemptData {
       .map((it) => ({
         examItemId: it.examItemId!,
         itemOrder: it.itemOrder!,
+        wordSource: it.wordSource ?? 'WORD',
         word: it.word ?? '',
         koreanMeaning: it.koreanMeaning ?? '',
         englishMeaning: it.englishMeaning ?? '',
@@ -59,6 +61,7 @@ function toExamItem(item: ExamItemDetail): ExamItem {
   return {
     examItemId: item.examItemId!,
     itemOrder: item.itemOrder!,
+    wordSource: item.wordSource ?? 'WORD',
     word: item.word ?? '',
     koreanMeaning: item.koreanMeaning ?? '',
     englishMeaning: item.englishMeaning ?? '',
@@ -94,6 +97,7 @@ export function toWordTestItems(items: ExamItem[]): WordTestItem[] {
     korMeaning: item.koreanMeaning,
     engMeaning: item.englishMeaning,
     synonyms: item.synonyms,
+    synonymDisabled: item.wordSource === 'PERSONAL',
   }));
 }
 
@@ -105,6 +109,7 @@ export function toVocabReviewItems(items: ExamItem[]): VocabReviewItem[] {
     engMeaning: item.englishMeaning,
     // 정답 synonym은 복수 — 전부 ", "로 이어서 표시.
     synonymAnswer: item.synonyms.join(', '),
+    synonymDisabled: item.wordSource === 'PERSONAL',
   }));
 }
 
@@ -141,6 +146,7 @@ export function inferMode(status: string): ExamMode {
 export function inferSource(examType: ExamType | undefined): ExamSource {
   if (examType === 'REVIEW_DECK') return 'review-deck';
   if (examType === 'LEVEL_TEST') return 'level-test';
+  if (examType === 'PERSONAL_TEST') return 'personal-test';
   return 'study-set';
 }
 

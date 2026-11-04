@@ -9,6 +9,9 @@ interface PersonalWordCardProps extends PersonalWordCardData {
   hideWord?: boolean;
   // 한글 뜻을 가린다 — 단어를 보고 뜻을 떠올리는 용도.
   hideMeaning?: boolean;
+  // 세트 안 등록순 번호(1부터). 선생님이 개인 단어장 시험 범위(From~To)를 고를 때 기준이 된다.
+  // 생략하면 표시하지 않는다. 검색 필터를 건 목록에서도 전체 목록 기준 번호를 넘겨야 한다.
+  orderNumber?: number;
 }
 
 // PersonalWord 1건을 표시하는 카드. word/koreanMeaning만 존재해 entities/word의 WordCard와는
@@ -21,6 +24,7 @@ export function PersonalWordCard({
   extraInfo,
   hideWord = false,
   hideMeaning = false,
+  orderNumber,
 }: PersonalWordCardProps) {
   // 카드별 공개 상태. 툴바 토글은 목록 전체를 가리고, 이 상태는 카드 하나만 되돌린다.
   const [revealedWord, setRevealedWord] = useState(false);
@@ -44,6 +48,11 @@ export function PersonalWordCard({
       <div className="p-8">
         <div className="flex items-center gap-12">
           <div className="w-1/4">
+            {orderNumber !== undefined && (
+              <span className="text-[11px] font-bold text-on-surface-variant/60 block mb-1">
+                #{orderNumber}
+              </span>
+            )}
             <Maskable
               hidden={wordMasked}
               enabled={hideWord}

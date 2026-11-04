@@ -35,7 +35,8 @@ export function VocabAnswerTable({
             korMeaning={item.korMeaning}
             engMeaning={item.engMeaning}
             testType={testType}
-            showSynonym={showSynonym}
+            // 개인 단어 문항(동의어 없음)은 시험 설정과 무관하게 동의어 칸을 끈다
+            showSynonym={showSynonym && !item.synonymDisabled}
             answer={answers[item.id]}
             onAnswerChange={onAnswerChange}
             isLast={index === items.length - 1 && currentPage === totalPages}

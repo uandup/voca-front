@@ -9,6 +9,7 @@ import {
   WordMaskButtons,
   useWordBookmarks,
   useWordMask,
+  toWordKey,
 } from '@/entities/word';
 import {
   usePendingReviews,
@@ -83,7 +84,7 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
   const [selectedSetId, setSelectedSetId] = useState<number | 'all'>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
-  const { bookmarkedIds, toggleBookmark } = useWordBookmarks(`pending_${studentId}`);
+  const { bookmarkedKeys, toggleBookmark } = useWordBookmarks(`pending_${studentId}`);
   const { hideWord, hideMeaning, toggleHideWord, toggleHideMeaning } = useWordMask();
 
   // 선택한 배정이 목록에서 사라졌으면(복습 통과 등) 전체 보기로 되돌린다.
@@ -94,11 +95,11 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
       : (groups.find((g) => g.studySetId === activeSetId)?.words ?? []);
 
   const visibleWords = showBookmarkedOnly
-    ? activeWords.filter((w) => bookmarkedIds.has(w.id))
+    ? activeWords.filter((w) => bookmarkedKeys.has(toWordKey(w)))
     : activeWords;
 
   // 현재 날짜 단어 중 북마크된 개수 — 날짜가 바뀌면 자동으로 재계산됨
-  const bookmarkedActiveCount = activeWords.filter((w) => bookmarkedIds.has(w.id)).length;
+  const bookmarkedActiveCount = activeWords.filter((w) => bookmarkedKeys.has(toWordKey(w))).length;
 
   return (
     <main>
@@ -191,7 +192,7 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
           ) : viewMode === 'flashcard' ? (
             <WordFlashcard
                 words={visibleWords}
-                bookmarkedIds={bookmarkedIds}
+                bookmarkedKeys={bookmarkedKeys}
                 onToggleBookmark={toggleBookmark}
               />
           ) : (
@@ -213,8 +214,8 @@ export function PendingReviewsPage({ studentId, parents }: Props) {
                     hideMeaning={hideMeaning}
                     extraInfo={
                       <WordBookmarkButton
-                        bookmarked={bookmarkedIds.has(word.id)}
-                        onToggle={() => toggleBookmark(word.id)}
+                        bookmarked={bookmarkedKeys.has(toWordKey(word))}
+                        onToggle={() => toggleBookmark(toWordKey(word))}
                       />
                     }
                   />

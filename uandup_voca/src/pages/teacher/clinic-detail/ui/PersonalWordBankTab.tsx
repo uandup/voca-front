@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { TableContainer } from '@/shared/ui/TableContainer';
-import { ConfirmDialog } from '@/shared/ui/Modal';
+import { ConfirmDialog, AlertDialog } from '@/shared/ui/Modal';
 import { usePersonalWordSets } from '@/entities/personal-word-set';
 import type { PersonalWordSetRow } from '@/entities/personal-word-set';
 import { usePersonalWordSetActions, PersonalWordSetFormModal } from '@/features/personal-word';
+import { PersonalTestCreateModal } from '@/features/personal-test-exam';
+import { PersonalTestHistoryTable } from './PersonalTestHistoryTable';
 
 interface Props {
   studentId: number;
@@ -19,6 +21,12 @@ const COLUMNS = ['Set Name', 'Added By', 'Words', 'Actions'];
 // 그 인덱스 UI와 이력 테이블이 전부 사라졌다 — 단어 순번이 시험 범위의 기준이 아니게 되어
 // "단어를 지우면 순번이 밀린다"는 취약점도 함께 없어졌다.
 // 지금은 ReviewDeck(WrongWordBankTab)·LevelTest 탭과 달리 시험 개념이 없는 순수 관리 테이블이다.
+//
+// (2026-11) 개인 단어장 시험이 다시 생겼다 — 이번엔 별도 테이블이 아니라 공용 시험 파이프라인(PERSONAL 타입)을
+// 타서, 채점 큐·채점 화면·학생 응시 화면을 그대로 쓰고 오답이 리뷰덱에 들어간다.
+// 출제는 다시 "등록순 연속 구간 + 문항 수"지만, 위 취약점(번호 밀림)은 생성 요청에 양끝 단어 id를 함께 보내
+// 서버가 409로 막는다(PersonalTestCreateModal). 문항엔 출제 시점 단어·뜻이 스냅샷으로 남아 이후 수정에도 기록이 고정된다.
+// 시험 이력은 세트 테이블 아래 PersonalTestHistoryTable.
 export function PersonalWordBankTab({ studentId }: Props) {
   const navigate = useNavigate();
 
@@ -28,6 +36,10 @@ export function PersonalWordBankTab({ studentId }: Props) {
   // 'new' = 생성 모달, PersonalWordSetRow = 이름 변경 모달, null = 닫힘.
   const [formTarget, setFormTarget] = useState<PersonalWordSetRow | 'new' | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PersonalWordSetRow | null>(null);
+  const [showCreateTest, setShowCreateTest] = useState(false);
+  const [showCreateSuccess, setShowCreateSuccess] = useState(false);
+  // 단어가 하나라도 있는 세트가 있어야 범위를 고를 수 있다
+  const hasTestableSet = sets.some((set) => set.wordCount > 0);
 
   const totalWords = sets.reduce((sum, set) => sum + set.wordCount, 0);
 
@@ -49,21 +61,33 @@ export function PersonalWordBankTab({ studentId }: Props) {
               {totalWords === 1 ? 'word' : 'words'}
             </p>
           </div>
-          <button
-            onClick={() => setFormTarget('new')}
-            className="flex items-center rounded-lg gap-0.5 px-3 py-2.5 text-xs shadow-lg shadow-primary/10 font-bold bg-primary hover:opacity-90 transition-opacity text-white"
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-              add
-            </span>
-            Add Word Set
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowCreateTest(true)}
+              disabled={!hasTestableSet}
+              className="flex items-center rounded-lg gap-0.5 px-3 py-2.5 text-xs font-bold border border-primary/30 text-primary hover:bg-primary/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                quiz
+              </span>
+              Generate Test
+            </button>
+            <button
+              onClick={() => setFormTarget('new')}
+              className="flex items-center rounded-lg gap-0.5 px-3 py-2.5 text-xs shadow-lg shadow-primary/10 font-bold bg-primary hover:opacity-90 transition-opacity text-white"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                add
+              </span>
+              Add Word Set
+            </button>
+          </div>
         </div>
 
         <div className="px-8 py-4">
           <p className="text-xs text-on-surface-variant">
-            Students can add their own sets and words too. Words are for memorizing only — no tests
-            are generated from them.
+            Students can add their own sets and words too. Generate a test from a range of a set —
+            results are saved and wrong answers go to the Review Deck.
           </p>
         </div>
       </div>
@@ -141,11 +165,30 @@ export function PersonalWordBankTab({ studentId }: Props) {
         </div>
       </TableContainer>
 
+      <PersonalTestHistoryTable studentId={studentId} />
+
       {formTarget !== null && (
         <PersonalWordSetFormModal
           studentId={studentId}
           target={formTarget === 'new' ? undefined : formTarget}
           onClose={() => setFormTarget(null)}
+        />
+      )}
+
+      {showCreateTest && (
+        <PersonalTestCreateModal
+          studentId={studentId}
+          onClose={() => setShowCreateTest(false)}
+          onCreated={() => setShowCreateSuccess(true)}
+        />
+      )}
+
+      {showCreateSuccess && (
+        <AlertDialog
+          variant="success"
+          title="Test Generated!"
+          description="The test has been created. Press Start Online Test when the student is ready."
+          onClose={() => setShowCreateSuccess(false)}
         />
       )}
 

@@ -1,7 +1,7 @@
 import { Modal } from '@/shared/ui/Modal';
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner';
 import { EmptyState } from '@/shared/ui/EmptyState';
-import { WordCard } from '@/entities/word/@x/review-deck';
+import { WordCard, toWordKey } from '@/entities/word/@x/review-deck';
 import type { ReviewDeckWord } from '../model/types';
 
 interface Props {
@@ -42,7 +42,8 @@ export function ReviewDeckWordsModal({ words, isLoading, onClose }: Props) {
             <div className="flex flex-col gap-5">
               {words.map((word) => (
                 <WordCard
-                  key={word.id}
+                  // 공용 단어와 개인 단어의 id가 겹칠 수 있어 출처 포함 키를 쓴다
+                  key={toWordKey(word)}
                   {...word}
                   showSentence
                   extraInfo={
